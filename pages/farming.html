@@ -7,7 +7,6 @@
 </head>
 <body>
 
-<!-- TOP NAV -->
 <nav class="top-nav">
   <a class="nav-logo" href="../index.html">
     <div class="nav-logo-icon">🌾</div>
@@ -24,10 +23,8 @@
   </div>
 </nav>
 
-<!-- MAIN LAYOUT -->
 <div style="display:flex;max-width:1400px;margin:0 auto;min-height:calc(100vh - 64px)">
 
-  <!-- SIDEBAR -->
   <aside style="width:220px;background:white;border-right:1px solid #eee;padding:16px 0;flex-shrink:0;position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto">
     <div style="font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.8px;padding:8px 20px 4px">Categories</div>
     <a href="farming.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;background:#E8F5E8;color:#2E7D32;font-weight:600;font-size:14px;text-decoration:none;border-right:3px solid #4CAF50">🌾 Farming Work</a>
@@ -47,10 +44,7 @@
     <a href="profile.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">👤 Profile</a>
   </aside>
 
-  <!-- MAIN CONTENT -->
   <main style="flex:1;min-width:0;padding-bottom:40px">
-
-    <!-- SEARCH BAR -->
     <div style="background:linear-gradient(135deg,#2E7D32,#66BB6A);padding:20px 32px">
       <div style="position:relative;max-width:520px">
         <input type="text" id="s" placeholder="Search farming work... | ଚାଷ କାମ ଖୋଜନ୍ତୁ" oninput="renderList()"
@@ -59,7 +53,6 @@
       </div>
     </div>
 
-    <!-- FILTER CHIPS -->
     <div style="display:flex;gap:8px;padding:14px 32px;background:white;border-bottom:1px solid #eee;flex-wrap:wrap">
       <div class="chip active" onclick="setChip(this,'all')">All</div>
       <div class="chip" onclick="setChip(this,'tractor')">🚜 Tractor</div>
@@ -68,20 +61,16 @@
       <div class="chip" onclick="setChip(this,'irrigation')">💧 Irrigation</div>
     </div>
 
-    <!-- COUNT -->
     <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 32px 12px">
       <div style="font-size:18px;font-weight:700">🌾 Available Providers</div>
       <div id="cnt" style="font-size:13px;color:#4CAF50;font-weight:600"></div>
     </div>
 
-    <!-- CARDS GRID -->
     <div id="list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:0 32px 32px"></div>
-
   </main>
 </div>
 
-<!-- BOTTOM NAV (mobile only) -->
-<nav style="display:none" class="bottom-nav">
+<nav class="bottom-nav">
   <a href="../index.html" class="nav-item"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></a>
   <a href="search.html" class="nav-item"><div class="nav-icon">🔍</div><div class="nav-label">Search</div></a>
   <a href="orders.html" class="nav-item"><div class="nav-icon">📋</div><div class="nav-label">Orders</div></a>
@@ -91,26 +80,27 @@
 
 <div id="toast" class="toast"></div>
 <script src="../assets/js/data.js"></script>
+<script src="../assets/js/nav.js"></script>
 <script>
 const FARM_DATA=[
-  {id:'f1',emoji:'🚜',name:'Rabindra Nayak',village:'Kendrapara',subcat:'Tractor Operator',price:800,unit:'hr',rating:4.8,reviews:124,trust:92,badge:'Popular',desc:'Experienced tractor operator. Plowing, harvesting & transport. 8 years experience.',odia:'ଅଭିଜ୍ଞ ଟ୍ରାକ୍ଟର ଅପ.',keywords:'tractor'},
-  {id:'f2',emoji:'🌾',name:'Sushanta Behera',village:'Aul',subcat:'Farm Labourer',price:300,unit:'day',rating:4.6,reviews:87,trust:85,badge:'Trusted',desc:'Hardworking farm labourer for rice, wheat and vegetable fields.',odia:'ଧାନ, ଗହମ ଓ ପନିପରିବା ଜମି ପାଇଁ।',keywords:'labourer harvesting'},
-  {id:'f3',emoji:'🌱',name:'Bijaylaxmi Sahoo',village:'Jagatsinghpur',subcat:'Seed Sowing Expert',price:350,unit:'day',rating:4.5,reviews:56,trust:80,badge:'Local',desc:'Expert in paddy transplantation, vegetable planting, seed treatment.',odia:'ଧାନ ରୋଇବା, ପନିପରିବା ଲଗାଇବା ଅଭିଜ୍ଞ।',keywords:'labourer'},
-  {id:'f4',emoji:'💧',name:'Sudhir Mallick',village:'Cuttack',subcat:'Irrigation Technician',price:450,unit:'day',rating:4.7,reviews:43,trust:83,badge:'Verified',desc:'Drip irrigation, sprinkler setup, canal water management.',odia:'ଡ୍ରିପ ଇରିଗେସନ, ସ୍ପ୍ରିଙ୍କଲର ସ୍ଥାପନ।',keywords:'irrigation'},
-  {id:'f5',emoji:'🌾',name:'Hrushikesh Das',village:'Bhubaneswar',subcat:'Harvest Worker',price:280,unit:'day',rating:4.4,reviews:67,trust:78,badge:'Local',desc:'Manual harvesting for paddy, vegetables and fruits. Team of 5 available.',odia:'ଦଳ ସହ ଫସଲ ଓ ଫଳ ସଂଗ୍ରହ।',keywords:'harvesting labourer'},
-  {id:'f6',emoji:'🚜',name:'Pradip Rout',village:'Puri',subcat:'Harvester Machine Op.',price:1200,unit:'day',rating:4.9,reviews:38,trust:94,badge:'Top Rated',desc:'Combine harvester operator. Fast, efficient paddy harvesting service.',odia:'କ୍ୟାମ୍ବ୍ ହାର୍ଭେଷ୍ଟର ଅପରେଟର।',keywords:'tractor harvesting'}
+  {id:'f1',emoji:'🚜',name:'Rabindra Nayak',village:'Kendrapara',subcat:'Tractor Operator',price:800,unit:'hr',rating:4.8,reviews:124,trust:92,badge:'Popular',keywords:'tractor'},
+  {id:'f2',emoji:'🌾',name:'Sushanta Behera',village:'Aul',subcat:'Farm Labourer',price:300,unit:'day',rating:4.6,reviews:87,trust:85,badge:'Trusted',keywords:'labourer harvesting'},
+  {id:'f3',emoji:'🌱',name:'Bijaylaxmi Sahoo',village:'Jagatsinghpur',subcat:'Seed Sowing Expert',price:350,unit:'day',rating:4.5,reviews:56,trust:80,badge:'Local',keywords:'labourer'},
+  {id:'f4',emoji:'💧',name:'Sudhir Mallick',village:'Cuttack',subcat:'Irrigation Tech',price:450,unit:'day',rating:4.7,reviews:43,trust:83,badge:'Verified',keywords:'irrigation'},
+  {id:'f5',emoji:'🌾',name:'Hrushikesh Das',village:'Bhubaneswar',subcat:'Harvest Worker',price:280,unit:'day',rating:4.4,reviews:67,trust:78,badge:'Local',keywords:'harvesting labourer'},
+  {id:'f6',emoji:'🚜',name:'Pradip Rout',village:'Puri',subcat:'Harvester Operator',price:1200,unit:'day',rating:4.9,reviews:38,trust:94,badge:'Top Rated',keywords:'tractor harvesting'}
 ];
 let activeChip='all';
 function setChip(el,c){activeChip=c;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));el.classList.add('active');renderList();}
 function renderList(){
   const q=document.getElementById('s').value.toLowerCase();
   const data=FARM_DATA.filter(d=>{
-    const text=(d.name+d.village+d.subcat+d.desc+d.keywords).toLowerCase();
-    return (!q||text.includes(q))&&(activeChip==='all'||d.keywords.includes(activeChip));
+    const text=(d.name+d.village+d.subcat+d.keywords).toLowerCase();
+    return(!q||text.includes(q))&&(activeChip==='all'||d.keywords.includes(activeChip));
   });
   document.getElementById('cnt').textContent=data.length+' providers';
   document.getElementById('list').innerHTML=data.map(d=>`
-    <div class="provider-card" onclick="location.href='worker-profile.html?id=${d.id}'">
+    <div class="provider-card">
       <div class="pc-image">${d.emoji}
         <div class="pc-badge">${d.badge}</div>
         <div class="pc-verified">✅ ${d.trust}%</div>
@@ -118,37 +108,26 @@ function renderList(){
       <div class="pc-body">
         <div class="pc-name">${d.name}</div>
         <div class="pc-loc">📍 ${d.village} • ${d.subcat}</div>
-        <div class="bilingual">${d.odia}</div>
         <div class="pc-meta" style="margin-top:10px">
           <div class="pc-rating">⭐${d.rating} (${d.reviews})</div>
           <div class="pc-price">₹${d.price}/${d.unit}</div>
         </div>
         <div style="display:flex;gap:8px;margin-top:12px">
-          <button style="flex:1;padding:10px;background:linear-gradient(135deg,#4CAF50,#66BB6A);color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer" onclick="event.stopPropagation();location.href='booking.html?id=${d.id}'">📅 Book Now</button>
-          <button style="padding:10px 14px;border:2px solid #4CAF50;border-radius:10px;background:white;color:#4CAF50;font-size:16px;cursor:pointer" onclick="event.stopPropagation();showToast('📞 Calling ${d.name}...')">📞</button>
+          <button onclick="location.href='booking.html?id=${d.id}'" style="flex:1;padding:10px;background:linear-gradient(135deg,#4CAF50,#66BB6A);color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer">📅 Book Now</button>
+          <button onclick="showToast('📞 Calling ${d.name}...')" style="padding:10px 14px;border:2px solid #4CAF50;border-radius:10px;background:white;color:#4CAF50;font-size:16px;cursor:pointer">📞</button>
         </div>
       </div>
-    </div>`).join('')||`<div style="text-align:center;padding:60px 30px;color:#999;grid-column:1/-1"><div style="font-size:52px;margin-bottom:12px">🌾</div><h3 style="color:#333">No workers found</h3><p>Try different search</p></div>`;
+    </div>`).join('')||`<div style="text-align:center;padding:60px;color:#999;grid-column:1/-1"><div style="font-size:52px">🌾</div><p style="margin-top:12px">No workers found</p></div>`;
 }
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
-
-// Show bottom nav on mobile
-if(window.innerWidth<=768) document.querySelector('.bottom-nav').style.display='flex';
 renderList();
 </script>
 
-<!-- Mobile CSS -->
 <style>
 @media(max-width:768px){
   aside{display:none!important}
-  [style*="display:flex;max-width:1400px"]{flex-direction:column}
-  [style*="padding:20px 32px"]{padding:16px!important}
-  [style*="padding:14px 32px"]{padding:10px 16px!important}
-  [style*="padding:20px 32px 12px"]{padding:14px 16px 8px!important}
-  #list{grid-template-columns:1fr 1fr!important;gap:12px!important;padding:0 14px 80px!important}
-  .bottom-nav{display:flex!important}
+  div[style*="max-width:1400px"]{flex-direction:column!important}
+  div[style*="padding:20px 32px"]{padding:16px!important}
+  div[style*="padding:14px 32px"]{padding:10px 14px!important}
+  #list{grid-template-columns:1fr 1fr!important;gap:12px!important;padding:0 12px 80px!important}
 }
-@media(max-width:480px){#list{grid-template-columns:1fr!important}}
-</style>
-</body>
-</html>
+@media(max-width:480px){#list{grid-
