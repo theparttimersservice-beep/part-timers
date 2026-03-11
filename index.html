@@ -1141,8 +1141,12 @@ function showToast(msg){
 }
 function toggleMobileMenu(){ showPage('pgServices'); }
 
-// Auto splash → home after 3s
-setTimeout(goHome, 3000);
+// Skip splash if coming back from a page
+if(document.referrer.includes('pages/')) {
+  goHome();
+} else {
+  setTimeout(goHome, 3000);
+}
 </script>
 </body>
 </html>
