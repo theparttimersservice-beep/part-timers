@@ -1,17 +1,15 @@
-// nav.js — Global navigation fix for all pages
-// Automatically fixes back button + adds top nav on every page
+// AUTO back button fix — works on ALL pages
+document.addEventListener('DOMContentLoaded', function() {
 
-(function() {
-
-  // ── BACK BUTTON FIX ──
-  // Replace all links going to index.html with history.back()
-  document.querySelectorAll('a[href="../index.html"], a[href="./index.html"]').forEach(function(link) {
-    // Only change back buttons, not the logo
-    if (link.classList.contains('back-btn')) {
-      link.href = 'javascript:void(0)';
-      link.onclick = function(e) {
+  // Fix ALL ← back buttons
+  document.querySelectorAll('a').forEach(function(a) {
+    var txt = a.textContent.trim();
+    var href = a.getAttribute('href') || '';
+    if (txt === '←' || a.classList.contains('back-btn')) {
+      a.href = 'javascript:void(0)';
+      a.onclick = function(e) {
         e.preventDefault();
-        if (document.referrer && document.referrer !== window.location.href) {
+        if (window.history.length > 1) {
           history.back();
         } else {
           window.location.href = '../index.html';
@@ -20,30 +18,20 @@
     }
   });
 
-  // ── ACTIVE NAV ITEM ──
-  // Highlight current page in bottom nav
-  var currentPage = window.location.pathname.split('/').pop();
-  document.querySelectorAll('.nav-item').forEach(function(item) {
-    var href = item.getAttribute('href');
-    if (href && href.includes(currentPage)) {
-      item.classList.add('active');
+  // Highlight active nav item
+  var page = window.location.pathname.split('/').pop();
+  document.querySelectorAll('.nav-item, .sidebar-item').forEach(function(el) {
+    if ((el.getAttribute('href') || '').includes(page)) {
+      el.classList.add('active');
     }
   });
 
-  // ── TOAST FUNCTION ── (global fallback)
-  if (typeof showToast === 'undefined') {
-    window.showToast = function(msg) {
-      var t = document.getElementById('toast');
-      if (!t) {
-        t = document.createElement('div');
-        t.id = 'toast';
-        t.className = 'toast';
-        document.body.appendChild(t);
-      }
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(function() { t.classList.remove('show'); }, 2500);
-    };
-  }
+  // Global toast
+  window.showToast = window.showToast || function(msg) {
+    var t = document.getElementById('toast');
+    if (!t) { t = document.createElement('div'); t.id = 'toast'; t.className = 'toast'; document.body.appendChild(t); }
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2500);
+  };
 
-})();
+});
