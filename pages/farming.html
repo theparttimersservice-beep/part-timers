@@ -6,31 +6,89 @@
 <link rel="stylesheet" href="../assets/css/shared.css">
 </head>
 <body>
-<div class="page-wrapper">
-  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
-  <div class="page-header">
-    <a href="../index.html" class="back-btn">←</a>
-    <div><div class="header-title">🌾 Farming Work</div><div class="header-sub">ଚାଷ କାମ — Agricultural Services in Odisha</div></div>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <a class="nav-logo" href="../index.html">
+    <div class="nav-logo-icon">🌾</div>
+    <div><div class="nav-logo-text">Part-Timers</div><div class="nav-logo-sub">Rural Services</div></div>
+  </a>
+  <div style="flex:1;margin-left:16px">
+    <div style="color:white;font-size:18px;font-weight:700">🌾 Farming Work</div>
+    <div style="color:rgba(255,255,255,0.78);font-size:12px">ଚାଷ କାମ — Agricultural Services in Odisha</div>
   </div>
-  <div class="search-bar-section">
-    <div class="search-wrap"><input type="text" id="s" placeholder="Search farming work... | ଚାଷ କାମ ଖୋଜନ୍ତୁ" oninput="renderList()"><span class="s-icon">🔍</span></div>
+  <div class="nav-actions">
+    <a class="nav-icon-btn" href="search.html">🔍</a>
+    <a class="nav-icon-btn" href="orders.html">📋</a>
+    <a class="nav-icon-btn" href="profile.html">👤</a>
   </div>
-  <div class="filter-row">
-    <div class="chip active" onclick="setChip(this,'all')">All</div>
-    <div class="chip" onclick="setChip(this,'tractor')">🚜 Tractor</div>
-    <div class="chip" onclick="setChip(this,'labourer')">👷 Labourer</div>
-    <div class="chip" onclick="setChip(this,'harvesting')">🌾 Harvesting</div>
-    <div class="chip" onclick="setChip(this,'irrigation')">💧 Irrigation</div>
-  </div>
-  <div id="list" style="background:#f8f9fa;padding-top:8px"></div>
-  <nav class="bottom-nav">
-    <a href="../index.html" class="nav-item"><div class="nav-icon">🏠</div><div class="nav-label">Home<br>ଘର</div></a>
-    <a href="search.html" class="nav-item"><div class="nav-icon">🔍</div><div class="nav-label">Search<br>ଖୋଜନ୍ତୁ</div></a>
-    <a href="orders.html" class="nav-item"><div class="nav-icon">📋</div><div class="nav-label">My Orders<br>ମୋ ଅର୍ଡର</div></a>
-    <a href="#" class="nav-item"><div class="nav-icon">💬</div><div class="nav-label">Chat<br>ଚାଟ୍</div></a>
-    <a href="profile.html" class="nav-item"><div class="nav-icon">👤</div><div class="nav-label">Profile<br>ପ୍ରୋଫାଇଲ</div></a>
-  </nav>
+</nav>
+
+<!-- MAIN LAYOUT -->
+<div style="display:flex;max-width:1400px;margin:0 auto;min-height:calc(100vh - 64px)">
+
+  <!-- SIDEBAR -->
+  <aside style="width:220px;background:white;border-right:1px solid #eee;padding:16px 0;flex-shrink:0;position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto">
+    <div style="font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.8px;padding:8px 20px 4px">Categories</div>
+    <a href="farming.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;background:#E8F5E8;color:#2E7D32;font-weight:600;font-size:14px;text-decoration:none;border-right:3px solid #4CAF50">🌾 Farming Work</a>
+    <a href="fish.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">🐟 Fish & Aqua</a>
+    <a href="poultry.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">🐔 Poultry</a>
+    <a href="learning.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">📚 Learning</a>
+    <a href="technicians.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">🔧 Technicians</a>
+    <a href="contractors.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">🏗️ Contractors</a>
+    <a href="equipment.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">⚙️ Equipment</a>
+    <a href="vehicle.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">🛺 Vehicle</a>
+    <a href="food.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">🍛 Food</a>
+    <a href="marketplace.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">🛒 Marketplace</a>
+    <a href="haata.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">🪁 Sunday Haata</a>
+    <div style="height:1px;background:#eee;margin:8px 0"></div>
+    <a href="orders.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">📋 My Orders</a>
+    <a href="register.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">📝 Register</a>
+    <a href="profile.html" style="display:flex;align-items:center;gap:10px;padding:10px 20px;color:#666;font-size:14px;text-decoration:none">👤 Profile</a>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main style="flex:1;min-width:0;padding-bottom:40px">
+
+    <!-- SEARCH BAR -->
+    <div style="background:linear-gradient(135deg,#2E7D32,#66BB6A);padding:20px 32px">
+      <div style="position:relative;max-width:520px">
+        <input type="text" id="s" placeholder="Search farming work... | ଚାଷ କାମ ଖୋଜନ୍ତୁ" oninput="renderList()"
+          style="width:100%;padding:12px 46px 12px 18px;border:none;border-radius:30px;background:rgba(255,255,255,0.18);color:white;font-size:14px;outline:none">
+        <span style="position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:18px">🔍</span>
+      </div>
+    </div>
+
+    <!-- FILTER CHIPS -->
+    <div style="display:flex;gap:8px;padding:14px 32px;background:white;border-bottom:1px solid #eee;flex-wrap:wrap">
+      <div class="chip active" onclick="setChip(this,'all')">All</div>
+      <div class="chip" onclick="setChip(this,'tractor')">🚜 Tractor</div>
+      <div class="chip" onclick="setChip(this,'labourer')">👷 Labourer</div>
+      <div class="chip" onclick="setChip(this,'harvesting')">🌾 Harvesting</div>
+      <div class="chip" onclick="setChip(this,'irrigation')">💧 Irrigation</div>
+    </div>
+
+    <!-- COUNT -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 32px 12px">
+      <div style="font-size:18px;font-weight:700">🌾 Available Providers</div>
+      <div id="cnt" style="font-size:13px;color:#4CAF50;font-weight:600"></div>
+    </div>
+
+    <!-- CARDS GRID -->
+    <div id="list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:0 32px 32px"></div>
+
+  </main>
 </div>
+
+<!-- BOTTOM NAV (mobile only) -->
+<nav style="display:none" class="bottom-nav">
+  <a href="../index.html" class="nav-item"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></a>
+  <a href="search.html" class="nav-item"><div class="nav-icon">🔍</div><div class="nav-label">Search</div></a>
+  <a href="orders.html" class="nav-item"><div class="nav-icon">📋</div><div class="nav-label">Orders</div></a>
+  <a href="register.html" class="nav-item"><div class="nav-icon">📝</div><div class="nav-label">Register</div></a>
+  <a href="profile.html" class="nav-item"><div class="nav-icon">👤</div><div class="nav-label">Profile</div></a>
+</nav>
+
 <div id="toast" class="toast"></div>
 <script src="../assets/js/data.js"></script>
 <script>
@@ -50,24 +108,47 @@ function renderList(){
     const text=(d.name+d.village+d.subcat+d.desc+d.keywords).toLowerCase();
     return (!q||text.includes(q))&&(activeChip==='all'||d.keywords.includes(activeChip));
   });
+  document.getElementById('cnt').textContent=data.length+' providers';
   document.getElementById('list').innerHTML=data.map(d=>`
     <div class="provider-card" onclick="location.href='worker-profile.html?id=${d.id}'">
-      <div class="pc-image" style="font-size:52px">${d.emoji}<div class="pc-badge">${d.badge}</div><div class="pc-verified">✅ ${d.trust}% Trust</div></div>
+      <div class="pc-image">${d.emoji}
+        <div class="pc-badge">${d.badge}</div>
+        <div class="pc-verified">✅ ${d.trust}%</div>
+      </div>
       <div class="pc-body">
         <div class="pc-name">${d.name}</div>
         <div class="pc-loc">📍 ${d.village} • ${d.subcat}</div>
         <div class="bilingual">${d.odia}</div>
         <div class="pc-meta" style="margin-top:10px">
-          <div class="pc-rating">⭐${d.rating} (${d.reviews} reviews)</div>
+          <div class="pc-rating">⭐${d.rating} (${d.reviews})</div>
           <div class="pc-price">₹${d.price}/${d.unit}</div>
         </div>
-        <div style="display:flex;gap:8px;margin-top:10px">
-          <button class="btn-primary" style="flex:1;padding:10px;font-size:13px" onclick="event.stopPropagation();location.href='booking.html?id=${d.id}'">📅 Book Now • ବୁକ୍ କରନ୍ତୁ</button>
-          <button style="padding:10px 14px;border:2px solid #4CAF50;border-radius:12px;background:white;color:#4CAF50;font-size:13px;cursor:pointer" onclick="event.stopPropagation();showToast('📞 Calling ${d.name}...')">📞</button>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button style="flex:1;padding:10px;background:linear-gradient(135deg,#4CAF50,#66BB6A);color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer" onclick="event.stopPropagation();location.href='booking.html?id=${d.id}'">📅 Book Now</button>
+          <button style="padding:10px 14px;border:2px solid #4CAF50;border-radius:10px;background:white;color:#4CAF50;font-size:16px;cursor:pointer" onclick="event.stopPropagation();showToast('📞 Calling ${d.name}...')">📞</button>
         </div>
       </div>
-    </div>`).join('')||`<div class="empty-state"><div class="emoji">🌾</div><h3>No workers found</h3><p>Try a different search</p></div>`;
+    </div>`).join('')||`<div style="text-align:center;padding:60px 30px;color:#999;grid-column:1/-1"><div style="font-size:52px;margin-bottom:12px">🌾</div><h3 style="color:#333">No workers found</h3><p>Try different search</p></div>`;
 }
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// Show bottom nav on mobile
+if(window.innerWidth<=768) document.querySelector('.bottom-nav').style.display='flex';
 renderList();
 </script>
-</body></html>
+
+<!-- Mobile CSS -->
+<style>
+@media(max-width:768px){
+  aside{display:none!important}
+  [style*="display:flex;max-width:1400px"]{flex-direction:column}
+  [style*="padding:20px 32px"]{padding:16px!important}
+  [style*="padding:14px 32px"]{padding:10px 16px!important}
+  [style*="padding:20px 32px 12px"]{padding:14px 16px 8px!important}
+  #list{grid-template-columns:1fr 1fr!important;gap:12px!important;padding:0 14px 80px!important}
+  .bottom-nav{display:flex!important}
+}
+@media(max-width:480px){#list{grid-template-columns:1fr!important}}
+</style>
+</body>
+</html>
