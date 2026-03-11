@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farming Work | The Part-Timers</title>
+<link rel="stylesheet" href="../assets/css/shared.css">
+</head>
+<body>
+<div class="page-wrapper">
+  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="page-header">
+    <a href="../index.html" class="back-btn">←</a>
+    <div><div class="header-title">🌾 Farming Work</div><div class="header-sub">ଚାଷ କାମ — Agricultural Services in Odisha</div></div>
+  </div>
+  <div class="search-bar-section">
+    <div class="search-wrap"><input type="text" id="s" placeholder="Search farming work... | ଚାଷ କାମ ଖୋଜନ୍ତୁ" oninput="renderList()"><span class="s-icon">🔍</span></div>
+  </div>
+  <div class="filter-row">
+    <div class="chip active" onclick="setChip(this,'all')">All</div>
+    <div class="chip" onclick="setChip(this,'tractor')">🚜 Tractor</div>
+    <div class="chip" onclick="setChip(this,'labourer')">👷 Labourer</div>
+    <div class="chip" onclick="setChip(this,'harvesting')">🌾 Harvesting</div>
+    <div class="chip" onclick="setChip(this,'irrigation')">💧 Irrigation</div>
+  </div>
+  <div id="list" style="background:#f8f9fa;padding-top:8px"></div>
+  <nav class="bottom-nav">
+    <a href="../index.html" class="nav-item"><div class="nav-icon">🏠</div><div class="nav-label">Home<br>ଘର</div></a>
+    <a href="search.html" class="nav-item"><div class="nav-icon">🔍</div><div class="nav-label">Search<br>ଖୋଜନ୍ତୁ</div></a>
+    <a href="orders.html" class="nav-item"><div class="nav-icon">📋</div><div class="nav-label">My Orders<br>ମୋ ଅର୍ଡର</div></a>
+    <a href="#" class="nav-item"><div class="nav-icon">💬</div><div class="nav-label">Chat<br>ଚାଟ୍</div></a>
+    <a href="profile.html" class="nav-item"><div class="nav-icon">👤</div><div class="nav-label">Profile<br>ପ୍ରୋଫାଇଲ</div></a>
+  </nav>
+</div>
+<div id="toast" class="toast"></div>
+<script src="../assets/js/data.js"></script>
+<script>
+const FARM_DATA=[
+  {id:'f1',emoji:'🚜',name:'Rabindra Nayak',village:'Kendrapara',subcat:'Tractor Operator',price:800,unit:'hr',rating:4.8,reviews:124,trust:92,badge:'Popular',desc:'Experienced tractor operator. Plowing, harvesting & transport. 8 years experience.',odia:'ଅଭିଜ୍ଞ ଟ୍ରାକ୍ଟର ଅପ.',keywords:'tractor'},
+  {id:'f2',emoji:'🌾',name:'Sushanta Behera',village:'Aul',subcat:'Farm Labourer',price:300,unit:'day',rating:4.6,reviews:87,trust:85,badge:'Trusted',desc:'Hardworking farm labourer for rice, wheat and vegetable fields.',odia:'ଧାନ, ଗହମ ଓ ପନିପରିବା ଜମି ପାଇଁ।',keywords:'labourer harvesting'},
+  {id:'f3',emoji:'🌱',name:'Bijaylaxmi Sahoo',village:'Jagatsinghpur',subcat:'Seed Sowing Expert',price:350,unit:'day',rating:4.5,reviews:56,trust:80,badge:'Local',desc:'Expert in paddy transplantation, vegetable planting, seed treatment.',odia:'ଧାନ ରୋଇବା, ପନିପରିବା ଲଗାଇବା ଅଭିଜ୍ଞ।',keywords:'labourer'},
+  {id:'f4',emoji:'💧',name:'Sudhir Mallick',village:'Cuttack',subcat:'Irrigation Technician',price:450,unit:'day',rating:4.7,reviews:43,trust:83,badge:'Verified',desc:'Drip irrigation, sprinkler setup, canal water management.',odia:'ଡ୍ରିପ ଇରିଗେସନ, ସ୍ପ୍ରିଙ୍କଲର ସ୍ଥାପନ।',keywords:'irrigation'},
+  {id:'f5',emoji:'🌾',name:'Hrushikesh Das',village:'Bhubaneswar',subcat:'Harvest Worker',price:280,unit:'day',rating:4.4,reviews:67,trust:78,badge:'Local',desc:'Manual harvesting for paddy, vegetables and fruits. Team of 5 available.',odia:'ଦଳ ସହ ଫସଲ ଓ ଫଳ ସଂଗ୍ରହ।',keywords:'harvesting labourer'},
+  {id:'f6',emoji:'🚜',name:'Pradip Rout',village:'Puri',subcat:'Harvester Machine Op.',price:1200,unit:'day',rating:4.9,reviews:38,trust:94,badge:'Top Rated',desc:'Combine harvester operator. Fast, efficient paddy harvesting service.',odia:'କ୍ୟାମ୍ବ୍ ହାର୍ଭେଷ୍ଟର ଅପରେଟର।',keywords:'tractor harvesting'}
+];
+let activeChip='all';
+function setChip(el,c){activeChip=c;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));el.classList.add('active');renderList();}
+function renderList(){
+  const q=document.getElementById('s').value.toLowerCase();
+  const data=FARM_DATA.filter(d=>{
+    const text=(d.name+d.village+d.subcat+d.desc+d.keywords).toLowerCase();
+    return (!q||text.includes(q))&&(activeChip==='all'||d.keywords.includes(activeChip));
+  });
+  document.getElementById('list').innerHTML=data.map(d=>`
+    <div class="provider-card" onclick="location.href='worker-profile.html?id=${d.id}'">
+      <div class="pc-image" style="font-size:52px">${d.emoji}<div class="pc-badge">${d.badge}</div><div class="pc-verified">✅ ${d.trust}% Trust</div></div>
+      <div class="pc-body">
+        <div class="pc-name">${d.name}</div>
+        <div class="pc-loc">📍 ${d.village} • ${d.subcat}</div>
+        <div class="bilingual">${d.odia}</div>
+        <div class="pc-meta" style="margin-top:10px">
+          <div class="pc-rating">⭐${d.rating} (${d.reviews} reviews)</div>
+          <div class="pc-price">₹${d.price}/${d.unit}</div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn-primary" style="flex:1;padding:10px;font-size:13px" onclick="event.stopPropagation();location.href='booking.html?id=${d.id}'">📅 Book Now • ବୁକ୍ କରନ୍ତୁ</button>
+          <button style="padding:10px 14px;border:2px solid #4CAF50;border-radius:12px;background:white;color:#4CAF50;font-size:13px;cursor:pointer" onclick="event.stopPropagation();showToast('📞 Calling ${d.name}...')">📞</button>
+        </div>
+      </div>
+    </div>`).join('')||`<div class="empty-state"><div class="emoji">🌾</div><h3>No workers found</h3><p>Try a different search</p></div>`;
+}
+renderList();
+</script>
+</body></html>

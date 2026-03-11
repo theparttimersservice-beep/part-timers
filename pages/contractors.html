@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contractors | The Part-Timers</title>
+<link rel="stylesheet" href="../assets/css/shared.css">
+</head><body>
+<div class="page-wrapper">
+  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="page-header"><a href="../index.html" class="back-btn">←</a><div><div class="header-title">🏗️ Contractors</div><div class="header-sub">ଠିକାଦାର — Construction & Renovation Services</div></div></div>
+  <div class="search-bar-section"><div class="search-wrap"><input type="text" id="s" placeholder="House construction, painting..." oninput="render()"><span class="s-icon">🔍</span></div></div>
+  <div class="filter-row">
+    <div class="chip active" onclick="setC(this,'all')">All</div>
+    <div class="chip" onclick="setC(this,'local')">🏠 Local</div>
+    <div class="chip" onclick="setC(this,'verified')">✅ Verified Pro</div>
+    <div class="chip" onclick="setC(this,'paint')">🎨 Painting</div>
+    <div class="chip" onclick="setC(this,'tile')">🪨 Tiles/Floor</div>
+  </div>
+  <div style="background:#FFF8E1;margin:12px 20px;border-radius:12px;padding:12px 14px;border-left:4px solid #FFC107;font-size:12px;color:#5D4037;line-height:1.5">
+    ℹ️ <strong>Note:</strong> Local contractors may not have formal licenses. Verify portfolio and references before hiring.<br>
+    <span style="font-size:11px;color:#999">ସ୍ଥାନୀୟ ଠିକାଦାରଙ୍କ ଲାଇସେନ୍ସ ନ ଥାଇ ପାରେ। ନମୁନା ଓ ରେଫ. ଯାଞ୍ଚ କରନ୍ତୁ।</span>
+  </div>
+  <div id="list" style="background:#f8f9fa;padding-top:4px"></div>
+  <nav class="bottom-nav">
+    <a href="../index.html" class="nav-item"><div class="nav-icon">🏠</div><div class="nav-label">Home<br>ଘର</div></a>
+    <a href="search.html" class="nav-item"><div class="nav-icon">🔍</div><div class="nav-label">Search<br>ଖୋଜନ୍ତୁ</div></a>
+    <a href="orders.html" class="nav-item"><div class="nav-icon">📋</div><div class="nav-label">My Orders<br>ମୋ ଅର୍ଡର</div></a>
+    <a href="#" class="nav-item"><div class="nav-icon">💬</div><div class="nav-label">Chat<br>ଚାଟ୍</div></a>
+    <a href="profile.html" class="nav-item"><div class="nav-icon">👤</div><div class="nav-label">Profile<br>ପ୍ରୋଫାଇଲ</div></a>
+  </nav>
+</div>
+<div id="toast" class="toast"></div>
+<script src="../assets/js/data.js"></script>
+<script>
+const D=[
+  {id:'c1',emoji:'🏗️',name:'Dipak Jena',village:'Kendrapara',subcat:'Local Contractor',type:'local',price:1500,unit:'day',rating:4.3,reviews:78,trust:82,badge:'Local',odia:'ଘର ନିର୍ମାଣ ଓ ମରାମତି।',k:'local'},
+  {id:'c2',emoji:'🏢',name:'Rohit Kumar',village:'Bhubaneswar',subcat:'Verified Contractor',type:'verified',price:2500,unit:'day',rating:4.8,reviews:312,trust:95,badge:'Verified Pro',odia:'ଲାଇ. ସ. ଠିକ. ୫୦+ ପ୍ରো.।',k:'verified'},
+  {id:'c3',emoji:'🎨',name:'Jitendra Sahu',village:'Cuttack',subcat:'Painter & Whitewash',type:'local',price:600,unit:'day',rating:4.5,reviews:134,trust:83,badge:'Popular',odia:'ଘର ରଙ୍ଗ ଓ ଧଳ।',k:'local paint'},
+  {id:'c4',emoji:'🪨',name:'Bibhuti Rout',village:'Puri',subcat:'Tile & Flooring',type:'local',price:700,unit:'day',rating:4.6,reviews:89,trust:85,badge:'Skilled',odia:'ଟାଇଲ ଓ ଫ୍ଲୋର।',k:'local tile'},
+  {id:'c5',emoji:'🏠',name:'Satyabrata Construction',village:'Bhubaneswar',subcat:'House Construction',type:'verified',price:3500,unit:'day',rating:4.9,reviews:201,trust:97,badge:'Top Firm',odia:'ସ. ବ. ନି. ସ. ১০+ ବ. ।',k:'verified'},
+  {id:'c6',emoji:'🚧',name:'Kailash Behera',village:'Balasore',subcat:'Road & Compound Wall',type:'local',price:1200,unit:'day',rating:4.4,reviews:47,trust:79,badge:'Local',odia:'ରୋଡ ଓ କ. ପ. ।',k:'local'},
+];
+let ac='all';
+function setC(el,c){ac=c;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));el.classList.add('active');render();}
+function render(){
+  const q=document.getElementById('s').value.toLowerCase();
+  const data=D.filter(d=>(!q||(d.name+d.village+d.subcat+d.k).toLowerCase().includes(q))&&(ac==='all'||d.k.includes(ac)));
+  document.getElementById('list').innerHTML=data.map(d=>`<div class="provider-card">
+    <div class="pc-image" style="background:linear-gradient(45deg,#FBE9E7,#FFCCBC)">${d.emoji}
+      <div class="pc-badge">${d.type==='verified'?'✅ Verified Pro':'Local'}</div>
+      <div class="pc-verified">${d.trust}% Trust</div>
+    </div>
+    <div class="pc-body">
+      <div class="pc-name">${d.name}</div><div class="pc-loc">📍 ${d.village} • ${d.subcat}</div>
+      <div class="bilingual">${d.odia}</div>
+      <div class="pc-meta" style="margin-top:10px"><div class="pc-rating">⭐${d.rating} (${d.reviews})</div><div class="pc-price">₹${d.price}/${d.unit}</div></div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn-primary" style="flex:1;padding:10px;font-size:13px" onclick="location.href='booking.html?id=${d.id}'">📅 Book Now</button>
+        <button style="padding:10px 14px;border:2px solid #4CAF50;border-radius:12px;background:white;color:#4CAF50;cursor:pointer" onclick="showToast('📞 Calling...')">📞</button>
+      </div>
+    </div></div>`).join('')||`<div class="empty-state"><div class="emoji">🏗️</div><h3>No contractors found</h3></div>`;
+}
+render();
+</script></body></html>

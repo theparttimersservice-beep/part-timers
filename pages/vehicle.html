@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vehicle Booking | The Part-Timers</title>
+<link rel="stylesheet" href="../assets/css/shared.css">
+</head><body>
+<div class="page-wrapper">
+  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="page-header"><a href="../index.html" class="back-btn">←</a><div><div class="header-title">🚗 Vehicle Booking</div><div class="header-sub">ଯାନ ବୁକିଂ — Auto, Truck, Tractor Transport</div></div></div>
+  <div class="search-bar-section"><div class="search-wrap"><input type="text" id="s" placeholder="Auto, truck, tempo..." oninput="render()"><span class="s-icon">🔍</span></div></div>
+  <div class="filter-row">
+    <div class="chip active" onclick="setC(this,'all')">All</div>
+    <div class="chip" onclick="setC(this,'auto')">🛺 Auto</div>
+    <div class="chip" onclick="setC(this,'truck')">🚚 Truck</div>
+    <div class="chip" onclick="setC(this,'tempo')">🚐 Tempo</div>
+    <div class="chip" onclick="setC(this,'bike')">🏍️ Bike</div>
+    <div class="chip" onclick="setC(this,'taxi')">🚕 Taxi</div>
+  </div>
+  <div id="list" style="background:#f8f9fa;padding-top:8px"></div>
+  <nav class="bottom-nav">
+    <a href="../index.html" class="nav-item"><div class="nav-icon">🏠</div><div class="nav-label">Home<br>ଘର</div></a>
+    <a href="search.html" class="nav-item"><div class="nav-icon">🔍</div><div class="nav-label">Search<br>ଖୋଜନ୍ତୁ</div></a>
+    <a href="orders.html" class="nav-item"><div class="nav-icon">📋</div><div class="nav-label">My Orders<br>ମୋ ଅର୍ଡର</div></a>
+    <a href="#" class="nav-item"><div class="nav-icon">💬</div><div class="nav-label">Chat<br>ଚାଟ୍</div></a>
+    <a href="profile.html" class="nav-item"><div class="nav-icon">👤</div><div class="nav-label">Profile<br>ପ୍ରୋଫାଇଲ</div></a>
+  </nav>
+</div>
+<div id="toast" class="toast"></div>
+<script src="../assets/js/data.js"></script>
+<script>
+const D=[
+  {id:'v1',emoji:'🛺',name:'Sanjay Mishra',village:'Cuttack',subcat:'Auto Rickshaw',price:15,unit:'km',rating:4.6,reviews:234,trust:90,badge:'Trusted',odia:'ଅଟୋ ରିକ୍ସା।',k:'auto',radius:'25 km'},
+  {id:'v2',emoji:'🚚',name:'Bijay Pradhan',village:'Balasore',subcat:'Pickup Truck',price:12,unit:'km',rating:4.7,reviews:98,trust:87,badge:'Verified',odia:'ମାଲ ବାହନ।',k:'truck',radius:'40 km'},
+  {id:'v3',emoji:'🚐',name:'Ramesh Tempo Service',village:'Kendrapara',subcat:'Tempo/Goods Van',price:18,unit:'km',rating:4.5,reviews:73,trust:83,badge:'Popular',odia:'ଟ. ଗୁ. ଭ.।',k:'tempo',radius:'30 km'},
+  {id:'v4',emoji:'🏍️',name:'Babu Biker',village:'Bhubaneswar',subcat:'Bike Delivery',price:8,unit:'km',rating:4.4,reviews:167,trust:79,badge:'Fast',odia:'ଦ୍ରୁତ ଡ.।',k:'bike',radius:'15 km'},
+  {id:'v5',emoji:'🚕',name:'Santosh Taxi',village:'Puri',subcat:'Shared Taxi',price:10,unit:'km',rating:4.8,reviews:312,trust:93,badge:'Top Rated',odia:'ସ. ଟ.।',k:'taxi',radius:'50 km'},
+  {id:'v6',emoji:'🚛',name:'Heavy Transport Odisha',village:'Bhubaneswar',subcat:'Truck (10 Ton)',price:25,unit:'km',rating:4.7,reviews:56,trust:89,badge:'Heavy Load',odia:'ଭ. ବ. ।',k:'truck',radius:'100 km'},
+];
+let ac='all';
+function setC(el,c){ac=c;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));el.classList.add('active');render();}
+function render(){
+  const q=document.getElementById('s').value.toLowerCase();
+  const data=D.filter(d=>(!q||(d.name+d.village+d.subcat+d.k).toLowerCase().includes(q))&&(ac==='all'||d.k.includes(ac)));
+  document.getElementById('list').innerHTML=data.map(d=>`<div class="provider-card">
+    <div class="pc-image" style="background:linear-gradient(45deg,#E3F2FD,#90CAF9)">${d.emoji}<div class="pc-badge">${d.badge}</div><div class="pc-verified">📏 ${d.radius}</div></div>
+    <div class="pc-body">
+      <div class="pc-name">${d.name}</div><div class="pc-loc">📍 ${d.village} • ${d.subcat}</div>
+      <div class="bilingual">${d.odia}</div>
+      <div class="pc-meta" style="margin-top:10px"><div class="pc-rating">⭐${d.rating} (${d.reviews})</div><div class="pc-price">₹${d.price}/${d.unit}</div></div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn-primary" style="flex:1;padding:10px;font-size:13px" onclick="location.href='booking.html?id=${d.id}'">🚗 Book Now • ବୁକ୍ କରନ୍ତୁ</button>
+        <button style="padding:10px 14px;border:2px solid #4CAF50;border-radius:12px;background:white;color:#4CAF50;cursor:pointer" onclick="showToast('📞 Calling driver...')">📞</button>
+      </div>
+    </div></div>`).join('')||`<div class="empty-state"><div class="emoji">🚗</div><h3>No vehicles found</h3></div>`;
+}
+render();
+</script></body></html>

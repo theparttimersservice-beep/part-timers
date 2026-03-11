@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buy/Sell Marketplace | The Part-Timers</title>
+<link rel="stylesheet" href="../assets/css/shared.css">
+<style>
+.post-btn{position:fixed;bottom:90px;right:20px;width:56px;height:56px;border-radius:28px;background:linear-gradient(135deg,#FF5722,#FF7043);color:white;font-size:28px;border:none;cursor:pointer;box-shadow:0 8px 20px rgba(255,87,34,0.3);z-index:200}
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px 16px}
+.p-card{background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.07);cursor:pointer;border:1px solid #eee}
+.p-card-img{height:100px;background:linear-gradient(135deg,#f8f9fa,#e0e0e0);display:flex;align-items:center;justify-content:center;font-size:36px}
+.p-card-body{padding:10px}
+.p-card-name{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:2px}
+.p-card-seller{font-size:11px;color:#666}
+.p-card-price{font-size:14px;font-weight:700;color:#FF5722;margin-top:5px}
+.p-card-btn{width:100%;margin-top:7px;padding:7px;background:linear-gradient(135deg,#4CAF50,#66BB6A);color:white;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer}
+</style>
+</head><body>
+<div class="page-wrapper">
+  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="page-header"><a href="../index.html" class="back-btn">←</a><div><div class="header-title">🛒 Buy / Sell Marketplace</div><div class="header-sub">କ. ବ. ବ. — Village Products & Local Items</div></div></div>
+  <div class="search-bar-section"><div class="search-wrap"><input type="text" id="s" placeholder="Search products... | ଦ୍ରବ୍ୟ ଖୋଜନ୍ତୁ" oninput="render()"><span class="s-icon">🔍</span></div></div>
+  <div class="filter-row">
+    <div class="chip active" onclick="setC(this,'all')">All</div>
+    <div class="chip" onclick="setC(this,'handicraft')">🧺 Handicraft</div>
+    <div class="chip" onclick="setC(this,'food')">🍯 Food</div>
+    <div class="chip" onclick="setC(this,'clothing')">👘 Clothing</div>
+    <div class="chip" onclick="setC(this,'pottery')">🏺 Pottery</div>
+    <div class="chip" onclick="setC(this,'spices')">🌿 Spices</div>
+  </div>
+  <div id="list"></div>
+  <button class="post-btn" onclick="location.href='register.html'" title="Post an Item">+</button>
+  <nav class="bottom-nav">
+    <a href="../index.html" class="nav-item"><div class="nav-icon">🏠</div><div class="nav-label">Home<br>ଘର</div></a>
+    <a href="search.html" class="nav-item"><div class="nav-icon">🔍</div><div class="nav-label">Search<br>ଖୋଜନ୍ତୁ</div></a>
+    <a href="orders.html" class="nav-item"><div class="nav-icon">📋</div><div class="nav-label">My Orders<br>ମୋ ଅର୍ଡର</div></a>
+    <a href="#" class="nav-item"><div class="nav-icon">💬</div><div class="nav-label">Chat<br>ଚାଟ୍</div></a>
+    <a href="profile.html" class="nav-item"><div class="nav-icon">👤</div><div class="nav-label">Profile<br>ପ୍ରୋଫାଇଲ</div></a>
+  </nav>
+</div>
+<div id="toast" class="toast"></div>
+<script src="../assets/js/data.js"></script>
+<script>
+let ac='all';
+function setC(el,c){ac=c;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));el.classList.add('active');render();}
+function render(){
+  const q=document.getElementById('s').value.toLowerCase();
+  const data=HAATA_PRODUCTS.filter(d=>(!q||(d.name+d.seller+d.village+d.desc).toLowerCase().includes(q))&&(ac==='all'||d.category===ac));
+  document.getElementById('list').innerHTML=`<div class="product-grid">${data.map(d=>`<div class="p-card">
+    <div class="p-card-img">${d.emoji}</div>
+    <div class="p-card-body">
+      <div class="p-card-name">${d.name}</div>
+      <div class="p-card-seller">👤 ${d.seller}<br>📍 ${d.village}</div>
+      <div class="p-card-price">₹${d.price}</div>
+      <button class="p-card-btn" onclick="showToast('🛒 Added to cart: ${d.name}')">Buy Now • କ.</button>
+    </div></div>`).join('')}</div>`||`<div class="empty-state"><div class="emoji">🛒</div><h3>No items found</h3></div>`;
+}
+render();
+</script></body></html>

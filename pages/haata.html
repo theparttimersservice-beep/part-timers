@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunday Digital Haata | The Part-Timers</title>
+<link rel="stylesheet" href="../assets/css/shared.css">
+<style>
+.haata-banner{background:linear-gradient(135deg,#FF9800,#FFC107);padding:16px 20px;color:white;text-align:center}
+.haata-banner h2{font-size:22px;font-weight:800;margin-bottom:4px}
+.haata-banner p{font-size:13px;opacity:0.9}
+.countdown{display:flex;gap:16px;justify-content:center;margin-top:12px}
+.cd-item{background:rgba(0,0,0,0.2);border-radius:10px;padding:8px 14px;text-align:center}
+.cd-num{font-size:22px;font-weight:800}
+.cd-label{font-size:10px;opacity:0.8}
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px 16px}
+.p-card{background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.07);cursor:pointer}
+.p-card-img{height:100px;background:linear-gradient(135deg,#FFF8E1,#FFE082);display:flex;align-items:center;justify-content:center;font-size:36px;position:relative}
+.p-card-body{padding:10px}
+.p-card-name{font-size:13px;font-weight:700;color:#1a1a1a}
+.p-card-seller{font-size:11px;color:#666;margin-top:2px}
+.p-card-price{font-size:14px;font-weight:700;color:#FF5722;margin-top:5px}
+.p-card-btn{width:100%;margin-top:7px;padding:7px;background:linear-gradient(135deg,#FF9800,#FFC107);color:white;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer}
+.sold-badge{position:absolute;top:6px;right:6px;background:#f44336;color:white;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600}
+.hot-badge{position:absolute;top:6px;left:6px;background:#FF5722;color:white;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600}
+</style>
+</head><body>
+<div class="page-wrapper">
+  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="page-header"><a href="../index.html" class="back-btn">←</a><div><div class="header-title">🪁 Sunday Digital Haata</div><div class="header-sub">ରବିବାର ଡ. ହାଟ — Weekly Village Market Online</div></div></div>
+
+  <div class="haata-banner">
+    <h2>🛍️ Sunday Haata LIVE!</h2>
+    <p>ଏହି ସପ୍ତାହ ଅଫର — Special weekly discounts on village products</p>
+    <div class="countdown">
+      <div class="cd-item"><div class="cd-num" id="cdH">08</div><div class="cd-label">Hours</div></div>
+      <div class="cd-item"><div class="cd-num" id="cdM">24</div><div class="cd-label">Mins</div></div>
+      <div class="cd-item"><div class="cd-num" id="cdS">00</div><div class="cd-label">Secs</div></div>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <div class="chip active" onclick="setC(this,'all')">All Items</div>
+    <div class="chip" onclick="setC(this,'handicraft')">🧺 Handicraft</div>
+    <div class="chip" onclick="setC(this,'food')">🍯 Food</div>
+    <div class="chip" onclick="setC(this,'clothing')">👘 Clothing</div>
+    <div class="chip" onclick="setC(this,'pottery')">🏺 Pottery</div>
+    <div class="chip" onclick="setC(this,'spices')">🌿 Spices</div>
+  </div>
+
+  <div class="section-header"><div class="section-title">🔥 Hot Deals This Week</div><div class="view-all">See All</div></div>
+  <div id="list"></div>
+
+  <div style="margin:8px 20px 16px;padding:14px;background:#E8F5E8;border-radius:12px">
+    <div style="font-weight:700;color:#2E7D32;margin-bottom:6px">🌾 Want to Sell?</div>
+    <div style="font-size:13px;color:#333;margin-bottom:10px">List your farm products, crafts or food items in the Sunday Haata.<br><span style="font-size:11px;color:#999">ଆପଣଙ୍କ ଦ୍ରବ୍ୟ ଏଠି ବୁଲାନ୍ତୁ।</span></div>
+    <button class="btn-primary" style="padding:11px;font-size:13px" onclick="location.href='register.html'">+ Post Your Item • ଦ୍ରବ୍ୟ ଦିଅନ୍ତୁ</button>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="../index.html" class="nav-item"><div class="nav-icon">🏠</div><div class="nav-label">Home<br>ଘର</div></a>
+    <a href="search.html" class="nav-item"><div class="nav-icon">🔍</div><div class="nav-label">Search<br>ଖୋଜନ୍ତୁ</div></a>
+    <a href="orders.html" class="nav-item"><div class="nav-icon">📋</div><div class="nav-label">My Orders<br>ମୋ ଅର୍ଡର</div></a>
+    <a href="#" class="nav-item"><div class="nav-icon">💬</div><div class="nav-label">Chat<br>ଚାଟ୍</div></a>
+    <a href="profile.html" class="nav-item"><div class="nav-icon">👤</div><div class="nav-label">Profile<br>ପ୍ରୋଫାଇଲ</div></a>
+  </nav>
+</div>
+<div id="toast" class="toast"></div>
+<script src="../assets/js/data.js"></script>
+<script>
+let ac='all';
+function setC(el,c){ac=c;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));el.classList.add('active');render();}
+function render(){
+  const data=HAATA_PRODUCTS.filter(d=>ac==='all'||d.category===ac);
+  document.getElementById('list').innerHTML=`<div class="product-grid">${data.map((d,i)=>`<div class="p-card">
+    <div class="p-card-img">${d.emoji}${i<3?'<div class="hot-badge">🔥 Hot</div>':''}${i===1?'<div class="sold-badge">23 sold</div>':''}</div>
+    <div class="p-card-body">
+      <div class="p-card-name">${d.name}</div>
+      <div class="p-card-seller">👤 ${d.seller} • 📍 ${d.village}</div>
+      <div class="p-card-price">₹${d.price}</div>
+      <button class="p-card-btn" onclick="showToast('🛍️ Added: ${d.name}')">Buy Now • କ.</button>
+    </div></div>`).join('')}</div>`;
+}
+render();
+
+// Countdown timer
+function updateTimer(){
+  const now=new Date(), sun=new Date(now);
+  sun.setDate(sun.getDate()+(7-sun.getDay())%7||7);
+  sun.setHours(8,0,0,0);
+  const diff=sun-now, h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+  document.getElementById('cdH').textContent=String(h).padStart(2,'0');
+  document.getElementById('cdM').textContent=String(m).padStart(2,'0');
+  document.getElementById('cdS').textContent=String(s).padStart(2,'0');
+}
+updateTimer(); setInterval(updateTimer,1000);
+</script></body></html>
