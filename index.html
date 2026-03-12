@@ -458,6 +458,19 @@ const waLink = document.querySelector('.whatsapp-float');
 if (waLink && window.PT_CONFIG?.brand?.whatsapp) {
   waLink.href = `https://wa.me/${PT_CONFIG.brand.whatsapp}`;
 }
+
+  // Hero Slideshow
+let heroIdx = 0;
+const heroSlides = document.querySelectorAll('.hero-slide');
+const heroDots   = document.querySelectorAll('.hero-dot');
+function goSlide(n) {
+  heroSlides[heroIdx].classList.remove('active');
+  heroDots[heroIdx].classList.remove('active');
+  heroIdx = n;
+  heroSlides[heroIdx].classList.add('active');
+  heroDots[heroIdx].classList.add('active');
+}
+setInterval(() => goSlide((heroIdx + 1) % heroSlides.length), 4000);
 </script>
 </body>
 </html>
