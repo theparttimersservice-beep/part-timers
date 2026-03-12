@@ -551,11 +551,8 @@ function closeSidebar() {
   const btn = document.getElementById('menuBtn');
   if(btn) btn.textContent = '☰';
 }
-  
-// ── Splash screen — sirf pehli baar ──
-if (!localStorage.getItem('pt_seen_splash') && !document.referrer.includes('splash')) {
-  window.location.replace('splash.html');
-}
+
+// Splash disabled
 </script>
 </body>
 </html>
