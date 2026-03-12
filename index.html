@@ -114,6 +114,9 @@
 </head>
 <body>
 
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
 <!-- ANNOUNCEMENT BAR -->
 <div class="announcement-bar" id="announcementBar">
   <div class="announcement-track" id="announcementTrack"></div>
@@ -142,7 +145,7 @@
         🛒<span class="badge" id="cartBadge" style="display:none">0</span>
       </a>
       <a class="header-btn" href="pages/user/login.html" title="Login" id="loginBtn">👤</a>
-      <button class="hamburger header-btn" onclick="toggleMobileMenu()">☰</button>
+      <button class="hamburger header-btn" onclick="openSidebar()">☰</button>
     </div>
   </div>
 </header>
@@ -184,7 +187,8 @@
 <div class="app-shell">
 
   <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="mainSidebar">
+    <button class="sidebar-close-btn" onclick="closeSidebar()">✕ Close Menu — ବନ୍ଦ</button>
     <div class="sidebar-section">MAIN</div>
     <a class="sidebar-link active" href="index.html"><span class="s-icon">🏠</span> Home</a>
     <a class="sidebar-link" href="pages/search.html"><span class="s-icon">🔍</span> Smart Search</a>
@@ -467,7 +471,7 @@ function renderFeed() {
     </div>`).join('');
 }
 
-if (window.PT_MAPS) PT_MAPS.init('miniMap');
+PT_MAPS.init('miniMap');
 renderTrending();
 renderFood();
 renderFeed();
@@ -490,6 +494,18 @@ function goSlide(n) {
 }
 setInterval(() => goSlide((heroIdx + 1) % heroSlides.length), 4000);
 
+
+// Sidebar open/close for mobile
+function openSidebar() {
+  document.getElementById('mainSidebar').classList.add('mobile-open');
+  document.getElementById('sidebarOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('mainSidebar').classList.remove('mobile-open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
 </script>
 </body>
 </html>
