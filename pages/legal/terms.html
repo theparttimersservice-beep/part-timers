@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms & Legal — The Part-Timers</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    .legal-hero { background: linear-gradient(135deg, #1A1A2E, #2E2E4E); padding: 22px 20px 28px; color: white; }
+    .legal-content { padding: 16px; }
+    .legal-section { background: var(--surface); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 12px; box-shadow: var(--shadow-xs); border: 1px solid var(--border); }
+    .legal-section h2 { font-size: 15px; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display:flex; align-items:center; gap:8px; }
+    .legal-section p, .legal-section li { font-size: 13px; color: var(--text-muted); line-height: 1.75; margin-bottom: 6px; }
+    .legal-section ol, .legal-section ul { padding-left: 18px; }
+    .highlight-box { background: #FFF8E1; border-left: 4px solid var(--warning); border-radius: var(--radius); padding: 12px 14px; font-size: 13px; color: #5D4037; line-height: 1.65; margin-bottom: 12px; }
+    .highlight-box.red { background: #FFEBEE; border-left-color: var(--danger); color: #B71C1C; }
+    .highlight-box.green { background: #E8F5E9; border-left-color: var(--success); color: #1B5E20; }
+    .tabs-row { display: flex; background: var(--surface); border-bottom: 2px solid var(--border); overflow-x: auto; scrollbar-width: none; position: sticky; top: 0; z-index: 10; }
+    .tabs-row::-webkit-scrollbar { display: none; }
+    .ltab { padding: 11px 16px; font-size: 12px; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; color: var(--text-muted); white-space: nowrap; }
+    .ltab.active { color: #1A1A2E; border-bottom-color: #1A1A2E; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .cat-term-card { background: var(--bg); border-radius: var(--radius); padding: 14px; margin-bottom: 10px; border-left: 4px solid var(--primary); }
+    .cat-term-card h3 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+    .cat-term-card li { font-size: 12px; color: var(--text-muted); line-height:1.7; }
+    .law-badge { display:inline-block; background:#E3F2FD; color:#0D47A1; font-size:10px; font-weight:700; padding:2px 8px; border-radius:12px; margin-left:8px; }
+  </style>
+</head>
+<body>
+
+<div class="legal-hero">
+  <button style="background:rgba(255,255,255,0.15);border:none;color:white;width:38px;height:38px;border-radius:12px;font-size:20px;cursor:pointer;margin-bottom:14px;display:block" onclick="history.back()">←</button>
+  <div style="font-size:22px;font-weight:800;margin-bottom:4px">⚖️ Terms & Legal</div>
+  <div style="font-size:13px;opacity:0.8">Platform rules • Privacy • Category terms</div>
+  <div style="font-size:12px;opacity:0.65;margin-top:4px">ଶ. ଓ ଆ. ନ. | Last updated: March 2026</div>
+</div>
+
+<div class="tabs-row">
+  <div class="ltab active" onclick="showTab(this,'terms')">⚖️ Terms</div>
+  <div class="ltab" onclick="showTab(this,'categories')">📂 Category Rules</div>
+  <div class="ltab" onclick="showTab(this,'rating')">⭐ Rating Policy</div>
+  <div class="ltab" onclick="showTab(this,'privacy')">🔒 Privacy</div>
+  <div class="ltab" onclick="showTab(this,'setup')">🔧 Setup Guide</div>
+</div>
+
+<!-- ── MAIN TERMS ── -->
+<div class="legal-content tab-panel active" id="tab-terms">
+
+  <div class="highlight-box red">
+    ⚠️ <strong>Kanuni Suchna — Legal Notice:</strong> Koi bhi user agar platform rules todega, galat jaankari dega, dhokha karega, ya koi illegal kaam karega — The Part-Timers team uska account band kar sakti hai aur Indian law ke hisab se action le sakti hai.
+    <br><span style="font-size:11px">IT Act 2000, IPC Sections, Consumer Protection Act 2019 lagu hoga.</span>
+  </div>
+
+  <div class="legal-section">
+    <h2>📋 General Terms of Service <span class="law-badge">IT Act 2000</span></h2>
+    <ol>
+      <li>Platform ek <strong>marketplace connector</strong> ki tarah kaam karta hai. Service agreements directly customer aur worker ke beech hain.</li>
+      <li>Workers apni <strong>100% kamaai rakhte hain</strong>. Platform workers se koi commission nahi leta.</li>
+      <li>Revenue sirf vendor subscription plans se aata hai (Mini/Plus/Block/District/Super).</li>
+      <li>Saari jaankari <strong>sach honi chahiye</strong>. Jhoothi registration se account band hoga.</li>
+      <li>Platform payment disputes ke liye responsible nahi hai — ye customer aur worker ke beech hai.</li>
+      <li>Koi bhi illegal, nafrat wala, ya haanikaarak content post karna mana hai.</li>
+      <li>Vendor subscriptions non-refundable hain, sirf platform failure hone par return hoga.</li>
+      <li>Platform ye terms kabhi bhi update kar sakta hai. Continue karne ka matlab razi hona hai.</li>
+    </ol>
+    <p style="font-size:11px;color:var(--text-light);margin-top:10px">ଭ. ସ.: ଏ ସ. ର ଲ. ।</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>💰 Payment & Monetization <span class="law-badge">Contract Act 1872</span></h2>
+    <ol>
+      <li>Customers directly workers/vendors ko pay karte hain. Platform ke through koi payment nahi hoti abhi.</li>
+      <li>Prices workers khud set karte hain. Platform koi minimum ya maximum fix nahi karta.</li>
+      <li>Booking confirm hone ka matlab payment confirm nahi hota — ye direct deal hai.</li>
+      <li>Agar worker kaam nahi karta toh customer cancellation claim kar sakta hai.</li>
+      <li>Vendor plans: Local Mini ₹10/month | Local Plus ₹20/month | Block ₹100/month | District ₹999/month | Super ₹3999/year.</li>
+    </ol>
+  </div>
+
+  <div class="legal-section">
+    <h2>🚫 Prohibited Activities <span class="law-badge">IPC Sec 420</span></h2>
+    <ul>
+      <li>Galat naam ya phone number se registration</li>
+      <li>Kisi aur ki identity use karna (identity theft)</li>
+      <li>Fake reviews ya ratings post karna</li>
+      <li>Platform use karke kisi ko threaten karna ya harass karna</li>
+      <li>Child labor se related koi bhi service post karna</li>
+      <li>Illegal products/services list karna (alcohol, drugs, weapons)</li>
+      <li>Kisi bhi user ki personal info share karna bina consent ke</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>🔑 Account Rules <span class="law-badge">IT Rules 2021</span></h2>
+    <ol>
+      <li>Ek phone number se ek hi account — ek se zyada accounts allowed nahi.</li>
+      <li>Account delete karne ke liye contact karo: hello@theparttimers.in</li>
+      <li>Suspicious activity report karo WhatsApp pe toh turant action hoga.</li>
+      <li>Minor (18 se kam age) — parent/guardian ki permission chahiye.</li>
+    </ol>
+  </div>
+
+  <div class="highlight-box green">
+    ✅ <strong>Worker Rights — Kaam Karne Wale ke Adhikar:</strong><br>
+    • Apni price khud set karo — koi pressure nahi<br>
+    • Koi bhi order decline kar sakte ho — reason batana zaroori nahi<br>
+    • Galat/abusive customer ki report karo — 24hr mein action<br>
+    • 100% payment seedha customer se lo — platform ke through nahi<br><br>
+    <span style="font-size:11px">Labour Welfare: Minimum Wages Act 1948 applicable where relevant.</span>
+  </div>
+</div>
+
+<!-- ── CATEGORY RULES ── -->
+<div class="legal-content tab-panel" id="tab-categories">
+
+  <div class="highlight-box">
+    📂 Har category ke liye alag rules hain. Apni service ke section mein pado. — ପ. ବ. ।
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#388E3C">
+    <h3>🌾 Farming Work — ଚାଷ କାମ</h3>
+    <ul>
+      <li>Tractor operator ko valid driving license hona chahiye.</li>
+      <li>Farm machinery ka insurance hona best practice hai.</li>
+      <li>Pesticide spray karne wala certified hona chahiye (CIBRC guidelines).</li>
+      <li>Seasonal rates: Platform peak season (Kharif/Rabi) mein price hike allow karta hai.</li>
+      <li>Crop damage hone par worker responsible nahi — sirf negligence prove hone par.</li>
+      <li>Work completion pe hi payment — advance optional hai.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#0277BD">
+    <h3>🐟 Fish & Aquaculture — ମାଛ ଚାଷ</h3>
+    <ul>
+      <li>Fish sale/purchase ke liye local fish market/mandi rules follow karo (Odisha Fisheries Act).</li>
+      <li>Pond chemicals use karne se pehle customer ko batao.</li>
+      <li>Fish mortality hone par worker ko proof dikhana hoga ki negligence nahi tha.</li>
+      <li>Aquaculture workers ke liye NFDB (National Fisheries Development Board) guidelines follow karni chahiye.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#E65100">
+    <h3>🐓 Poultry & Livestock — ପୋଲ୍ଟ୍ରି</h3>
+    <ul>
+      <li>Animal disease control ke liye state Veterinary Dept se certificates recommended.</li>
+      <li>Poultry farm workers ko vaccination records maintain karne chahiye.</li>
+      <li>Animal cruelty strictly prohibited — Prevention of Cruelty to Animals Act 1960.</li>
+      <li>Livestock transport ke liye proper vehicle hona chahiye (PETA guidelines).</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#4527A0">
+    <h3>📚 Learning & Coaching — ଶିକ୍ଷା</h3>
+    <ul>
+      <li>Tutors ko apni qualification sach batani chahiye — fake degree = permanent ban.</li>
+      <li>Minor students (under 18) ke liye parent consent mandatory hai.</li>
+      <li>Home tuition: Family member present hona chahiye — ek student ek teacher single room mein nahi.</li>
+      <li>Platform child safety ke liye zero tolerance policy hai (POCSO Act 2012).</li>
+      <li>Online tuition ke liye screen recording consent lena chahiye.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#006064">
+    <h3>🔧 Technicians — ଟ.</h3>
+    <ul>
+      <li>Electricians ko IE Rules 1956 ka knowledge hona chahiye.</li>
+      <li>High voltage kaam ke liye licensed electrician compulsory (Electricity Act 2003).</li>
+      <li>Kisi bhi kaam ke baad technician ko completion report ya WhatsApp confirmation deni chahiye.</li>
+      <li>Parts warranty: Jo parts lagaye unka receipt customer ko milna chahiye.</li>
+      <li>Gas fitter, plumber, AC technician — respective trade certificate required.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#4E342E">
+    <h3>🏗️ Contractors — ଠ.</h3>
+    <ul>
+      <li>Construction work ke liye local municipality/gram panchayat permission zaroori ho sakti hai.</li>
+      <li>RERA (Real Estate Regulation Act 2016) — large projects ke liye applicable.</li>
+      <li>Contractor ko workers ka accident insurance lena chahiye (Workmen Compensation Act 1923).</li>
+      <li>Building material quality ke liye BIS standards follow karni chahiye.</li>
+      <li>Project completion se pehle advance zyada mat lena — 30% max recommended.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#37474F">
+    <h3>⚙️ Equipment Rental — ଯ.</h3>
+    <ul>
+      <li>Equipment owner ko maintenance records rakhne chahiye.</li>
+      <li>Renter se security deposit lena allowed hai — receipt mandatory.</li>
+      <li>Equipment damage hone par renter responsible — before/after photos lo.</li>
+      <li>Heavy machinery (JCB, Crane) ke liye operator license compulsory.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#1565C0">
+    <h3>🚗 Vehicle Booking — ଯ. ବ.</h3>
+    <ul>
+      <li>Driver ke paas valid license hona chahiye (Motor Vehicles Act 1988).</li>
+      <li>Vehicle insurance mandatory — check karo passenger insurance bhi ho.</li>
+      <li>Goods transport ke liye: vehicle fitness certificate + permit required.</li>
+      <li>Drunk driving = permanent ban + police complaint.</li>
+      <li>Night travel (10PM-5AM) ke liye customer ki written consent (WhatsApp) leni chahiye.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#BF360C">
+    <h3>🍽️ Food Delivery — ଖ. ଡ.</h3>
+    <ul>
+      <li>Food vendors ko FSSAI registration/license hona chahiye (Food Safety & Standards Act 2006).</li>
+      <li>Home food makers ke liye FSSAI basic registration (free, online) karo.</li>
+      <li>Allergens: Customer ko batana mandatory — dairy, nuts, gluten etc.</li>
+      <li>Food delivery 2 ghante mein honi chahiye nahi toh fresh nahi maana jayega.</li>
+      <li>Food poisoning complaint mein vendor ko full refund dena hoga.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#6A1B9A">
+    <h3>🛒 Marketplace Buy/Sell — ବ.</h3>
+    <ul>
+      <li>Seller ko item ki sahi condition batani chahiye — misleading description = ban.</li>
+      <li>Second-hand electronics: 7-day return policy recommended.</li>
+      <li>Land/property listing: Documents verify karo pehle — fraud hone par IPC 420 lagu.</li>
+      <li>Animals sale: Vaccination records mandatory. Stolen animals list karna IPC 379.</li>
+      <li>Vegetables/crops: Fresh hone chahiye — galat quality pe complaint hogi.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#FF6F00">
+    <h3>🏪 Sunday Haata — ରବ. ହ.</h3>
+    <ul>
+      <li>Haata mein sirf genuine local products — fake/duplicate products ban.</li>
+      <li>Handloom: GI (Geographical Indication) tags respect karo — Sambalpuri/Nuapatna designs.</li>
+      <li>Wild animals ya protected birds sell karna Wildlife Protection Act 1972 ke under illegal.</li>
+      <li>Haata listing 7 din ke liye active rahegi — uske baad renew karo.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#263238">
+    <h3>🪪 Digital Work ID — ଡ. କ. ID</h3>
+    <ul>
+      <li>Work ID sirf genuine workers ke liye hai — misuse hone par cancel hoga.</li>
+      <li>Work ID government ID ka replacement nahi hai — sirf platform identity proof hai.</li>
+      <li>QR code link kisi ke saath bhi share karo — lekin account password share mat karo.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── RATING POLICY ── -->
+<div class="legal-content tab-panel" id="tab-rating">
+
+  <div class="highlight-box green">
+    ⭐ <strong>Dual Rating System:</strong> Is platform pe dono sides rate kar sakte hain — Customer worker ko aur Worker customer ko. Ye rural trust build karta hai. — ଦ. ।
+  </div>
+
+  <div class="legal-section">
+    <h2>⭐ Customer → Worker Rating</h2>
+    <ol>
+      <li>Booking complete hone ke baad customer 5-star rating de sakta hai.</li>
+      <li>Rating 1 se 5 stars mein — 5 best, 1 worst.</li>
+      <li>Written feedback optional hai lekin encouraged hai.</li>
+      <li>Quick tags se bhi feedback de sakte hain (Sahi kaam, Samay pe aaye, etc.)</li>
+      <li>Rating published hogi worker ke public profile pe.</li>
+      <li>Fake/malicious rating report karo — 24hr mein review hogi.</li>
+    </ol>
+  </div>
+
+  <div class="legal-section">
+    <h2>⭐ Worker → Customer Rating</h2>
+    <ol>
+      <li>Worker bhi customer ko rate kar sakta hai apne orders section se.</li>
+      <li>Customer rating visible hogi future workers ko — taaki they know who is reliable.</li>
+      <li>Worker tags: "Sahi payment diya", "Kaam clearly bataya", "Respectful", etc.</li>
+      <li>Low rated customers ko platform alert de sakta hai.</li>
+      <li>Kisi ne agar 3 se kam rating di repeatedly — platform review karega.</li>
+    </ol>
+  </div>
+
+  <div class="legal-section">
+    <h2>📝 Feedback Guidelines</h2>
+    <ul>
+      <li>Feedback mein personal attacks nahi — sirf kaam ke baare mein.</li>
+      <li>Rating ke baad 72 ghante mein edit nahi ho sakti.</li>
+      <li>Dono parties rating de sakte hain same order pe.</li>
+      <li>3 se kam rating pe admin ko auto-alert milega.</li>
+      <li>Galat rating report karna: WhatsApp pe screenshot bhejo.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── PRIVACY ── -->
+<div class="legal-content tab-panel" id="tab-privacy">
+  <div class="legal-section">
+    <h2>🔒 Privacy Policy <span class="law-badge">IT Rules 2011</span></h2>
+    <p>Hum collect karte hain: naam, phone number, gaon, service information.</p>
+    <p>Hum <strong>kisi ko bhi personal data sell nahi karte</strong>.</p>
+    <p>Phone numbers sirf platform communications aur service matching ke liye use hote hain.</p>
+    <p>User kabhi bhi account delete karne ki request kar sakta hai.</p>
+    <p>Data Google Sheets mein (platform operator configure karta hai) aur browser local storage mein store hota hai.</p>
+    <p>Ye platform Indian Information Technology (Reasonable Security Practices) Rules, 2011 comply karta hai.</p>
+    <p>Children (under 13) ke liye: Parent consent mandatory. COPPA principles follow kiye jaate hain.</p>
+  </div>
+  <div class="legal-section">
+    <h2>📱 Data hum use karte hain</h2>
+    <ul>
+      <li><strong>Phone number:</strong> Login OTP, booking confirmation</li>
+      <li><strong>Village/location:</strong> Nearby services dikhane ke liye</li>
+      <li><strong>Service category:</strong> Better matching ke liye</li>
+      <li><strong>Ratings:</strong> Public profile improvement ke liye</li>
+      <li><strong>Order history:</strong> Aapke orders track karne ke liye</li>
+    </ul>
+  </div>
+  <div class="legal-section">
+    <h2>❌ Data hum use nahi karte</h2>
+    <ul>
+      <li>Bank/payment information nahi store karte</li>
+      <li>Third party advertisers ko data nahi dete</li>
+      <li>Government ko data sirf court order par dete hain</li>
+      <li>Biometric data collect nahi karte</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── SETUP GUIDE ── -->
+<div class="legal-content tab-panel" id="tab-setup">
+  <div class="legal-section">
+    <h2>📊 Google Sheets Database Setup</h2>
+    <div style="display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);align-items:flex-start">
+      <div style="width:30px;height:30px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">1</div>
+      <div><div style="font-size:13px;font-weight:700;margin-bottom:3px">Google Sheet banao</div><div style="font-size:12px;color:var(--text-muted)">Google Sheets kholo, new spreadsheet banao. Tabs: Users, Workers, Vendors, Orders, Ratings, Ads.</div></div>
+    </div>
+    <div style="display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);align-items:flex-start">
+      <div style="width:30px;height:30px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">2</div>
+      <div><div style="font-size:13px;font-weight:700;margin-bottom:3px">Apps Script open karo</div><div style="font-size:12px;color:var(--text-muted)">Sheet mein: Extensions → Apps Script. Purana code delete karo, <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">data/sheets-api.gs</code> ka code paste karo.</div></div>
+    </div>
+    <div style="display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);align-items:flex-start">
+      <div style="width:30px;height:30px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">3</div>
+      <div><div style="font-size:13px;font-weight:700;margin-bottom:3px">Deploy karo</div><div style="font-size:12px;color:var(--text-muted)">Deploy → New Deployment → Web App. "Execute as: Me" aur "Who has access: Anyone". Deploy karo aur URL copy karo.</div></div>
+    </div>
+    <div style="display:flex;gap:14px;padding:12px 0;align-items:flex-start">
+      <div style="width:30px;height:30px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">4</div>
+      <div><div style="font-size:13px;font-weight:700;margin-bottom:3px">Config mein dalo</div><div style="font-size:12px;color:var(--text-muted)"><code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">data/config.js</code> mein: <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">sheetsScriptUrl</code> mein apna URL dalo. Save karo — ho gaya!</div></div>
+    </div>
+  </div>
+  <div class="legal-section">
+    <h2>🗺️ Google Maps Setup</h2>
+    <ol style="font-size:13px;color:var(--text-muted);line-height:2">
+      <li>console.cloud.google.com pe jao → New Project banao</li>
+      <li>Maps JavaScript API enable karo</li>
+      <li>Credentials → Create API Key → Copy karo</li>
+      <li><code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">data/config.js</code> mein <code style="background:#F3F4F6;padding:1px 5px;border-radius:4px">mapsApiKey</code> mein dalo</li>
+      <li>Production pe key restrict karo: HTTP referrers mein apna domain dalo</li>
+    </ol>
+  </div>
+</div>
+
+<div style="height:30px"></div>
+
+<script>
+function showTab(el, id) {
+  document.querySelectorAll('.ltab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

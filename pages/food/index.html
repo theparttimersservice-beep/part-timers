@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Delivery — The Part-Timers</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    .food-hero { background: linear-gradient(135deg, #BF360C, #E64A19); padding: 22px 20px 26px; color: white; position: relative; overflow: hidden; }
+    .food-hero::after { content:'🍽️'; position:absolute; right:-10px; top:-10px; font-size:130px; opacity:0.08; }
+    .food-section-tabs { display: flex; background: var(--surface); border-bottom: 2px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+    .food-section-tabs::-webkit-scrollbar { display: none; }
+    .ftab { flex-shrink: 0; padding: 13px 20px; font-size: 14px; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; color: var(--text-muted); transition: all 0.2s; }
+    .ftab.active { color: #BF360C; border-bottom-color: #BF360C; }
+    .vendor-card { background: var(--surface); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .vendor-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .vc-banner { height: 140px; display: flex; align-items: center; justify-content: center; font-size: 60px; background: linear-gradient(135deg, #FFF3E0, #FFCCBC); position: relative; }
+    .vc-plan { position: absolute; top: 10px; right: 10px; background: #BF360C; color: white; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+    .vc-open { position: absolute; top: 10px; left: 10px; background: #4CAF50; color: white; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+    .vc-body { padding: 14px; }
+    .vc-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .vc-loc { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+    .vc-products { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+    .vc-prod { background: #FFF3E0; color: #E65100; font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 500; }
+    .vc-meta { display: flex; justify-content: space-between; align-items: center; }
+    .product-card { background: var(--surface); border-radius: var(--radius-lg); padding: 14px; box-shadow: var(--shadow-xs); border: 1px solid var(--border); display: flex; gap: 14px; align-items: center; margin-bottom: 10px; }
+    .pc-emoji { font-size: 36px; flex-shrink: 0; }
+    .pc-info { flex: 1; }
+    .pc-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .pc-vendor { font-size: 12px; color: var(--text-muted); }
+    .pc-price { font-size: 16px; font-weight: 800; color: var(--accent); }
+    .pc-unit  { font-size: 11px; color: var(--text-light); }
+    .qty-badge { background: var(--bg-2); border-radius: 20px; padding: 3px 8px; font-size: 12px; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<div class="food-hero">
+  <button style="background:rgba(255,255,255,0.15);border:none;color:white;width:38px;height:38px;border-radius:12px;font-size:20px;cursor:pointer;margin-bottom:14px" onclick="history.back()">←</button>
+  <div style="font-size:24px;font-weight:800;margin-bottom:4px">🍽️ Food Delivery</div>
+  <div style="font-size:13px;opacity:0.85">Fresh vegetables, home food & groceries | ଖ. ଡ.</div>
+</div>
+
+<div style="padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border)">
+  <input type="text" id="foodSearch" class="form-control" placeholder="🔍 Search food, vegetables, vendors..." oninput="filterFood()">
+</div>
+
+<div class="food-section-tabs">
+  <div class="ftab active" onclick="setFoodTab(this,'all')">🛒 All</div>
+  <div class="ftab" onclick="setFoodTab(this,'vegetables')">🥦 Vegetables</div>
+  <div class="ftab" onclick="setFoodTab(this,'instant')">🍛 Instant Food</div>
+  <div class="ftab" onclick="setFoodTab(this,'grocery')">🏪 Grocery</div>
+</div>
+
+<div style="padding:16px 16px 80px" id="foodContent"></div>
+
+<div id="toast"></div>
+<script src="../../data/config.js"></script>
+<script src="../../data/data.js"></script>
+<script src="../../assets/js/app.js"></script>
+<script>
+let activeTab = 'all';
+
+function setFoodTab(el, tab) {
+  activeTab = tab;
+  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderFood();
+}
+
+function filterFood() { renderFood(); }
+
+function renderFood() {
+  const D = window.PT_DATA;
+  if (!D) return;
+  const q = document.getElementById('foodSearch').value.toLowerCase();
+  let vendors = D.vendors.filter(v => {
+    const matchQ = !q || [v.name, v.village, ...(v.products||[])].join(' ').toLowerCase().includes(q);
+    const matchT = activeTab === 'all' || v.category === activeTab;
+    return matchQ && matchT;
+  });
+
+  document.getElementById('foodContent').innerHTML = `
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px">${vendors.length} vendors found</div>
+    ${vendors.map(v => `
+      <div class="vendor-card" style="margin-bottom:14px" onclick="openVendor('${v.id}')">
+        <div class="vc-banner">
+          ${v.emoji}
+          ${v.verified ? '<div class="vc-open">🟢 Open</div>' : '<div class="vc-plan" style="background:#9E9E9E">Unverified</div>'}
+          <div class="vc-plan">${v.badge}</div>
+        </div>
+        <div class="vc-body">
+          <div class="vc-name">${v.name}</div>
+          <div class="vc-loc">📍 ${v.village} • ⭐ ${v.rating} (${v.reviews} reviews)</div>
+          <div class="vc-products">${(v.products||[]).slice(0,4).map(p => `<span class="vc-prod">${p}</span>`).join('')}${v.products?.length > 4 ? `<span class="vc-prod">+${v.products.length-4} more</span>` : ''}</div>
+          <div class="vc-meta">
+            <div style="font-size:12px;color:var(--text-muted)">${v.desc}</div>
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openVendor('${v.id}')">Order →</button>
+          </div>
+        </div>
+      </div>`).join('')}
+
+    ${activeTab !== 'grocery' ? '' : `
+    <div style="font-size:15px;font-weight:700;margin:20px 0 14px">🛒 Quick Order Items</div>
+    ${(D.haata||[]).filter(h=>h.category==='food'||h.category==='spices').map(h => `
+      <div class="product-card">
+        <div class="pc-emoji">${h.emoji}</div>
+        <div class="pc-info">
+          <div class="pc-name">${h.name}</div>
+          <div class="pc-vendor">by ${h.vendor} • ${h.village}</div>
+          <div style="margin-top:4px">${h.qty > 0 ? `<span class="qty-badge" style="background:#E8F5E9;color:var(--primary)">✅ ${h.qty} in stock</span>` : '<span class="qty-badge" style="background:#FEE2E2;color:var(--danger)">❌ Sold out</span>'}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="pc-price">₹${h.price}</div>
+          <div class="pc-unit">per ${h.unit}</div>
+          ${h.qty > 0 ? `<button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="event.stopPropagation();addFoodToCart('${h.id}','${h.name}',${h.price},'${h.unit}','${v.name}','${v.village}','${v.emoji}')">🛒 Add</button>` : '<button class="btn btn-sm" style="background:#F3F4F6;cursor:not-allowed">Sold out</button>'}
+        </div>
+      </div>`).join('')}`}`;
+}
+
+function openVendor(id) {
+  showToast('🏪 Opening vendor profile...');
+}
+
+function addFoodToCart(id, name, price, unit, vendor, village, emoji) {
+  let cart = JSON.parse(localStorage.getItem('pt_cart') || '[]');
+  const existing = cart.find(i => i.id === 'food_' + id);
+  if (existing) { existing.qty++; }
+  else { cart.push({ id: 'food_' + id, name, price: Number(price), unit, vendor, village, emoji: emoji || '🍛', qty: 1 }); }
+  localStorage.setItem('pt_cart', JSON.stringify(cart));
+  const total = cart.reduce((s,i) => s + i.qty, 0);
+  const badge = document.getElementById('cartBadge');
+  if (badge) { badge.textContent = total; badge.style.display = 'inline'; }
+  showToast('🛒 ' + name + ' cart mein gaya! ।');
+}
+
+renderFood();
+</script>
+</body>
+</html>
