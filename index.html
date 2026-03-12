@@ -6,7 +6,15 @@
   <title>The Part-Timers — Rural Services Platform | Odisha</title>
   <meta name="description" content="Odisha's largest rural services platform. Find farm workers, technicians, food delivery, vehicle booking, tutors and more in your village.">
   <link rel="stylesheet" href="assets/css/main.css">
-  <style>
+  <style
+  .hero { position: relative !important; overflow: hidden !important; }
+  .hero-slides { position: absolute !important; inset: 0 !important; z-index: 0 !important; }
+  .hero-overlay { position: absolute !important; inset: 0 !important; z-index: 1 !important; }
+  .hero-pattern, .hero-row, .hero-search, .hero-stats, .hero-dots { 
+    position: relative !important; z-index: 2 !important; 
+  }
+</style>
+  
     /* Homepage-specific extras */
     .promo-banner {
       background: linear-gradient(135deg, #FF6F00, #FFA726);
@@ -166,10 +174,10 @@
     <div class="hero" id="heroSection">
       <!-- Slideshow Background -->
       <div class="hero-slides" id="heroSlides">
-        <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800&q=80')"></div>
-        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=800&q=80')"></div>
-        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&q=80')"></div>
-        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1591696205602-2f950c417cb9?w=800&q=80')"></div>
+        <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800&q=80&auto=format')"></div>
+        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=800&q=80&auto=format')"></div>
+        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&q=80&auto=format')"></div>
+        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=800&q=80&auto=format')"></div>
       </div>
       <!-- Green Overlay -->
       <div class="hero-overlay"></div>
