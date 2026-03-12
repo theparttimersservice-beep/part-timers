@@ -61,6 +61,23 @@
     }
     .whatsapp-float:hover { transform: scale(1.1); }
     @media (min-width: 601px) { .whatsapp-float { bottom: 20px; } }
+    /* Login nav button */
+    .login-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      color: var(--primary-dark);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .login-nav-btn:hover { background: #f0f0f0; transform: translateY(-1px); }
+    @media (max-width: 480px) { .login-nav-btn span, .login-nav-btn { font-size: 11px; padding: 6px 10px; } }
 
     /* ── HERO SLIDESHOW ── */
     .hero { position: relative !important; overflow: hidden !important; }
@@ -144,8 +161,9 @@
       <a class="header-btn" href="pages/user/cart.html" title="Cart">
         🛒<span class="badge" id="cartBadge" style="display:none">0</span>
       </a>
-      <a class="header-btn" href="pages/user/login.html" title="Login" id="loginBtn">👤</a>
-      <button class="hamburger header-btn" onclick="openSidebar()">☰</button>
+      <a class="header-login-btn outline" href="pages/user/login.html" id="loginBtn">👤 <span>Login</span></a>
+      <a class="header-login-btn filled" href="pages/user/register-worker.html">✚ <span>Register</span></a>
+      <button class="hamburger header-btn" onclick="toggleSidebar()" id="menuBtn" title="Menu">☰</button>
     </div>
   </div>
 </header>
@@ -186,9 +204,22 @@
 <!-- MAIN LAYOUT -->
 <div class="app-shell">
 
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
   <!-- SIDEBAR -->
   <aside class="sidebar" id="mainSidebar">
-    <button class="sidebar-close-btn" onclick="closeSidebar()">✕ Close Menu — ବନ୍ଦ</button>
+    <div style="background:linear-gradient(135deg,var(--primary-dark),var(--primary));padding:16px 20px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="color:white;">
+        <div style="font-size:15px;font-weight:700;">🌾 The Part-Timers</div>
+        <div style="font-size:11px;opacity:0.75;">Rural Services Platform</div>
+      </div>
+      <button onclick="closeSidebar()" style="background:rgba(255,255,255,0.2);border:none;border-radius:8px;width:34px;height:34px;color:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>
+    <div class="sidebar-header">
+      <span class="sidebar-header-title">🌾 Menu</span>
+      <button class="sidebar-close-btn" onclick="closeSidebar()">✕</button>
+    </div>
     <div class="sidebar-section">MAIN</div>
     <a class="sidebar-link active" href="index.html"><span class="s-icon">🏠</span> Home</a>
     <a class="sidebar-link" href="pages/search.html"><span class="s-icon">🔍</span> Smart Search</a>
@@ -495,16 +526,46 @@ function goSlide(n) {
 setInterval(() => goSlide((heroIdx + 1) % heroSlides.length), 4000);
 
 
-// Sidebar open/close for mobile
+// Sidebar open/close
 function openSidebar() {
-  document.getElementById('mainSidebar').classList.add('mobile-open');
+  document.getElementById('mainSidebar').classList.add('is-open');
   document.getElementById('sidebarOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 function closeSidebar() {
-  document.getElementById('mainSidebar').classList.remove('mobile-open');
+  document.getElementById('mainSidebar').classList.remove('is-open');
   document.getElementById('sidebarOverlay').classList.remove('open');
   document.body.style.overflow = '';
+}
+// Sidebar toggle — works on ALL screen sizes
+function toggleSidebar() {
+  const sidebar = document.getElementById('mainSidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const btn = document.getElementById('menuBtn');
+  const isOpen = sidebar.classList.contains('is-open');
+  if (isOpen) {
+    sidebar.classList.remove('is-open');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    btn.textContent = '☰';
+  } else {
+    sidebar.classList.add('is-open');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    btn.textContent = '✕';
+  }
+}
+function closeSidebar() {
+  document.getElementById('mainSidebar').classList.remove('is-open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  const btn = document.getElementById('menuBtn');
+  if(btn) btn.textContent = '☰';
+}
+
+// Splash screen — sirf pehli baar (localStorage matches splash.html logic)
+if (!localStorage.getItem('pt_seen_splash')) {
+  window.location.replace('splash.html');
 }
 </script>
 </body>
