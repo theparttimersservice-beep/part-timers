@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Cart — The Part-Timers</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    .cart-hero { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); padding: 20px 20px 24px; color: white; }
+    .ch-back { background: rgba(255,255,255,0.15); border: none; color: white; width: 38px; height: 38px; border-radius: 12px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+    .cart-item { display: flex; align-items: center; gap: 14px; background: var(--surface); border-radius: var(--radius-lg); padding: 14px; margin: 0 16px 12px; box-shadow: var(--shadow-xs); border: 1px solid var(--border); }
+    .ci-emoji { font-size: 32px; width: 50px; height: 50px; background: var(--bg); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ci-info { flex: 1; min-width: 0; }
+    .ci-name { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ci-vendor { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .ci-price { font-size: 15px; font-weight: 700; color: var(--accent); margin-top: 4px; }
+    .ci-qty { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .qty-btn-sm { width: 30px; height: 30px; border-radius: 8px; background: var(--bg); border: 1.5px solid var(--border); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .qty-num-sm { font-size: 16px; font-weight: 700; min-width: 20px; text-align: center; }
+    .del-btn { background: #FEE2E2; color: #C62828; border: none; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 14px; flex-shrink:0; }
+    .cart-summary { background: var(--surface); margin: 0 16px 16px; border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-xs); }
+    .cs-row { display: flex; justify-content: space-between; padding: 7px 0; font-size: 14px; border-bottom: 1px solid var(--border-light); }
+    .cs-row:last-child { border: none; font-weight: 700; font-size: 16px; padding-top: 10px; }
+    .cs-total { color: var(--accent); }
+    .empty-cart { text-align: center; padding: 70px 30px; }
+    .section-label { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; padding: 14px 20px 6px; }
+  </style>
+</head>
+<body>
+
+<div class="cart-hero">
+  <button class="ch-back" onclick="history.back()">←</button>
+  <div style="font-size:22px;font-weight:800;margin-bottom:4px">🛒 My Cart — ଆ. ଝ.</div>
+  <div style="font-size:13px;opacity:0.8" id="cartCount">0 items</div>
+</div>
+
+<div id="cartContent"></div>
+<div id="cartEmpty" class="empty-cart" style="display:none">
+  <div style="font-size:64px;margin-bottom:16px">🛒</div>
+  <div style="font-size:20px;font-weight:800;margin-bottom:8px">Cart is empty! — ଖାଲି ।</div>
+  <div style="font-size:14px;color:var(--text-muted);margin-bottom:24px">Nothing added yet — ଏଠି କିଛି ନାହିଁ ।</div>
+  <a href="../haata/index.html" class="btn btn-primary" style="display:inline-flex;text-decoration:none;margin-right:10px">🏪 Visit Haata</a>
+  <a href="../food/index.html" class="btn btn-outline" style="display:inline-flex;text-decoration:none">🍽️ Order Food</a>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bn-items">
+    <a class="bn-item" href="../../index.html"><div class="bn-icon">🏠</div><div class="bn-label">Home</div></a>
+    <a class="bn-item" href="../search.html"><div class="bn-icon">🔍</div><div class="bn-label">Search</div></a>
+    <a class="bn-item" href="../food/index.html"><div class="bn-icon">🍽️</div><div class="bn-label">Food</div></a>
+    <a class="bn-item" href="orders.html"><div class="bn-icon">📋</div><div class="bn-label">Orders</div></a>
+    <a class="bn-item" href="profile.html"><div class="bn-icon">👤</div><div class="bn-label">Profile</div></a>
+  </div>
+</nav>
+
+<div id="toast"></div>
+<script src="../../data/config.js"></script>
+<script src="../../data/data.js"></script>
+<script src="../../assets/js/app.js"></script>
+<script>
+function getCart() {
+  try { return JSON.parse(localStorage.getItem('pt_cart') || '[]'); }
+  catch(e) { return []; }
+}
+function saveCart(cart) {
+  localStorage.setItem('pt_cart', JSON.stringify(cart));
+  updateCartBadge();
+}
+function updateCartBadge() {
+  const cart = getCart();
+  const total = cart.reduce((s,i) => s + i.qty, 0);
+  const badge = document.getElementById('cartBadge');
+  if (badge) { badge.textContent = total; badge.style.display = total > 0 ? 'inline' : 'none'; }
+}
+
+function renderCart() {
+  const cart = getCart();
+  const content = document.getElementById('cartContent');
+  const empty   = document.getElementById('cartEmpty');
+  const count   = document.getElementById('cartCount');
+
+  if (!cart.length) {
+    content.style.display = 'none';
+    empty.style.display   = 'block';
+    count.textContent = '0 items — ଖ. ଛ.';
+    return;
+  }
+
+  empty.style.display   = 'none';
+  content.style.display = 'block';
+
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const delivery = subtotal > 300 ? 0 : 30;
+  const total    = subtotal + delivery;
+
+  count.textContent = cart.length + ' item' + (cart.length > 1 ? 's' : '') + ' — ' + cart.length + ' ଚ.';
+
+  const groupedByVendor = {};
+  cart.forEach(item => {
+    if (!groupedByVendor[item.vendor]) groupedByVendor[item.vendor] = [];
+    groupedByVendor[item.vendor].push(item);
+  });
+
+  let html = '';
+  Object.entries(groupedByVendor).forEach(([vendor, items]) => {
+    html += `<div class="section-label">🏪 ${vendor}</div>`;
+    items.forEach(item => {
+      html += `
+      <div class="cart-item">
+        <div class="ci-emoji">${item.emoji || '📦'}</div>
+        <div class="ci-info">
+          <div class="ci-name">${item.name}</div>
+          <div class="ci-vendor">${item.vendor} • ${item.village || ''}</div>
+          <div class="ci-price">₹${item.price} / ${item.unit || 'pc'}</div>
+        </div>
+        <div class="ci-qty">
+          <button class="qty-btn-sm" onclick="changeQty('${item.id}', -1)">−</button>
+          <div class="qty-num-sm">${item.qty}</div>
+          <button class="qty-btn-sm" onclick="changeQty('${item.id}', 1)">+</button>
+        </div>
+        <button class="del-btn" onclick="removeItem('${item.id}')" title="Remove">🗑</button>
+      </div>`;
+    });
+  });
+
+  html += `
+  <div class="section-label">💰 Price Summary — ମ. ହ.</div>
+  <div class="cart-summary">
+    <div class="cs-row"><span>Subtotal (${cart.length} items)</span><span>₹${subtotal}</span></div>
+    <div class="cs-row"><span>Delivery — ଡ.</span><span>${delivery === 0 ? '<span style="color:var(--success)">FREE ✅</span>' : '₹' + delivery}</span></div>
+    ${delivery > 0 ? '<div style="font-size:11px;color:var(--text-muted);text-align:right;margin-top:-4px;padding-bottom:6px">₹300+ order pe FREE delivery — ₹300+ ର।</div>' : ''}
+    <div class="cs-row"><span class="cs-total">Total — ମ.</span><span class="cs-total">₹${total}</span></div>
+  </div>
+  <div style="padding: 0 16px 20px; display:flex; gap:10px;">
+    <button class="btn btn-outline" style="width:130px" onclick="clearCart()">🗑 Clear All</button>
+    <button class="btn btn-primary" style="flex:1;font-size:15px" onclick="checkout()">✅ Place Order — ₹${total}</button>
+  </div>
+  <div style="text-align:center;padding:0 16px 80px;font-size:12px;color:var(--text-muted)">
+    💰 Pay directly to worker/vendor — no online payment yet | ସିଧା ଦେୟ ଦ୍ୟ ।<br>
+    ଦ. ସ. ଦ. ।
+  </div>`;
+
+  content.innerHTML = html;
+}
+
+function changeQty(id, delta) {
+  const cart = getCart();
+  const idx  = cart.findIndex(i => i.id === id);
+  if (idx < 0) return;
+  cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+  saveCart(cart);
+  renderCart();
+}
+
+function removeItem(id) {
+  let cart = getCart();
+  const item = cart.find(i => i.id === id);
+  cart = cart.filter(i => i.id !== id);
+  saveCart(cart);
+  if (item) showToast('🗑 ' + item.name + ' removed — ହ. ।');
+  renderCart();
+}
+
+function clearCart() {
+  if (!confirm('Clear entire cart? — ସମ୍ପୂର୍ଣ ଖାଲି କରିବ?')) return;
+  saveCart([]);
+  renderCart();
+  showToast('🗑 Cart cleared — ଖାଲି ହୋଇଗଲା');
+}
+
+function checkout() {
+  const cart = getCart();
+  if (!cart.length) return showToast('⚠️ Cart is empty! — ଖାଲି ।');
+  const user = PT_AUTH.getUser();
+  if (!user || user.role === 'guest') {
+    showToast('⚠️ Please login first — ଲଗ ଇନ କରନ୍ତୁ ।');
+    setTimeout(() => location.href = 'login.html?r=cart.html', 1200);
+    return;
+  }
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const delivery = subtotal > 300 ? 0 : 30;
+  const order = {
+    workerName: cart.map(i => i.vendor).filter((v,i,a) => a.indexOf(v)===i).join(', '),
+    workerEmoji: '🛒',
+    workerSubcat: 'Food/Haata Order',
+    workerVillage: cart[0]?.village || '',
+    workerPhone: '',
+    date: new Date().toISOString().split('T')[0],
+    time: new Date().toTimeString().slice(0,5),
+    location: user.village || 'Home',
+    totalAmount: subtotal + delivery,
+    items: cart,
+    itemCount: cart.length
+  };
+  saveOrder(order);
+  saveCart([]);
+  showToast('✅ Order placed! ORD#' + Date.now() + ' — ଅର୍ଡର ହୋଇଗଲା', 3000);
+  setTimeout(() => location.href = 'orders.html', 1500);
+}
+
+renderCart();
+</script>
+</body>
+</html>

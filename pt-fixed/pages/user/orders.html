@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders — The Part-Timers</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    .orders-hero { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); padding: 20px 20px 24px; color: white; }
+    .oh-back { background: rgba(255,255,255,0.15); border: none; color: white; width: 38px; height: 38px; border-radius: 12px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+    .filter-tabs { display: flex; background: var(--surface); padding: 0 20px; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+    .tab { padding: 13px 16px; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2.5px solid transparent; white-space: nowrap; transition: all 0.2s; }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .orders-list { padding: 14px 16px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; flex-shrink: 0; display:inline-block; }
+    .status-confirmed { background: var(--success); }
+    .status-pending    { background: var(--warning); }
+    .status-completed  { background: var(--info); }
+    .status-cancelled  { background: var(--danger); }
+    .new-badge { background: var(--accent); color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+    /* Rating Modal */
+    .rating-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; display: none; align-items: flex-end; justify-content: center; }
+    .rating-modal.open { display: flex; }
+    .rating-sheet { background: var(--surface); border-radius: 24px 24px 0 0; padding: 28px 24px 40px; width: 100%; max-width: 500px; }
+    .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+    .stars-row { display: flex; gap: 12px; justify-content: center; margin: 16px 0; }
+    .star-btn { font-size: 38px; cursor: pointer; transition: transform 0.15s; filter: grayscale(1); }
+    .star-btn.active { filter: none; transform: scale(1.1); }
+    .feedback-tabs { display: flex; gap: 8px; margin: 14px 0; flex-wrap: wrap; }
+    .ftag { padding: 7px 14px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 12px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+    .ftag.sel { background: var(--primary); color: white; border-color: var(--primary); }
+    .role-switcher { background: var(--bg); border-radius: var(--radius); padding: 14px; margin-bottom: 16px; border: 1.5px solid var(--border); }
+    .rs-label { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+    .rs-tabs { display: flex; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .rs-tab { flex: 1; padding: 9px; text-align: center; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: var(--surface); color: var(--text-muted); }
+    .rs-tab.active { background: var(--primary); color: white; }
+  </style>
+</head>
+<body>
+
+<div class="orders-hero">
+  <button class="oh-back" onclick="history.back()">←</button>
+  <div style="font-size:22px;font-weight:800;margin-bottom:4px">📋 My Orders — ଆ. ବ.</div>
+  <div style="font-size:13px;opacity:0.8">Track your service bookings — ସ. ବ. ଟ.</div>
+</div>
+
+<div class="filter-tabs">
+  <div class="tab active" onclick="setTab(this,'all')">All — ସ.</div>
+  <div class="tab" onclick="setTab(this,'confirmed')">✅ Confirmed</div>
+  <div class="tab" onclick="setTab(this,'pending')">⏳ Pending</div>
+  <div class="tab" onclick="setTab(this,'completed')">🏁 Done</div>
+  <div class="tab" onclick="setTab(this,'cancelled')">❌ Cancel</div>
+</div>
+
+<div class="orders-list" id="ordersList"></div>
+
+<!-- Rating Modal -->
+<div class="rating-modal" id="ratingModal" onclick="if(event.target===this)closeRating()">
+  <div class="rating-sheet">
+    <div class="modal-handle"></div>
+    <div style="font-size:18px;font-weight:800;margin-bottom:4px" id="ratingTitle">⭐ Give Rating — ରେଟ ଦ୍ୟ</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px" id="ratingSubtitle">Share your experience — ଆପଣଙ୍କ ଅନୁଭବ ଦ୍ୟ</div>
+
+    <!-- Who is rating whom -->
+    <div class="role-switcher" id="roleSwitcher">
+      <div class="rs-label">Your role in this order? — ଆପଣଙ୍କ ଭୂମିକା?</div>
+      <div class="rs-tabs">
+        <div class="rs-tab active" id="rTabCustomer" onclick="switchRatingRole('customer')">👤 I am Customer — ଗ୍ରାହକ</div>
+        <div class="rs-tab" id="rTabWorker" onclick="switchRatingRole('worker')">👷 I am Worker — ଶ୍ରମିକ</div>
+      </div>
+    </div>
+
+    <div id="ratingTargetInfo" style="background:var(--bg);border-radius:var(--radius);padding:12px;margin-bottom:14px;font-size:13px;font-weight:600"></div>
+
+    <div class="stars-row" id="starsRow">
+      <span class="star-btn" data-v="1" onclick="setStar(1)">⭐</span>
+      <span class="star-btn" data-v="2" onclick="setStar(2)">⭐</span>
+      <span class="star-btn" data-v="3" onclick="setStar(3)">⭐</span>
+      <span class="star-btn" data-v="4" onclick="setStar(4)">⭐</span>
+      <span class="star-btn" data-v="5" onclick="setStar(5)">⭐</span>
+    </div>
+    <div style="text-align:center;font-size:20px;font-weight:800;margin-bottom:14px" id="starLabel">⭐ Select Rating — ରେଟିଂ ବାଛନ୍ତୁ</div>
+
+    <!-- Quick feedback tags — changes based on role -->
+    <div style="font-size:13px;font-weight:600;margin-bottom:8px">Quick feedback — ଶୀଘ୍ର ମତାମତ :</div>
+    <div class="feedback-tabs" id="feedbackTags"></div>
+
+    <textarea class="form-control" id="ratingText" placeholder="Anything else to say? (optional) — ଅଧିକ କିଛି? (ଐଚ୍ଛିକ)" style="min-height:70px;margin-top:14px"></textarea>
+
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-outline" style="width:100px" onclick="closeRating()">Cancel</button>
+      <button class="btn btn-primary" style="flex:1" onclick="submitRating()">✅ Submit Rating — ରେଟିଂ ଦ୍ୟ</button>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bn-items">
+    <a class="bn-item" href="../../index.html"><div class="bn-icon">🏠</div><div class="bn-label">Home</div></a>
+    <a class="bn-item" href="../search.html"><div class="bn-icon">🔍</div><div class="bn-label">Search</div></a>
+    <a class="bn-item" href="../food/index.html"><div class="bn-icon">🍽️</div><div class="bn-label">Food</div></a>
+    <a class="bn-item active" href="orders.html"><div class="bn-icon">📋</div><div class="bn-label">Orders</div></a>
+    <a class="bn-item" href="profile.html"><div class="bn-icon">👤</div><div class="bn-label">Profile</div></a>
+  </div>
+</nav>
+
+<div id="toast"></div>
+<script src="../../data/config.js"></script>
+<script src="../../data/data.js"></script>
+<script src="../../assets/js/app.js"></script>
+<script>
+let currentTab = 'all';
+let newOrderId = getParam('new');
+let ratingOrderId = null;
+let selectedStar = 0;
+let selectedTags = [];
+let ratingRole = 'customer'; // 'customer' rating worker, or 'worker' rating customer
+
+const CUSTOMER_FEEDBACK_TAGS = ['Good work 👍','On time ⏰','Clear communication 👌','No issues at all 🌟','Will hire again 🔄','Fair price ₹','Clean work ⭐'];
+const WORKER_FEEDBACK_TAGS   = ['Honest person 😊','Informed on time ⏰','Paid correctly ₹','Respectful behaviour 🙏','Explained clearly 👌','Will give work again 🔄','No issues 🌟'];
+
+const STATUS_COLORS = {
+  confirmed: 'var(--success)', pending: 'var(--warning)',
+  completed: 'var(--info)',    cancelled: 'var(--danger)'
+};
+const STATUS_TEXT = {
+  confirmed:'✅ Confirm',  pending:'⏳ Pending',
+  completed:'🏁 Completed', cancelled:'❌ Cancelled'
+};
+
+const DEMO_ORDERS = [
+  { id:'ORD001', workerName:'Rabindra Nayak', workerEmoji:'🚜', workerSubcat:'Tractor Operator', workerVillage:'Kendrapara', workerPhone:'98XXXXXX01', date:'2025-08-01', time:'07:00', location:'North Field, Aul', totalAmount:840, status:'confirmed', createdAt:'2025-07-30T10:00:00Z', durType:'hourly', qty:1 },
+  { id:'ORD002', workerName:'Priya Das',      workerEmoji:'⚡', workerSubcat:'Electrician',      workerVillage:'Bhubaneswar',workerPhone:'98XXXXXX03', date:'2025-07-28', time:'09:00', location:'My House, Ward 5', totalAmount:420, status:'completed', createdAt:'2025-07-26T08:00:00Z', durType:'hourly', qty:1 },
+  { id:'ORD003', workerName:'Kavita Nanda',   workerEmoji:'📚', workerSubcat:'Math & Science Tutor',workerVillage:'Bhubaneswar',workerPhone:'98XXXXXX07', date:'2025-08-05', time:'17:00', location:'Home Tuition',  totalAmount:525, status:'pending',   createdAt:'2025-07-31T14:00:00Z', durType:'daily', qty:1 },
+];
+
+function setTab(el, tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function render() {
+  const myOrders = getOrders();
+  const all = myOrders.length ? myOrders : DEMO_ORDERS;
+  const filtered = currentTab === 'all' ? all : all.filter(o => o.status === currentTab);
+
+  if (!filtered.length) {
+    document.getElementById('ordersList').innerHTML = `
+      <div style="text-align:center;padding:60px 20px">
+        <div style="font-size:60px;margin-bottom:16px">📋</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px">No orders yet — ଏଠି ଅର୍ଡର ନାହିଁ ।</div>
+        <div style="font-size:14px;color:var(--text-muted);margin-bottom:20px">Book a service to get started — ସେବା ବୁକ କରନ୍ତୁ</div>
+        <a href="../../index.html" class="btn btn-primary" style="display:inline-flex;text-decoration:none">Browse Services →</a>
+      </div>`;
+    return;
+  }
+
+  const rated = getRatedOrders();
+  document.getElementById('ordersList').innerHTML = filtered.map(o => {
+    const isNew = o.id === newOrderId;
+    const isRated = rated[o.id];
+    return `
+    <div class="order-card" style="margin-bottom:12px">
+      <div class="oc-head">
+        <div class="oc-avatar">${o.workerEmoji || '🔧'}</div>
+        <div class="oc-head-info" style="flex:1">
+          <div class="oc-name">${o.workerName} ${isNew ? '<span class="new-badge">NEW</span>' : ''}</div>
+          <div class="oc-service">${o.workerSubcat || ''} • ${o.workerVillage || ''}</div>
+          <div style="font-size:11px;color:var(--text-light);margin-top:2px">#${o.id}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
+          <span class="status-dot status-${o.status}"></span>
+          <span style="font-size:11px;font-weight:700;color:${STATUS_COLORS[o.status]}">${STATUS_TEXT[o.status] || o.status}</span>
+        </div>
+      </div>
+      <div class="oc-detail">
+        📅 ${o.date} ${o.time ? '• ⏰ ' + o.time : ''} • 📍 ${o.location || 'N/A'}
+        ${o.itemCount ? ` • 🛒 ${o.itemCount} items` : ''}
+      </div>
+      <div class="oc-foot">
+        <div class="oc-price">₹${o.totalAmount}</div>
+        <div class="oc-btns" style="display:flex;gap:6px;flex-wrap:wrap">
+          ${o.status === 'confirmed' ? `<button class="btn btn-outline btn-sm" onclick="cancelOrder('${o.id}')">Cancel — ବ. ।</button>` : ''}
+          ${o.status === 'completed' && !isRated
+            ? `<button class="btn btn-primary btn-sm" onclick="openRating('${o.id}')">⭐ Rate Now — ରେଟ ଦ୍ୟ</button>`
+            : o.status === 'completed' ? `<span style="font-size:12px;color:var(--success);font-weight:700">⭐ Rated</span>` : ''}
+          <button class="btn btn-outline btn-sm" onclick="viewOrder('${o.id}')">Details</button>
+          ${o.workerPhone && !o.workerPhone.includes('X')
+            ? `<a class="btn btn-sm" href="tel:${o.workerPhone}" style="background:#E8F5E9;color:var(--primary);text-decoration:none">📞</a>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function getRatedOrders() {
+  try { return JSON.parse(localStorage.getItem('pt_rated_orders') || '{}'); } catch(e) { return {}; }
+}
+
+function openRating(orderId) {
+  ratingOrderId = orderId;
+  selectedStar = 0;
+  selectedTags = [];
+  ratingRole = 'customer';
+  document.getElementById('ratingText').value = '';
+  updateStarDisplay();
+  updateRatingUI();
+  document.getElementById('ratingModal').classList.add('open');
+}
+
+function updateRatingUI() {
+  const all = [...getOrders(), ...DEMO_ORDERS];
+  const order = all.find(o => o.id === ratingOrderId);
+  if (!order) return;
+  const isCustomer = ratingRole === 'customer';
+  document.getElementById('ratingTitle').textContent = '⭐ Give Rating — ରେଟ ଦ୍ୟ';
+  document.getElementById('ratingSubtitle').textContent = isCustomer
+    ? `Rate Worker: ${order.workerName} — ଶ୍ରମିକଙ୍କୁ ରେଟ`
+    : `Rate Customer — ଗ୍ରାହକଙ୍କୁ ରେଟ`;
+  document.getElementById('ratingTargetInfo').innerHTML = isCustomer
+    ? `👷 <strong>${order.workerName}</strong> — ${order.workerSubcat} • ${order.workerVillage}`
+    : `👤 <strong>Customer</strong> — Order #${order.id}`;
+
+  const tags = isCustomer ? CUSTOMER_FEEDBACK_TAGS : WORKER_FEEDBACK_TAGS;
+  document.getElementById('feedbackTags').innerHTML = tags.map(t =>
+    `<div class="ftag${selectedTags.includes(t) ? ' sel' : ''}" onclick="toggleTag(this,'${t}')">${t}</div>`
+  ).join('');
+  document.getElementById('rTabCustomer').classList.toggle('active', isCustomer);
+  document.getElementById('rTabWorker').classList.toggle('active', !isCustomer);
+}
+
+function switchRatingRole(role) {
+  ratingRole = role;
+  selectedTags = [];
+  updateRatingUI();
+}
+
+function toggleTag(el, tag) {
+  if (selectedTags.includes(tag)) {
+    selectedTags = selectedTags.filter(t => t !== tag);
+    el.classList.remove('sel');
+  } else {
+    selectedTags.push(tag);
+    el.classList.add('sel');
+  }
+}
+
+function setStar(n) {
+  selectedStar = n;
+  updateStarDisplay();
+}
+
+function updateStarDisplay() {
+  document.querySelectorAll('.star-btn').forEach((s, i) => {
+    s.classList.toggle('active', i < selectedStar);
+  });
+  const labels = ['', 'Very Bad 😞 | ଅତ୍ୟନ୍ତ ଖରାପ', 'Not Good 😕 | ଭଲ ନୁହେଁ', 'Okay 😐 | ଠିକ ଅଛି', 'Good 😊 | ଭଲ', 'Excellent! 🌟 | ଅତ୍ୟୁତ୍ତମ'];
+  document.getElementById('starLabel').textContent = selectedStar ? labels[selectedStar] : '⭐ Pick a rating — ରେଟିଂ ବାଛନ୍ତୁ';
+}
+
+function closeRating() {
+  document.getElementById('ratingModal').classList.remove('open');
+  ratingOrderId = null;
+}
+
+function submitRating() {
+  if (!selectedStar) return showToast('⚠️ Please select a star rating first — ରେଟିଂ ବାଛନ୍ତୁ');
+  const text = document.getElementById('ratingText').value.trim();
+  const all  = [...getOrders(), ...DEMO_ORDERS];
+  const order = all.find(o => o.id === ratingOrderId);
+
+  const ratingData = {
+    orderId:    ratingOrderId,
+    ratingBy:   ratingRole,
+    workerName: order?.workerName || '',
+    rating:     selectedStar,
+    tags:       selectedTags,
+    text:       text,
+    createdAt:  new Date().toISOString()
+  };
+  SHEETS_API.post('submitRating', ratingData);
+
+  // Save locally too
+  const allRatings = JSON.parse(localStorage.getItem('pt_ratings') || '[]');
+  allRatings.unshift(ratingData);
+  localStorage.setItem('pt_ratings', JSON.stringify(allRatings));
+
+  // Mark order as rated
+  const rated = getRatedOrders();
+  rated[ratingOrderId] = true;
+  localStorage.setItem('pt_rated_orders', JSON.stringify(rated));
+
+  // Update order status to completed
+  const orders = getOrders();
+  const idx = orders.findIndex(o => o.id === ratingOrderId);
+  if (idx >= 0) { orders[idx].status = 'completed'; localStorage.setItem('pt_orders', JSON.stringify(orders)); }
+
+  showToast('⭐ Rating submitted! Thank you — ଧନ୍ୟବାଦ', 3000);
+  closeRating();
+  render();
+}
+
+function cancelOrder(id) {
+  if (!confirm('Cancel this booking? — ଏ ବୁକିଂ ରଦ ହେଉ ?')) return;
+  const orders = getOrders();
+  const i = orders.findIndex(o => o.id === id);
+  if (i >= 0) { orders[i].status = 'cancelled'; localStorage.setItem('pt_orders', JSON.stringify(orders)); }
+  showToast('❌ Order cancelled — ଅର୍ଡର ବାତିଲ');
+  render();
+}
+
+function viewOrder(id) {
+  const all = [...getOrders(), ...DEMO_ORDERS];
+  const o = all.find(x => x.id === id);
+  if (!o) return showToast('Order not found! — ଅର୍ଡର ମିଳିଲା ନାହିଁ');
+  showToast(`📋 #${o.id} • ₹${o.totalAmount} • ${o.status}`);
+}
+
+render();
+</script>
+</body>
+</html>

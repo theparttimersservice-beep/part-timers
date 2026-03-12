@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — The Part-Timers</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    body { background: #F3F4F6; font-family: var(--font); margin: 0; }
+    .admin-header { background: linear-gradient(135deg,#1A1A2E,#2E2E4E); color: white; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+    .ah-logo { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 700; }
+    .ah-badge { background: #F44336; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+    .admin-shell { display: flex; }
+    .admin-sidebar { width: 220px; background: #111827; flex-shrink: 0; position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto; }
+    .admin-main { flex: 1; padding: 24px; overflow: auto; min-height: calc(100vh - 60px); }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 11px 20px; font-size: 13px; font-weight: 500; color: #9CA3AF; cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent; text-decoration: none; }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
+    .nav-item.active { background: rgba(255,255,255,0.08); color: white; border-left-color: #4CAF50; }
+    .nav-section { font-size: 10px; color: #4B5563; text-transform: uppercase; letter-spacing: 1px; padding: 14px 20px 5px; font-weight: 700; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .panel-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .panel-sub { font-size: 13px; color: #6B7280; margin-bottom: 24px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: white; border-radius: 14px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border: 1px solid #E5E7EB; }
+    .sc-icon { font-size: 28px; margin-bottom: 10px; }
+    .sc-num { font-size: 28px; font-weight: 800; color: #1F2937; line-height: 1; }
+    .sc-label { font-size: 13px; color: #6B7280; margin-top: 4px; }
+    .sc-change { font-size: 12px; color: #10B981; margin-top: 6px; font-weight: 600; }
+    .admin-card { background: white; border-radius: 14px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border: 1px solid #E5E7EB; margin-bottom: 20px; }
+    .admin-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid #F0F0F0; }
+    .save-btn { background: #2E7D32; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+    .save-btn:hover { opacity: 0.85; }
+    .delete-btn { background: #FEE2E2; color: #DC2626; border: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .edit-btn   { background: #EFF6FF; color: #2563EB; border: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .toggle-switch { position: relative; width: 46px; height: 26px; cursor: pointer; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .ts-track { position: absolute; inset: 0; background: #D1D5DB; border-radius: 26px; transition: 0.3s; }
+    .ts-track::before { content:''; position: absolute; width: 20px; height: 20px; border-radius: 50%; background: white; top: 3px; left: 3px; transition: 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+    input:checked + .ts-track { background: #4CAF50; }
+    input:checked + .ts-track::before { transform: translateX(20px); }
+    .row-between { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F3F4F6; }
+    .row-between:last-child { border: none; }
+    .announcement-list { display: flex; flex-direction: column; gap: 10px; }
+    .ann-item { display: flex; align-items: center; gap: 10px; background: #F9FAFB; border-radius: 10px; padding: 10px 14px; border: 1px solid #E5E7EB; }
+    .ann-text { flex: 1; font-size: 13px; }
+    .ann-text input { width: 100%; border: none; background: transparent; font-family: var(--font); font-size: 13px; color: #1F2937; }
+    .ann-text input:focus { outline: none; }
+    .color-row { display: flex; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid #F3F4F6; }
+    .color-row:last-child { border: none; }
+    .color-label { flex: 1; font-size: 13px; color: #4B5563; }
+    .color-input { width: 44px; height: 36px; padding: 2px; border: 1.5px solid #E5E7EB; border-radius: 8px; cursor: pointer; }
+    .cat-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F3F4F6; }
+    .cat-row:last-child { border: none; }
+    .cat-row .emoji { font-size: 22px; width: 30px; }
+    .cat-row .cat-info { flex: 1; }
+    .cat-row .cat-name { font-size: 14px; font-weight: 600; }
+    .cat-row .cat-count { font-size: 12px; color: #9CA3AF; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .data-table th { background: #F9FAFB; padding: 10px 12px; text-align: left; font-weight: 600; font-size: 11px; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #E5E7EB; }
+    .data-table td { padding: 11px 12px; border-bottom: 1px solid #F5F5F5; vertical-align: middle; }
+    .data-table tr:hover td { background: #FAFAFA; }
+    .pill { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .pill-green  { background: #D1FAE5; color: #065F46; }
+    .pill-yellow { background: #FEF3C7; color: #92400E; }
+    .pill-red    { background: #FEE2E2; color: #991B1B; }
+    .pill-blue   { background: #DBEAFE; color: #1E40AF; }
+    .logo-preview { width: 80px; height: 80px; border-radius: 20px; border: 2px dashed #E5E7EB; display: flex; align-items: center; justify-content: center; font-size: 40px; cursor: pointer; background: #F9FAFB; transition: border-color 0.2s; }
+    .logo-preview:hover { border-color: #4CAF50; }
+    .upload-area { border: 2px dashed #E5E7EB; border-radius: 12px; padding: 30px; text-align: center; cursor: pointer; background: #F9FAFB; transition: all 0.2s; }
+    .upload-area:hover { border-color: #4CAF50; background: #F0FDF4; }
+    @media (max-width: 768px) {
+  .admin-sidebar { position: fixed; left: -240px; top: 60px; height: calc(100vh - 60px); z-index: 400; transition: left 0.28s ease; }
+  .admin-sidebar.open { left: 0; }
+  .admin-main { padding: 16px; }
+  #adminMenuToggle { display: flex !important; }
+}
+.admin-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 399; }
+.admin-menu-overlay.open { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="admin-header">
+  <div class="ah-logo">
+    <span id="adminLogoIcon" style="font-size:22px">🌾</span>
+    <span id="adminBrandName">The Part-Timers</span>
+    <span class="ah-badge">ADMIN</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span style="font-size:13px;color:#9CA3AF" id="adminUserName">Admin</span>
+    <a href="../../index.html" style="color:#9CA3AF;font-size:12px;text-decoration:none">← View Site</a>
+    <button onclick="PT_AUTH.logout()" style="background:#374151;border:none;color:#9CA3AF;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer">Logout</button>
+    <button id="adminMenuToggle" onclick="toggleAdminMenu()" style="display:none;background:#374151;border:none;color:white;width:36px;height:36px;border-radius:8px;font-size:18px;cursor:pointer;align-items:center;justify-content:center">☰</button>
+  </div>
+</div>
+
+<div class="admin-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="nav-section">Overview</div>
+    <a class="nav-item active" onclick="showPanel('dashboard')">📊 Dashboard</a>
+
+    <div class="nav-section">Appearance</div>
+    <a class="nav-item" onclick="showPanel('branding')">🎨 Branding & Logo</a>
+    <a class="nav-item" onclick="showPanel('colors')">🎨 Colors & Theme</a>
+    <a class="nav-item" onclick="showPanel('announcements')">📢 Announcement Bar</a>
+    <a class="nav-item" onclick="showPanel('categories')">🗂️ Categories</a>
+
+    <div class="nav-section">Content</div>
+    <a class="nav-item" onclick="showPanel('workers')">👷 Workers</a>
+    <a class="nav-item" onclick="showPanel('vendors')">🏪 Vendors</a>
+    <a class="nav-item" onclick="showPanel('orders')">📋 Orders</a>
+
+    <div class="nav-section">Settings</div>
+    <a class="nav-item" onclick="showPanel('plans')">💳 Pricing Plans</a>
+    <a class="nav-item" onclick="showPanel('integrations')">🔗 Integrations</a>
+    <a class="nav-item" onclick="showPanel('features')">🔧 Feature Toggles</a>
+    <a class="nav-item" onclick="showPanel('legal')">⚖️ Legal Text</a>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+
+    <!-- ── DASHBOARD ── -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="panel-title">📊 Dashboard</div>
+      <div class="panel-sub">Welcome back! Here's your platform overview.</div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="sc-icon">👷</div><div class="sc-num" id="stat-workers">18</div><div class="sc-label">Workers Registered</div><div class="sc-change">+3 this week</div></div>
+        <div class="stat-card"><div class="sc-icon">📋</div><div class="sc-num" id="stat-orders">0</div><div class="sc-label">Total Orders</div></div>
+        <div class="stat-card"><div class="sc-icon">🏪</div><div class="sc-num">5</div><div class="sc-label">Active Vendors</div><div class="sc-change">+1 this month</div></div>
+        <div class="stat-card"><div class="sc-icon">💰</div><div class="sc-num">₹0</div><div class="sc-label">Revenue (Demo)</div></div>
+        <div class="stat-card"><div class="sc-icon">⭐</div><div class="sc-num">4.7</div><div class="sc-label">Avg Platform Rating</div></div>
+        <div class="stat-card"><div class="sc-icon">🌐</div><div class="sc-num">30+</div><div class="sc-label">Villages Covered</div></div>
+      </div>
+      <div class="admin-card">
+        <h3>🚀 Quick Actions</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <button class="save-btn" onclick="showPanel('announcements')">📢 Edit Announcement Bar</button>
+          <button class="save-btn" onclick="showPanel('branding')">🎨 Change Logo</button>
+          <button class="save-btn" onclick="showPanel('categories')">🗂️ Manage Categories</button>
+          <button class="save-btn" onclick="showPanel('workers')">👷 View Workers</button>
+          <button onclick="window.open('../../index.html')" class="save-btn" style="background:#0277BD">👁️ Preview Site</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BRANDING ── -->
+    <div class="panel" id="panel-branding">
+      <div class="panel-title">🎨 Branding & Logo</div>
+      <div class="panel-sub">Change platform name, logo and tagline. No coding needed.</div>
+
+      <div class="admin-card">
+        <h3>🌾 Logo</h3>
+        <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
+          <div>
+            <div style="font-size:12px;color:#6B7280;margin-bottom:8px">Current Logo</div>
+            <div class="logo-preview" id="logoPreviewEl" onclick="document.getElementById('logoFileInput').click()">🌾</div>
+            <div style="font-size:11px;color:#9CA3AF;margin-top:6px;text-align:center">Click to upload</div>
+            <input type="file" id="logoFileInput" accept="image/*" style="display:none" onchange="uploadLogo(this)">
+          </div>
+          <div style="flex:1;min-width:200px">
+            <div class="form-group">
+              <label class="form-label" style="font-size:13px">Logo Emoji (if no image)</label>
+              <input type="text" id="logoEmojiInput" class="form-control" value="🌾" maxlength="4" style="font-size:24px;width:80px">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="font-size:13px">Or Logo Image URL</label>
+              <input type="text" id="logoUrlInput" class="form-control" placeholder="https://... or assets/images/logo.png">
+            </div>
+            <button class="save-btn" onclick="saveLogo()">💾 Save Logo</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3>📝 Brand Text</h3>
+        <div class="form-group">
+          <label class="form-label" style="font-size:13px">Platform Name</label>
+          <input type="text" id="brandName" class="form-control" value="The Part-Timers">
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-size:13px">Tagline (English)</label>
+          <input type="text" id="brandTagline" class="form-control" value="Odisha's Rural Services Platform">
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-size:13px">Tagline (Odia)</label>
+          <input type="text" id="brandTaglineOdia" class="form-control" value="ଓଡ଼ିଶାର ଗ୍ରାମୀଣ ସେବା ମଞ୍ଚ" style="font-family:var(--font-odia)">
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-size:13px">Contact Phone</label>
+          <input type="tel" id="brandPhone" class="form-control" placeholder="+91-XXXXXXXXXX">
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-size:13px">WhatsApp Number (without +)</label>
+          <input type="text" id="brandWA" class="form-control" placeholder="91XXXXXXXXXX">
+        </div>
+        <button class="save-btn" onclick="saveBranding()">💾 Save Brand Settings</button>
+      </div>
+    </div>
+
+    <!-- ── COLORS ── -->
+    <div class="panel" id="panel-colors">
+      <div class="panel-title">🎨 Colors & Theme</div>
+      <div class="panel-sub">Customize platform colors. Changes apply instantly.</div>
+      <div class="admin-card">
+        <h3>🎨 Color Palette</h3>
+        <div id="colorRows">
+          <!-- Generated by JS -->
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="save-btn" onclick="saveColors()">💾 Save Colors</button>
+          <button onclick="resetColors()" style="background:#F3F4F6;border:none;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;color:#374151">↩ Reset to Default</button>
+        </div>
+        <div style="margin-top:16px">
+          <label style="font-size:13px;font-weight:600;color:#374151">🎨 Quick Themes</label>
+          <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+            <button onclick="applyThemePreset('green')" style="padding:8px 16px;background:#2E7D32;color:white;border:none;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700">🌿 Odisha Green</button>
+            <button onclick="applyThemePreset('blue')" style="padding:8px 16px;background:#0277BD;color:white;border:none;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700">🌊 Ocean Blue</button>
+            <button onclick="applyThemePreset('orange')" style="padding:8px 16px;background:#E65100;color:white;border:none;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700">🍊 Harvest Orange</button>
+            <button onclick="applyThemePreset('dark')" style="padding:8px 16px;background:#1A1A2E;color:white;border:none;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700">🌙 Dark Mode</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ANNOUNCEMENTS ── -->
+    <div class="panel" id="panel-announcements">
+      <div class="panel-title">📢 Announcement Bar</div>
+      <div class="panel-sub">Edit the scrolling announcement bar on top of every page. No coding needed.</div>
+      <div class="admin-card">
+        <h3>📢 Announcements List</h3>
+        <div style="font-size:12px;color:#6B7280;margin-bottom:16px">Click on text to edit. Drag to reorder.</div>
+        <div class="announcement-list" id="annList"></div>
+        <div style="margin-top:16px;display:flex;gap:10px">
+          <button class="save-btn" onclick="addAnn()">+ Add Item</button>
+          <button class="save-btn" onclick="saveAnnouncements()">💾 Save & Publish</button>
+        </div>
+      </div>
+      <div class="admin-card">
+        <h3>⚙️ Bar Settings</h3>
+        <div class="row-between">
+          <div><div style="font-size:14px;font-weight:600">Show Announcement Bar</div><div style="font-size:12px;color:#9CA3AF">Display the scrolling bar on all pages</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="annToggle" checked onchange="toggleAnn()"><div class="ts-track"></div></label>
+        </div>
+        <div class="row-between">
+          <div><div style="font-size:14px;font-weight:600">Scroll Speed</div></div>
+          <select id="annSpeed" class="form-control" style="width:130px;padding:7px 10px;font-size:13px">
+            <option value="20">Normal</option>
+            <option value="35">Slow</option>
+            <option value="12">Fast</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CATEGORIES ── -->
+    <div class="panel" id="panel-categories">
+      <div class="panel-title">🗂️ Categories</div>
+      <div class="panel-sub">Show/hide categories on homepage. Reorder them. No coding needed.</div>
+      <div class="admin-card">
+        <h3>🗂️ Category Management</h3>
+        <div id="catList"></div>
+        <button class="save-btn" style="margin-top:16px" onclick="saveCategories()">💾 Save Changes</button>
+      </div>
+    </div>
+
+    <!-- ── WORKERS ── -->
+    <div class="panel" id="panel-workers">
+      <div class="panel-title">👷 Workers</div>
+      <div class="panel-sub">View, approve or remove worker registrations.</div>
+      <div class="admin-card">
+        <h3>👷 Registered Workers</h3>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Name</th><th>Category</th><th>Village</th><th>Rating</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="workersTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── VENDORS ── -->
+    <div class="panel" id="panel-vendors">
+      <div class="panel-title">🏪 Vendors</div>
+      <div class="panel-sub">Manage vendor accounts and subscription plans.</div>
+      <div class="admin-card">
+        <h3>🏪 Active Vendors</h3>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Vendor</th><th>Village</th><th>Plan</th><th>Verified</th><th>Actions</th></tr></thead>
+            <tbody id="vendorsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ORDERS ── -->
+    <div class="panel" id="panel-orders">
+      <div class="panel-title">📋 Orders</div>
+      <div class="panel-sub">All bookings made on the platform.</div>
+      <div class="admin-card">
+        <h3>📋 Order History</h3>
+        <div id="ordersAdmin"></div>
+      </div>
+    </div>
+
+    <!-- ── PLANS ── -->
+    <div class="panel" id="panel-plans">
+      <div class="panel-title">💳 Pricing Plans</div>
+      <div class="panel-sub">Edit vendor subscription plan prices and features.</div>
+      <div id="plansCards"></div>
+    </div>
+
+    <!-- ── INTEGRATIONS ── -->
+    <div class="panel" id="panel-integrations">
+      <div class="panel-title">🔗 Integrations</div>
+      <div class="panel-sub">Configure Google Maps, Google Sheets and other integrations.</div>
+      <div class="admin-card">
+        <h3>🗺️ Google Maps</h3>
+        <div class="form-group">
+          <label class="form-label" style="font-size:13px">API Key</label>
+          <input type="text" id="gmapsKey" class="form-control" placeholder="AIzaSy...">
+        </div>
+        <button class="save-btn" onclick="saveIntegration('mapsApiKey','gmapsKey')">💾 Save Maps Key</button>
+      </div>
+      <div class="admin-card">
+        <h3>📊 Google Sheets</h3>
+        <div class="form-group">
+          <label class="form-label" style="font-size:13px">Apps Script URL</label>
+          <input type="text" id="sheetsUrl" class="form-control" placeholder="https://script.google.com/macros/s/...">
+        </div>
+        <button class="save-btn" onclick="saveIntegration('sheetsScriptUrl','sheetsUrl')">💾 Save Sheets URL</button>
+        <div style="margin-top:14px;font-size:12px;color:#6B7280">
+          📋 <a href="../legal/terms.html" style="color:#2563EB">View setup guide</a> to connect Google Sheets as database.
+        </div>
+      </div>
+      <div class="admin-card">
+        <h3>📱 WhatsApp Integration</h3>
+        <div class="form-group">
+          <label class="form-label" style="font-size:13px">Business WhatsApp Number</label>
+          <input type="text" id="waNum" class="form-control" placeholder="91XXXXXXXXXX (without +)">
+        </div>
+        <button class="save-btn" onclick="saveIntegration('whatsapp','waNum')">💾 Save</button>
+      </div>
+    </div>
+
+    <!-- ── FEATURES ── -->
+    <div class="panel" id="panel-features">
+      <div class="panel-title">🔧 Feature Toggles</div>
+      <div class="panel-sub">Turn features on/off without any coding.</div>
+      <div class="admin-card">
+        <h3>🔧 Platform Features</h3>
+        <div id="featureToggles"></div>
+      </div>
+    </div>
+
+    <!-- ── LEGAL ── -->
+    <div class="panel" id="panel-legal">
+      <div class="panel-title">⚖️ Legal Text</div>
+      <div class="panel-sub">Edit Terms & Conditions, legal notices, and policies.</div>
+      <div class="admin-card">
+        <h3>⚖️ Legal Notice Text</h3>
+        <textarea id="legalText" class="form-control" style="min-height:120px">If any user violates platform rules, provides false information, commits fraud, or behaves illegally, The Part-Timers team reserves the right to suspend accounts or take action according to applicable law.</textarea>
+        <button class="save-btn" style="margin-top:12px" onclick="saveLegalText()">💾 Save Legal Notice</button>
+      </div>
+      <div class="admin-card">
+        <h3>📄 Terms & Conditions</h3>
+        <textarea id="termsText" class="form-control" style="min-height:160px">1. Workers keep 100% earnings. Platform charges 0% commission.
+2. Vendor subscriptions fund platform operations.
+3. All users must provide accurate information.
+4. Platform reserves the right to suspend abusive accounts.
+5. Bookings are agreements between customers and workers directly.
+6. Platform acts only as a marketplace connector.</textarea>
+        <button class="save-btn" style="margin-top:12px" onclick="showToast('✅ Terms saved!')">💾 Save Terms</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div id="toast"></div>
+<div class="admin-menu-overlay" id="adminMenuOverlay" onclick="toggleAdminMenu()"></div>
+
+<script src="../../data/config.js"></script>
+<script src="../../data/data.js"></script>
+<script src="../../assets/js/app.js"></script>
+<script>
+// ── Show/hide panels ──
+function showPanel(id, callerEl) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const panelEl = document.getElementById('panel-' + id);
+  if (panelEl) panelEl.classList.add('active');
+  // Highlight matching sidebar item
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+      n.classList.add('active');
+    }
+  });
+  loadPanel(id);
+}
+
+function loadPanel(id) {
+  if (id === 'announcements') renderAnnList();
+  if (id === 'categories')    renderCatList();
+  if (id === 'colors')        renderColorRows();
+  if (id === 'workers')       renderWorkersTable();
+  if (id === 'vendors')       renderVendorsTable();
+  if (id === 'orders')        renderOrdersAdmin();
+  if (id === 'plans')         renderPlans();
+  if (id === 'features')      renderFeatures();
+  if (id === 'integrations')  loadIntegrations();
+  if (id === 'dashboard')     updateDashStats();
+  if (id === 'branding')      loadBranding();
+}
+
+// ── Dashboard stats ──
+function updateDashStats() {
+  const D = window.PT_DATA;
+  if (D) document.getElementById('stat-workers').textContent = D.workers.length;
+  document.getElementById('stat-orders').textContent = getOrders().length;
+}
+
+// ── Branding ──
+function loadBranding() {
+  const C = window.PT_CONFIG?.brand;
+  if (!C) return;
+  document.getElementById('brandName').value = C.name || '';
+  document.getElementById('brandTagline').value = C.tagline || '';
+  document.getElementById('logoEmojiInput').value = C.logoEmoji || '';
+  document.getElementById('logoPreviewEl').textContent = C.logoEmoji || '🌾';
+  document.getElementById('adminLogoIcon').textContent = C.logoEmoji || '🌾';
+  document.getElementById('adminBrandName').textContent = C.name || '';
+}
+
+function saveBranding() {
+  const C = window.PT_CONFIG;
+  if (!C) return;
+  C.brand.name = document.getElementById('brandName').value;
+  C.brand.tagline = document.getElementById('brandTagline').value;
+  C.brand.tagline_odia = document.getElementById('brandTaglineOdia').value;
+  C.brand.phone = document.getElementById('brandPhone').value;
+  C.brand.whatsapp = document.getElementById('brandWA').value;
+  PT_ADMIN.saveConfig('brand', C.brand);
+  document.getElementById('adminBrandName').textContent = C.brand.name;
+  showToast('✅ Brand settings saved!');
+}
+
+function saveLogo() {
+  const emoji = document.getElementById('logoEmojiInput').value;
+  const url   = document.getElementById('logoUrlInput').value.trim();
+  document.getElementById('logoPreviewEl').textContent = emoji || '🌾';
+  if (url) PT_ADMIN.updateLogo(url);
+  else {
+    if (window.PT_CONFIG?.brand) window.PT_CONFIG.brand.logoEmoji = emoji;
+    PT_ADMIN.saveConfig('logoEmoji', emoji);
+  }
+  document.getElementById('adminLogoIcon').textContent = emoji || '🌾';
+  showToast('✅ Logo updated!');
+}
+
+function uploadLogo(input) {
+  if (input.files[0]) {
+    const url = URL.createObjectURL(input.files[0]);
+    document.getElementById('logoPreviewEl').innerHTML = `<img src="${url}" style="width:76px;height:76px;object-fit:contain;border-radius:18px">`;
+    showToast('📸 Logo preview updated. Click Save Logo.');
+  }
+}
+
+// ── Announcement editor ──
+let annItems = [];
+function renderAnnList() {
+  annItems = [...(window.PT_CONFIG?.announcements || [])];
+  const el = document.getElementById('annList');
+  el.innerHTML = annItems.map((a, i) => `
+    <div class="ann-item">
+      <span style="font-size:18px;cursor:grab">⠿</span>
+      <div class="ann-text"><input value="${a.replace(/"/g,"&quot;")}" onchange="annItems[${i}]=this.value"></div>
+      <button class="delete-btn" onclick="removeAnn(${i})">✕</button>
+    </div>`).join('');
+}
+function addAnn() {
+  annItems.push('🌾 New announcement — edit here | ସ. .')
+  renderAnnList();
+}
+function removeAnn(i) { annItems.splice(i, 1); renderAnnList(); }
+function saveAnnouncements() {
+  PT_ADMIN.updateAnnouncements(annItems);
+  showToast('✅ Announcements saved and published!');
+}
+function toggleAnn() {
+  const on = document.getElementById('annToggle').checked;
+  if (window.PT_CONFIG?.features) window.PT_CONFIG.features.showAnnouncements = on;
+  PT_ADMIN.saveConfig('showAnnouncements', on);
+  showToast(on ? '✅ Announcement bar enabled' : '🚫 Announcement bar disabled');
+}
+
+// ── Category list editor ──
+function renderCatList() {
+  const cats = window.PT_CONFIG?.categories || [];
+  const D    = window.PT_DATA;
+  document.getElementById('catList').innerHTML = cats.map((c, i) => `
+    <div class="cat-row">
+      <div class="emoji">${c.icon}</div>
+      <div class="cat-info">
+        <div class="cat-name">${c.label}</div>
+        <div class="cat-count">${D ? D.workers.filter(w=>w.category===c.id).length : '?'} workers • /${c.id}</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" ${c.active ? 'checked' : ''} onchange="PT_ADMIN.toggleCategory('${c.id}',this.checked)">
+        <div class="ts-track"></div>
+      </label>
+    </div>`).join('');
+}
+
+function saveCategories() {
+  const cats = window.PT_CONFIG?.categories || [];
+  PT_ADMIN.saveConfig('categories', cats);
+  showToast('✅ Categories saved!');
+}
+
+// ── Color editor ──
+const COLOR_LABELS = { primary:'Primary Color', primaryLight:'Primary Light', primaryDark:'Primary Dark', accent:'Accent Color', accentLight:'Accent Light', bg:'Background', surface:'Surface / Card', text:'Main Text', textMuted:'Muted Text', border:'Border Color' };
+function renderColorRows() {
+  const col = window.PT_CONFIG?.colors || {};
+  document.getElementById('colorRows').innerHTML = Object.entries(COLOR_LABELS).map(([k,l]) => `
+    <div class="color-row">
+      <span class="color-label">${l}</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:8px;background:${col[k]||'#ccc'};border:1px solid #E5E7EB"></div>
+        <input type="color" class="color-input" id="color_${k}" value="${col[k]||'#cccccc'}" oninput="liveColor('${k}',this.value)">
+        <input type="text" value="${col[k]||''}" style="width:90px;padding:6px 8px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:12px;font-family:monospace" oninput="syncColor('${k}',this.value)">
+      </div>
+    </div>`).join('');
+}
+function liveColor(k, v) { PT_ADMIN.updateColor(k, v); }
+function syncColor(k, v) { if (v.startsWith('#') && v.length >= 4) { document.getElementById('color_'+k).value = v; liveColor(k, v); } }
+function saveColors() {
+  const col = window.PT_CONFIG?.colors || {};
+  PT_ADMIN.saveConfig('colors', col);
+  showToast('✅ Colors saved!');
+}
+function resetColors() {
+  const defaults = { primary:'#2E7D32', primaryLight:'#4CAF50', primaryDark:'#1B5E20', accent:'#FF6F00', accentLight:'#FFA726', bg:'#F1F8E9', surface:'#FFFFFF', text:'#1A1A1A', textMuted:'#5D5D5D', border:'#E0E0E0' };
+  if (window.PT_CONFIG) window.PT_CONFIG.colors = { ...window.PT_CONFIG.colors, ...defaults };
+  applyConfig();
+  renderColorRows();
+  showToast('↩ Colors reset to default');
+}
+function applyThemePreset(t) {
+  const themes = {
+    green:  { primary:'#2E7D32', primaryLight:'#4CAF50', primaryDark:'#1B5E20', accent:'#FF6F00', bg:'#F1F8E9' },
+    blue:   { primary:'#0277BD', primaryLight:'#039BE5', primaryDark:'#01579B', accent:'#FF6F00', bg:'#E1F5FE' },
+    orange: { primary:'#E65100', primaryLight:'#FF6D00', primaryDark:'#BF360C', accent:'#FFD600', bg:'#FFF3E0' },
+    dark:   { primary:'#4CAF50', primaryLight:'#66BB6A', primaryDark:'#388E3C', accent:'#FF9800', bg:'#1A1A1A', surface:'#2A2A2A', text:'#F5F5F5' },
+  };
+  if (themes[t] && window.PT_CONFIG) {
+    Object.assign(window.PT_CONFIG.colors, themes[t]);
+    applyConfig();
+    renderColorRows();
+    showToast('✅ Theme applied!');
+  }
+}
+
+// ── Workers table ──
+function renderWorkersTable() {
+  const D = window.PT_DATA;
+  if (!D) return;
+  document.getElementById('workersTable').innerHTML = D.workers.map((w,i) => `
+    <tr>
+      <td><strong>${w.emoji} ${w.name}</strong></td>
+      <td>${w.subcat}</td>
+      <td>${w.village}</td>
+      <td>${w.rating} ⭐</td>
+      <td><span class="pill ${w.verified ? 'pill-green' : 'pill-yellow'}">${w.verified ? 'Verified' : 'Pending'}</span></td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="edit-btn" onclick="editWorker(${i})">✏️ Edit</button>
+        <button class="edit-btn" style="background:#D1FAE5;color:#065F46" onclick="verifyWorker(${i})">✓ Verify</button>
+        <button class="delete-btn" onclick="removeWorker(${i})">✕ Remove</button>
+      </td>
+    </tr>`).join('');
+}
+
+// ── Vendors table ──
+function renderVendorsTable() {
+  const D = window.PT_DATA;
+  if (!D) return;
+  document.getElementById('vendorsTable').innerHTML = D.vendors.map(v => `
+    <tr>
+      <td><strong>${v.emoji} ${v.name}</strong></td>
+      <td>${v.village}</td>
+      <td><span class="pill pill-blue">${v.plan}</span></td>
+      <td><span class="pill ${v.verified ? 'pill-green' : 'pill-yellow'}">${v.verified ? 'Yes' : 'No'}</span></td>
+      <td><button class="edit-btn" onclick="showToast('✏️ Edit ${v.name}')">Edit</button></td>
+    </tr>`).join('');
+}
+
+// ── Orders ──
+function renderOrdersAdmin() {
+  const orders = getOrders();
+  if (!orders.length) {
+    document.getElementById('ordersAdmin').innerHTML = '<div style="text-align:center;padding:40px;color:#9CA3AF">No orders yet. Orders will appear here after customers book services.</div>';
+    return;
+  }
+  document.getElementById('ordersAdmin').innerHTML = `
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Order ID</th><th>Worker</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+        <tbody>
+          ${orders.map(o => `
+          <tr>
+            <td style="font-family:monospace">${o.id}</td>
+            <td>${o.workerEmoji} ${o.workerName}</td>
+            <td>${o.date} ${o.time || ''}</td>
+            <td style="font-weight:700;color:var(--accent)">₹${o.totalAmount}</td>
+            <td><span class="pill ${o.status==='confirmed'?'pill-green':o.status==='pending'?'pill-yellow':'pill-red'}">${o.status}</span></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+// ── Plans ──
+function renderPlans() {
+  const plans = window.PT_CONFIG?.plans || [];
+  document.getElementById('plansCards').innerHTML = plans.map((p, i) => `
+    <div class="admin-card">
+      <h3>💳 ${p.name}</h3>
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <div class="form-group" style="flex:1;min-width:120px">
+          <label class="form-label" style="font-size:13px">Plan Name</label>
+          <input class="form-control" value="${p.name}" onchange="PT_CONFIG.plans[${i}].name=this.value">
+        </div>
+        <div class="form-group" style="width:130px">
+          <label class="form-label" style="font-size:13px">Price (₹)</label>
+          <input type="number" class="form-control" value="${p.price}" onchange="PT_CONFIG.plans[${i}].price=+this.value">
+        </div>
+        <div class="form-group" style="width:120px">
+          <label class="form-label" style="font-size:13px">Period</label>
+          <select class="form-control" onchange="PT_CONFIG.plans[${i}].period=this.value">
+            <option ${p.period==='month'?'selected':''}>month</option>
+            <option ${p.period==='year'?'selected':''}>year</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-size:13px">Features (comma separated)</label>
+        <input class="form-control" value="${p.features.join(', ')}" onchange="PT_CONFIG.plans[${i}].features=this.value.split(',').map(s=>s.trim())">
+      </div>
+      <button class="save-btn" onclick="savePlan(${i})">💾 Save Plan</button>
+    </div>`).join('');
+}
+
+function savePlan(i) {
+  PT_ADMIN.saveConfig('plan_' + i, window.PT_CONFIG.plans[i]);
+  showToast('✅ Plan saved!');
+}
+
+// ── Features ──
+function renderFeatures() {
+  const F = window.PT_CONFIG?.features || {};
+  const labels = {
+    showAnnouncements: ['Announcement Bar', 'Show scrolling text at top'],
+    showGoogleMaps:    ['Google Maps', 'Enable map on search/profile pages'],
+    showSundayHaata:   ['Sunday Haata', 'Weekly digital marketplace feature'],
+    showWorkID:        ['Digital Work ID', 'Let workers create digital ID cards'],
+    darkModeToggle:    ['Dark Mode Toggle', 'Allow users to switch dark mode'],
+    multiLanguage:     ['Odia Language', 'Show Odia translations throughout'],
+    whatsappBooking:   ['WhatsApp Booking', 'Allow WhatsApp contact on profiles'],
+  };
+  document.getElementById('featureToggles').innerHTML = Object.entries(labels).map(([k, [l, s]]) => `
+    <div class="row-between">
+      <div><div style="font-size:14px;font-weight:600">${l}</div><div style="font-size:12px;color:#9CA3AF">${s}</div></div>
+      <label class="toggle-switch">
+        <input type="checkbox" ${F[k] !== false ? 'checked' : ''} onchange="toggleFeature('${k}',this.checked)">
+        <div class="ts-track"></div>
+      </label>
+    </div>`).join('');
+}
+
+function toggleFeature(k, v) {
+  if (window.PT_CONFIG?.features) window.PT_CONFIG.features[k] = v;
+  PT_ADMIN.saveConfig('feature_' + k, v);
+  showToast(v ? `✅ ${k} enabled` : `🚫 ${k} disabled`);
+}
+
+// ── Integrations ──
+function loadIntegrations() {
+  const G = window.PT_CONFIG?.google || {};
+  document.getElementById('gmapsKey').value  = G.mapsApiKey?.includes('YOUR') ? '' : G.mapsApiKey || '';
+  document.getElementById('sheetsUrl').value = G.sheetsScriptUrl?.includes('YOUR') ? '' : G.sheetsScriptUrl || '';
+  document.getElementById('waNum').value     = window.PT_CONFIG?.brand?.whatsapp || '';
+}
+
+function saveIntegration(field, inputId) {
+  const val = document.getElementById(inputId).value.trim();
+  if (!val) return showToast('⚠️ Enter a value first');
+  if (field === 'mapsApiKey' && window.PT_CONFIG?.google)    window.PT_CONFIG.google.mapsApiKey = val;
+  if (field === 'sheetsScriptUrl' && window.PT_CONFIG?.google) window.PT_CONFIG.google.sheetsScriptUrl = val;
+  if (field === 'whatsapp' && window.PT_CONFIG?.brand)       window.PT_CONFIG.brand.whatsapp = val;
+  PT_ADMIN.saveConfig(field, val);
+  showToast('✅ Saved! Refresh site to apply.');
+}
+
+function saveLegalText() {
+  PT_ADMIN.saveConfig('legalText', document.getElementById('legalText').value);
+  showToast('✅ Legal text saved!');
+}
+
+// ── Worker management ──
+function editWorker(idx) {
+  const D = window.PT_DATA;
+  if (!D) return;
+  const w = D.workers[idx];
+  const newName = prompt('Edit worker name:', w.name);
+  if (newName && newName.trim()) {
+    D.workers[idx].name = newName.trim();
+    renderWorkersTable();
+    showToast('✅ Worker name updated');
+  }
+}
+function verifyWorker(idx) {
+  const D = window.PT_DATA;
+  if (!D) return;
+  D.workers[idx].verified = true;
+  renderWorkersTable();
+  showToast('✅ Worker verified');
+}
+function removeWorker(idx) {
+  if (!confirm('Remove this worker?')) return;
+  const D = window.PT_DATA;
+  if (!D) return;
+  const name = D.workers[idx].name;
+  D.workers.splice(idx, 1);
+  renderWorkersTable();
+  updateDashStats();
+  showToast('✕ Removed ' + name);
+}
+
+// ── Mobile admin menu toggle ──
+function toggleAdminMenu() {
+  const sb = document.querySelector('.admin-sidebar');
+  const ov = document.getElementById('adminMenuOverlay');
+  if (sb) sb.classList.toggle('open');
+  if (ov) ov.classList.toggle('open');
+}
+
+// ── Init ──
+const user = PT_AUTH.getUser();
+if (!user || user.role !== 'admin') {
+  document.body.innerHTML = '<div style="text-align:center;padding:80px 20px"><div style="font-size:60px;margin-bottom:20px">🔒</div><h2>Admin Access Required</h2><p style="color:#6B7280;margin:10px 0 24px">You need admin access to view this page</p><a href="../user/login.html" style="background:#2E7D32;color:white;padding:12px 28px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none">Login as Admin</a></div>';
+} else {
+  document.getElementById('adminUserName').textContent = user.name;
+  updateDashStats();
+}
+</script>
+</body>
+</html>

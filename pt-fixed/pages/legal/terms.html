@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms & Legal — The Part-Timers</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    .legal-hero { background: linear-gradient(135deg, #1A1A2E, #2E2E4E); padding: 22px 20px 28px; color: white; }
+    .legal-content { padding: 16px; }
+    .legal-section { background: var(--surface); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 12px; box-shadow: var(--shadow-xs); border: 1px solid var(--border); }
+    .legal-section h2 { font-size: 15px; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display:flex; align-items:center; gap:8px; }
+    .legal-section p, .legal-section li { font-size: 13px; color: var(--text-muted); line-height: 1.75; margin-bottom: 6px; }
+    .legal-section ol, .legal-section ul { padding-left: 18px; }
+    .highlight-box { background: #FFF8E1; border-left: 4px solid var(--warning); border-radius: var(--radius); padding: 12px 14px; font-size: 13px; color: #5D4037; line-height: 1.65; margin-bottom: 12px; }
+    .highlight-box.red { background: #FFEBEE; border-left-color: var(--danger); color: #B71C1C; }
+    .highlight-box.green { background: #E8F5E9; border-left-color: var(--success); color: #1B5E20; }
+    .tabs-row { display: flex; background: var(--surface); border-bottom: 2px solid var(--border); overflow-x: auto; scrollbar-width: none; position: sticky; top: 0; z-index: 10; }
+    .tabs-row::-webkit-scrollbar { display: none; }
+    .ltab { padding: 11px 16px; font-size: 12px; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; color: var(--text-muted); white-space: nowrap; }
+    .ltab.active { color: #1A1A2E; border-bottom-color: #1A1A2E; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .cat-term-card { background: var(--bg); border-radius: var(--radius); padding: 14px; margin-bottom: 10px; border-left: 4px solid var(--primary); }
+    .cat-term-card h3 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+    .cat-term-card li { font-size: 12px; color: var(--text-muted); line-height:1.7; }
+    .law-badge { display:inline-block; background:#E3F2FD; color:#0D47A1; font-size:10px; font-weight:700; padding:2px 8px; border-radius:12px; margin-left:8px; }
+    .step-row { display:flex; gap:14px; padding:12px 0; border-bottom:1px solid var(--border); align-items:flex-start; }
+    .step-row:last-child { border:none; }
+    .step-num { width:30px; height:30px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0; }
+    .step-body { font-size:12px; color:var(--text-muted); }
+    .step-body strong { display:block; font-size:13px; color:var(--text); margin-bottom:3px; }
+    code { background:#F3F4F6; padding:1px 5px; border-radius:4px; font-size:11px; }
+  </style>
+</head>
+<body>
+
+<div class="legal-hero">
+  <button style="background:rgba(255,255,255,0.15);border:none;color:white;width:38px;height:38px;border-radius:12px;font-size:20px;cursor:pointer;margin-bottom:14px;display:block" onclick="history.back()">←</button>
+  <div style="font-size:22px;font-weight:800;margin-bottom:4px">⚖️ Terms & Legal</div>
+  <div style="font-size:13px;opacity:0.8">Platform rules • Privacy • Category terms</div>
+  <div style="font-size:12px;opacity:0.65;margin-top:4px">ନିୟମ ଓ ଆଇନ ସୂଚନା | Last updated: March 2026</div>
+</div>
+
+<div class="tabs-row">
+  <div class="ltab active" onclick="showTab(this,'terms')">⚖️ Terms</div>
+  <div class="ltab" onclick="showTab(this,'categories')">📂 Category Rules</div>
+  <div class="ltab" onclick="showTab(this,'rating')">⭐ Rating Policy</div>
+  <div class="ltab" onclick="showTab(this,'privacy')">🔒 Privacy</div>
+  <div class="ltab" onclick="showTab(this,'setup')">🔧 Setup Guide</div>
+</div>
+
+<!-- ── MAIN TERMS ── -->
+<div class="legal-content tab-panel active" id="tab-terms">
+
+  <div class="highlight-box red">
+    ⚠️ <strong>Legal Notice — ଆଇନ ସୂଚନା:</strong> If any user violates platform rules, provides false information, commits fraud, or engages in illegal activity — The Part-Timers team reserves the right to suspend the account and take action under applicable Indian law.
+    <br><span style="font-size:11px">IT Act 2000, IPC Sections, Consumer Protection Act 2019 apply.</span>
+  </div>
+
+  <div class="legal-section">
+    <h2>📋 General Terms of Service <span class="law-badge">IT Act 2000</span></h2>
+    <ol>
+      <li>This platform works as a <strong>marketplace connector</strong>. All service agreements are directly between the customer and the worker.</li>
+      <li>Workers keep <strong>100% of their earnings</strong>. The platform charges zero commission from workers.</li>
+      <li>Revenue comes only from vendor subscription plans (Mini / Plus / Block / District / Super).</li>
+      <li>All information provided must be <strong>accurate and truthful</strong>. False registration leads to account ban.</li>
+      <li>The platform is not responsible for payment disputes — those are between the customer and worker directly.</li>
+      <li>Posting any illegal, hateful, or harmful content is strictly prohibited.</li>
+      <li>Vendor subscriptions are non-refundable, except in case of platform failure.</li>
+      <li>The platform may update these terms at any time. Continued use means acceptance.</li>
+    </ol>
+    <p style="font-size:11px;color:var(--text-light);margin-top:10px">ଭାରତ ସରକାର: ଏ ସର୍ତ ଭାରତୀୟ ଆଇନ ଅନୁଯାୟୀ ।</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>💰 Payment & Monetization <span class="law-badge">Contract Act 1872</span></h2>
+    <ol>
+      <li>Customers pay directly to workers/vendors. No online payment through the platform currently.</li>
+      <li>Workers set their own prices. The platform does not fix any minimum or maximum rate.</li>
+      <li>Booking confirmation does not mean payment confirmation — it is a direct deal.</li>
+      <li>If a worker does not complete the work, the customer may raise a cancellation claim.</li>
+      <li>Vendor plans: Local Mini ₹10/month | Local Plus ₹20/month | Block ₹100/month | District ₹999/month | Super ₹3999/year.</li>
+    </ol>
+  </div>
+
+  <div class="legal-section">
+    <h2>🚫 Prohibited Activities <span class="law-badge">IPC Sec 420</span></h2>
+    <ul>
+      <li>Registering with false name or phone number</li>
+      <li>Using another person's identity (identity theft)</li>
+      <li>Posting fake reviews or ratings</li>
+      <li>Using the platform to threaten or harass anyone</li>
+      <li>Posting any service involving child labour</li>
+      <li>Listing illegal products or services (alcohol, drugs, weapons)</li>
+      <li>Sharing any user's personal information without consent</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>🔑 Account Rules <span class="law-badge">IT Rules 2021</span></h2>
+    <ol>
+      <li>One phone number = one account. Multiple accounts are not allowed.</li>
+      <li>To delete your account, contact: hello@theparttimers.in</li>
+      <li>Report suspicious activity on WhatsApp for immediate action.</li>
+      <li>Minors (under 18) require parent or guardian permission to register.</li>
+    </ol>
+  </div>
+
+  <div class="highlight-box green">
+    ✅ <strong>Worker Rights — ଶ୍ରମିକ ଅଧିକାର:</strong><br>
+    • Set your own price — no pressure from anyone<br>
+    • You may decline any order — no reason required<br>
+    • Report abusive/dishonest customers — action within 24 hours<br>
+    • Receive 100% payment directly from the customer — not through the platform<br><br>
+    <span style="font-size:11px">Labour Welfare: Minimum Wages Act 1948 applicable where relevant.</span>
+  </div>
+</div>
+
+<!-- ── CATEGORY RULES ── -->
+<div class="legal-content tab-panel" id="tab-categories">
+
+  <div class="highlight-box">
+    📂 Each category has its own specific rules. Please read the section relevant to your service. — ଆପଣଙ୍କ ସେବା ଅନୁଯାୟୀ ନିୟମ ପଢ଼ନ୍ତୁ ।
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#388E3C">
+    <h3>🌾 Farming Work — ଚାଷ କାମ</h3>
+    <ul>
+      <li>Tractor operators must hold a valid driving licence.</li>
+      <li>Farm machinery insurance is strongly recommended best practice.</li>
+      <li>Pesticide spray workers should be certified (CIBRC guidelines).</li>
+      <li>Seasonal rates: The platform allows price increases during peak seasons (Kharif/Rabi).</li>
+      <li>The worker is not responsible for crop damage unless negligence is proven.</li>
+      <li>Payment should be made only after work completion — advance is optional.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#0277BD">
+    <h3>🐟 Fish & Aquaculture — ମାଛ ଚାଷ</h3>
+    <ul>
+      <li>Follow local fish market rules for sale/purchase (Odisha Fisheries Act).</li>
+      <li>Inform the customer before using any pond chemicals.</li>
+      <li>In case of fish mortality, the worker must provide proof that it was not due to negligence.</li>
+      <li>Aquaculture workers should follow NFDB (National Fisheries Development Board) guidelines.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#E65100">
+    <h3>🐓 Poultry & Livestock — ପୋଲ୍ଟ୍ରି</h3>
+    <ul>
+      <li>Certificates from the State Veterinary Department are recommended for disease control.</li>
+      <li>Poultry farm workers should maintain vaccination records.</li>
+      <li>Animal cruelty is strictly prohibited — Prevention of Cruelty to Animals Act 1960.</li>
+      <li>Proper vehicles are required for livestock transport (PETA guidelines).</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#4527A0">
+    <h3>📚 Learning & Coaching — ଶିକ୍ଷା</h3>
+    <ul>
+      <li>Tutors must truthfully state their qualifications — a fake degree results in a permanent ban.</li>
+      <li>Parent consent is mandatory for students under 18 years old.</li>
+      <li>Home tuition: A family member must be present — one student and one teacher alone in a single room is not permitted.</li>
+      <li>Platform maintains zero tolerance for child safety violations (POCSO Act 2012).</li>
+      <li>Obtain screen recording consent before conducting online tuition sessions.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#006064">
+    <h3>🔧 Technicians — ଟେକ୍ନିସିଆନ</h3>
+    <ul>
+      <li>Electricians should have knowledge of IE Rules 1956.</li>
+      <li>A licensed electrician is compulsory for high-voltage work (Electricity Act 2003).</li>
+      <li>After completing any job, the technician should provide a completion report or WhatsApp confirmation.</li>
+      <li>Parts warranty: The customer should receive a receipt for all parts installed.</li>
+      <li>Gas fitter, plumber, and AC technician — respective trade certificate required.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#4E342E">
+    <h3>🏗️ Contractors — ଠିକାଦାର</h3>
+    <ul>
+      <li>Construction work may require permission from local municipality or Gram Panchayat.</li>
+      <li>RERA (Real Estate Regulation Act 2016) applies for large projects.</li>
+      <li>Contractors should obtain workers' accident insurance (Workmen Compensation Act 1923).</li>
+      <li>Building materials should meet BIS quality standards.</li>
+      <li>Do not accept excessive advance before project completion — 30% maximum is recommended.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#37474F">
+    <h3>⚙️ Equipment Rental — ଯନ୍ତ୍ରପାତି ଭଡ଼ା</h3>
+    <ul>
+      <li>Equipment owners should maintain service and maintenance records.</li>
+      <li>Collecting a security deposit from the renter is allowed — a receipt is mandatory.</li>
+      <li>The renter is responsible for equipment damage — take before and after photos.</li>
+      <li>An operator licence is compulsory for heavy machinery (JCB, Crane).</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#1565C0">
+    <h3>🚗 Vehicle Booking — ଯାନ ବୁକିଂ</h3>
+    <ul>
+      <li>The driver must hold a valid licence (Motor Vehicles Act 1988).</li>
+      <li>Vehicle insurance is mandatory — verify that passenger insurance is also included.</li>
+      <li>For goods transport: vehicle fitness certificate and permit are required.</li>
+      <li>Drunk driving = permanent ban + police complaint.</li>
+      <li>For night travel (10 PM–5 AM), obtain the customer's written consent via WhatsApp.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#BF360C">
+    <h3>🍽️ Food Delivery — ଖାଦ୍ୟ ଡେଲିଭରି</h3>
+    <ul>
+      <li>Food vendors must have FSSAI registration or licence (Food Safety & Standards Act 2006).</li>
+      <li>Home food makers should obtain FSSAI basic registration (free, done online).</li>
+      <li>Allergen disclosure is mandatory — inform about dairy, nuts, gluten, etc.</li>
+      <li>Food should be delivered within 2 hours, otherwise it may not be considered fresh.</li>
+      <li>In case of food poisoning, the vendor must provide a full refund.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#6A1B9A">
+    <h3>🛒 Marketplace Buy/Sell — କ. ବ.</h3>
+    <ul>
+      <li>Sellers must accurately describe the condition of items — misleading descriptions result in a ban.</li>
+      <li>Second-hand electronics: A 7-day return policy is recommended.</li>
+      <li>Land/property listings: Verify documents first — fraud is covered under IPC 420.</li>
+      <li>Animal sales: Vaccination records are mandatory. Listing stolen animals is covered under IPC 379.</li>
+      <li>Vegetables and crops must be fresh — complaints about poor quality will be reviewed.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#FF6F00">
+    <h3>🏪 Sunday Haata — ରବିବାର ହାଟ</h3>
+    <ul>
+      <li>Only genuine local products in the Haata — fake or duplicate products are banned.</li>
+      <li>Respect GI (Geographical Indication) tags for handlooms — Sambalpuri and Nuapatna designs.</li>
+      <li>Selling wild animals or protected birds is illegal under the Wildlife Protection Act 1972.</li>
+      <li>Haata listings remain active for 7 days — renew afterwards.</li>
+    </ul>
+  </div>
+
+  <div class="cat-term-card" style="border-left-color:#263238">
+    <h3>🪪 Digital Work ID — ଡିଜିଟାଲ କାର୍ଯ୍ୟ ID</h3>
+    <ul>
+      <li>Work ID is only for genuine workers — it will be cancelled if misused.</li>
+      <li>Work ID is not a replacement for a government ID — it is platform identity proof only.</li>
+      <li>You may share your QR code link with anyone — but never share your account password.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── RATING POLICY ── -->
+<div class="legal-content tab-panel" id="tab-rating">
+
+  <div class="highlight-box green">
+    ⭐ <strong>Dual Rating System — ଦ୍ୱି ରେଟିଂ:</strong> Both sides can rate on this platform — Customers rate Workers and Workers rate Customers. This builds rural trust. — ଏହା ଗ୍ରାମୀଣ ବିଶ୍ୱାସ ଗଢ଼ୁଛି ।
+  </div>
+
+  <div class="legal-section">
+    <h2>⭐ Customer → Worker Rating</h2>
+    <ol>
+      <li>After a booking is completed, the customer can give a 5-star rating.</li>
+      <li>Rating scale: 1 to 5 stars — 5 is best, 1 is worst.</li>
+      <li>Written feedback is optional but encouraged.</li>
+      <li>Quick tags can also be used for feedback (Good work, On time, etc.).</li>
+      <li>The rating will be published on the worker's public profile.</li>
+      <li>Report fake or malicious ratings — they will be reviewed within 24 hours.</li>
+    </ol>
+  </div>
+
+  <div class="legal-section">
+    <h2>⭐ Worker → Customer Rating</h2>
+    <ol>
+      <li>Workers can also rate customers from their orders section.</li>
+      <li>Customer ratings are visible to future workers — so they know who is reliable.</li>
+      <li>Worker tags: "Paid correctly", "Explained clearly", "Respectful", etc.</li>
+      <li>The platform may alert workers about low-rated customers.</li>
+      <li>If someone repeatedly receives ratings below 3, the platform will review the account.</li>
+    </ol>
+  </div>
+
+  <div class="legal-section">
+    <h2>📝 Feedback Guidelines</h2>
+    <ul>
+      <li>Feedback must not include personal attacks — only comments about the work.</li>
+      <li>A rating cannot be edited within 72 hours of submission.</li>
+      <li>Both parties can rate the same order independently.</li>
+      <li>Admins receive an auto-alert when any rating falls below 3 stars.</li>
+      <li>To report a wrong rating: send a screenshot on WhatsApp.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── PRIVACY ── -->
+<div class="legal-content tab-panel" id="tab-privacy">
+  <div class="legal-section">
+    <h2>🔒 Privacy Policy <span class="law-badge">IT Rules 2011</span></h2>
+    <p>We collect: name, phone number, village, and service information.</p>
+    <p>We <strong>never sell personal data to anyone</strong>.</p>
+    <p>Phone numbers are used only for platform communications and service matching.</p>
+    <p>Users can request account deletion at any time.</p>
+    <p>Data is stored in Google Sheets (configured by the platform operator) and in browser local storage.</p>
+    <p>This platform complies with the Indian Information Technology (Reasonable Security Practices) Rules, 2011.</p>
+    <p>For children under 13: Parent consent is mandatory. COPPA principles are followed.</p>
+  </div>
+  <div class="legal-section">
+    <h2>📱 Data We Use — ଆମେ ଯାହା ବ୍ୟବହାର କରୁ</h2>
+    <ul>
+      <li><strong>Phone number:</strong> Login OTP, booking confirmation</li>
+      <li><strong>Village / location:</strong> To show nearby services</li>
+      <li><strong>Service category:</strong> For better matching</li>
+      <li><strong>Ratings:</strong> To improve public profiles</li>
+      <li><strong>Order history:</strong> To track your bookings</li>
+    </ul>
+  </div>
+  <div class="legal-section">
+    <h2>❌ Data We Do Not Use — ଆମେ ଯାହା ବ୍ୟବହାର କରୁ ନାହିଁ</h2>
+    <ul>
+      <li>We do not store bank or payment information</li>
+      <li>We do not share data with third-party advertisers</li>
+      <li>We only share data with authorities when required by a court order</li>
+      <li>We do not collect biometric data</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── SETUP GUIDE ── -->
+<div class="legal-content tab-panel" id="tab-setup">
+  <div class="legal-section">
+    <h2>📊 Google Sheets Database Setup</h2>
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-body"><strong>Create a Google Sheet</strong>Open Google Sheets, create a new spreadsheet. Add tabs: Users, Workers, Vendors, Orders, Ratings, Ads.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-body"><strong>Open Apps Script</strong>In the sheet: Extensions → Apps Script. Delete old code, then paste the code from <code>data/sheets-api.gs</code>.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-body"><strong>Deploy as Web App</strong>Deploy → New Deployment → Web App. Set "Execute as: Me" and "Who has access: Anyone". Deploy and copy the URL.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-body"><strong>Add URL to config</strong>In <code>data/config.js</code>, paste your URL into the <code>sheetsScriptUrl</code> field. Save — done!</div>
+    </div>
+  </div>
+  <div class="legal-section">
+    <h2>🗺️ Google Maps Setup</h2>
+    <ol style="font-size:13px;color:var(--text-muted);line-height:2">
+      <li>Go to console.cloud.google.com → Create a new project</li>
+      <li>Enable Maps JavaScript API</li>
+      <li>Credentials → Create API Key → Copy it</li>
+      <li>In <code>data/config.js</code>, paste it into <code>mapsApiKey</code></li>
+      <li>Restrict the key in production: add your domain under HTTP referrers</li>
+    </ol>
+  </div>
+</div>
+
+<div style="height:30px"></div>
+
+<script>
+function showTab(el, id) {
+  document.querySelectorAll('.ltab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
