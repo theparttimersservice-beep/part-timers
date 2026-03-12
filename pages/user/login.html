@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — The Part-Timers</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    body { background: linear-gradient(160deg, var(--primary-dark), var(--primary), #66BB6A); min-height: 100vh; display: flex; flex-direction: column; }
+    .login-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; }
+    .login-logo { text-align: center; margin-bottom: 28px; }
+    .ll-icon { width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 14px; border: 2px solid rgba(255,255,255,0.3); }
+    .ll-name { font-size: 24px; font-weight: 800; color: white; margin-bottom: 5px; }
+    .ll-sub { font-size: 13px; color: rgba(255,255,255,0.75); }
+    .ll-odia { font-size: 14px; color: rgba(255,255,255,0.85); margin-top: 4px; }
+    .login-card { background: var(--surface); border-radius: var(--radius-xl); padding: 28px 24px; width: 100%; max-width: 420px; box-shadow: var(--shadow-lg); }
+    .tab-row { display: flex; border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 22px; }
+    .tab-btn { flex: 1; padding: 11px; text-align: center; font-size: 14px; font-weight: 600; cursor: pointer; border: none; background: var(--surface); color: var(--text-muted); transition: all 0.2s; line-height:1.3; }
+    .tab-btn.active { background: var(--primary); color: white; }
+    .tab-odia { font-size: 10px; display: block; opacity: 0.75; margin-top: 2px; }
+    .or-divider { text-align: center; margin: 18px 0; color: var(--text-light); font-size: 13px; position: relative; }
+    .or-divider::before, .or-divider::after { content:''; position:absolute; top:50%; width:40%; height:1px; background:var(--border); }
+    .or-divider::before { left:0; } .or-divider::after { right:0; }
+    .social-btn { width: 100%; padding: 12px; border: 1.5px solid var(--border); border-radius: var(--radius); background: var(--surface); font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: background 0.2s; margin-bottom: 10px; line-height:1.3; }
+    .social-btn:hover { background: var(--bg); }
+    .otp-input { display: flex; gap: 10px; justify-content: center; margin: 10px 0; }
+    .otp-digit { width: 50px; height: 52px; border: 2px solid var(--border); border-radius: var(--radius); text-align: center; font-size: 22px; font-weight: 700; color: var(--primary-dark); }
+    .otp-digit:focus { border-color: var(--primary); outline: none; }
+    .otp-hint { text-align:center; font-size:12px; color:#E65100; margin-top:8px; background:#FFF8E1; padding:8px; border-radius:8px; }
+    .demo-badge { background: #FFF3E0; border: 1px solid #FFE0B2; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #E65100; margin-bottom: 16px; text-align: center; }
+    .bottom-link { text-align: center; color: rgba(255,255,255,0.85); font-size: 13px; margin-top: 20px; }
+    .bottom-link a { color: white; font-weight: 700; }
+    .role-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px; }
+    .role-card { border: 2px solid var(--border); border-radius: var(--radius); padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .role-card.sel { border-color: var(--primary); background: #E8F5E9; }
+    .role-card .rc-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+    .role-card .rc-name { font-size: 11px; font-weight: 700; }
+    .role-card .rc-odia { font-size: 10px; color: var(--text-muted); }
+    .input-group-flag { position: relative; }
+    .input-flag { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; font-weight: 700; color: var(--text-muted); pointer-events:none; }
+    .input-with-flag { padding-left: 42px !important; }
+  </style>
+</head>
+<body>
+
+<div class="login-wrap">
+  <div class="login-logo">
+    <div class="ll-icon" id="loginLogo">🌾</div>
+    <div class="ll-name">The Part-Timers</div>
+    <div class="ll-sub">Odisha Rural Services Platform</div>
+    <div class="ll-odia">ଓଡ଼ିଶା ଗ୍ରାମ ସେବା ମଞ୍ଚ — ଆଜି ଯୋଗ ଦ୍ୟ!</div>
+  </div>
+
+  <div class="login-card">
+    <div class="demo-badge">
+      🧪 Demo OTP: <strong>1234</strong> &nbsp;|&nbsp; Admin pass: <strong>admin123</strong>
+    </div>
+
+    <div class="tab-row">
+      <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">
+        Login <span class="tab-odia">ଲଗ ଇନ</span>
+      </button>
+      <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">
+        New Account <span class="tab-odia">ନୂଆ ଖାତା</span>
+      </button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="loginForm">
+      <div class="form-group">
+        <label class="form-label">📞 Mobile Number <span style="color:var(--text-muted);font-size:11px">— ମୋ. ନ. ଦ.</span></label>
+        <div class="input-group-flag">
+          <span class="input-flag">+91</span>
+          <input type="tel" id="loginPhone" class="form-control input-with-flag" placeholder="10 digit number" maxlength="10" inputmode="numeric">
+        </div>
+      </div>
+      <div class="form-group" id="otpGroup" style="display:none">
+        <label class="form-label">🔐 Enter OTP <span style="color:var(--text-muted);font-size:11px">— ଓ.ଟ.ପ. ଦ.</span></label>
+        <div class="otp-input">
+          <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" oninput="otpNext(this,1)">
+          <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" oninput="otpNext(this,2)">
+          <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" oninput="otpNext(this,3)">
+          <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" oninput="otpNext(this,4)">
+        </div>
+        <div class="otp-hint">Demo OTP: <strong>1234</strong> — Real app lo OTP miliba 📱 | କ. ୱ. ପ. ।</div>
+      </div>
+      <button class="btn btn-primary btn-full btn-lg" id="loginBtn" onclick="doLogin()">📱 Send OTP — ଓ.ଟ.ପ. ପଠାନ୍ତୁ</button>
+      <div class="or-divider">OR — ବା</div>
+      <button class="social-btn" onclick="guestLogin()">👤 Continue as Guest — ଅତିଥି ଭାବେ ଯାଆନ୍ତୁ</button>
+      <button class="social-btn" onclick="adminLogin()" style="border-color:#1A1A2E;color:#1A1A2E">⚙️ Admin Login (Demo)</button>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="registerForm" style="display:none">
+      <div class="form-group">
+        <label class="form-label" style="margin-bottom:10px">👤 Who are you? <span style="color:var(--text-muted);font-size:11px">— ଆପଣ କିଏ?</span></label>
+        <div class="role-cards">
+          <div class="role-card sel" data-role="customer" onclick="selectRole(this)">
+            <span class="rc-icon">🛒</span>
+            <div class="rc-name">Customer</div>
+            <div class="rc-odia">ସ. ନ.</div>
+          </div>
+          <div class="role-card" data-role="worker" onclick="selectRole(this)">
+            <span class="rc-icon">👷</span>
+            <div class="rc-name">Worker</div>
+            <div class="rc-odia">କ. ଲ.</div>
+          </div>
+          <div class="role-card" data-role="vendor" onclick="selectRole(this)">
+            <span class="rc-icon">🏪</span>
+            <div class="rc-name">Vendor</div>
+            <div class="rc-odia">ବ. ଲ.</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">👤 Full Name — ପୂରା ନାମ</label>
+        <input type="text" id="regName" class="form-control" placeholder="Enter your name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">📞 Mobile Number — ମୋ. ନ.</label>
+        <div class="input-group-flag">
+          <span class="input-flag">+91</span>
+          <input type="tel" id="regPhone" class="form-control input-with-flag" placeholder="10 digit" maxlength="10" inputmode="numeric">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">📍 Village / Town — ଗ୍ରାମ / ସହର</label>
+        <input type="text" id="regVillage" class="form-control" placeholder="Enter village or town">
+      </div>
+      <div class="form-group">
+        <label class="form-label">🏙️ District — ଜ.</label>
+        <select id="regDistrict" class="form-control">
+          <option value="">Select District — ଜିଲ୍ଲା ବାଛନ୍ତୁ</option>
+          <option>Kendrapara</option><option>Khordha</option><option>Cuttack</option>
+          <option>Puri</option><option>Jagatsinghpur</option><option>Balasore</option>
+          <option>Ganjam</option><option>Sambalpur</option><option>Mayurbhanj</option>
+          <option>Keonjhar</option><option>Jajpur</option><option>Koraput</option>
+          <option>Rayagada</option><option>Bolangir</option><option>Sundargarh</option>
+          <option>Bargarh</option><option>Boudh</option><option>Nayagarh</option>
+          <option>Other — ଅ.</option>
+        </select>
+      </div>
+      <div class="form-group" style="display:flex;gap:10px;align-items:flex-start">
+        <input type="checkbox" id="regAgree" style="width:16px;height:16px;margin-top:3px;flex-shrink:0">
+        <label for="regAgree" style="font-size:12px;color:var(--text-muted)">
+          I agree to <a href="../legal/terms.html" style="color:var(--primary);font-weight:600">Terms &amp; Conditions</a>. I will not misuse this platform. — ମୁଁ ନିୟମ ଶର୍ତ ମାନିବି ।
+        </label>
+      </div>
+      <button class="btn btn-primary btn-full btn-lg" onclick="doRegister()">✅ Create Account — ଖାତା ଖୋଲନ୍ତୁ</button>
+    </div>
+
+  </div>
+
+  <div class="bottom-link">
+    <a href="../../index.html">← Back to Home</a> &nbsp;·&nbsp;
+    <a href="register-worker.html">Join as Worker →</a>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bn-items">
+    <a class="bn-item" href="../../index.html"><div class="bn-icon">🏠</div><div class="bn-label">Home<br>ଘର</div></a>
+    <a class="bn-item" href="../search.html"><div class="bn-icon">🔍</div><div class="bn-label">Search<br>ଖୋଜ</div></a>
+    <a class="bn-item" href="../food/index.html"><div class="bn-icon">🍽️</div><div class="bn-label">Food<br>ଖାଦ୍ୟ</div></a>
+    <a class="bn-item" href="orders.html"><div class="bn-icon">📋</div><div class="bn-label">Orders<br>ଅ.</div></a>
+    <a class="bn-item active" href="profile.html"><div class="bn-icon">👤</div><div class="bn-label">Profile<br>ପ.</div></a>
+  </div>
+</nav>
+<div id="toast"></div>
+<script src="../../data/config.js"></script>
+<script src="../../data/data.js"></script>
+<script src="../../assets/js/app.js"></script>
+<script>
+let otpSent = false;
+let selectedRole = 'customer';
+const DEMO_OTP = '1234';
+
+function switchTab(tab) {
+  document.getElementById('loginForm').style.display    = tab === 'login'    ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tabLogin').classList.toggle('active',    tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+  otpSent = false;
+  document.getElementById('otpGroup').style.display = 'none';
+  document.getElementById('loginBtn').textContent = '📱 Send OTP — ଓ.ଟ.ପ. ପଠାନ୍ତୁ';
+}
+
+function selectRole(el) {
+  document.querySelectorAll('.role-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedRole = el.dataset.role;
+}
+
+function otpNext(el, pos) {
+  el.value = el.value.replace(/\D/,'');
+  if (el.value.length === 1 && pos < 4) {
+    document.querySelectorAll('.otp-digit')[pos].focus();
+  }
+  const digits = [...document.querySelectorAll('.otp-digit')].map(d => d.value).join('');
+  if (digits.length === 4) verifyOTP(digits);
+}
+
+function doLogin() {
+  if (otpSent) { verifyManual(); return; }
+  const phone = document.getElementById('loginPhone').value.trim();
+  if (!validatePhone(phone)) return showToast('⚠️ Enter a valid 10-digit number — ଦୟାକରି ସଠିକ ୧୦ ଅଙ୍କ ଦିଅନ୍ତୁ');
+  document.getElementById('otpGroup').style.display = 'block';
+  document.getElementById('loginBtn').textContent = '✅ Verify OTP — ଯାଞ୍ଚ କରନ୍ତୁ';
+  document.getElementById('loginBtn').onclick = verifyManual;
+  otpSent = true;
+  showToast('📱 OTP sent! (Demo: 1234) — ଓ.ଟ.ପ. ପଠାଗଲା', 4000);
+}
+
+function verifyOTP(digits) {
+  if (digits === DEMO_OTP) doSuccessLogin();
+}
+
+function verifyManual() {
+  const digits = [...document.querySelectorAll('.otp-digit')].map(d => d.value).join('');
+  if (digits === DEMO_OTP) doSuccessLogin();
+  else showToast('❌ Wrong OTP! Demo code: 1234 — ଭୁଲ OTP');
+}
+
+function doSuccessLogin(userData) {
+  const user = userData || {
+    name: 'User',
+    phone: document.getElementById('loginPhone')?.value || '',
+    role: 'customer',
+    id: 'u' + Date.now(),
+    village: 'Odisha'
+  };
+  PT_AUTH.login(user);
+  showToast('✅ Welcome ' + user.name + '!');
+  setTimeout(() => {
+    const r = getParam('r');
+    location.href = r || '../../index.html';
+  }, 900);
+}
+
+function guestLogin() {
+  doSuccessLogin({ name: 'Guest', phone: '', role: 'guest', id: 'guest', village: 'Odisha' });
+}
+
+function adminLogin() {
+  const pass = prompt('Admin password (Demo: admin123):');
+  if (!pass) return;
+  if (pass !== 'admin123') return showToast('❌ Wrong password! — ଭୁଲ ପାସୱାର୍ଡ');
+  const adminUser = { name: 'Admin', phone: '9999999999', role: 'admin', id: 'admin001', village: 'Kendrapara' };
+  PT_AUTH.login(adminUser);
+  showToast('✅ Admin login successful! — ଆଡ୍ମିନ ଲଗ ଇନ ସଫଳ');
+  setTimeout(() => location.href = '../admin/index.html', 600);
+}
+
+function doRegister() {
+  const name     = document.getElementById('regName').value.trim();
+  const phone    = document.getElementById('regPhone').value.trim();
+  const village  = document.getElementById('regVillage').value.trim();
+  const district = document.getElementById('regDistrict').value;
+  const agree    = document.getElementById('regAgree').checked;
+
+  if (!name)     return showToast('⚠️ Please enter your name — ନାମ ଲେଖନ୍ତୁ');
+  if (!validatePhone(phone)) return showToast('⚠️ Enter a valid 10-digit number — ସଠିକ ନମ୍ବର ଦିଅନ୍ତୁ');
+  if (!village)  return showToast('⚠️ Enter your village/town name — ଗ୍ରାମ ନାମ ଦିଅନ୍ତୁ');
+  if (!district) return showToast('⚠️ Please select your district — ଜିଲ୍ଲା ବାଛନ୍ତୁ');
+  if (!agree)    return showToast('⚠️ Please agree to Terms & Conditions — ନିୟମ ମାନ୍ୟ କରନ୍ତୁ');
+
+  const user = { name, phone, village, district, role: selectedRole, id: 'u' + Date.now(), joinedAt: new Date().toISOString() };
+  SHEETS_API.post('registerUser', user);
+  PT_AUTH.login(user);
+  showToast('🎉 Account created, ' + name + '!');
+  if (selectedRole === 'worker') {
+    setTimeout(() => location.href = 'register-worker.html', 800);
+  } else if (selectedRole === 'vendor') {
+    setTimeout(() => location.href = '../haata/index.html', 800);
+  } else {
+    setTimeout(() => { const r = getParam('r'); location.href = r || '../../index.html'; }, 800);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.getElementById('loginForm').style.display !== 'none') doLogin();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const C = window.PT_CONFIG?.brand;
+  if (C) {
+    document.getElementById('loginLogo').textContent = C.logoEmoji || '🌾';
+    document.querySelector('.ll-name').textContent = C.name;
+  }
+});
+</script>
+</body>
+</html>

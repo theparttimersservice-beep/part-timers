@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>The Part-Timers — Rural Services Platform | Odisha</title>
+  <meta name="description" content="Odisha's largest rural services platform. Find farm workers, technicians, food delivery, vehicle booking, tutors and more in your village.">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    /* Homepage-specific extras */
+    .promo-banner {
+      background: linear-gradient(135deg, #FF6F00, #FFA726);
+      margin: 0 20px 0;
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: transform var(--transition);
+    }
+    .promo-banner:hover { transform: translateY(-2px); }
+    .pb-icon { font-size: 36px; flex-shrink: 0; }
+    .pb-title { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+    .pb-sub { font-size: 12px; opacity: 0.9; }
+    .trending-tag {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .live-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #F44336;
+      border-radius: 50%;
+      animation: blink 1.2s ease-in-out infinite;
+      margin-right: 4px;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .whatsapp-float {
+      position: fixed;
+      bottom: calc(var(--bottom-h) + 14px);
+      left: 20px;
+      width: 50px;
+      height: 50px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.4);
+      cursor: pointer;
+      z-index: 100;
+      text-decoration: none;
+      transition: transform var(--transition);
+    }
+    .whatsapp-float:hover { transform: scale(1.1); }
+    @media (min-width: 601px) {
+      .whatsapp-float { bottom: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════ ANNOUNCEMENT BAR ════════ -->
+<div class="announcement-bar" id="announcementBar">
+  <div class="announcement-track" id="announcementTrack"></div>
+</div>
+
+<!-- ════════ HEADER ════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo-wrap" href="index.html">
+      <div class="logo-icon">🌾</div>
+      <div class="logo-text">
+        <div class="logo-name">The Part-Timers</div>
+        <div class="logo-sub">Rural Services Platform</div>
+      </div>
+    </a>
+
+    <div class="header-search">
+      <input type="text" id="headerSearchInput" placeholder="Search services, workers, products...">
+      <button class="header-search-btn" onclick="doHeaderSearch()">🔍</button>
+    </div>
+
+    <div class="header-actions">
+      <button class="location-chip" onclick="changeLocation()">
+        📍 <span class="loc-name">Kendrapara</span>
+      </button>
+      <button class="header-btn" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
+      <a class="header-btn" href="pages/user/cart.html" title="Cart">
+        🛒<span class="badge" id="cartBadge" style="display:none">0</span>
+      </a>
+      <a class="header-btn" href="pages/user/login.html" title="Login" id="loginBtn">👤</a>
+      <button class="hamburger header-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ════════ MOBILE MENU OVERLAY ════════ -->
+<div class="modal-overlay" id="mobileMenu" onclick="if(event.target===this)toggleMobileMenu()">
+  <div class="modal-sheet" style="max-height:80vh">
+    <div class="modal-handle"></div>
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">☰ Menu</h3>
+    <a class="profile-menu-item" href="pages/user/login.html">
+      <div class="pmi-icon" style="background:#E8F5E9">👤</div>
+      <div><div class="pmi-label">Login / Register</div><div class="pmi-sub">Access your account</div></div>
+      <span class="pmi-arrow">›</span>
+    </a>
+    <a class="profile-menu-item" href="pages/user/orders.html">
+      <div class="pmi-icon" style="background:#E3F2FD">📋</div>
+      <div><div class="pmi-label">My Orders</div><div class="pmi-sub">Booking history</div></div>
+      <span class="pmi-arrow">›</span>
+    </a>
+    <a class="profile-menu-item" href="pages/user/register-worker.html">
+      <div class="pmi-icon" style="background:#FFF3E0">📝</div>
+      <div><div class="pmi-label">Register as Worker</div><div class="pmi-sub">Earn from your skills</div></div>
+      <span class="pmi-arrow">›</span>
+    </a>
+    <a class="profile-menu-item" href="pages/work-id/index.html">
+      <div class="pmi-icon" style="background:#F3E5F5">🪪</div>
+      <div><div class="pmi-label">Digital Work ID</div><div class="pmi-sub">Get your free work identity</div></div>
+      <span class="pmi-arrow">›</span>
+    </a>
+
+  </div>
+</div>
+
+<!-- ════════ MAIN LAYOUT ════════ -->
+<div class="app-shell">
+
+  <!-- SIDEBAR (desktop only) -->
+  <aside class="sidebar">
+    <div class="sidebar-section">MAIN</div>
+    <a class="sidebar-link active" href="index.html"><span class="s-icon">🏠</span> Home</a>
+    <a class="sidebar-link" href="pages/search.html"><span class="s-icon">🔍</span> Smart Search</a>
+    <a class="sidebar-link" href="pages/user/orders.html"><span class="s-icon">📋</span> My Orders</a>
+
+    <div class="sidebar-section">CATEGORIES</div>
+    <div id="sidebarCats"></div>
+
+    <div class="sidebar-section">ACCOUNT</div>
+    <a class="sidebar-link" href="pages/user/profile.html"><span class="s-icon">👤</span> My Profile</a>
+    <a class="sidebar-link" href="pages/user/register-worker.html"><span class="s-icon">📝</span> Register as Worker</a>
+    <a class="sidebar-link" href="pages/work-id/index.html"><span class="s-icon">🪪</span> Digital Work ID</a>
+
+    <div class="sidebar-section">PLATFORM</div>
+    <a class="sidebar-link" href="pages/legal/terms.html"><span class="s-icon">⚖️</span> Terms & Legal</a>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-pattern">🌾</div>
+      <div class="hero-row">
+        <div>
+          <div class="hero-greeting">👋 Namaste! ନମସ୍କାର</div>
+          <div class="hero-title">Find Rural Services<br>Near You</div>
+          <div class="hero-sub">Kendrapara, Odisha • ଖୋର୍ଦ୍ଧା</div>
+        </div>
+        <a class="hero-avatar" href="pages/user/profile.html">👤</a>
+      </div>
+      <div class="hero-search">
+        <input class="hero-search-input" id="heroSearchInput" type="text"
+          placeholder="tractor near Aul, electrician Kendrapara... | ସେବା ଖୋଜନ୍ତୁ">
+        <button class="hero-search-go" onclick="doHeroSearch()">🔍</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-n">500+</div><div class="hero-stat-l">Workers</div></div>
+        <div class="hero-stat"><div class="hero-stat-n">12</div><div class="hero-stat-l">Categories</div></div>
+        <div class="hero-stat"><div class="hero-stat-n">30+</div><div class="hero-stat-l">Villages</div></div>
+        <div class="hero-stat"><div class="hero-stat-n">4.8⭐</div><div class="hero-stat-l">Avg Rating</div></div>
+      </div>
+    </div>
+
+    <!-- QUICK SERVICES GRID -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">Quick Services <span>ଶୀଘ୍ର ସେବା</span></div>
+      </div>
+      <div class="quick-grid" id="quickGrid">
+        <!-- Populated by app.js renderCategories() -->
+      </div>
+    </div>
+
+    <!-- PROMO BANNER -->
+    <div class="section" style="padding:14px 0 4px">
+      <div class="promo-banner" onclick="location.href='pages/user/register-worker.html'">
+        <div class="pb-icon">🌟</div>
+        <div>
+          <div class="pb-title">Register for FREE — Earn from Your Skills!</div>
+          <div class="pb-sub">1000+ workers already registered • ଆଜି ଯୋଗ ଦିଅନ୍ତୁ</div>
+        </div>
+        <div style="margin-left:auto;font-size:22px">→</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+
+    <!-- TRENDING NOW -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">🔥 Trending Now <span class="trending-tag">HOT</span></div>
+        <a class="view-all" href="pages/search.html">View All</a>
+      </div>
+      <div class="h-scroll" id="trendingScroll">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- MAP PREVIEW -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">📍 Services Near You <span>ଆଖ. ସେ.</span></div>
+        <a class="view-all" href="pages/search.html?near=me">Map View</a>
+      </div>
+      <div id="miniMap" style="height:200px;margin:0 20px 16px;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border)"></div>
+    </div>
+
+    <!-- LIVE UPDATES FEED -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title"><span class="live-dot"></span> Live Updates <span>ଲ. ଅ.</span></div>
+        <a class="view-all" href="pages/search.html">View All</a>
+      </div>
+      <div id="liveFeed">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- BANNER QUICK LINKS -->
+    <div class="section" style="padding-bottom:16px">
+      <div class="banner-cards">
+        <a class="banner-card" href="pages/haata/index.html"
+          style="background:linear-gradient(135deg,#E65100,#FF9800)">
+          <div class="bc-icon">🏪</div>
+          <div class="bc-title">Sunday Haata</div>
+          <div class="bc-sub">Weekly village market</div>
+        </a>
+        <a class="banner-card" href="pages/work-id/index.html"
+          style="background:linear-gradient(135deg,#1A1A2E,#2E2E4E)">
+          <div class="bc-icon">🪪</div>
+          <div class="bc-title">Digital Work ID</div>
+          <div class="bc-sub">Get your free work identity</div>
+        </a>
+        <a class="banner-card" href="pages/user/register-worker.html"
+          style="background:linear-gradient(135deg,var(--primary-dark),var(--primary))">
+          <div class="bc-icon">📝</div>
+          <div class="bc-title">Join as Provider</div>
+          <div class="bc-sub">0% commission platform</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- FOOD DELIVERY SECTION -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">🍽️ Food Delivery <span>ଖ. ଡ.</span></div>
+        <a class="view-all" href="pages/food/index.html">View All</a>
+      </div>
+      <div class="h-scroll" id="foodScroll">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- LEGAL NOTICE -->
+    <div class="section" style="padding:0 20px 20px">
+      <div class="legal-notice">
+        ⚖️ <strong>Legal Notice:</strong> If any user violates platform rules, provides false information, commits fraud, or behaves illegally, The Part-Timers team reserves the right to suspend accounts or take action as per applicable law.
+        <a href="pages/legal/terms.html" style="color:var(--primary);font-weight:600;margin-left:4px">Read Terms →</a>
+      </div>
+    </div>
+
+  </main>
+</div><!-- /app-shell -->
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav">
+  <div class="bn-items">
+    <a class="bn-item active" href="index.html">
+      <div class="bn-icon">🏠</div><div class="bn-label">Home<br>ଘର</div>
+    </a>
+    <a class="bn-item" href="pages/search.html">
+      <div class="bn-icon">🔍</div><div class="bn-label">Search<br>ଖୋଜ</div>
+    </a>
+    <a class="bn-item" href="pages/food/index.html">
+      <div class="bn-icon">🍽️</div><div class="bn-label">Food<br>ଖାଦ୍ୟ</div>
+    </a>
+    <a class="bn-item" href="pages/user/orders.html">
+      <div class="bn-icon">📋</div><div class="bn-label">Orders<br>ଅର୍ଡ.</div>
+    </a>
+    <a class="bn-item" href="pages/user/profile.html">
+      <div class="bn-icon">👤</div><div class="bn-label">Profile<br>ପ୍ରୋ.</div>
+    </a>
+  </div>
+</nav>
+
+<!-- FAB -->
+<a class="fab" href="pages/search.html" title="Smart Search">🔍</a>
+
+<!-- WhatsApp Float -->
+<a class="whatsapp-float" href="https://wa.me/91XXXXXXXXXX" target="_blank" title="WhatsApp">💬</a>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- SCRIPTS -->
+<script src="data/config.js"></script>
+<script src="data/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+// ── Homepage-specific JS ──
+
+function doHeroSearch() {
+  const q = document.getElementById('heroSearchInput').value.trim();
+  if (q) location.href = `pages/search.html?q=${encodeURIComponent(q)}`;
+  else location.href = 'pages/search.html';
+}
+
+function doHeaderSearch() {
+  const q = document.getElementById('headerSearchInput').value.trim();
+  if (q) location.href = `pages/search.html?q=${encodeURIComponent(q)}`;
+}
+
+document.getElementById('heroSearchInput').addEventListener('keydown', e => { if(e.key==='Enter') doHeroSearch(); });
+document.getElementById('headerSearchInput').addEventListener('keydown', e => { if(e.key==='Enter') doHeaderSearch(); });
+
+function changeLocation() {
+  const loc = prompt('Enter your village/city name:', 'Kendrapara');
+  if (loc) {
+    document.querySelector('.loc-name').textContent = loc;
+    showToast('📍 Location updated to ' + loc);
+  }
+}
+
+// Render trending cards
+function renderTrending() {
+  const D = window.PT_DATA;
+  if (!D) return;
+  const top = D.workers.sort((a,b) => b.rating - a.rating).slice(0, 8);
+  const gradients = [
+    'linear-gradient(135deg,#E8F5E8,#C8E6C9)',
+    'linear-gradient(135deg,#E3F2FD,#BBDEFB)',
+    'linear-gradient(135deg,#FFF3E0,#FFE0B2)',
+    'linear-gradient(135deg,#F3E5F5,#E1BEE7)',
+    'linear-gradient(135deg,#E0F7FA,#B2EBF2)',
+  ];
+  document.getElementById('trendingScroll').innerHTML = top.map((w, i) => `
+    <div class="service-card" onclick="location.href='pages/user/worker-profile.html?id=${w.id}'">
+      <div class="sc-thumb" style="background:${gradients[i%gradients.length]}">
+        <span style="font-size:52px">${w.emoji}</span>
+        <span class="sc-badge">${w.badge}</span>
+      </div>
+      <div class="sc-body">
+        <div class="sc-name">${w.name}</div>
+        <div class="sc-sub">${w.subcat} • ${w.village}</div>
+        <div class="sc-meta">
+          <div class="sc-rating">⭐ ${w.rating} (${w.reviews})</div>
+          <div class="sc-price">₹${w.price}/${w.unit}</div>
+        </div>
+        <div class="sc-dist">📍 ~${(Math.random()*8+0.5).toFixed(1)}km</div>
+      </div>
+    </div>`).join('');
+}
+
+// Render food vendors
+function renderFood() {
+  const D = window.PT_DATA;
+  if (!D) return;
+  document.getElementById('foodScroll').innerHTML = D.vendors.map(v => `
+    <div class="service-card" onclick="location.href='pages/food/index.html'">
+      <div class="sc-thumb" style="background:linear-gradient(135deg,#FFF3E0,#FFCCBC)">
+        <span style="font-size:52px">${v.emoji}</span>
+        <span class="sc-badge">${v.badge}</span>
+      </div>
+      <div class="sc-body">
+        <div class="sc-name">${v.name}</div>
+        <div class="sc-sub">${v.village} • ${v.category}</div>
+        <div class="sc-meta">
+          <div class="sc-rating">⭐ ${v.rating}</div>
+          <div class="sc-price" style="font-size:12px;color:var(--primary)">Open Now</div>
+        </div>
+        <div class="sc-dist">🛒 ${v.products.length} items</div>
+      </div>
+    </div>`).join('');
+}
+
+// Render live feed
+function renderFeed() {
+  const D = window.PT_DATA;
+  if (!D) return;
+  const feedData = [
+    { emoji:'🌾', name:'Ramesh Kumar', time:'2 mins ago • 1.5 km', text:'Need 5 workers for rice harvesting. 3 days work. Food included.', odia:'୫ ଜ. ମ. ଦ. — ୩ ଦ. ।', tags:['💼 Job','🌾 Farming','₹300/day'], page:'pages/farming/index.html' },
+    { emoji:'🚗', name:'Village Taxi', time:'5 mins ago • Available', text:'Shared taxi to Bhubaneswar in 30 min. 2 seats available.', odia:'ଭ. ଟ୍ୟ. — ୨ ସ. ।', tags:['🚗 Transport','🕐 Urgent','₹80/seat'], page:'pages/vehicle/index.html' },
+    { emoji:'🍛', name:'Maa Tarini Kitchen', time:'15 mins ago • Open', text:'Special Odia thali! Pakhala, fish curry, dalma — Home-made taste!', odia:'ବ. ଓ. ଥ. — ₹120।', tags:['🍽️ Food','🏠 Homemade','₹120'], page:'pages/food/index.html' },
+    { emoji:'🔧', name:'Manoj Plumber', time:'1 hr ago • Kendrapara', text:'Available for plumbing work this week. Urgent repairs taken.', odia:'ପ୍ଲ. ସ. — ₹350।', tags:['🔧 Technician','⚡ Available'], page:'pages/technicians/index.html' },
+  ];
+  document.getElementById('liveFeed').innerHTML = feedData.map(f => `
+    <div class="feed-item" onclick="location.href='${f.page}'">
+      <div class="fi-head">
+        <div class="fi-avatar">${f.emoji}</div>
+        <div>
+          <div class="fi-name">${f.name}</div>
+          <div class="fi-time">${f.time}</div>
+        </div>
+      </div>
+      <div class="fi-body">${f.text} <div class="fi-odia">${f.odia}</div></div>
+      <div class="wc-meta" style="margin-bottom:10px">
+        ${f.tags.map(t => `<span class="tag tag-orange">${t}</span>`).join('')}
+      </div>
+      <div class="fi-actions">
+        <button class="fi-btn" onclick="event.stopPropagation();showToast('👍 Interested!')">👍 Interested</button>
+        <button class="fi-btn" onclick="event.stopPropagation();showToast('📞 Connecting...')">📞 Contact</button>
+      </div>
+    </div>`).join('');
+}
+
+// Init map
+PT_MAPS.init('miniMap');
+
+// Render all sections
+renderTrending();
+renderFood();
+renderFeed();
+
+// WhatsApp link from config
+const waLink = document.querySelector('.whatsapp-float');
+if (waLink && window.PT_CONFIG?.brand?.whatsapp) {
+  waLink.href = `https://wa.me/${PT_CONFIG.brand.whatsapp}`;
+}
+</script>
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="site-footer-main">
+  <div class="sfm-inner">
+    <div class="sfm-brand">
+      <div class="sfm-logo">🌾</div>
+      <div>
+        <div class="sfm-name">The Part-Timers</div>
+        <div class="sfm-tagline">Odisha's Rural Services Platform<br><span style="font-family:var(--font-odia)">ଓଡ଼ିଶାର ଗ୍ରାମୀଣ ସେବା ମଞ୍ଚ</span></div>
+      </div>
+    </div>
+    <div class="sfm-links">
+      <div class="sfm-col">
+        <div class="sfm-col-title">Services — ସେବା</div>
+        <a href="pages/farming/index.html">🌾 Farming</a>
+        <a href="pages/fish/index.html">🐟 Fish & Aqua</a>
+        <a href="pages/technicians/index.html">🔧 Technicians</a>
+        <a href="pages/food/index.html">🍽️ Food Delivery</a>
+        <a href="pages/vehicle/index.html">🚗 Vehicle</a>
+        <a href="pages/learning/index.html">📚 Learning</a>
+      </div>
+      <div class="sfm-col">
+        <div class="sfm-col-title">Platform — ମଞ୍ଚ</div>
+        <a href="pages/user/register-worker.html">📝 Join as Worker</a>
+        <a href="pages/work-id/index.html">🪪 Digital Work ID</a>
+        <a href="pages/haata/index.html">🏪 Sunday Haata</a>
+        <a href="pages/marketplace/index.html">🛒 Marketplace</a>
+        <a href="pages/legal/terms.html">⚖️ Terms & Legal</a>
+      </div>
+      <div class="sfm-col">
+        <div class="sfm-col-title">Contact — ଯୋଗାଯୋଗ</div>
+        <a href="tel:+91XXXXXXXXXX">📞 +91-XXXXXXXXXX</a>
+        <a href="https://wa.me/91XXXXXXXXXX">💬 WhatsApp</a>
+        <a href="mailto:hello@theparttimers.in">✉️ Email Us</a>
+        <div style="margin-top:8px;font-size:11px;color:var(--text-light)">📍 Kendrapara, Odisha</div>
+      </div>
+    </div>
+    <div class="sfm-bottom">
+      <div>© 2026 The Part-Timers. All rights reserved. — ସ. ସ. ସ.</div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <a href="pages/legal/terms.html">Privacy Policy</a>
+        <a href="pages/legal/terms.html">Terms of Service</a>
+        <a href="pages/legal/terms.html">Refund Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<style>
+.site-footer-main { background: #1A1A2E; color: #9CA3AF; padding: 36px 20px 24px; margin-top: 10px; }
+.sfm-inner { max-width: 1400px; margin: 0 auto; }
+.sfm-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+.sfm-logo { font-size: 36px; width: 52px; height: 52px; background: rgba(255,255,255,0.1); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sfm-name { font-size: 16px; font-weight: 800; color: white; margin-bottom: 4px; }
+.sfm-tagline { font-size: 12px; line-height: 1.6; opacity: 0.7; }
+.sfm-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 28px; }
+.sfm-col { display: flex; flex-direction: column; gap: 8px; }
+.sfm-col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: white; margin-bottom: 4px; }
+.sfm-col a { font-size: 12px; color: #9CA3AF; text-decoration: none; transition: color 0.2s; }
+.sfm-col a:hover { color: #4CAF50; }
+.sfm-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 11px; }
+.sfm-bottom a { color: #6B7280; text-decoration: none; }
+.sfm-bottom a:hover { color: #9CA3AF; }
+@media (max-width: 600px) {
+  .sfm-links { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .sfm-bottom { flex-direction: column; align-items: flex-start; }
+  .main-content { padding-bottom: calc(var(--bottom-h) + 20px); }
+}
+</style>
+
+</body>
+</html>
