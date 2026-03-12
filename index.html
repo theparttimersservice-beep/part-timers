@@ -526,18 +526,7 @@ function goSlide(n) {
 setInterval(() => goSlide((heroIdx + 1) % heroSlides.length), 4000);
 
 
-// Sidebar open/close
-function openSidebar() {
-  document.getElementById('mainSidebar').classList.add('is-open');
-  document.getElementById('sidebarOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeSidebar() {
-  document.getElementById('mainSidebar').classList.remove('is-open');
-  document.getElementById('sidebarOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-// Sidebar toggle — works on ALL screen sizes
+// ── Sidebar toggle (Desktop + Mobile) ──
 function toggleSidebar() {
   const sidebar = document.getElementById('mainSidebar');
   const overlay = document.getElementById('sidebarOverlay');
@@ -547,12 +536,12 @@ function toggleSidebar() {
     sidebar.classList.remove('is-open');
     overlay.classList.remove('open');
     document.body.style.overflow = '';
-    btn.textContent = '☰';
+    if(btn) btn.textContent = '☰';
   } else {
     sidebar.classList.add('is-open');
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
-    btn.textContent = '✕';
+    if(btn) btn.textContent = '✕';
   }
 }
 function closeSidebar() {
@@ -563,7 +552,7 @@ function closeSidebar() {
   if(btn) btn.textContent = '☰';
 }
 
-// Splash screen — sirf pehli baar (localStorage matches splash.html logic)
+// ── Splash screen — sirf pehli baar ──
 if (!localStorage.getItem('pt_seen_splash')) {
   window.location.replace('splash.html');
 }
