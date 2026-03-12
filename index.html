@@ -6,15 +6,7 @@
   <title>The Part-Timers — Rural Services Platform | Odisha</title>
   <meta name="description" content="Odisha's largest rural services platform. Find farm workers, technicians, food delivery, vehicle booking, tutors and more in your village.">
   <link rel="stylesheet" href="assets/css/main.css">
-  <style
-  .hero { position: relative !important; overflow: hidden !important; }
-  .hero-slides { position: absolute !important; inset: 0 !important; z-index: 0 !important; }
-  .hero-overlay { position: absolute !important; inset: 0 !important; z-index: 1 !important; }
-  .hero-pattern, .hero-row, .hero-search, .hero-stats, .hero-dots { 
-    position: relative !important; z-index: 2 !important; 
-  }
-</style>
-  
+  <style>
     /* Homepage-specific extras */
     .promo-banner {
       background: linear-gradient(135deg, #FF6F00, #FFA726);
@@ -45,8 +37,7 @@
     }
     .live-dot {
       display: inline-block;
-      width: 8px;
-      height: 8px;
+      width: 8px; height: 8px;
       background: #F44336;
       border-radius: 50%;
       animation: blink 1.2s ease-in-out infinite;
@@ -57,13 +48,10 @@
       position: fixed;
       bottom: calc(var(--bottom-h) + 14px);
       left: 20px;
-      width: 50px;
-      height: 50px;
+      width: 50px; height: 50px;
       background: #25D366;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       font-size: 26px;
       box-shadow: 0 4px 16px rgba(37,211,102,0.4);
       cursor: pointer;
@@ -72,19 +60,66 @@
       transition: transform var(--transition);
     }
     .whatsapp-float:hover { transform: scale(1.1); }
-    @media (min-width: 601px) {
-      .whatsapp-float { bottom: 20px; }
+    @media (min-width: 601px) { .whatsapp-float { bottom: 20px; } }
+
+    /* ── HERO SLIDESHOW ── */
+    .hero { position: relative !important; overflow: hidden !important; }
+    .hero-slides {
+      position: absolute !important;
+      top: 0 !important; left: 0 !important;
+      right: 0 !important; bottom: 0 !important;
+      z-index: 0 !important;
     }
+    .hero-slide {
+      position: absolute !important;
+      top: 0 !important; left: 0 !important;
+      right: 0 !important; bottom: 0 !important;
+      background-size: cover !important;
+      background-position: center !important;
+      opacity: 0 !important;
+      transition: opacity 1.2s ease !important;
+    }
+    .hero-slide.active { opacity: 1 !important; }
+    .hero-overlay {
+      position: absolute !important;
+      top: 0 !important; left: 0 !important;
+      right: 0 !important; bottom: 0 !important;
+      background: linear-gradient(135deg,
+        rgba(27,94,32,0.78),
+        rgba(46,125,50,0.72),
+        rgba(102,187,106,0.65)) !important;
+      z-index: 1 !important;
+    }
+    .hero > .hero-slides,
+    .hero > .hero-overlay { z-index: 0; }
+    .hero > .hero-pattern,
+    .hero > .hero-row,
+    .hero > .hero-search,
+    .hero > .hero-stats,
+    .hero > .hero-dots {
+      position: relative !important;
+      z-index: 3 !important;
+    }
+    .hero-dots { display:flex; gap:7px; margin-top:16px; }
+    .hero-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-block;
+    }
+    .hero-dot.active { background: white; width: 20px; border-radius: 4px; }
   </style>
 </head>
 <body>
 
-<!-- ════════ ANNOUNCEMENT BAR ════════ -->
+<!-- ANNOUNCEMENT BAR -->
 <div class="announcement-bar" id="announcementBar">
   <div class="announcement-track" id="announcementTrack"></div>
 </div>
 
-<!-- ════════ HEADER ════════ -->
+<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
     <a class="logo-wrap" href="index.html">
@@ -94,12 +129,10 @@
         <div class="logo-sub">Rural Services Platform</div>
       </div>
     </a>
-
     <div class="header-search">
       <input type="text" id="headerSearchInput" placeholder="Search services, workers, products...">
       <button class="header-search-btn" onclick="doHeaderSearch()">🔍</button>
     </div>
-
     <div class="header-actions">
       <button class="location-chip" onclick="changeLocation()">
         📍 <span class="loc-name">Kendrapara</span>
@@ -114,7 +147,7 @@
   </div>
 </header>
 
-<!-- ════════ MOBILE MENU OVERLAY ════════ -->
+<!-- MOBILE MENU -->
 <div class="modal-overlay" id="mobileMenu" onclick="if(event.target===this)toggleMobileMenu()">
   <div class="modal-sheet" style="max-height:80vh">
     <div class="modal-handle"></div>
@@ -147,41 +180,38 @@
   </div>
 </div>
 
-<!-- ════════ MAIN LAYOUT ════════ -->
+<!-- MAIN LAYOUT -->
 <div class="app-shell">
 
-  <!-- SIDEBAR (desktop only) -->
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-section">MAIN</div>
     <a class="sidebar-link active" href="index.html"><span class="s-icon">🏠</span> Home</a>
     <a class="sidebar-link" href="pages/search.html"><span class="s-icon">🔍</span> Smart Search</a>
     <a class="sidebar-link" href="pages/user/orders.html"><span class="s-icon">📋</span> My Orders</a>
-
     <div class="sidebar-section">CATEGORIES</div>
     <div id="sidebarCats"></div>
-
     <div class="sidebar-section">ACCOUNT</div>
     <a class="sidebar-link" href="pages/user/profile.html"><span class="s-icon">👤</span> My Profile</a>
     <a class="sidebar-link" href="pages/user/register-worker.html"><span class="s-icon">📝</span> Register as Worker</a>
     <a class="sidebar-link" href="pages/work-id/index.html"><span class="s-icon">🪪</span> Digital Work ID</a>
-
     <div class="sidebar-section">PLATFORM</div>
     <a class="sidebar-link" href="pages/admin/index.html"><span class="s-icon">⚙️</span> Admin Panel</a>
     <a class="sidebar-link" href="pages/legal/terms.html"><span class="s-icon">⚖️</span> Terms & Legal</a>
   </aside>
 
-  <!-- HERO -->
-    <div class="hero" id="heroSection">
-      <!-- Slideshow Background -->
-      <div class="hero-slides" id="heroSlides">
-        <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800&q=80&auto=format')"></div>
-        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=800&q=80&auto=format')"></div>
-        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&q=80&auto=format')"></div>
-        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=800&q=80&auto=format')"></div>
-      </div>
-      <!-- Green Overlay -->
-      <div class="hero-overlay"></div>
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
 
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-slides">
+        <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800&q=80&auto=format&fit=crop')"></div>
+        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=800&q=80&auto=format&fit=crop')"></div>
+        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&q=80&auto=format&fit=crop')"></div>
+        <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=800&q=80&auto=format&fit=crop')"></div>
+      </div>
+      <div class="hero-overlay"></div>
       <div class="hero-pattern">🌾</div>
       <div class="hero-row">
         <div>
@@ -202,8 +232,6 @@
         <div class="hero-stat"><div class="hero-stat-n">30+</div><div class="hero-stat-l">Villages</div></div>
         <div class="hero-stat"><div class="hero-stat-n">4.8⭐</div><div class="hero-stat-l">Avg Rating</div></div>
       </div>
-
-      <!-- Slide Dots -->
       <div class="hero-dots">
         <span class="hero-dot active" onclick="goSlide(0)"></span>
         <span class="hero-dot" onclick="goSlide(1)"></span>
@@ -217,9 +245,7 @@
       <div class="section-head">
         <div class="section-title">Quick Services <span>ଶୀଘ୍ର ସେବା</span></div>
       </div>
-      <div class="quick-grid" id="quickGrid">
-        <!-- Populated by app.js renderCategories() -->
-      </div>
+      <div class="quick-grid" id="quickGrid"></div>
     </div>
 
     <!-- PROMO BANNER -->
@@ -241,9 +267,7 @@
         <div class="section-title">🔥 Trending Now <span class="trending-tag">HOT</span></div>
         <a class="view-all" href="pages/search.html">View All</a>
       </div>
-      <div class="h-scroll" id="trendingScroll">
-        <!-- populated by JS -->
-      </div>
+      <div class="h-scroll" id="trendingScroll"></div>
     </div>
 
     <!-- MAP PREVIEW -->
@@ -261,9 +285,7 @@
         <div class="section-title"><span class="live-dot"></span> Live Updates <span>ଲ. ଅ.</span></div>
         <a class="view-all" href="pages/search.html">View All</a>
       </div>
-      <div id="liveFeed">
-        <!-- populated by JS -->
-      </div>
+      <div id="liveFeed"></div>
     </div>
 
     <!-- BANNER QUICK LINKS -->
@@ -290,15 +312,13 @@
       </div>
     </div>
 
-    <!-- FOOD DELIVERY SECTION -->
+    <!-- FOOD DELIVERY -->
     <div class="section">
       <div class="section-head">
         <div class="section-title">🍽️ Food Delivery <span>ଖ. ଡ.</span></div>
         <a class="view-all" href="pages/food/index.html">View All</a>
       </div>
-      <div class="h-scroll" id="foodScroll">
-        <!-- populated by JS -->
-      </div>
+      <div class="h-scroll" id="foodScroll"></div>
     </div>
 
     <!-- LEGAL NOTICE -->
@@ -310,9 +330,9 @@
     </div>
 
   </main>
-</div><!-- /app-shell -->
+</div>
 
-<!-- BOTTOM NAV (mobile) -->
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="bn-items">
     <a class="bn-item active" href="index.html">
@@ -347,7 +367,6 @@
 <script src="data/data.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
-// ── Homepage-specific JS ──
 
 function doHeroSearch() {
   const q = document.getElementById('heroSearchInput').value.trim();
@@ -371,7 +390,6 @@ function changeLocation() {
   }
 }
 
-// Render trending cards
 function renderTrending() {
   const D = window.PT_DATA;
   if (!D) return;
@@ -401,7 +419,6 @@ function renderTrending() {
     </div>`).join('');
 }
 
-// Render food vendors
 function renderFood() {
   const D = window.PT_DATA;
   if (!D) return;
@@ -423,10 +440,7 @@ function renderFood() {
     </div>`).join('');
 }
 
-// Render live feed
 function renderFeed() {
-  const D = window.PT_DATA;
-  if (!D) return;
   const feedData = [
     { emoji:'🌾', name:'Ramesh Kumar', time:'2 mins ago • 1.5 km', text:'Need 5 workers for rice harvesting. 3 days work. Food included.', odia:'୫ ଜ. ମ. ଦ. — ୩ ଦ. ।', tags:['💼 Job','🌾 Farming','₹300/day'], page:'pages/farming/index.html' },
     { emoji:'🚗', name:'Village Taxi', time:'5 mins ago • Available', text:'Shared taxi to Bhubaneswar in 30 min. 2 seats available.', odia:'ଭ. ଟ୍ୟ. — ୨ ସ. ।', tags:['🚗 Transport','🕐 Urgent','₹80/seat'], page:'pages/vehicle/index.html' },
@@ -453,21 +467,17 @@ function renderFeed() {
     </div>`).join('');
 }
 
-// Init map
-PT_MAPS.init('miniMap');
-
-// Render all sections
+if (window.PT_MAPS) PT_MAPS.init('miniMap');
 renderTrending();
 renderFood();
 renderFeed();
 
-// WhatsApp link from config
 const waLink = document.querySelector('.whatsapp-float');
 if (waLink && window.PT_CONFIG?.brand?.whatsapp) {
   waLink.href = `https://wa.me/${PT_CONFIG.brand.whatsapp}`;
 }
 
-  // Hero Slideshow
+// Hero Slideshow
 let heroIdx = 0;
 const heroSlides = document.querySelectorAll('.hero-slide');
 const heroDots   = document.querySelectorAll('.hero-dot');
@@ -479,6 +489,7 @@ function goSlide(n) {
   heroDots[heroIdx].classList.add('active');
 }
 setInterval(() => goSlide((heroIdx + 1) % heroSlides.length), 4000);
+
 </script>
 </body>
 </html>
