@@ -626,3 +626,5 @@ window.callWorker= callWorker;
 window.toggleDarkMode = toggleDarkMode;
 window.formatCurrency = formatCurrency;
 window.calcBookingPrice = calcBookingPrice;
+window.validatePhone = validatePhone;
+window.toggleMobileMenu = toggleMobileMenu;
