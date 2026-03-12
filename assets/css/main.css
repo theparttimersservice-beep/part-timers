@@ -325,12 +325,13 @@ img { max-width:100%; display:block; }
 /* ── HERO SECTION ── */
 .hero {
   background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 55%, #66BB6A 100%);
-  padding: 20px 24px 24px;
+  padding: 36px 28px 28px;
   color: white;
   position: relative;
   overflow: hidden;
-  min-height: unset;
-  max-height: 320px;
+  width: 100%;
+  min-height: 260px;
+  max-height: 380px;
 }
 .hero::before {
   content: '';
@@ -963,7 +964,7 @@ select.form-control { cursor: pointer; }
   .fab { bottom: calc(var(--bottom-h) + 14px); }
   .app-shell { width: 100%; overflow-x: hidden; }
   .main-content { padding-bottom: calc(var(--bottom-h) + 20px); width: 100%; overflow-x: hidden; }
-  .hero { padding: 16px 16px 18px !important; width: 100%; box-sizing: border-box; max-height: unset; }
+  .hero { padding: 28px 16px 22px !important; width: 100%; box-sizing: border-box; min-height: 240px; max-height: unset; }
   .hero-title { font-size: 20px !important; }
   .quick-grid { grid-template-columns: repeat(4, 1fr); }
   .q-odia { display: none; }
