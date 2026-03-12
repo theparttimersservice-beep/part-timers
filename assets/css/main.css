@@ -270,8 +270,10 @@ img { max-width:100%; display:block; }
 /* ── DESKTOP SIDEBAR ── */
 .app-shell {
   display: flex;
+  width: 100%;
   max-width: 1400px;
   margin: 0 auto;
+  overflow-x: hidden;
 }
 .sidebar {
   width: 230px;
@@ -942,13 +944,16 @@ select.form-control { cursor: pointer; }
   .cat-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
 }
 @media (max-width: 600px) {
+  body { overflow-x: hidden; }
   .site-header .header-search { display: none; }
   .hamburger { display: flex; }
   .location-chip .loc-name { display: none; }
   .bottom-nav { display: flex; }
   .fab { bottom: calc(var(--bottom-h) + 14px); }
-  .main-content { padding-bottom: calc(var(--bottom-h) + 20px); }
-  .hero { padding: 22px 16px 28px; }
+  .app-shell { width: 100%; overflow-x: hidden; }
+  .main-content { padding-bottom: calc(var(--bottom-h) + 20px); width: 100%; overflow-x: hidden; }
+  .hero { padding: 22px 16px 28px; width: 100%; box-sizing: border-box; }
+  .hero-title { font-size: 26px; }
   .quick-grid { grid-template-columns: repeat(4, 1fr); }
   .q-odia { display: none; }
   .cat-grid { grid-template-columns: repeat(2, 1fr); padding: 14px; gap: 10px; }
@@ -956,6 +961,9 @@ select.form-control { cursor: pointer; }
   .banner-cards { padding: 12px 16px; }
   .section-head { padding: 14px 16px 10px; }
   .h-scroll { padding: 4px 16px 14px; }
+  .bn-items { width: 100%; justify-content: space-around; }
+  .bn-item { flex: 1; min-width: 0; }
+  .bn-label { font-size: 9px; }
 }
 @media (min-width: 1200px) {
   .quick-grid { grid-template-columns: repeat(6, 1fr); }
@@ -1008,3 +1016,48 @@ select.form-control { cursor: pointer; }
   display: inline-block;
 }
 .hero-dot.active { background: white; width: 20px; border-radius: 4px; }
+
+/* ── SIDEBAR MOBILE OVERLAY ── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 199;
+}
+.sidebar-overlay.open { display: block; }
+.sidebar.mobile-open {
+  display: block !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  height: 100vh !important;
+  z-index: 200 !important;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.18) !important;
+}
+.sidebar-close-btn {
+  display: none;
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  gap: 10px;
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .sidebar-close-btn { display: flex; }
+}
+
+/* ── HERO HEIGHT FIX ── */
+.hero {
+  min-height: unset !important;
+  padding: 28px 24px 32px !important;
+}
+.hero-slides .hero-slide {
+  background-position: center 30% !important;
+}
