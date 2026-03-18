@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Register as Worker — The Part-Timers</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    .reg-hero { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); padding: 22px 20px 28px; color: white; }
+    .rh-back { background: rgba(255,255,255,0.15); border: none; color: white; width: 38px; height: 38px; border-radius: 12px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+    .rh-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+    .rh-sub { font-size: 13px; opacity: 0.8; }
+    .steps { display: flex; gap: 8px; padding: 16px 20px; background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+    .steps::-webkit-scrollbar { display: none; }
+    .step { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--border); color: var(--text-muted); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .step.active .step-num { background: var(--primary); color: white; }
+    .step.done .step-num { background: var(--success); color: white; }
+    .step-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    .step.active .step-label { color: var(--primary); font-weight: 600; }
+    .step-divider { color: var(--border); font-size: 16px; flex-shrink: 0; }
+    .form-page { padding: 20px; display: none; }
+    .form-page.active { display: block; }
+    .photo-upload { width: 100%; height: 140px; border: 2px dashed var(--border); border-radius: var(--radius-lg); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; color: var(--text-muted); transition: border-color 0.2s; background: var(--bg); }
+    .photo-upload:hover { border-color: var(--primary); }
+    .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .cat-option { padding: 14px 12px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; text-align: center; transition: all 0.2s; }
+    .cat-option:hover { border-color: var(--primary); background: var(--bg-2); }
+    .cat-option.sel { border-color: var(--primary); background: var(--bg-2); }
+    .cat-option .c-icon { font-size: 28px; margin-bottom: 8px; }
+    .cat-option .c-name { font-size: 13px; font-weight: 600; }
+    .nav-btns { display: flex; gap: 10px; margin-top: 24px; }
+    .price-hint { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+    .success-wrap { text-align: center; padding: 50px 30px; }
+    .sw-icon { font-size: 70px; margin-bottom: 20px; }
+    .sw-title { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
+    .sw-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
+  
+    body { padding-bottom: calc(68px + env(safe-area-inset-bottom, 16px)); }
+    @media(min-width:820px){ body { padding-bottom: 0; } }
+  </style>
+</head>
+<body>
+
+<div class="reg-hero">
+  <button class="rh-back" onclick="safeBack()">←</button>
+  <div class="rh-title">📝 Register as Worker</div>
+  <div class="rh-sub">ଆଜି ଯୋଗ ଦିଅନ୍ତୁ — Join 1000+ workers earning on platform</div>
+</div>
+
+<div class="steps" id="stepsBar">
+  <div class="step active" id="step1"><div class="step-num">1</div><div class="step-label">Basic Info</div></div>
+  <div class="step-divider">›</div>
+  <div class="step" id="step2"><div class="step-num">2</div><div class="step-label">Skills</div></div>
+  <div class="step-divider">›</div>
+  <div class="step" id="step3"><div class="step-num">3</div><div class="step-label">Pricing</div></div>
+  <div class="step-divider">›</div>
+  <div class="step" id="step4"><div class="step-num">4</div><div class="step-label">Submit</div></div>
+</div>
+
+<!-- PAGE 1: Basic Info -->
+<div class="form-page active" id="page1">
+  <div class="form-group">
+    <label class="form-label">👤 Full Name <span class="odia text-odia">ନ।</span></label>
+    <input type="text" id="w_name" class="form-control" placeholder="Your full name">
+  </div>
+  <div class="form-group">
+    <label class="form-label">📞 Phone Number <span class="odia text-odia">ଫ।</span></label>
+    <input type="tel" id="w_phone" class="form-control" placeholder="10-digit mobile" maxlength="10">
+  </div>
+  <div class="form-group">
+    <label class="form-label">📍 Village <span class="odia text-odia">ଗ।</span></label>
+    <input type="text" id="w_village" class="form-control" placeholder="Your village/town name">
+    <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Customers near your village will find you first</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">🏙️ District</label>
+    <select id="w_district" class="form-control">
+      <option value="">Select district</option>
+      <option>Kendrapara</option><option>Khordha</option><option>Cuttack</option>
+      <option>Puri</option><option>Jagatsinghpur</option><option>Balasore</option>
+      <option>Ganjam</option><option>Sambalpur</option><option>Mayurbhanj</option>
+      <option>Keonjhar</option><option>Jajpur</option><option>Koraput</option>
+      <option>Other</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label class="form-label">📸 Your Photo (Optional)</label>
+    <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+      <div style="font-size:36px;margin-bottom:8px">📸</div>
+      <div>Tap to upload photo</div>
+      <div style="font-size:11px;margin-top:4px;color:var(--text-light)">JPG/PNG, max 2MB</div>
+    </div>
+    <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+    <div id="photoPreview" style="margin-top:10px"></div>
+  </div>
+  <div class="nav-btns">
+    <button class="btn btn-primary btn-full btn-lg" onclick="goPage(2)">Next → Skills</button>
+  </div>
+</div>
+
+<!-- PAGE 2: Skills & Category -->
+<div class="form-page" id="page2">
+  <label class="form-label" style="display:block;margin-bottom:12px">🎯 Select Your Skill Category <span class="odia text-odia">ଦ।</span></label>
+  <div class="category-grid" id="catGrid">
+    <div class="cat-option" data-cat="farming" onclick="selectCat(this)"><div class="c-icon">🌾</div><div class="c-name">Farming Work</div></div>
+    <div class="cat-option" data-cat="fish" onclick="selectCat(this)"><div class="c-icon">🐟</div><div class="c-name">Fish & Aqua</div></div>
+    <div class="cat-option" data-cat="poultry" onclick="selectCat(this)"><div class="c-icon">🐓</div><div class="c-name">Poultry & Livestock</div></div>
+    <div class="cat-option" data-cat="learning" onclick="selectCat(this)"><div class="c-icon">📚</div><div class="c-name">Teaching/Coaching</div></div>
+    <div class="cat-option" data-cat="technician" onclick="selectCat(this)"><div class="c-icon">🔧</div><div class="c-name">Technician</div></div>
+    <div class="cat-option" data-cat="contractor" onclick="selectCat(this)"><div class="c-icon">🏗️</div><div class="c-name">Contractor</div></div>
+    <div class="cat-option" data-cat="equipment" onclick="selectCat(this)"><div class="c-icon">⚙️</div><div class="c-name">Equipment Rental</div></div>
+    <div class="cat-option" data-cat="vehicle" onclick="selectCat(this)"><div class="c-icon">🚗</div><div class="c-name">Vehicle Service</div></div>
+  </div>
+  <div class="form-group" style="margin-top:18px">
+    <label class="form-label">🏷️ Specific Role / Sub-category</label>
+    <input type="text" id="w_subcat" class="form-control" placeholder="e.g. Tractor Operator, Electrician...">
+  </div>
+  <div class="form-group">
+    <label class="form-label">📖 Experience</label>
+    <select id="w_exp" class="form-control">
+      <option>Less than 1 year</option>
+      <option>1-3 years</option>
+      <option>3-5 years</option>
+      <option>5-10 years</option>
+      <option>10+ years</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label class="form-label">✍️ About You (Optional)</label>
+    <textarea id="w_desc" class="form-control" placeholder="Describe your skills and work experience..."></textarea>
+  </div>
+  <div class="nav-btns">
+    <button class="btn btn-outline" style="width:120px" onclick="goPage(1)">← Back</button>
+    <button class="btn btn-primary" style="flex:1" onclick="goPage(3)">Next → Pricing</button>
+  </div>
+</div>
+
+<!-- PAGE 3: Pricing -->
+<div class="form-page" id="page3">
+  <div class="form-group">
+    <label class="form-label">💰 Your Price Rate <span class="odia text-odia">ମ।</span></label>
+    <input type="number" id="w_price" class="form-control" placeholder="e.g. 400">
+    <div class="price-hint">Enter the amount you want to charge per hour/day/visit</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">📐 Price Unit</label>
+    <select id="w_unit" class="form-control">
+      <option value="hr">Per Hour</option>
+      <option value="day">Per Day</option>
+      <option value="visit">Per Visit</option>
+      <option value="km">Per KM</option>
+      <option value="month">Per Month</option>
+    </select>
+    <div class="price-hint">Workers keep 100% of earnings. Platform takes 0% commission.</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">📡 Service Radius (km)</label>
+    <select id="w_radius" class="form-control">
+      <option value="5">5 km (Nearby villages only)</option>
+      <option value="10" selected>10 km</option>
+      <option value="20">20 km (Block level)</option>
+      <option value="50">50 km (District level)</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label class="form-label">📸 Work Photos (Optional)</label>
+    <div class="photo-upload" onclick="document.getElementById('portfolioInput').click()">
+      <div style="font-size:36px;margin-bottom:8px">🖼️</div>
+      <div>Upload work portfolio photos</div>
+      <div style="font-size:11px;margin-top:4px;color:var(--text-light)">Max 4 photos, 2MB each</div>
+    </div>
+    <input type="file" id="portfolioInput" accept="image/*" multiple style="display:none">
+  </div>
+  <div class="nav-btns">
+    <button class="btn btn-outline" style="width:120px" onclick="goPage(2)">← Back</button>
+    <button class="btn btn-primary" style="flex:1" onclick="goPage(4)">Review & Submit</button>
+  </div>
+</div>
+
+<!-- PAGE 4: Review & Submit -->
+<div class="form-page" id="page4">
+  <div style="background:var(--bg-2);border-radius:var(--radius-lg);padding:18px;margin-bottom:20px">
+    <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--primary)">📋 Registration Summary</div>
+    <div id="reviewContent"></div>
+  </div>
+
+  <div style="background:#FFF3E0;border-radius:var(--radius);padding:16px;margin-bottom:20px;font-size:12px;color:#5D4037;line-height:1.6">
+    ⚖️ <strong>Legal Notice:</strong> By registering, you confirm all information is accurate. False information may result in account suspension. The Part-Timers takes no commission. You keep 100% of your earnings.
+  </div>
+
+  <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:20px">
+    <input type="checkbox" id="finalAgree" style="width:16px;height:16px;margin-top:3px;flex-shrink:0">
+    <label for="finalAgree" style="font-size:13px;color:var(--text-muted)">
+      I agree to <a href="../legal/terms.html" style="color:var(--primary);font-weight:600">Terms & Conditions</a> and confirm all information is accurate.
+    </label>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-outline" style="width:120px" onclick="goPage(3)">← Back</button>
+    <button class="btn btn-primary" style="flex:1;font-size:16px;padding:14px" onclick="submitRegistration()">🚀 Submit Registration</button>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div id="successPage" style="display:none" class="success-wrap">
+  <div class="sw-icon">🎉</div>
+  <div class="sw-title">Registration Successful!</div>
+  <div class="sw-sub">
+    Your worker profile has been submitted.<br>
+    ଆପଣଙ୍କ ପ୍ରୋଫ. ଦ।<br><br>
+    Your profile will be visible to customers within 24 hours.
+  </div>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:4px">
+  <a href="../../index.html" class="btn btn-primary btn-lg" style="display:inline-flex;text-decoration:none">🏠 ଘରକୁ ଯାଅ — Home</a>
+  <a href="profile.html" class="btn btn-outline btn-lg" style="display:inline-flex;text-decoration:none">👤 ପ୍ରୋଫାଇଲ — Profile</a>
+</div>
+</div>
+
+<div id="toast"></div>
+<script src="../../data/config.js"></script>
+<script src="../../data/data.js"></script>
+<script src="../../assets/js/app.js"></script>
+<script>
+let currentPage = 1;
+function safeBack() {
+  if (currentPage > 1) goPage(currentPage - 1);
+  else history.back();
+}
+let selectedCat = '';
+
+function goPage(n) {
+  if (n === 2 && !validate1()) return;
+  if (n === 3 && !validate2()) return;
+  if (n === 4) buildReview();
+
+  document.querySelectorAll('.form-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page' + n).classList.add('active');
+  document.querySelectorAll('.step').forEach((s, i) => {
+    s.classList.toggle('active', i + 1 === n);
+    s.classList.toggle('done', i + 1 < n);
+  });
+  currentPage = n;
+  window.scrollTo(0, 0);
+}
+
+function validate1() {
+  if (!document.getElementById('w_name').value.trim()) { showToast('⚠️ Enter your name'); return false; }
+  if (!validatePhone(document.getElementById('w_phone').value)) { showToast('⚠️ Enter valid 10-digit phone'); return false; }
+  if (!document.getElementById('w_village').value.trim()) { showToast('⚠️ Enter your village'); return false; }
+  return true;
+}
+
+function validate2() {
+  if (!selectedCat) { showToast('⚠️ Select a skill category'); return false; }
+  return true;
+}
+
+function selectCat(el) {
+  document.querySelectorAll('.cat-option').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedCat = el.dataset.cat;
+}
+
+function previewPhoto(input) {
+  if (input.files[0]) {
+    const url = URL.createObjectURL(input.files[0]);
+    document.getElementById('photoPreview').innerHTML = `<img src="${url}" style="width:80px;height:80px;border-radius:12px;object-fit:cover">`;
+  }
+}
+
+function buildReview() {
+  document.getElementById('reviewContent').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Name</span><strong>${document.getElementById('w_name').value}</strong></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Phone</span><strong>${document.getElementById('w_phone').value}</strong></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Village</span><strong>${document.getElementById('w_village').value}</strong></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Category</span><strong>${selectedCat}</strong></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Skill</span><strong>${document.getElementById('w_subcat').value || 'N/A'}</strong></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Price</span><strong>₹${document.getElementById('w_price').value || '0'} / ${document.getElementById('w_unit').value}</strong></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Radius</span><strong>${document.getElementById('w_radius').value} km</strong></div>
+    </div>`;
+}
+
+function submitRegistration() {
+  if (!document.getElementById('finalAgree').checked) return showToast('⚠️ Accept Terms & Conditions');
+  const data = {
+    name:     document.getElementById('w_name').value,
+    phone:    document.getElementById('w_phone').value,
+    village:  document.getElementById('w_village').value,
+    district: document.getElementById('w_district').value,
+    category: selectedCat,
+    subcat:   document.getElementById('w_subcat').value,
+    experience: document.getElementById('w_exp').value,
+    desc:     document.getElementById('w_desc').value,
+    price:    document.getElementById('w_price').value,
+    unit:     document.getElementById('w_unit').value,
+    radius:   document.getElementById('w_radius').value,
+  };
+  // Save to global Workers sheet + local
+  SHEETS_API.registerWorker(data);
+  // Mark user as worker in their profile
+  var user = PT_AUTH.getUser();
+  if (user) {
+    user.isWorker = true;
+    if (user.role === 'customer') user.role = 'both';
+    user.workerCategory = data.category;
+    localStorage.setItem('pt_user', JSON.stringify(user));
+  }
+
+  // Save to category-specific sheet
+  var catSheetMap = {
+    farming:'saveFarmingWorker', fish:'saveFishWorker', poultry:'savePoultryWorker',
+    learning:'saveLearningWorker', technician:'saveTechWorker',
+    contractor:'saveContractorWorker', vehicle:'saveVehicleWorker'
+  };
+  if (catSheetMap[selectedCat]) SHEETS_API.post(catSheetMap[selectedCat], data);
+
+  // Update user profile to add worker role
+  var user = PT_AUTH.getUser();
+  if (user) {
+    PT_AUTH.addRole('worker');
+    PT_AUTH.updateProfile({isWorker:true, workerCategory:selectedCat, workerSubcat:data.subcat, workerPrice:data.price});
+  }
+
+  // Add to local data so visible immediately in category pages
+  if (window.PT_DATA) {
+    window.PT_DATA.workers.unshift({
+      id: 'W'+Date.now(), name:data.name, phone:data.phone, village:data.village,
+      district:data.district, category:data.category, subcat:data.subcat,
+      price:+data.price||300, unit:data.unit||'day', radius:+data.radius||10,
+      rating:4.5, reviews:0, trust:75, verified:false, badge:'New',
+      odia:'', emoji:'🌾', tags:[], desc:data.desc||''
+    });
+  }
+
+  document.querySelectorAll('.form-page').forEach(p => p.style.display='none');
+  document.getElementById('stepsBar').style.display = 'none';
+  document.getElementById('successPage').style.display = 'block';
+}
+</script>
+<!-- FUTURE: Add footer here -->
+
+<nav class="bottom-nav"><div class="bn-items"><a class="bn-item" href="../../index.html"><span class="bn-icon">🏠</span><span class="bn-label">Home</span></a><a class="bn-item" href="../../pages/search.html"><span class="bn-icon">🔍</span><span class="bn-label">Search</span></a><a class="bn-item" href="../../pages/user/orders.html"><span class="bn-icon">📋</span><span class="bn-label">Orders</span></a><a class="bn-item" href="../../pages/user/cart.html"><span class="bn-icon">🛒</span><span class="bn-label">Cart</span></a><a class="bn-item" href="../../pages/user/profile.html"><span class="bn-icon">👤</span><span class="bn-label">Profile</span></a></div></nav>
+</body>
+</html>

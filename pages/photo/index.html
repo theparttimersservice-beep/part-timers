@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Photo & Video — The Part-Timers</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>body{padding-bottom:calc(var(--bottom-h) + 20px)}</style>
+</head>
+<body>
+<div class="announcement-bar" id="announcementBar"><div class="announcement-track" id="announcementTrack"></div></div>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo-wrap" href="../../index.html">
+      <div class="logo-icon">🌾</div>
+      <div class="logo-text"><div class="logo-name">The Part-Timers</div><div class="logo-sub">Rural Services</div></div>
+    </a>
+    <div class="header-search">
+      <input type="text" id="headerSearchInput" placeholder="ଖୋଜ — Search...">
+      <button class="header-search-btn" id="hdrSearchBtn">🔍</button>
+    </div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="toggleDarkMode()">🌙</button>
+      <a class="header-btn" href="../../pages/user/cart.html">🛒<span class="badge" id="cartBadge" style="display:none">0</span></a>
+      <a class="header-btn" href="../../pages/user/login.html" id="loginBtn">👤</a>
+      <button class="hamburger header-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+  </div>
+</header>
+<div class="modal-overlay" id="mobileMenu" onclick="if(event.target===this)toggleMobileMenu()">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <span style="font-size:16px;font-weight:700">☰ ମ.</span>
+      <button onclick="toggleMobileMenu()" style="background:var(--bg);border:none;border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer">✕</button>
+    </div>
+    <a class="profile-menu-item" href="../../index.html"><div class="pmi-icon" style="background:#E8F5E9">🏠</div><div><div class="pmi-label">ଘର — Home</div></div><span class="pmi-arrow">›</span></a>
+    <a class="profile-menu-item" href="../../pages/user/login.html"><div class="pmi-icon" style="background:#E3F2FD">👤</div><div><div class="pmi-label">Login / Register</div></div><span class="pmi-arrow">›</span></a>
+    <a class="profile-menu-item" href="../../pages/user/orders.html"><div class="pmi-icon" style="background:#FFF3E0">📋</div><div><div class="pmi-label">ଆ. ଅ. — My Orders</div></div><span class="pmi-arrow">›</span></a>
+    <a class="profile-menu-item" href="../../pages/search.html"><div class="pmi-icon" style="background:#E8EAF6">🔍</div><div><div class="pmi-label">ସ. ଖ. — Search</div></div><span class="pmi-arrow">›</span></a>
+    <a class="profile-menu-item" href="../../pages/user/register-worker.html"><div class="pmi-icon" style="background:#F3E5F5">📝</div><div><div class="pmi-label">Worker ଭ. ଯ. ଦ.</div></div><span class="pmi-arrow">›</span></a>
+  </div>
+</div>
+<nav class="bottom-nav">
+  <div class="bn-items">
+    <a class="bn-item" href="../../index.html"><div class="bn-icon">🏠</div><div class="bn-label">ଘର</div></a>
+    <a class="bn-item" href="../../pages/search.html"><div class="bn-icon">🔍</div><div class="bn-label">ଖୋଜ</div></a>
+    <a class="bn-item" href="../../pages/food/index.html"><div class="bn-icon">🍽️</div><div class="bn-label">ଖାଦ୍ୟ</div></a>
+    <a class="bn-item" href="../../pages/user/orders.html"><div class="bn-icon">📋</div><div class="bn-label">ଅ.</div></a>
+    <a class="bn-item" href="../../pages/user/profile.html"><div class="bn-icon">👤</div><div class="bn-label">ପ୍ରୋ.</div></a>
+  </div>
+</nav>
+
+<div class="page-hero" style="background:linear-gradient(135deg,#1A237ECC,#1A237E)">
+  <button class="ph-back" onclick="safeBack()" title="ପ. — Back">←</button>
+  <div class="ph-title">📸 Photo & Video</div>
+  <div class="ph-odia">ଫ. ଓ ଭ. — ସ.</div>
+  <div class="ph-sub" id="resultCount">ଲୋ. — Loading...</div>
+</div>
+
+<div class="chips-row">
+  <button class="chip active" onclick="filterSub(this,'')">ସ. — All</button>
+    <button class="chip" onclick="filterSub(this,'Wedding')">💍 Wedding</button>
+    <button class="chip" onclick="filterSub(this,'Passport')">🪪 Passport</button>
+    <button class="chip" onclick="filterSub(this,'Editing')">✂️ Editing</button>
+</div>
+<div style="padding:10px 16px 0;display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-bottom:1px solid var(--border)">
+  <div style="font-size:12px;color:var(--text-muted)">
+    <label style="font-weight:600;margin-right:6px">📍 ଜି. — District:</label>
+    <select id="distFilter" class="form-control" style="width:140px;padding:5px 8px;font-size:12px;display:inline-block" onchange="renderWorkers()">
+      <option value="">ସ. — All Districts</option>
+      <option>Kendrapara</option><option>Khordha</option><option>Cuttack</option><option>Puri</option>
+      <option>Ganjam</option><option>Sambalpur</option><option>Balasore</option><option>Mayurbhanj</option>
+      <option>Koraput</option><option>Jagatsinghpur</option><option>Bhadrak</option><option>Angul</option>
+      <option>Dhenkanal</option><option>Bargarh</option><option>Jajpur</option><option>Sundargarh</option>
+    </select>
+  </div>
+  <select id="sortSel" class="form-control" style="width:130px;padding:5px 8px;font-size:12px" onchange="renderWorkers()">
+    <option value="">Best Match</option>
+    <option value="rating">⭐ ରେ. — Rating</option>
+    <option value="price_asc">₹ ଅ. — Price Low</option>
+    <option value="price_desc">₹ ↓ Price High</option>
+  </select>
+</div>
+
+<div class="cards-grid" id="workerGrid"></div>
+<div id="emptyState" style="display:none" class="empty-state">
+  <div class="es-icon">📸</div>
+  <div class="es-title">ଏ ଏ. ମ. ନ. — No providers found</div>
+  <div class="es-sub">Try a different district or search all of Odisha</div>
+  <a href="../search.html?cat=photo" class="btn btn-primary" style="display:inline-flex;margin-top:12px">🔍 Search All</a>
+</div>
+
+<!-- POST JOB BUTTON (dual-role — logged in users can post their own service too) -->
+<div style="padding:16px 20px;background:var(--surface);border-top:1px solid var(--border);position:sticky;bottom:calc(var(--bottom-h));z-index:50;display:flex;gap:10px">
+  <a href="../../pages/user/register-worker.html?cat=photo" class="btn btn-outline" style="flex:1;display:flex;justify-content:center;text-decoration:none;font-size:13px">👷 ସ. ଦ. ହ. — Offer This Service</a>
+  <a href="../../pages/search.html?cat=photo" class="btn btn-primary" style="flex:1;display:flex;justify-content:center;text-decoration:none;font-size:13px">🔍 ସ. ଖ. — Search More</a>
+</div>
+
+<div id="toast"></div>
+<script src="../../data/config.js"></script>
+<script src="../../data/data.js"></script>
+<script src="../../assets/js/app.js"></script>
+<script>
+const CAT_ID = 'photo';
+let subFilter = '', distFilter2 = '';
+
+function filterSub(el, sub) {
+  subFilter = sub;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderWorkers();
+}
+
+function renderWorkers() {
+  const D = window.PT_DATA; if(!D) return;
+  distFilter2 = document.getElementById('distFilter').value;
+  const sort = document.getElementById('sortSel').value;
+  let workers = D.workers.filter(w=>w.category===CAT_ID);
+  if(subFilter) workers = workers.filter(w=>w.subcat&&w.subcat.toLowerCase().includes(subFilter.toLowerCase()));
+  if(distFilter2) workers = workers.filter(w=>w.district===distFilter2);
+  if(sort==='rating') workers.sort((a,b)=>b.rating-a.rating);
+  else if(sort==='price_asc') workers.sort((a,b)=>a.price-b.price);
+  else if(sort==='price_desc') workers.sort((a,b)=>b.price-a.price);
+
+  const countEl = document.getElementById('resultCount');
+  if(countEl) countEl.textContent = workers.length + ' ସ. ମ. — providers found';
+
+  if(!workers.length){
+    document.getElementById('workerGrid').innerHTML='';
+    document.getElementById('emptyState').style.display='block';
+    return;
+  }
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('workerGrid').innerHTML = workers.map(w=>{
+    const dist = (Math.random()*8+0.4).toFixed(1);
+    return `<div class="worker-card" onclick="location.href='../user/worker-profile.html?id=${w.id}'">
+      <div class="wc-head">
+        <div class="wc-avatar"><span style="font-size:26px">${w.emoji}</span>${w.verified?'<div class="wc-verified">✓</div>':''}</div>
+        <div class="wc-info">
+          <div class="wc-name">${w.name}</div>
+          <div class="wc-sub">${w.subcat} • 📍 ${w.village}</div>
+          ${w.odia?'<div class="wc-odia">'+w.odia+'</div>':''}
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:17px;font-weight:700;color:var(--accent)">₹${w.price}</div>
+          <div style="font-size:11px;color:var(--text-light)">/${w.unit}</div>
+        </div>
+      </div>
+      <div class="wc-meta">
+        <span class="tag">⭐ ${w.rating} (${w.reviews})</span>
+        ${w.badge?'<span class="tag tag-orange">'+w.badge+'</span>':''}
+        <span class="tag tag-blue">📍 ~${dist}km</span>
+        ${w.verified?'<span class="tag tag-green">✓ Verified</span>':''}
+      </div>
+      <div class="trust-bar"><div class="trust-label"><span>ଟ. — Trust</span><span>${w.trust}%</span></div><div class="trust-track"><div class="trust-fill" style="width:${w.trust}%"></div></div></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-primary btn-sm" style="flex:1" onclick="event.stopPropagation();location.href='../user/booking.html?id=${w.id}'">📅 ବ. — Book</button>
+        <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();callWorker('${w.phone}','${w.name}')">📞</button>
+        <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();shareWorker('${w.id}','${w.name}')">📤</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function shareWorker(id, name) {
+  const url = location.origin + location.pathname.replace(/pages\/.*/, '') + 'pages/user/worker-profile.html?id=' + id;
+  if(navigator.share) navigator.share({title: name + ' — The Part-Timers', url: url});
+  else navigator.clipboard.writeText(url).then(()=>showToast('📋 Link copied!'));
+}
+
+renderWorkers();
+document.addEventListener('DOMContentLoaded',function(){
+  var btn=document.getElementById('hdrSearchBtn'),inp=document.getElementById('headerSearchInput');
+  function doSearch(){var q=inp?inp.value.trim():'';location.href='../../pages/search.html'+(q?'?q='+encodeURIComponent(q):'');}
+  if(btn) btn.addEventListener('click',doSearch);
+  if(inp) inp.addEventListener('keydown',function(e){if(e.key==='Enter')doSearch();});
+});
+</script>
+</body>
+</html>

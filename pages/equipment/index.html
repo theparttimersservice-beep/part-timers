@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Equipment Rental — The Part-Timers</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    .cat-hero { background:linear-gradient(135deg,#37474F,#546E7A); color:white; padding:20px 20px 28px; }
+    .cat-hero h1 { font-size:22px; font-weight:800; margin-bottom:4px; }
+    .cat-hero p { font-size:13px; opacity:.8; }
+    .back-btn { background:rgba(255,255,255,.15); border:none; color:white; width:38px; height:38px; border-radius:12px; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+    .filter-bar { display:flex; gap:8px; padding:14px 16px; overflow-x:auto; scrollbar-width:none; background:var(--surface); border-bottom:1px solid var(--border); }
+    .filter-bar::-webkit-scrollbar { display:none; }
+    .f-chip { padding:7px 16px; border-radius:20px; font-size:12px; font-weight:600; border:1.5px solid var(--border); background:var(--surface); color:var(--text-muted); cursor:pointer; white-space:nowrap; transition:.2s; flex-shrink:0; }
+    .f-chip.active { background:var(--primary); color:white; border-color:var(--primary); }
+    .eq-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:16px; }
+    @media(max-width:400px){ .eq-grid{grid-template-columns:1fr;} }
+    .eq-card { background:var(--surface); border-radius:16px; border:1px solid var(--border); overflow:hidden; cursor:pointer; transition:.2s; }
+    .eq-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+    .eq-thumb { height:100px; background:linear-gradient(135deg,#ECEFF1,#CFD8DC); display:flex; align-items:center; justify-content:center; font-size:48px; position:relative; }
+    .eq-avail { position:absolute; top:8px; right:8px; font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; }
+    .eq-avail.yes { background:#D1FAE5; color:#065F46; }
+    .eq-avail.no  { background:#FEE2E2; color:#991B1B; }
+    .eq-body { padding:12px; }
+    .eq-name { font-size:14px; font-weight:700; color:var(--text); margin-bottom:3px; }
+    .eq-owner { font-size:11px; color:var(--text-muted); margin-bottom:8px; }
+    .eq-footer { display:flex; justify-content:space-between; align-items:center; }
+    .eq-price { font-size:15px; font-weight:800; color:var(--accent); }
+    .eq-unit  { font-size:11px; color:var(--text-light); }
+    /* Modal */
+    .eq-modal { position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:999; display:none; align-items:flex-end; justify-content:center; }
+    .eq-modal.open { display:flex; }
+    .eq-sheet { background:var(--surface); border-radius:24px 24px 0 0; padding:28px 24px 40px; width:100%; max-width:500px; }
+    .modal-handle { width:40px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 20px; }
+    .eq-modal-icon { font-size:52px; text-align:center; margin-bottom:14px; }
+    .eq-modal-title { font-size:20px; font-weight:800; text-align:center; margin-bottom:4px; }
+    .eq-modal-desc { font-size:13px; color:var(--text-muted); text-align:center; margin-bottom:20px; }
+  
+    body { padding-bottom: calc(68px + env(safe-area-inset-bottom, 16px)); }
+    @media(min-width:820px){ body { padding-bottom: 0; } }
+  </style>
+</head>
+<body>
+
+<div class="cat-hero">
+  <button class="back-btn" onclick="safeBack()">←</button>
+  <h1>⚙️ Equipment Rental</h1>
+  <p>Rent farm & construction tools near you • ଯ. ଭ. ଭ.</p>
+</div>
+
+<div style="padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border)">
+  <div style="display:flex;gap:10px;align-items:center">
+    <input type="text" id="eqSearch" class="form-control" placeholder="🔍 Search equipment..." style="flex:1" oninput="filterEq()">
+    <select id="eqSort" class="form-control" style="width:120px;font-size:13px" onchange="filterEq()">
+      <option value="">Sort</option>
+      <option value="price">Price ↑</option>
+      <option value="rating">Rating ↓</option>
+      <option value="avail">Available</option>
+    </select>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="f-chip active" onclick="filterCat(this,'all')">All</div>
+  <div class="f-chip" onclick="filterCat(this,'farm')">🌾 Farming</div>
+  <div class="f-chip" onclick="filterCat(this,'water')">💧 Water</div>
+  <div class="f-chip" onclick="filterCat(this,'construct')">🏗️ Construction</div>
+  <div class="f-chip" onclick="filterCat(this,'spray')">🌿 Spraying</div>
+</div>
+
+<div class="eq-grid" id="eqGrid"></div>
+
+<!-- Detail Modal -->
+<div class="eq-modal" id="eqModal" onclick="if(event.target===this)closeModal()">
+  <div class="eq-sheet">
+    <div class="modal-handle"></div>
+    <div class="eq-modal-icon" id="mdIcon">⚙️</div>
+    <div class="eq-modal-title" id="mdName">Equipment Name</div>
+    <div style="text-align:center;margin-bottom:8px">
+      <span class="tag tag-blue" id="mdOwner">Owner</span>
+      <span class="tag" id="mdVillage">📍 Village</span>
+      <span class="tag" id="mdRating">⭐ Rating</span>
+    </div>
+    <div class="eq-modal-desc" id="mdDesc">Description</div>
+    <div style="background:var(--bg);border-radius:12px;padding:14px;text-align:center;margin-bottom:20px">
+      <div style="font-size:24px;font-weight:800;color:var(--accent)" id="mdPrice">₹0</div>
+      <div style="font-size:12px;color:var(--text-muted)" id="mdUnit">/ day</div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary" style="flex:1" id="mdBookBtn" onclick="bookEquipment()">📅 Book Now</button>
+      <button class="btn btn-outline" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav"><div class="bn-items"><a class="bn-item" href="../../index.html"><span class="bn-icon">🏠</span><span class="bn-label">Home</span></a><a class="bn-item" href="../search.html"><span class="bn-icon">🔍</span><span class="bn-label">Search</span></a><a class="bn-item" href="../user/orders.html"><span class="bn-icon">📋</span><span class="bn-label">Orders</span></a><a class="bn-item" href="../user/cart.html"><span class="bn-icon">🛒</span><span class="bn-label">Cart</span></a><a class="bn-item" href="../user/profile.html"><span class="bn-icon">👤</span><span class="bn-label">Profile</span></a></div></nav><div id="toast"></div>
+
+<script src="../../data/config.js"></script>
+<script src="../../data/data.js"></script>
+<script src="../../assets/js/app.js"></script>
+<script>
+var catFilter = 'all';
+var currentEq = null;
+
+var EQ_CATS = {
+  'Tractor': 'farm', 'Power Tiller': 'farm', 'Threshing Machine': 'farm', 'Sprayer': 'spray',
+  'Water Pump': 'water', 'Excavator': 'construct', 'Concrete Mixer': 'construct'
+};
+
+function getCat(name) {
+  for (var k in EQ_CATS) {
+    if (name.toLowerCase().indexOf(k.toLowerCase()) !== -1) return EQ_CATS[k];
+  }
+  return 'farm';
+}
+
+function filterCat(el, cat) {
+  document.querySelectorAll('.f-chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  catFilter = cat;
+  filterEq();
+}
+
+function filterEq() {
+  var q = document.getElementById('eqSearch').value.toLowerCase();
+  var sort = document.getElementById('eqSort').value;
+  var D = window.PT_DATA;
+  if (!D || !D.equipment) return;
+
+  var items = D.equipment.slice();
+  if (catFilter !== 'all') items = items.filter(function(e){ return getCat(e.name) === catFilter; });
+  if (q) items = items.filter(function(e){ return (e.name + ' ' + e.village + ' ' + e.desc).toLowerCase().indexOf(q) !== -1; });
+  if (sort === 'price') items.sort(function(a,b){ return a.price - b.price; });
+  if (sort === 'rating') items.sort(function(a,b){ return b.rating - a.rating; });
+  if (sort === 'avail') items.sort(function(a,b){ return b.available - a.available; });
+  renderGrid(items);
+}
+
+function renderGrid(items) {
+  if (!items || !items.length) {
+    document.getElementById('eqGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)"><div style="font-size:48px;margin-bottom:12px">⚙️</div><div>No equipment found</div></div>';
+    return;
+  }
+  document.getElementById('eqGrid').innerHTML = items.map(function(e) {
+    return '<div class="eq-card" onclick="openModal(' + JSON.stringify(e).replace(/'/g,"\\u0027") + ')">' +
+      '<div class="eq-thumb">' +
+        '<span>' + e.emoji + '</span>' +
+        '<span class="eq-avail ' + (e.available?'yes':'no') + '">' + (e.available?'Available':'Unavailable') + '</span>' +
+      '</div>' +
+      '<div class="eq-body">' +
+        '<div class="eq-name">' + e.name + '</div>' +
+        '<div class="eq-owner">Owner: ' + e.owner + ' • 📍 ' + e.village + '</div>' +
+        '<div class="eq-footer">' +
+          '<div><div class="eq-price">₹' + e.price + '</div><div class="eq-unit">/' + e.unit + '</div></div>' +
+          '<div style="font-size:12px;color:var(--text-muted)">⭐ ' + e.rating + ' (' + e.reviews + ')</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function openModal(eq) {
+  if (typeof eq === 'string') eq = JSON.parse(eq);
+  currentEq = eq;
+  document.getElementById('mdIcon').textContent = eq.emoji;
+  document.getElementById('mdName').textContent = eq.name;
+  document.getElementById('mdOwner').textContent = '👤 ' + eq.owner;
+  document.getElementById('mdVillage').textContent = '📍 ' + eq.village;
+  document.getElementById('mdRating').textContent = '⭐ ' + eq.rating + ' (' + eq.reviews + ')';
+  document.getElementById('mdDesc').textContent = eq.desc;
+  document.getElementById('mdPrice').textContent = '₹' + eq.price;
+  document.getElementById('mdUnit').textContent = '/ ' + eq.unit;
+  document.getElementById('mdBookBtn').disabled = !eq.available;
+  document.getElementById('mdBookBtn').textContent = eq.available ? '📅 Book Now' : '❌ Not Available';
+  document.getElementById('eqModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('eqModal').classList.remove('open');
+}
+
+function bookEquipment() {
+  if (!currentEq || !currentEq.available) return;
+  var date = prompt('Enter booking date (YYYY-MM-DD):', new Date().toISOString().split('T')[0]);
+  if (!date) return;
+  var phone = prompt('Your phone number:');
+  if (!phone) return;
+  var orders = JSON.parse(localStorage.getItem('pt_orders') || '[]');
+  orders.unshift({
+    id: 'EQ' + Date.now(),
+    workerName: currentEq.name,
+    workerEmoji: currentEq.emoji,
+    workerSubcat: 'Equipment Rental',
+    workerVillage: currentEq.village,
+    date: date, time: '08:00', qty: 1,
+    basePrice: currentEq.price, unit: currentEq.unit,
+    totalAmount: currentEq.price,
+    status: 'confirmed',
+    type: 'equipment',
+    createdAt: new Date().toISOString()
+  });
+  localStorage.setItem('pt_orders', JSON.stringify(orders));
+  closeModal();
+  showToast('✅ Equipment booked! Check My Orders.');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  filterEq();
+});
+</script>
+</body>
+</html>

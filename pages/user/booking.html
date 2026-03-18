@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ସେବା ବୁକ — Book Service</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    *{box-sizing:border-box}
+    input,select,textarea{font-size:16px!important}
+    @media(min-width:601px){input,select,textarea{font-size:14px!important}}
+    .bk-hero{background:linear-gradient(135deg,var(--primary-dark),var(--primary));padding:18px 20px 22px;color:white}
+    .bk-back{background:rgba(255,255,255,.18);border:none;color:white;width:40px;height:40px;border-radius:12px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+    .bk-worker{display:flex;gap:14px;align-items:center}
+    .bk-av{width:56px;height:56px;border-radius:14px;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+    .bk-name{font-size:18px;font-weight:700}
+    .bk-sub{font-size:13px;opacity:.8;margin-top:2px}
+    .bk-price{font-size:15px;font-weight:700;margin-top:4px}
+    .bk-body{padding:16px 20px 40px}
+    /* Duration */
+    .dur-tabs{display:flex;border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px}
+    .dur-tab{flex:1;padding:11px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;border:none;background:var(--surface);color:var(--text-muted);transition:.2s}
+    .dur-tab.active{background:var(--primary);color:white}
+    .qty-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+    .qty-btn{width:44px;height:44px;border-radius:var(--radius);background:var(--bg-2);border:1.5px solid var(--border);font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+    .qty-num{font-size:26px;font-weight:700;min-width:44px;text-align:center}
+    .qty-unit{font-size:13px;color:var(--text-muted)}
+    /* KM fare range */
+    .km-range-box{background:linear-gradient(135deg,#E8F5E9,#F1F8E9);border:1px solid #A5D6A7;border-radius:12px;padding:14px;margin-bottom:16px}
+    .km-range-title{font-size:12px;font-weight:700;color:var(--primary);margin-bottom:8px}
+    .km-range-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:6px}
+    .km-range-val{font-weight:700;color:var(--accent)}
+    .km-slider{width:100%;margin:8px 0;accent-color:var(--primary)}
+    /* Time slots */
+    .time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+    .t-slot{padding:11px 8px;border:1.5px solid var(--border);border-radius:10px;text-align:center;font-size:13px;cursor:pointer;transition:.2s}
+    .t-slot:hover{border-color:var(--primary);background:var(--bg-2)}
+    .t-slot.sel{background:var(--primary);color:white;border-color:var(--primary)}
+    .t-slot.unavail{opacity:.4;cursor:not-allowed;background:var(--bg)}
+    /* Price calc */
+    .p-calc{background:var(--bg);border-radius:var(--radius);padding:16px;margin-bottom:18px;border:1px solid var(--border-light)}
+    .p-calc-title{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--text)}
+    .pc-row{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;border-bottom:1px solid var(--border-light)}
+    .pc-row:last-child{border:none;font-weight:700;font-size:16px;padding-top:10px}
+    .pc-total{color:var(--accent)}
+    .pc-fee-note{font-size:11px;color:var(--text-light);text-align:right}
+    /* Legal */
+    .legal-chk{display:flex;gap:10px;align-items:flex-start;background:var(--bg-2);border-radius:var(--radius);padding:13px;margin-bottom:16px;font-size:12px;color:var(--text-muted);line-height:1.6}
+    .legal-chk input{margin-top:2px;flex-shrink:0;width:18px;height:18px;cursor:pointer}
+    @media(max-width:400px){.time-grid{grid-template-columns:repeat(2,1fr)}}
+  
+    body { padding-bottom: calc(68px + env(safe-area-inset-bottom, 16px)); }
+    @media(min-width:820px){ body { padding-bottom: 0; } }
+  </style>
+</head>
+<body>
+
+<div class="bk-hero">
+  <button class="bk-back" onclick="history.back()">←</button>
+  <div class="bk-worker">
+    <div class="bk-av" id="bkAvatar">🔧</div>
+    <div>
+      <div class="bk-name" id="bkName">ଲୋଡ଼ ହେଉଛି...</div>
+      <div class="bk-sub" id="bkSub"></div>
+      <div class="bk-price" id="bkPrice">₹0</div>
+    </div>
+  </div>
+</div>
+
+<div class="bk-body">
+
+  <!-- KM fare range box (for vehicle/km workers) -->
+  <div id="kmRangeBox" class="km-range-box" style="display:none">
+    <div class="km-range-title">🚗 ଦୂରତ୍ୱ ଅନୁଯାୟୀ ଭଡ଼ା — KM Based Fare</div>
+    <div class="km-range-row"><span>ଆପଣଙ୍କ ଦୂରତ୍ୱ — Distance</span><span class="km-range-val"><span id="kmDisplay">5</span> km</span></div>
+    <input type="range" class="km-slider" id="kmSlider" min="1" max="100" value="5" oninput="onKmChange(this.value)">
+    <div class="km-range-row" style="margin-top:4px">
+      <span style="font-size:12px;color:var(--text-muted)">ଅନୁମାନ ଭଡ଼ା — Estimate</span>
+      <span class="km-range-val" id="kmEstimate">₹0</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-light);margin-top:4px">
+      <span>ନ୍ୟୂନ — Min: <span id="fareMin">₹0</span></span>
+      <span>ଅଧିକ — Max: <span id="fareMax">₹0</span></span>
+    </div>
+  </div>
+
+  <!-- Date -->
+  <div class="form-group">
+    <label class="form-label">📅 ତାରିଖ — Date *</label>
+    <input type="date" id="bkDate" class="form-control" onchange="updatePrice()">
+  </div>
+
+  <!-- Time slots -->
+  <div class="form-group">
+    <label class="form-label">⏰ ସମୟ — Start Time *</label>
+    <div class="time-grid" id="timeGrid">
+      <div class="t-slot" data-t="06:00" onclick="selTime(this)">6:00 ସକ</div>
+      <div class="t-slot" data-t="07:00" onclick="selTime(this)">7:00 ସକ</div>
+      <div class="t-slot" data-t="08:00" onclick="selTime(this)">8:00 ସକ</div>
+      <div class="t-slot" data-t="09:00" onclick="selTime(this)">9:00 ସକ</div>
+      <div class="t-slot" data-t="10:00" onclick="selTime(this)">10:00 ସକ</div>
+      <div class="t-slot" data-t="11:00" onclick="selTime(this)">11:00 ସକ</div>
+      <div class="t-slot" data-t="14:00" onclick="selTime(this)">2:00 ବ.</div>
+      <div class="t-slot" data-t="15:00" onclick="selTime(this)">3:00 ବ.</div>
+      <div class="t-slot" data-t="16:00" onclick="selTime(this)">4:00 ବ.</div>
+    </div>
+  </div>
+
+  <!-- Duration (hidden for km) -->
+  <div id="durSection" class="form-group">
+    <label class="form-label">⏱️ ଅବଧି — Duration *</label>
+    <div class="dur-tabs" id="durTabs">
+      <button class="dur-tab active" id="btnHourly" onclick="setDur('hourly')">ଘଣ୍ଟା — Hourly</button>
+      <button class="dur-tab"        id="btnDaily"  onclick="setDur('daily')">ଦିନ — Daily</button>
+    </div>
+    <div class="qty-row">
+      <button class="qty-btn" onclick="chgQty(-1)">−</button>
+      <div><div class="qty-num" id="qtyNum">1</div><div class="qty-unit" id="qtyUnit">ଘଣ୍ଟା</div></div>
+      <button class="qty-btn" onclick="chgQty(1)">+</button>
+    </div>
+  </div>
+
+  <!-- Location -->
+  <div class="form-group">
+    <label class="form-label">📍 କାମ ସ୍ଥାନ — Work Location *</label>
+    <input type="text" id="bkLoc" class="form-control" placeholder="ଆପଣଙ୍କ ଗ୍ରାମ / ଜମି ନାମ">
+  </div>
+
+  <!-- Phone -->
+  <div class="form-group">
+    <label class="form-label">📞 ଆପଣଙ୍କ ଫୋନ — Your Phone *</label>
+    <input type="tel" id="bkPhone" class="form-control" placeholder="10 ସଂଖ୍ୟା ମୋବାଇଲ" maxlength="10" inputmode="numeric">
+  </div>
+
+  <!-- Notes -->
+  <div class="form-group">
+    <label class="form-label">📝 ବିଶେଷ ନୋଟ (ଐଚ୍ଛିକ)</label>
+    <textarea id="bkNotes" class="form-control" placeholder="କୌଣସି ବିଶେଷ ଆବଶ୍ୟକତା..." style="min-height:70px"></textarea>
+  </div>
+
+  <!-- Price Summary -->
+  <div class="p-calc" id="priceCalc">
+    <div class="p-calc-title">💰 ମୂଲ୍ୟ ସারসংক্ষেপ — Price Summary</div>
+    <div class="pc-row"><span>ମୂଳ ମୂଲ୍ୟ — Base Rate</span><span id="pcBase">₹0</span></div>
+    <div class="pc-row"><span>ପରିମାଣ — Qty/KM</span><span id="pcQty">× 1</span></div>
+    <div class="pc-row"><span>ପ୍ଲ. ଫି — Platform Fee (5%)</span><span id="pcFee">₹0</span></div>
+    <div class="pc-row"><span class="pc-total">ମୋଟ — Total</span><span class="pc-total" id="pcTotal">₹0</span></div>
+    <div class="pc-fee-note">ସିଧା Worker କୁ ଦ୍ୟ — Pay directly to worker</div>
+  </div>
+
+  <!-- Legal -->
+  <div class="legal-chk">
+    <input type="checkbox" id="agreeChk">
+    <span>ମୁଁ <a href="../legal/terms.html" style="color:var(--primary);font-weight:600">ନିୟମ ଓ ସର୍ତ</a> ରେ ସହମତ। ଦେଉଥିବା ତଥ୍ୟ ସଠିକ। ଭୁଲ ତଥ୍ୟ ଦ୍ୱାରା ଖାତା ବନ୍ଦ ହୋଇ ପାରେ।</span>
+  </div>
+
+  <!-- Confirm -->
+  <button class="btn btn-primary btn-full btn-lg" onclick="confirmBooking()">
+    ✅ ବୁକିଂ ନିଶ୍ଚିତ — Confirm Booking
+  </button>
+  <div style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:10px">
+    ଏବେ ଅଗ୍ରିମ ଦେୟ ନାହିଁ। Worker ଙ୍କୁ ସିଧା ଦ୍ୟ।
+  </div>
+
+</div>
+
+<div id="toast"></div>
+<script src="../../data/config.js"></script>
+<script src="../../data/data.js"></script>
+<script src="../../assets/js/app.js"></script>
+<script>
+var W = null, durType = 'hourly', qty = 1, selectedTime = '', selectedKm = 5;
+
+function init() {
+  var id = getParam('id');
+  if (!id) { showToast('⚠️ Worker ID ନାହିଁ'); return; }
+  W = PT_DATA.workers.find(function(w){ return w.id === id; });
+  if (!W) { showToast('⚠️ Worker ମିଳିଲ ନାହିଁ'); return; }
+
+  document.title = 'Book ' + W.name;
+  document.getElementById('bkAvatar').textContent = W.emoji;
+  document.getElementById('bkName').textContent   = W.name;
+  document.getElementById('bkSub').textContent    = W.subcat + ' • 📍 ' + W.village;
+  document.getElementById('bkPrice').textContent  = '₹' + W.price + ' / ' + W.unit;
+
+  // Default date = today
+  document.getElementById('bkDate').value = new Date().toISOString().split('T')[0];
+  // Min date = today
+  document.getElementById('bkDate').min   = new Date().toISOString().split('T')[0];
+
+  // Pre-fill phone from logged-in user
+  var user = PT_AUTH.getUser();
+  if (user && user.phone) document.getElementById('bkPhone').value = user.phone;
+  if (user && user.village) document.getElementById('bkLoc').value = user.village;
+
+  // KM-based service
+  if (W.unit === 'km') {
+    document.getElementById('durSection').style.display = 'none';
+    document.getElementById('kmRangeBox').style.display = 'block';
+    updateKmRange();
+  }
+
+  updatePrice();
+}
+
+function onKmChange(val) {
+  selectedKm = parseInt(val);
+  document.getElementById('kmDisplay').textContent = selectedKm;
+  updateKmRange();
+  updatePrice();
+}
+
+function updateKmRange() {
+  if (!W) return;
+  var rate = W.price;
+  var estimate = rate * selectedKm;
+  var minFare  = rate * 1;
+  var maxFare  = rate * 100;
+  document.getElementById('kmEstimate').textContent = '₹' + estimate;
+  document.getElementById('fareMin').textContent    = '₹' + minFare;
+  document.getElementById('fareMax').textContent    = '₹' + maxFare;
+}
+
+function setDur(t) {
+  durType = t;
+  document.getElementById('btnHourly').classList.toggle('active', t==='hourly');
+  document.getElementById('btnDaily').classList.toggle('active',  t==='daily');
+  qty = 1; document.getElementById('qtyNum').textContent = qty;
+  document.getElementById('qtyUnit').textContent = t==='hourly' ? 'ଘଣ୍ଟା' : 'ଦିନ';
+  updatePrice();
+}
+
+function chgQty(d) {
+  var C = (window.PT_CONFIG && window.PT_CONFIG.booking) || {};
+  var max = durType==='daily' ? (C.maxDailyDays||30) : (C.maxHoursBeforeDaily||8);
+  qty = Math.max(1, Math.min(max, qty + d));
+  document.getElementById('qtyNum').textContent = qty;
+  if (durType==='hourly' && qty >= (C.maxHoursBeforeDaily||8)) showToast('💡 8+ ଘଣ୍ଟା → ଦୈନିକ ବୁକ ଉତ୍ତମ');
+  updatePrice();
+}
+
+function selTime(el) {
+  document.querySelectorAll('.t-slot').forEach(function(t){ t.classList.remove('sel'); });
+  el.classList.add('sel');
+  selectedTime = el.dataset.t;
+}
+
+function updatePrice() {
+  if (!W) return;
+  var effectiveQty = (W.unit === 'km') ? selectedKm : qty;
+  var p = calcBookingPrice(W.price, W.unit, effectiveQty, selectedKm);
+  document.getElementById('pcBase').textContent = '₹' + W.price;
+  document.getElementById('pcQty').textContent  = W.unit === 'km' ? '× ' + selectedKm + ' km' : '× ' + qty;
+  document.getElementById('pcFee').textContent  = '₹' + p.fee;
+  document.getElementById('pcTotal').textContent= '₹' + p.total;
+}
+
+function confirmBooking() {
+  if (!W) return showToast('⚠️ Worker ତଥ୍ୟ ନାହିଁ');
+  var date  = document.getElementById('bkDate').value;
+  var loc   = document.getElementById('bkLoc').value.trim();
+  var phone = document.getElementById('bkPhone').value.trim();
+  var notes = document.getElementById('bkNotes').value.trim();
+  var agree = document.getElementById('agreeChk').checked;
+
+  if (!date)         return showToast('⚠️ ତାରିଖ ବାଛନ୍ତୁ');
+  if (!selectedTime) return showToast('⚠️ ସମୟ ବାଛନ୍ତୁ');
+  if (!loc)          return showToast('⚠️ କାମ ସ୍ଥାନ ଦ୍ୟ');
+  if (!phone)        return showToast('⚠️ ଫୋନ ନମ୍ବର ଦ୍ୟ');
+  if (!validatePhone(phone)) return showToast('⚠️ ସଠିକ 10 ସଂଖ୍ୟା ଫୋନ ଦ୍ୟ');
+  if (!agree)        return showToast('⚠️ ନିୟମ ଓ ସର୍ତ ରେ ସହମତ ହୁଅ');
+
+  var effectiveQty = (W.unit === 'km') ? selectedKm : qty;
+  var p = calcBookingPrice(W.price, W.unit, effectiveQty, selectedKm);
+
+  var order = saveOrder({
+    workerId: W.id, workerName: W.name, workerEmoji: W.emoji,
+    workerSubcat: W.subcat, workerVillage: W.village, workerPhone: W.phone,
+    date: date, time: selectedTime, location: loc,
+    phone: phone, notes: notes, durType: durType,
+    qty: effectiveQty, kmDistance: W.unit==='km' ? selectedKm : null,
+    basePrice: W.price, unit: W.unit,
+    totalAmount: p.total, platformFee: p.fee,
+    status: 'confirmed'
+  });
+
+  SHEETS_API.submitBooking(order);
+  showToast('✅ ବୁକିଂ ନିଶ୍ଚିତ! ORD: ' + order.id, 3000);
+  setTimeout(function(){ location.href = 'orders.html?new=' + order.id; }, 1400);
+}
+
+init();
+</script>
+
+<nav class="bottom-nav"><div class="bn-items"><a class="bn-item" href="../../index.html"><span class="bn-icon">🏠</span><span class="bn-label">Home</span></a><a class="bn-item" href="../../pages/search.html"><span class="bn-icon">🔍</span><span class="bn-label">Search</span></a><a class="bn-item" href="../../pages/user/orders.html"><span class="bn-icon">📋</span><span class="bn-label">Orders</span></a><a class="bn-item" href="../../pages/user/cart.html"><span class="bn-icon">🛒</span><span class="bn-label">Cart</span></a><a class="bn-item" href="../../pages/user/profile.html"><span class="bn-icon">👤</span><span class="bn-label">Profile</span></a></div></nav>
+</body>
+</html>

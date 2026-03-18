@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Admin Panel — The Part-Timers</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#F3F4F6;font-family:var(--font);margin:0}
+    .adm-header{background:linear-gradient(135deg,#1A1A2E,#2E2E4E);color:white;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(0,0,0,.3)}
+    .adm-logo{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700}
+    .adm-badge{background:#EF4444;color:white;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.5px}
+    .adm-header-right{display:flex;align-items:center;gap:10px}
+    .adm-user-name{font-size:12px;color:#9CA3AF}
+    .adm-view-btn{color:#9CA3AF;font-size:12px;text-decoration:none}
+    .adm-view-btn:hover{color:white}
+    .adm-logout{background:#374151;border:none;color:#9CA3AF;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:var(--font)}
+    .adm-logout:hover{background:#4B5563;color:white}
+    .adm-menu-btn{display:none;background:rgba(255,255,255,.15);border:none;color:white;width:38px;height:38px;border-radius:10px;font-size:18px;cursor:pointer;align-items:center;justify-content:center}
+    @media(max-width:768px){.adm-menu-btn{display:flex}}
+    .adm-shell{display:flex;min-height:calc(100vh - 60px)}
+    .adm-sidebar{width:220px;background:#111827;flex-shrink:0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto}
+    .adm-nav-section{font-size:10px;color:#4B5563;text-transform:uppercase;letter-spacing:1px;padding:14px 20px 5px;font-weight:700}
+    .adm-nav-item{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13px;font-weight:500;color:#9CA3AF;cursor:pointer;transition:all .2s;border-left:3px solid transparent;background:none;border-top:none;border-right:none;border-bottom:none;width:100%;text-align:left;font-family:var(--font)}
+    .adm-nav-item:hover{background:rgba(255,255,255,.05);color:white}
+    .adm-nav-item.active{background:rgba(255,255,255,.08);color:white;border-left-color:#4CAF50}
+    @media(max-width:768px){.adm-sidebar{display:none;position:fixed;top:60px;left:0;z-index:200;height:calc(100vh - 60px)}.adm-sidebar.open{display:block}.adm-main{padding:16px}}
+    .adm-main{flex:1;padding:24px;overflow:auto}
+    .adm-panel{display:none}
+    .adm-panel.active{display:block}
+    .adm-panel-title{font-size:22px;font-weight:800;margin-bottom:4px;color:#111827}
+    .adm-panel-sub{font-size:13px;color:#6B7280;margin-bottom:20px}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+    .stat-card{background:white;border-radius:14px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid #E5E7EB}
+    .sc-icon{font-size:26px;margin-bottom:8px}
+    .sc-num{font-size:26px;font-weight:800;color:#1F2937;line-height:1}
+    .sc-label{font-size:12px;color:#6B7280;margin-top:4px}
+    .adm-card{background:white;border-radius:14px;padding:22px;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid #E5E7EB;margin-bottom:18px}
+    .adm-card h3{font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid #F0F0F0;color:#1F2937}
+    .save-btn{background:#2E7D32;color:white;border:none;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;font-family:var(--font)}
+    .save-btn:hover{opacity:.85}
+    .save-btn.blue{background:#1D4ED8}
+    .save-btn.orange{background:#D97706}
+    .save-btn.red{background:#DC2626}
+    .delete-btn{background:#FEE2E2;color:#DC2626;border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)}
+    .edit-btn{background:#EFF6FF;color:#2563EB;border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)}
+    .toggle-switch{position:relative;width:46px;height:26px;cursor:pointer;flex-shrink:0}
+    .toggle-switch input{opacity:0;width:0;height:0;position:absolute}
+    .ts-track{position:absolute;inset:0;background:#D1D5DB;border-radius:26px;transition:.3s}
+    .ts-track::before{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:white;top:3px;left:3px;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+    input:checked+.ts-track{background:#4CAF50}
+    input:checked+.ts-track::before{transform:translateX(20px)}
+    .row-between{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #F3F4F6;gap:12px}
+    .row-between:last-child{border:none}
+    .row-label{font-size:14px;font-weight:600;color:#1F2937}
+    .row-sub{font-size:12px;color:#9CA3AF;margin-top:2px}
+    .adm-form-group{margin-bottom:14px}
+    .adm-label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:#374151}
+    .adm-input{width:100%;padding:10px 12px;border:1.5px solid #E5E7EB;border-radius:10px;font-size:14px;font-family:var(--font);color:#1F2937;background:white;transition:border-color .2s}
+    .adm-input:focus{outline:none;border-color:#4CAF50}
+    textarea.adm-input{min-height:88px;resize:vertical}
+    select.adm-input{cursor:pointer}
+    .logo-preview{width:80px;height:80px;border-radius:20px;border:2px dashed #E5E7EB;display:flex;align-items:center;justify-content:center;font-size:38px;cursor:pointer;background:#F9FAFB;transition:border-color .2s}
+    .logo-preview:hover{border-color:#4CAF50}
+    .hero-preview{width:100%;height:130px;border-radius:14px;border:2px dashed #E5E7EB;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#2E7D32,#4CAF50);cursor:pointer;overflow:hidden;position:relative}
+    .hero-preview img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+    .hero-preview-label{color:white;font-size:13px;font-weight:600;position:relative}
+    .ann-item{display:flex;align-items:center;gap:10px;background:#F9FAFB;border-radius:10px;padding:10px 12px;border:1px solid #E5E7EB;margin-bottom:8px}
+    .ann-text{flex:1}
+    .ann-text input{width:100%;border:none;background:transparent;font-family:var(--font);font-size:13px;color:#1F2937}
+    .ann-text input:focus{outline:none}
+    .ann-drag{color:#9CA3AF;font-size:18px;cursor:grab}
+    .color-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #F3F4F6}
+    .color-row:last-child{border:none}
+    .color-label{flex:1;font-size:13px;color:#4B5563}
+    .color-swatch{width:34px;height:34px;border-radius:8px;border:1px solid #E5E7EB;flex-shrink:0}
+    .color-input{width:42px;height:34px;padding:2px;border:1.5px solid #E5E7EB;border-radius:8px;cursor:pointer}
+    .cat-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #F3F4F6}
+    .cat-row:last-child{border:none}
+    .data-table-wrap{overflow-x:auto}
+    .data-table{width:100%;border-collapse:collapse;font-size:13px;min-width:480px}
+    .data-table th{background:#F9FAFB;padding:9px 12px;text-align:left;font-weight:600;font-size:11px;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #E5E7EB}
+    .data-table td{padding:10px 12px;border-bottom:1px solid #F5F5F5;vertical-align:middle}
+    .data-table tr:hover td{background:#FAFAFA}
+    .pill{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+    .pill-green{background:#D1FAE5;color:#065F46}
+    .pill-yellow{background:#FEF3C7;color:#92400E}
+    .pill-red{background:#FEE2E2;color:#991B1B}
+    .pill-blue{background:#DBEAFE;color:#1E40AF}
+    .theme-btn{padding:8px 16px;border:none;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700;color:white;font-family:var(--font)}
+    .theme-btn:hover{opacity:.85}
+    #loginWall{position:fixed;inset:0;background:linear-gradient(135deg,#1B5E20,#2E7D32);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9000;padding:30px}
+    .lw-card{background:white;border-radius:24px;padding:32px 28px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+    .lw-icon{font-size:48px;text-align:center;margin-bottom:14px}
+    .lw-title{font-size:22px;font-weight:800;text-align:center;margin-bottom:4px;color:#1F2937}
+    .lw-sub{font-size:13px;color:#6B7280;text-align:center;margin-bottom:20px}
+    .lw-error{background:#FEE2E2;color:#DC2626;border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:12px;display:none}
+    .lw-demo{background:#FFF3E0;border:1px solid #FED7AA;border-radius:10px;padding:10px 12px;font-size:12px;color:#92400E;margin-top:12px;text-align:center}
+    #adminToast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#1F2937;color:white;padding:12px 22px;border-radius:30px;font-size:14px;font-weight:600;z-index:9999;opacity:0;transition:all .3s;white-space:nowrap;pointer-events:none}
+    #adminToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:5000;display:none;align-items:flex-end;justify-content:center}
+    .modal-overlay.open{display:flex}
+    .modal-sheet-lg{background:white;border-radius:24px 24px 0 0;padding:28px 24px 40px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto}
+    .wm-handle{width:40px;height:4px;background:#E5E7EB;border-radius:2px;margin:0 auto 20px}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:500px){.two-col{grid-template-columns:1fr}}
+    .haata-row{display:flex;align-items:center;gap:12px;padding:10px;background:#F9FAFB;border-radius:10px;border:1px solid #E5E7EB;margin-bottom:8px}
+    .haata-row .hr-emoji{font-size:24px;flex-shrink:0}
+    .haata-row .hr-info{flex:1}
+    .haata-row .hr-name{font-size:13px;font-weight:700}
+    .haata-row .hr-meta{font-size:11px;color:#6B7280;margin-top:2px}
+    .ghost-btn{background:#F3F4F6;border:none;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;color:#374151;font-family:var(--font)}
+  
+    /* Mobile admin fixes */
+    @media(max-width:820px){
+      .adm-shell{flex-direction:column;}
+      .adm-sidebar{width:100%;height:auto;position:static;display:flex;overflow-x:auto;padding:8px 0;-webkit-overflow-scrolling:touch;}
+      .adm-nav-item{white-space:nowrap;flex-shrink:0;border-left:none;border-bottom:3px solid transparent;padding:10px 14px;}
+      .adm-nav-item.active{border-left:none;border-bottom-color:#4CAF50;}
+      .adm-section-title{display:none;}
+      .adm-main{padding:14px;}
+      .stat-cards{grid-template-columns:repeat(2,1fr);}
+      .data-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+      .adm-header{padding:0 14px;}
+    }
+    @media(max-width:480px){
+      .stat-cards{grid-template-columns:1fr 1fr;}
+      .adm-card{padding:16px;}
+      .adm-card h3{font-size:14px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN WALL -->
+<div id="loginWall">
+  <div class="lw-card">
+    <div class="lw-icon">🔒</div>
+    <div class="lw-title">Admin Panel</div>
+    <div class="lw-sub">The Part-Timers • Secure Access</div>
+    <div class="lw-error" id="lwError">❌ Incorrect credentials. Try again.</div>
+    <div class="adm-form-group">
+      <label class="adm-label">Username</label>
+      <input type="text" id="lwUser" class="adm-input" placeholder="admin" autocomplete="username">
+    </div>
+    <div class="adm-form-group">
+      <label class="adm-label">Password</label>
+      <input type="password" id="lwPass" class="adm-input" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="save-btn" style="width:100%;padding:13px;font-size:15px" onclick="doAdminLogin()">🔓 Login to Admin</button>
+    <div class="lw-demo">🧪 Demo: <strong>admin</strong> / <strong>admin123</strong></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="adm-header">
+  <div class="adm-logo">
+    <span id="adLogoIcon" style="font-size:22px">🌾</span>
+    <span id="adBrandName">The Part-Timers</span>
+    <span class="adm-badge">ADMIN</span>
+  </div>
+  <div class="adm-header-right">
+    <button class="adm-menu-btn" onclick="toggleAdminSidebar()">☰</button>
+    <span class="adm-user-name" id="adUserName">Admin</span>
+    <a href="../../index.html" class="adm-view-btn" target="_blank">← View Site</a>
+    <button class="adm-logout" onclick="doAdminLogout()">Logout</button>
+  </div>
+</div>
+
+<div class="adm-shell">
+  <!-- SIDEBAR -->
+  <aside class="adm-sidebar" id="adminSidebar">
+    <div class="adm-nav-section">Overview</div>
+    <button class="adm-nav-item active" onclick="showPanel('dashboard',this)">📊 Dashboard</button>
+    <div class="adm-nav-section">Appearance</div>
+    <button class="adm-nav-item" onclick="showPanel('branding',this)">🎨 Branding &amp; Logo</button>
+    <button class="adm-nav-item" onclick="showPanel('hero',this)">🖼️ Hero Image</button>
+    <button class="adm-nav-item" onclick="showPanel('colors',this)">🎨 Colors &amp; Theme</button>
+    <button class="adm-nav-item" onclick="showPanel('announcements',this)">📢 Announcements</button>
+    <button class="adm-nav-item" onclick="showPanel('categories',this)">🗂️ Categories</button>
+    <div class="adm-nav-section">Content</div>
+    <button class="adm-nav-item" onclick="showPanel('workers',this)">👷 Workers</button>
+    <button class="adm-nav-item" onclick="showPanel('addworker',this)">➕ Add Worker</button>
+    <button class="adm-nav-item" onclick="showPanel('vendors',this)">🏪 Vendors</button>
+    <button class="adm-nav-item" onclick="showPanel('haata',this)">🏪 Haata Items</button>
+    <button class="adm-nav-item" onclick="showPanel('marketplace',this)">🛒 Marketplace</button>
+    <button class="adm-nav-item" onclick="showPanel('orders',this)">📋 Orders</button>
+    <div class="adm-nav-section">Settings</div>
+    <button class="adm-nav-item" onclick="showPanel('plans',this)">💳 Pricing Plans</button>
+    <button class="adm-nav-item" onclick="showPanel('integrations',this)">🔗 Integrations</button>
+    <button class="adm-nav-item" onclick="showPanel('features',this)">🔧 Feature Toggles</button>
+    <button class="adm-nav-item" onclick="showPanel('legal',this)">⚖️ Legal Text</button>
+    <button class="adm-nav-item" onclick="showPanel('security',this)">🔒 Security</button>
+    <button class="adm-nav-item" onclick="showPanel('export',this)">📤 Export / Backup</button>
+  </aside>
+
+  <main class="adm-main">
+
+    <!-- DASHBOARD -->
+    <div class="adm-panel active" id="panel-dashboard">
+      <div class="adm-panel-title">📊 Dashboard</div>
+      <div class="adm-panel-sub">Live platform overview</div>
+      <div class="stats-grid" id="dashStats"></div>
+      <div class="adm-card">
+        <h3>🚀 Quick Actions</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <button class="save-btn" onclick="showPanel('announcements',null)">📢 Announcements</button>
+          <button class="save-btn" onclick="showPanel('branding',null)">🎨 Logo</button>
+          <button class="save-btn" onclick="showPanel('hero',null)">🖼️ Hero</button>
+          <button class="save-btn" onclick="showPanel('colors',null)">🎨 Colors</button>
+          <button class="save-btn" onclick="showPanel('addworker',null)">➕ Add Worker</button>
+          <button class="save-btn blue" onclick="window.open('../../index.html','_blank')">👁️ Preview Site</button>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>📋 Recent Orders</h3>
+        <div id="dashOrders"></div>
+      </div>
+    </div>
+
+    <!-- BRANDING -->
+    <div class="adm-panel" id="panel-branding">
+      <div class="adm-panel-title">🎨 Branding &amp; Logo</div>
+      <div class="adm-panel-sub">Change platform name, logo, tagline</div>
+      <div class="adm-card">
+        <h3>🌾 Logo</h3>
+        <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
+          <div>
+            <div style="font-size:12px;color:#6B7280;margin-bottom:8px">Current Logo</div>
+            <div class="logo-preview" id="logoPreviewEl" onclick="document.getElementById('logoFileInput').click()">🌾</div>
+            <div style="font-size:11px;color:#9CA3AF;margin-top:6px;text-align:center">Click to upload</div>
+            <input type="file" id="logoFileInput" accept="image/*" style="display:none" onchange="uploadLogoFile(this)">
+          </div>
+          <div style="flex:1;min-width:180px">
+            <div class="adm-form-group">
+              <label class="adm-label">Logo Emoji</label>
+              <input type="text" id="logoEmojiInput" class="adm-input" value="🌾" maxlength="4" style="font-size:22px;width:80px" oninput="liveLogoEmoji(this.value)">
+            </div>
+            <div class="adm-form-group">
+              <label class="adm-label">Or Image URL</label>
+              <input type="text" id="logoUrlInput" class="adm-input" placeholder="https://... or assets/images/logo.png">
+            </div>
+            <button class="save-btn" onclick="saveLogo()">💾 Save Logo</button>
+          </div>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>📝 Brand Text</h3>
+        <div class="two-col">
+          <div class="adm-form-group"><label class="adm-label">Platform Name</label><input type="text" id="brandName" class="adm-input" value="The Part-Timers"></div>
+          <div class="adm-form-group"><label class="adm-label">Contact Email</label><input type="email" id="brandEmail" class="adm-input" placeholder="hello@theparttimers.in"></div>
+          <div class="adm-form-group"><label class="adm-label">Tagline (English)</label><input type="text" id="brandTagline" class="adm-input"></div>
+          <div class="adm-form-group"><label class="adm-label">Contact Phone</label><input type="tel" id="brandPhone" class="adm-input"></div>
+          <div class="adm-form-group"><label class="adm-label">Tagline (Odia)</label><input type="text" id="brandTaglineOdia" class="adm-input" style="font-family:var(--font-odia)"></div>
+          <div class="adm-form-group"><label class="adm-label">WhatsApp (without +)</label><input type="text" id="brandWA" class="adm-input" placeholder="91XXXXXXXXXX"></div>
+        </div>
+        <div class="adm-form-group"><label class="adm-label">Address</label><input type="text" id="brandAddress" class="adm-input" placeholder="Kendrapara, Odisha, India"></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="save-btn" onclick="saveBranding()">💾 Save Brand Settings</button>
+          <button class="save-btn blue" onclick="window.open('../../index.html','_blank')">👁️ Preview</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="adm-panel" id="panel-hero">
+      <div class="adm-panel-title">🖼️ Hero Image</div>
+      <div class="adm-panel-sub">Set the main hero background on the homepage</div>
+      <div class="adm-card">
+        <h3>🖼️ Hero Background</h3>
+        <div class="adm-form-group">
+          <div class="hero-preview" id="heroPreviewEl" onclick="document.getElementById('heroFileInput').click()">
+            <div style="font-size:36px;position:relative">🌾</div>
+            <div class="hero-preview-label">Click to upload hero image</div>
+          </div>
+          <input type="file" id="heroFileInput" accept="image/*" style="display:none" onchange="uploadHeroFile(this)">
+        </div>
+        <div class="adm-form-group"><label class="adm-label">Or Image URL</label><input type="text" id="heroUrlInput" class="adm-input" placeholder="https://..."></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="save-btn" onclick="saveHeroImage()">💾 Save Hero Image</button>
+          <button class="ghost-btn" onclick="clearHeroImage()">✕ Clear</button>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>✏️ Hero Text</h3>
+        <div class="adm-form-group"><label class="adm-label">Hero Title</label><input type="text" id="heroTitle" class="adm-input" value="Find Rural Services Near You"></div>
+        <div class="adm-form-group"><label class="adm-label">Hero Subtitle</label><input type="text" id="heroSubtitle" class="adm-input" placeholder="Kendrapara, Odisha"></div>
+        <button class="save-btn" onclick="saveHeroText()">💾 Save Hero Text</button>
+      </div>
+    </div>
+
+    <!-- COLORS -->
+    <div class="adm-panel" id="panel-colors">
+      <div class="adm-panel-title">🎨 Colors &amp; Theme</div>
+      <div class="adm-panel-sub">Changes apply instantly site-wide after saving</div>
+      <div class="adm-card">
+        <h3>🎨 Quick Theme Presets</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="theme-btn" style="background:#2E7D32" onclick="applyTheme('green')">🌿 Odisha Green</button>
+          <button class="theme-btn" style="background:#0277BD" onclick="applyTheme('blue')">🌊 Ocean Blue</button>
+          <button class="theme-btn" style="background:#E65100" onclick="applyTheme('orange')">🍊 Harvest Orange</button>
+          <button class="theme-btn" style="background:#5E35B1" onclick="applyTheme('purple')">🫐 Royal Purple</button>
+          <button class="theme-btn" style="background:#1A1A2E" onclick="applyTheme('dark')">🌙 Dark Night</button>
+          <button class="theme-btn" style="background:#AD1457" onclick="applyTheme('rose')">🌹 Rose Red</button>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>🎨 Custom Colors</h3>
+        <div id="colorRows"></div>
+        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="save-btn" onclick="saveColors()">💾 Save Colors</button>
+          <button class="ghost-btn" onclick="resetColors()">↩ Reset Default</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENTS -->
+    <div class="adm-panel" id="panel-announcements">
+      <div class="adm-panel-title">📢 Announcement Bar</div>
+      <div class="adm-panel-sub">Edit the scrolling text bar shown on all pages</div>
+      <div class="adm-card">
+        <h3>📢 Items</h3>
+        <div style="font-size:12px;color:#6B7280;margin-bottom:12px">Edit each line. Click ✕ to remove.</div>
+        <div id="annList"></div>
+        <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+          <button class="save-btn" onclick="addAnnItem()">+ Add Item</button>
+          <button class="save-btn blue" onclick="saveAnnouncements()">💾 Save &amp; Publish</button>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>⚙️ Bar Settings</h3>
+        <div class="row-between">
+          <div><div class="row-label">Show Announcement Bar</div><div class="row-sub">Scrolling bar on all pages</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="annToggle" checked onchange="saveFeatureToggle('showAnnouncements',this.checked)"><div class="ts-track"></div></label>
+        </div>
+        <div class="row-between" style="align-items:center">
+          <div><div class="row-label">Scroll Speed</div></div>
+          <select id="annSpeed" class="adm-input" style="width:120px;padding:7px 10px;font-size:13px" onchange="saveAnnSpeed(this.value)">
+            <option value="30">Normal</option><option value="45">Slow</option><option value="15">Fast</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="adm-panel" id="panel-categories">
+      <div class="adm-panel-title">🗂️ Categories</div>
+      <div class="adm-panel-sub">Toggle visibility and edit labels for each category</div>
+      <div class="adm-card">
+        <h3>🗂️ Category Visibility &amp; Labels</h3>
+        <div id="catList"></div>
+        <button class="save-btn" style="margin-top:14px" onclick="saveCategories()">💾 Save All</button>
+      </div>
+    </div>
+
+    <!-- WORKERS -->
+    <div class="adm-panel" id="panel-workers">
+      <div class="adm-panel-title">👷 Workers</div>
+      <div class="adm-panel-sub">View, verify, edit and remove workers</div>
+      <div class="adm-card">
+        <h3>👷 Workers List</h3>
+        <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+          <input type="text" id="workerSearch" class="adm-input" placeholder="🔍 Search name, village..." style="flex:1;min-width:160px" oninput="renderWorkersTable()">
+          <select id="workerCatFilter" class="adm-input" style="width:150px" onchange="renderWorkersTable()">
+            <option value="">All Categories</option>
+            <option value="farming">🌾 Farming</option>
+            <option value="fish">🐟 Fish</option>
+            <option value="poultry">🐓 Poultry</option>
+            <option value="learning">📚 Learning</option>
+            <option value="technician">🔧 Technician</option>
+            <option value="contractor">🏗️ Contractor</option>
+            <option value="vehicle">🚗 Vehicle</option>
+          </select>
+        </div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Name</th><th>Role</th><th>Village</th><th>Rate</th><th>Rating</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="workersTable"></tbody>
+          </table>
+        </div>
+        <div id="workersPager" style="margin-top:12px;display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap"></div>
+      </div>
+    </div>
+
+    <!-- ADD WORKER -->
+    <div class="adm-panel" id="panel-addworker">
+      <div class="adm-panel-title">➕ Add Worker</div>
+      <div class="adm-panel-sub">Add a new worker to the platform database</div>
+      <div class="adm-card">
+        <h3>👷 Worker Details</h3>
+        <div class="two-col">
+          <div class="adm-form-group"><label class="adm-label">Full Name *</label><input type="text" id="aw-name" class="adm-input" placeholder="Rabindra Nayak"></div>
+          <div class="adm-form-group"><label class="adm-label">Odia Short Name</label><input type="text" id="aw-odia" class="adm-input" placeholder="ର. ନ." style="font-family:var(--font-odia)"></div>
+          <div class="adm-form-group"><label class="adm-label">Village *</label><input type="text" id="aw-village" class="adm-input" placeholder="Kendrapara"></div>
+          <div class="adm-form-group"><label class="adm-label">District</label>
+            <select id="aw-district" class="adm-input"><option>Kendrapara</option><option>Khordha</option><option>Cuttack</option><option>Puri</option><option>Ganjam</option><option>Sambalpur</option><option>Balasore</option><option>Mayurbhanj</option><option>Koraput</option><option>Jagatsinghpur</option></select>
+          </div>
+          <div class="adm-form-group"><label class="adm-label">Category *</label>
+            <select id="aw-cat" class="adm-input"><option value="farming">🌾 Farming</option><option value="fish">🐟 Fish &amp; Aqua</option><option value="poultry">🐓 Poultry</option><option value="learning">📚 Learning</option><option value="technician">🔧 Technician</option><option value="contractor">🏗️ Contractor</option><option value="vehicle">🚗 Vehicle</option></select>
+          </div>
+          <div class="adm-form-group"><label class="adm-label">Sub-category / Role *</label><input type="text" id="aw-subcat" class="adm-input" placeholder="Tractor Operator"></div>
+          <div class="adm-form-group"><label class="adm-label">Price (₹) *</label><input type="number" id="aw-price" class="adm-input" placeholder="500" min="0"></div>
+          <div class="adm-form-group"><label class="adm-label">Unit</label>
+            <select id="aw-unit" class="adm-input"><option value="hr">Per Hour</option><option value="day">Per Day</option><option value="visit">Per Visit</option><option value="month">Per Month</option><option value="km">Per KM</option></select>
+          </div>
+          <div class="adm-form-group"><label class="adm-label">Phone</label><input type="tel" id="aw-phone" class="adm-input" placeholder="98XXXXXXXX"></div>
+          <div class="adm-form-group"><label class="adm-label">Service Radius (km)</label><input type="number" id="aw-radius" class="adm-input" placeholder="10" min="1"></div>
+          <div class="adm-form-group"><label class="adm-label">Emoji</label><input type="text" id="aw-emoji" class="adm-input" value="🌾" maxlength="2" style="font-size:22px;width:70px"></div>
+          <div class="adm-form-group"><label class="adm-label">Badge</label>
+            <select id="aw-badge" class="adm-input"><option>Popular</option><option>Trusted</option><option>Top Rated</option><option>Verified</option><option>Local</option><option>Certified</option><option>Verified Pro</option></select>
+          </div>
+        </div>
+        <div class="adm-form-group"><label class="adm-label">Description</label><textarea id="aw-desc" class="adm-input" placeholder="Brief description of skills and experience..."></textarea></div>
+        <div class="adm-form-group"><label class="adm-label">Tags (comma separated)</label><input type="text" id="aw-tags" class="adm-input" placeholder="tractor, plowing, farming"></div>
+        <div class="row-between" style="margin-bottom:14px">
+          <div><div class="row-label">Mark as Verified</div><div class="row-sub">Show verification badge</div></div>
+          <label class="toggle-switch"><input type="checkbox" id="aw-verified"><div class="ts-track"></div></label>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="save-btn" onclick="addWorker()">✅ Add Worker</button>
+          <button class="ghost-btn" onclick="clearWorkerForm()">✕ Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENDORS -->
+    <div class="adm-panel" id="panel-vendors">
+      <div class="adm-panel-title">🏪 Vendors</div>
+      <div class="adm-panel-sub">Manage food and product vendor accounts</div>
+      <div class="adm-card">
+        <h3>🏪 Active Vendors</h3>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Vendor</th><th>Village</th><th>Category</th><th>Plan</th><th>Verified</th><th>Actions</th></tr></thead>
+            <tbody id="vendorsTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>➕ Add Vendor</h3>
+        <div class="two-col">
+          <div class="adm-form-group"><label class="adm-label">Vendor Name *</label><input type="text" id="av-name" class="adm-input" placeholder="Amma Kitchen"></div>
+          <div class="adm-form-group"><label class="adm-label">Village</label><input type="text" id="av-village" class="adm-input" placeholder="Kendrapara"></div>
+          <div class="adm-form-group"><label class="adm-label">Category</label>
+            <select id="av-cat" class="adm-input"><option value="instant">🍛 Food</option><option value="vegetables">🥦 Vegetables</option><option value="grocery">🛒 Grocery</option></select>
+          </div>
+          <div class="adm-form-group"><label class="adm-label">Plan</label>
+            <select id="av-plan" class="adm-input"><option value="mini">Local Mini</option><option value="plus">Local Plus</option><option value="block">Block Plan</option><option value="district">District Plan</option></select>
+          </div>
+          <div class="adm-form-group"><label class="adm-label">Emoji</label><input type="text" id="av-emoji" class="adm-input" value="🏪" maxlength="2" style="font-size:22px;width:70px"></div>
+        </div>
+        <button class="save-btn" onclick="addVendor()">✅ Add Vendor</button>
+      </div>
+    </div>
+
+    <!-- HAATA -->
+    <div class="adm-panel" id="panel-haata">
+      <div class="adm-panel-title">🏪 Sunday Haata Items</div>
+      <div class="adm-panel-sub">Manage weekly village market listings</div>
+      <div class="adm-card"><h3>🏪 Current Listings</h3><div id="haataList"></div></div>
+      <div class="adm-card">
+        <h3>➕ Add Haata Item</h3>
+        <div class="two-col">
+          <div class="adm-form-group"><label class="adm-label">Item Name *</label><input type="text" id="ah-name" class="adm-input" placeholder="Fresh Pomfret Fish"></div>
+          <div class="adm-form-group"><label class="adm-label">Price (₹)</label><input type="number" id="ah-price" class="adm-input" placeholder="280"></div>
+          <div class="adm-form-group"><label class="adm-label">Unit</label><input type="text" id="ah-unit" class="adm-input" placeholder="kg"></div>
+          <div class="adm-form-group"><label class="adm-label">Vendor Name</label><input type="text" id="ah-vendor" class="adm-input" placeholder="Sukanta Fish"></div>
+          <div class="adm-form-group"><label class="adm-label">Village</label><input type="text" id="ah-village" class="adm-input" placeholder="Rajnagar"></div>
+          <div class="adm-form-group"><label class="adm-label">Qty Available</label><input type="number" id="ah-qty" class="adm-input" placeholder="50"></div>
+          <div class="adm-form-group"><label class="adm-label">Emoji</label><input type="text" id="ah-emoji" class="adm-input" value="🛒" maxlength="2" style="font-size:22px;width:70px"></div>
+          <div class="adm-form-group"><label class="adm-label">Category</label>
+            <select id="ah-cat" class="adm-input"><option value="fish">Fish</option><option value="food">Food</option><option value="spices">Spices</option><option value="clothing">Clothing</option><option value="poultry">Poultry</option><option value="handicraft">Handicraft</option><option value="herbs">Herbs</option></select>
+          </div>
+        </div>
+        <button class="save-btn" onclick="addHaataItem()">✅ Add Item</button>
+      </div>
+    </div>
+
+    <!-- MARKETPLACE -->
+    <div class="adm-panel" id="panel-marketplace">
+      <div class="adm-panel-title">🛒 Marketplace</div>
+      <div class="adm-panel-sub">Manage buy/sell listings</div>
+      <div class="adm-card">
+        <h3>🛒 Current Listings</h3>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Item</th><th>Price</th><th>Village</th><th>Category</th><th>Actions</th></tr></thead>
+            <tbody id="marketplaceTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>➕ Add Listing</h3>
+        <div class="two-col">
+          <div class="adm-form-group"><label class="adm-label">Item Title *</label><input type="text" id="am-title" class="adm-input" placeholder="Honda Shine 2019"></div>
+          <div class="adm-form-group"><label class="adm-label">Price (₹)</label><input type="number" id="am-price" class="adm-input" placeholder="42000"></div>
+          <div class="adm-form-group"><label class="adm-label">Village</label><input type="text" id="am-village" class="adm-input" placeholder="Cuttack"></div>
+          <div class="adm-form-group"><label class="adm-label">Category</label>
+            <select id="am-cat" class="adm-input"><option value="vehicles">Vehicles</option><option value="electronics">Electronics</option><option value="land">Land</option><option value="animals">Animals</option><option value="tools">Tools</option><option value="furniture">Furniture</option><option value="crops">Crops</option></select>
+          </div>
+          <div class="adm-form-group"><label class="adm-label">Emoji</label><input type="text" id="am-emoji" class="adm-input" value="🛒" maxlength="2" style="font-size:22px;width:70px"></div>
+        </div>
+        <div class="adm-form-group"><label class="adm-label">Description</label><input type="text" id="am-desc" class="adm-input" placeholder="Condition, history, etc."></div>
+        <button class="save-btn" onclick="addMarketItem()">✅ Add Listing</button>
+      </div>
+      <div class="adm-card">
+        <h3>📏 KM Rate Settings (ଦୂ. ଚ.)</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="adm-form-group"><label class="adm-label">Min Rate (₹/km)</label><input type="number" id="kmMinRate" class="adm-input" placeholder="10"></div>
+          <div class="adm-form-group"><label class="adm-label">Max Rate (₹/km)</label><input type="number" id="kmMaxRate" class="adm-input" placeholder="30"></div>
+        </div>
+        <div style="font-size:12px;color:#6B7280;margin-bottom:10px">Vehicle/km ସେ. ପ. ଦ. — shown as range on booking page</div>
+        <button class="save-btn" onclick="saveKmRates()">💾 Save KM Rates</button>
+      </div>
+      <div class="adm-card">
+        <h3>📋 Google Sheets Setup Guide</h3>
+        <div style="font-size:13px;color:#374151;line-height:1.8">
+          <strong>Step 1:</strong> Google Sheets ଖୋଲ — Open a Google Spreadsheet<br>
+          <strong>Step 2:</strong> Extensions → Apps Script ଯା<br>
+          <strong>Step 3:</strong> <code style="background:#F3F4F6;padding:2px 6px;border-radius:4px">data/sheets-api.gs</code> ର code paste କର<br>
+          <strong>Step 4:</strong> Deploy → New Deployment → Web App<br>
+          <strong>Step 5:</strong> Execute as: <em>Me</em>, Access: <em>Anyone</em><br>
+          <strong>Step 6:</strong> URL copy → Sheets URL field ଉ. ଦ<br>
+          <strong>Step 7:</strong> Test button click ✅
+        </div>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="save-btn blue" onclick="testSheetsConnection()">🔗 Test Connection</button>
+          <div id="sheetsTestResult" style="font-size:13px;padding:8px 12px;border-radius:8px;display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="adm-panel" id="panel-orders">
+      <div class="adm-panel-title">📋 Orders</div>
+      <div class="adm-panel-sub">All bookings placed on the platform</div>
+      <div class="adm-card">
+        <h3>📋 Order Management</h3>
+        <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+          <select id="orderStatusFilter" class="adm-input" style="width:150px" onchange="renderOrdersTable()">
+            <option value="">All Status</option><option value="confirmed">Confirmed</option><option value="pending">Pending</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option>
+          </select>
+          <button onclick="exportOrders()" class="save-btn blue" style="font-size:12px;padding:8px 14px">📤 Export CSV</button>
+          <button onclick="clearAllOrders()" class="delete-btn">🗑️ Clear All</button>
+        </div>
+        <div id="ordersAdmin"></div>
+      </div>
+    </div>
+
+    <!-- PLANS -->
+    <div class="adm-panel" id="panel-plans">
+      <div class="adm-panel-title">💳 Pricing Plans</div>
+      <div class="adm-panel-sub">Edit vendor subscription plan prices and features</div>
+      <div id="plansCards"></div>
+    </div>
+
+    <!-- INTEGRATIONS -->
+    <div class="adm-panel" id="panel-integrations">
+      <div class="adm-panel-title">🔗 Integrations</div>
+      <div class="adm-panel-sub">Configure Google Maps, Sheets, WhatsApp, Analytics</div>
+      <div class="adm-card">
+        <h3>🗺️ Google Maps</h3>
+        <div class="adm-form-group"><label class="adm-label">API Key</label><input type="text" id="gmapsKey" class="adm-input" placeholder="AIzaSy..."></div>
+        <div style="font-size:12px;color:#6B7280;margin-bottom:10px">Get free key at <a href="https://console.cloud.google.com" target="_blank" style="color:#2563EB">console.cloud.google.com</a></div>
+        <button class="save-btn" onclick="saveIntegration('mapsApiKey','gmapsKey')">💾 Save Maps Key</button>
+      </div>
+      <div class="adm-card">
+        <h3>📊 Google Sheets</h3>
+        <div class="adm-form-group"><label class="adm-label">Apps Script URL (from data/sheets-api.gs)</label><input type="text" id="sheetsUrl" class="adm-input" placeholder="https://script.google.com/macros/s/..."></div>
+        <button class="save-btn" onclick="saveIntegration('sheetsScriptUrl','sheetsUrl')">💾 Save Sheets URL</button>
+        <button onclick="testSheetsConnection()" style="background:#F0FDF4;border:1px solid #86EFAC;color:#166534;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);margin-top:8px">🔗 ସଂଯୋଗ ପରୀକ୍ଷା — Test Connection</button>
+        <div id="sheetsStatus" style="margin-top:10px;font-size:13px;display:none"></div>
+        <div style="font-size:12px;color:#6B7280;margin-top:10px;line-height:1.6">
+          📊 ଏହି ସ୍କ୍ରିପ୍ଟ ସ୍ୱୟଂଚାଳିତ ଭାବ ସୁରକ୍ଷିତ ରଖେ: Users, Workers, Orders, Ratings, WorkIDs, Vendors, Marketplace<br>
+          <strong>Sheets Tab ଗୁଡ଼ିକ:</strong> Users · Workers · Orders · Ratings · WorkIDs · Vendors · Marketplace
+        </div>
+      </div>
+      <div class="adm-card">
+        <h3>📱 WhatsApp Business</h3>
+        <div class="adm-form-group"><label class="adm-label">WhatsApp Number (without +)</label><input type="text" id="waNum" class="adm-input" placeholder="91XXXXXXXXXX"></div>
+        <button class="save-btn" onclick="saveIntegration('whatsapp','waNum')">💾 Save</button>
+      </div>
+      <div class="adm-card">
+        <h3>📈 Google Analytics</h3>
+        <div class="adm-form-group"><label class="adm-label">Measurement ID</label><input type="text" id="gaId" class="adm-input" placeholder="G-XXXXXXXXXX"></div>
+        <button class="save-btn" onclick="saveIntegration('analyticsId','gaId')">💾 Save</button>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="adm-panel" id="panel-features">
+      <div class="adm-panel-title">🔧 Feature Toggles</div>
+      <div class="adm-panel-sub">Turn platform features on/off without coding</div>
+      <div class="adm-card"><h3>🔧 Platform Features</h3><div id="featureToggles"></div></div>
+    </div>
+
+    <!-- LEGAL -->
+    <div class="adm-panel" id="panel-legal">
+      <div class="adm-panel-title">⚖️ Legal Text</div>
+      <div class="adm-panel-sub">Edit all legal notices and policies shown on the site</div>
+      <div class="adm-card">
+        <h3>⚖️ Legal Notice (shown on homepage)</h3>
+        <textarea id="legalText" class="adm-input" style="min-height:110px">If any user violates platform rules, provides false information, commits fraud, or behaves illegally, The Part-Timers team reserves the right to suspend accounts or take action as per applicable law.</textarea>
+        <button class="save-btn" style="margin-top:12px" onclick="saveLegalText()">💾 Save Notice</button>
+      </div>
+      <div class="adm-card">
+        <h3>📄 Terms &amp; Conditions</h3>
+        <div style="font-size:12px;color:#6B7280;margin-bottom:8px">Each line becomes a bullet point on the Terms page.</div>
+        <textarea id="termsText" class="adm-input" style="min-height:180px">1. Workers keep 100% of their earnings. Platform charges 0% commission.
+2. Vendor subscriptions fund platform operations.
+3. All users must provide accurate information.
+4. Platform reserves the right to suspend abusive accounts.
+5. Bookings are direct agreements between customers and workers.
+6. Platform acts only as a marketplace connector.
+7. Language: English and Odia only on this platform.</textarea>
+        <button class="save-btn" style="margin-top:12px" onclick="saveTerms()">💾 Save Terms</button>
+      </div>
+      <div class="adm-card">
+        <h3>🔐 Privacy Policy</h3>
+        <textarea id="privacyText" class="adm-input" style="min-height:110px">We collect only basic information (name, phone, village). We do not sell your data. Phone numbers are shown only to confirmed booking parties. You can request account deletion at any time.</textarea>
+        <button class="save-btn" style="margin-top:12px" onclick="adSave('privacyText',document.getElementById('privacyText').value);adToast('✅ Privacy policy saved!')">💾 Save Privacy</button>
+      </div>
+    </div>
+
+    <!-- SECURITY -->
+    <div class="adm-panel" id="panel-security">
+      <div class="adm-panel-title">🔒 Security</div>
+      <div class="adm-panel-sub">Change admin credentials and manage settings</div>
+      <div class="adm-card">
+        <h3>🔑 Change Admin Password</h3>
+        <div class="adm-form-group"><label class="adm-label">Current Password</label><input type="password" id="curPass" class="adm-input"></div>
+        <div class="adm-form-group"><label class="adm-label">New Password (min 6 chars)</label><input type="password" id="newPass" class="adm-input"></div>
+        <div class="adm-form-group"><label class="adm-label">Confirm New Password</label><input type="password" id="confPass" class="adm-input"></div>
+        <button class="save-btn" onclick="changePassword()">🔒 Change Password</button>
+      </div>
+      <div class="adm-card">
+        <h3>🔑 Change Admin Username</h3>
+        <div class="adm-form-group"><label class="adm-label">Current Password (to confirm)</label><input type="password" id="unameConfPass" class="adm-input"></div>
+        <div class="adm-form-group"><label class="adm-label">New Username (min 3 chars)</label><input type="text" id="newUsername" class="adm-input" placeholder="admin"></div>
+        <button class="save-btn" onclick="changeUsername()">✏️ Change Username</button>
+      </div>
+      <div class="adm-card">
+        <h3>🚨 Danger Zone</h3>
+        <p style="font-size:13px;color:#6B7280;margin-bottom:14px">Reset all admin settings to defaults. This cannot be undone.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button onclick="resetAllSettings()" class="save-btn red">⚠️ Reset All Settings</button>
+          <button onclick="clearOrdersOnly()" style="background:#FEF3C7;color:#92400E;border:none;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font)">🗑️ Clear Orders Only</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPORT -->
+    <div class="adm-panel" id="panel-export">
+      <div class="adm-panel-title">📤 Export / Backup</div>
+      <div class="adm-panel-sub">Download your platform data as CSV or JSON</div>
+      <div class="adm-card">
+        <h3>📊 Export Options</h3>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div class="row-between"><div><div class="row-label">👷 Workers Data</div><div class="row-sub">All registered workers as CSV</div></div><button class="save-btn" onclick="exportData('workers')">📥 Download CSV</button></div>
+          <div class="row-between"><div><div class="row-label">📋 Orders Data</div><div class="row-sub">All booking orders as CSV</div></div><button class="save-btn" onclick="exportData('orders')">📥 Download CSV</button></div>
+          <div class="row-between"><div><div class="row-label">🏪 Vendors Data</div><div class="row-sub">All vendor accounts as CSV</div></div><button class="save-btn" onclick="exportData('vendors')">📥 Download CSV</button></div>
+          <div class="row-between"><div><div class="row-label">🏪 Haata Items</div><div class="row-sub">All haata listings as CSV</div></div><button class="save-btn" onclick="exportData('haata')">📥 Download CSV</button></div>
+          <div class="row-between"><div><div class="row-label">🔧 Admin Config Backup</div><div class="row-sub">Full settings backup as JSON</div></div><button class="save-btn blue" onclick="exportConfig()">📥 Download JSON</button></div>
+          <div class="row-between"><div><div class="row-label">📂 Import Config</div><div class="row-sub">Restore from JSON backup file</div></div>
+            <button class="save-btn orange" onclick="document.getElementById('importFile').click()">📤 Import JSON</button>
+            <input type="file" id="importFile" accept=".json" style="display:none" onchange="importConfig(this)">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Worker Edit Modal -->
+<div class="modal-overlay" id="workerEditModal" onclick="if(event.target===this)closeWorkerModal()">
+  <div class="modal-sheet-lg">
+    <div class="wm-handle"></div>
+    <h3 style="font-size:17px;font-weight:800;margin-bottom:18px">✏️ Edit Worker</h3>
+    <input type="hidden" id="ew-id">
+    <div class="two-col">
+      <div class="adm-form-group"><label class="adm-label">Name</label><input type="text" id="ew-name" class="adm-input"></div>
+      <div class="adm-form-group"><label class="adm-label">Village</label><input type="text" id="ew-village" class="adm-input"></div>
+      <div class="adm-form-group"><label class="adm-label">Sub-category</label><input type="text" id="ew-subcat" class="adm-input"></div>
+      <div class="adm-form-group"><label class="adm-label">Price (₹)</label><input type="number" id="ew-price" class="adm-input"></div>
+      <div class="adm-form-group"><label class="adm-label">Phone</label><input type="tel" id="ew-phone" class="adm-input"></div>
+      <div class="adm-form-group"><label class="adm-label">Badge</label>
+        <select id="ew-badge" class="adm-input"><option>Popular</option><option>Trusted</option><option>Top Rated</option><option>Verified</option><option>Local</option><option>Certified</option><option>Verified Pro</option></select>
+      </div>
+    </div>
+    <div class="adm-form-group"><label class="adm-label">Description</label><textarea id="ew-desc" class="adm-input"></textarea></div>
+    <div class="row-between" style="margin-bottom:16px">
+      <div><div class="row-label">Verified</div></div>
+      <label class="toggle-switch"><input type="checkbox" id="ew-verified"><div class="ts-track"></div></label>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="save-btn" style="flex:1" onclick="saveWorkerEdit()">💾 Save Changes</button>
+      <button class="ghost-btn" onclick="closeWorkerModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" style="display:none"></div>
+<div id="adminToast"></div>
+<script src="../../data/config.js"></script>
+<script src="../../data/data.js"></script>
+<script>
+'use strict';
+function adSave(k,v){try{var c=JSON.parse(localStorage.getItem('pt_admin_config')||'{}');c[k]=v;localStorage.setItem('pt_admin_config',JSON.stringify(c));}catch(e){}}
+function adGet(k,fb){try{var c=JSON.parse(localStorage.getItem('pt_admin_config')||'{}');return(k in c)?c[k]:fb;}catch(e){return fb;}}
+function adToast(msg,dur){var el=document.getElementById('adminToast');if(!el)return;el.textContent=msg;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show');},dur||2800);}
+var CREDS_KEY='pt_admin_creds';
+function getCreds(){try{return JSON.parse(localStorage.getItem(CREDS_KEY)||'null')||{username:'admin',password:'admin123'};}catch(e){return{username:'admin',password:'admin123'};}}
+function doAdminLogin(){var u=document.getElementById('lwUser').value.trim(),p=document.getElementById('lwPass').value,c=getCreds();if(u===c.username&&p===c.password){localStorage.setItem('pt_admin_session',Date.now().toString());document.getElementById('loginWall').style.display='none';document.getElementById('adUserName').textContent=u;loadDashboard();}else{document.getElementById('lwError').style.display='block';}}
+document.addEventListener('DOMContentLoaded',function(){['lwPass','lwUser'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('keydown',function(e){if(e.key==='Enter')doAdminLogin();});});checkSession();});
+function checkSession(){var s=localStorage.getItem('pt_admin_session');if(s&&(Date.now()-parseInt(s))<86400000){document.getElementById('loginWall').style.display='none';document.getElementById('adUserName').textContent=getCreds().username;loadDashboard();}}
+function doAdminLogout(){localStorage.removeItem('pt_admin_session');location.reload();}
+function toggleAdminSidebar(){document.getElementById('adminSidebar').classList.toggle('open');}
+var PANEL_LOADERS={dashboard:loadDashboard,branding:loadBranding,hero:loadHero,colors:renderColorRows,announcements:renderAnnList,categories:renderCatList,workers:renderWorkersTable,addworker:function(){},vendors:renderVendorsTable,haata:renderHaataList,marketplace:renderMarketplaceTable,orders:renderOrdersTable,plans:renderPlans,features:renderFeatures,integrations:loadIntegrations,legal:loadLegal,security:function(){},export:function(){}};
+function showPanel(id,btn){document.querySelectorAll('.adm-panel').forEach(function(p){p.classList.remove('active');});document.querySelectorAll('.adm-nav-item').forEach(function(n){n.classList.remove('active');});var p=document.getElementById('panel-'+id);if(p)p.classList.add('active');if(btn)btn.classList.add('active');document.getElementById('adminSidebar').classList.remove('open');if(PANEL_LOADERS[id])PANEL_LOADERS[id]();}
+function loadDashboard(){
+  var D=window.PT_DATA,C=window.PT_CONFIG;
+  var orders=[];try{orders=JSON.parse(localStorage.getItem('pt_orders')||'[]');}catch(e){}
+  var cats=C?(C.categories||[]).filter(function(c){return c.active!==false;}).length:0;
+  var rev=orders.reduce(function(s,o){return s+(o.totalAmount||0);},0);
+  document.getElementById('dashStats').innerHTML=[
+    {icon:'👷',num:D?D.workers.length:0,label:'Workers'},{icon:'📋',num:orders.length,label:'Orders'},
+    {icon:'🏪',num:D?(D.vendors||[]).length:0,label:'Vendors'},{icon:'🗂️',num:cats,label:'Categories'},
+    {icon:'💰',num:'₹'+rev.toLocaleString('en-IN'),label:'Booking Value'},{icon:'🛒',num:D?(D.marketplace||[]).length:0,label:'Marketplace'},
+    {icon:'🏪',num:D?(D.haata||[]).length:0,label:'Haata Items'},{icon:'⭐',num:'4.7',label:'Avg Rating'},
+  ].map(function(s){return '<div class="stat-card"><div class="sc-icon">'+s.icon+'</div><div class="sc-num">'+s.num+'</div><div class="sc-label">'+s.label+'</div></div>';}).join('');
+  var el=document.getElementById('dashOrders');
+  if(!orders.length){el.innerHTML='<div style="text-align:center;padding:20px;color:#9CA3AF;font-size:13px">No orders yet.</div>';return;}
+  el.innerHTML='<div class="data-table-wrap"><table class="data-table"><thead><tr><th>ID</th><th>Worker</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>'+
+    orders.slice(0,6).map(function(o){var sc=o.status==='confirmed'?'pill-green':o.status==='completed'?'pill-blue':o.status==='pending'?'pill-yellow':'pill-red';return'<tr><td style="font-family:monospace;font-size:11px">'+(o.id||'—')+'</td><td>'+(o.workerEmoji||'')+' '+(o.workerName||'—')+'</td><td style="font-weight:700;color:#FF6F00">₹'+(o.totalAmount||0)+'</td><td><span class="pill '+sc+'">'+(o.status||'unknown')+'</span></td><td style="font-size:11px;color:#9CA3AF">'+(o.date||'')+'</td></tr>';}).join('')+'</tbody></table></div>';
+  var s=JSON.parse(localStorage.getItem('pt_admin_config')||'{}');
+  if(s.brandName)document.getElementById('adBrandName').textContent=s.brandName;
+  if(s.logoEmoji)document.getElementById('adLogoIcon').textContent=s.logoEmoji;
+}
+function loadBranding(){var C=window.PT_CONFIG?window.PT_CONFIG.brand:{};var s=JSON.parse(localStorage.getItem('pt_admin_config')||'{}');var set=function(id,ck,def){var el=document.getElementById(id);if(el)el.value=s[ck]||(C&&C[ck])||def||'';};set('brandName','brandName','The Part-Timers');set('brandTagline','brandTagline','');set('brandTaglineOdia','brandTaglineOdia','');set('brandPhone','brandPhone','');set('brandEmail','brandEmail','');set('brandWA','whatsapp','');set('brandAddress','brandAddress','');set('logoEmojiInput','logoEmoji','🌾');set('logoUrlInput','logoUrl','');var emoji=document.getElementById('logoEmojiInput').value,url=document.getElementById('logoUrlInput').value,prev=document.getElementById('logoPreviewEl');if(url)prev.innerHTML='<img src="'+url+'" style="width:76px;height:76px;object-fit:contain;border-radius:18px">';else prev.textContent=emoji||'🌾';}
+function saveBranding(){['brandName','brandTagline','brandTaglineOdia','brandPhone','brandEmail','brandAddress'].forEach(function(k){adSave(k,document.getElementById(k).value);});adSave('whatsapp',document.getElementById('brandWA').value);document.getElementById('adBrandName').textContent=document.getElementById('brandName').value;adToast('✅ Brand settings saved! Refresh site.');}
+function liveLogoEmoji(v){var prev=document.getElementById('logoPreviewEl');if(prev&&!document.getElementById('logoUrlInput').value)prev.textContent=v;}
+function saveLogo(){var emoji=document.getElementById('logoEmojiInput').value.trim()||'🌾',url=document.getElementById('logoUrlInput').value.trim();adSave('logoEmoji',emoji);if(url)adSave('logoUrl',url);var prev=document.getElementById('logoPreviewEl');if(url)prev.innerHTML='<img src="'+url+'" style="width:76px;height:76px;object-fit:contain;border-radius:18px">';else prev.textContent=emoji;document.getElementById('adLogoIcon').textContent=emoji;adToast('✅ Logo saved!');}
+function uploadLogoFile(input){if(!input.files[0])return;var r=new FileReader();r.onload=function(e){adSave('logoUrl',e.target.result);document.getElementById('logoPreviewEl').innerHTML='<img src="'+e.target.result+'" style="width:76px;height:76px;object-fit:contain;border-radius:18px">';adToast('✅ Logo uploaded!');};r.readAsDataURL(input.files[0]);}
+function loadHero(){var s=JSON.parse(localStorage.getItem('pt_admin_config')||'{}'),C=window.PT_CONFIG?window.PT_CONFIG.brand:{};var url=s.heroImage||(C&&C.heroImage)||'';document.getElementById('heroUrlInput').value=url;document.getElementById('heroTitle').value=s.heroTitle||'Find Rural Services Near You';document.getElementById('heroSubtitle').value=s.heroSubtitle||'Kendrapara, Odisha';if(url){document.getElementById('heroPreviewEl').innerHTML='<img src="'+url+'"><div class="hero-preview-label" style="position:relative">Current hero ✓</div>';}}
+function saveHeroImage(){var url=document.getElementById('heroUrlInput').value.trim();adSave('heroImage',url);if(url)document.getElementById('heroPreviewEl').innerHTML='<img src="'+url+'"><div class="hero-preview-label" style="position:relative">Saved ✓</div>';adToast('✅ Hero image saved!');}
+function clearHeroImage(){adSave('heroImage','');document.getElementById('heroUrlInput').value='';document.getElementById('heroPreviewEl').innerHTML='<div style="font-size:36px;position:relative">🌾</div><div class="hero-preview-label">Click to upload</div>';adToast('✅ Hero image cleared.');}
+function uploadHeroFile(input){if(!input.files[0])return;var r=new FileReader();r.onload=function(e){adSave('heroImage',e.target.result);document.getElementById('heroPreviewEl').innerHTML='<img src="'+e.target.result+'"><div class="hero-preview-label" style="position:relative">Saved ✓</div>';adToast('✅ Hero image saved!');};r.readAsDataURL(input.files[0]);}
+function saveHeroText(){adSave('heroTitle',document.getElementById('heroTitle').value);adSave('heroSubtitle',document.getElementById('heroSubtitle').value);adToast('✅ Hero text saved!');}
+var COLOR_DEFS=[['primary','Primary Color'],['primaryLight','Primary Light'],['primaryDark','Primary Dark'],['accent','Accent Color'],['accentLight','Accent Light'],['bg','Background'],['surface','Card Surface'],['text','Main Text'],['textMuted','Muted Text'],['border','Border Color']];
+function renderColorRows(){var C=window.PT_CONFIG?window.PT_CONFIG.colors:{},s=JSON.parse(localStorage.getItem('pt_admin_config')||'{}');document.getElementById('colorRows').innerHTML=COLOR_DEFS.map(function(def){var k=def[0],lbl=def[1],val=s['color_'+k]||(C&&C[k])||'#cccccc';return'<div class="color-row"><span class="color-label">'+lbl+'</span><div style="display:flex;align-items:center;gap:10px"><div class="color-swatch" id="sw_'+k+'" style="background:'+val+'"></div><input type="color" class="color-input" id="col_'+k+'" value="'+val+'" oninput="liveColor(\''+k+'\',this.value)"><input type="text" value="'+val+'" id="colTxt_'+k+'" style="width:88px;padding:6px 8px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:12px;font-family:monospace" oninput="syncColorText(\''+k+'\',this.value)"></div></div>';}).join('');}
+function liveColor(k,v){var sw=document.getElementById('sw_'+k);if(sw)sw.style.background=v;var t=document.getElementById('colTxt_'+k);if(t)t.value=v;adSave('color_'+k,v);}
+function syncColorText(k,v){if(v&&v.startsWith('#')&&(v.length===4||v.length===7)){var ci=document.getElementById('col_'+k);if(ci)ci.value=v;liveColor(k,v);}}
+function saveColors(){COLOR_DEFS.forEach(function(def){var el=document.getElementById('col_'+def[0]);if(el)adSave('color_'+def[0],el.value);});adToast('✅ Colors saved! Refresh site.');}
+function resetColors(){var def={primary:'#2E7D32',primaryLight:'#4CAF50',primaryDark:'#1B5E20',accent:'#FF6F00',accentLight:'#FFA726',bg:'#F1F8E9',surface:'#FFFFFF',text:'#1A1A1A',textMuted:'#5D5D5D',border:'#E0E0E0'};Object.keys(def).forEach(function(k){adSave('color_'+k,def[k]);});renderColorRows();adToast('↩ Colors reset.');}
+function applyTheme(t){var T={green:{primary:'#2E7D32',primaryLight:'#4CAF50',primaryDark:'#1B5E20',accent:'#FF6F00',accentLight:'#FFA726',bg:'#F1F8E9',surface:'#FFFFFF',text:'#1A1A1A',textMuted:'#5D5D5D',border:'#E0E0E0'},blue:{primary:'#0277BD',primaryLight:'#039BE5',primaryDark:'#01579B',accent:'#FF6F00',accentLight:'#FFB74D',bg:'#E1F5FE',surface:'#FFFFFF',text:'#1A1A1A',textMuted:'#5D5D5D',border:'#E0E0E0'},orange:{primary:'#E65100',primaryLight:'#FF6D00',primaryDark:'#BF360C',accent:'#FFD600',accentLight:'#FFE57F',bg:'#FFF3E0',surface:'#FFFFFF',text:'#1A1A1A',textMuted:'#5D5D5D',border:'#E0E0E0'},purple:{primary:'#5E35B1',primaryLight:'#7E57C2',primaryDark:'#4527A0',accent:'#FF6F00',accentLight:'#FFA726',bg:'#F3E5F5',surface:'#FFFFFF',text:'#1A1A1A',textMuted:'#5D5D5D',border:'#E0E0E0'},dark:{primary:'#4CAF50',primaryLight:'#66BB6A',primaryDark:'#388E3C',accent:'#FF9800',accentLight:'#FFB74D',bg:'#0D1A0D',surface:'#1A2C1A',text:'#F1F8E9',textMuted:'#A5C8A5',border:'#2E4A2E'},rose:{primary:'#AD1457',primaryLight:'#E91E63',primaryDark:'#880E4F',accent:'#FF6F00',accentLight:'#FFA726',bg:'#FCE4EC',surface:'#FFFFFF',text:'#1A1A1A',textMuted:'#5D5D5D',border:'#E0E0E0'}};var th=T[t];if(!th)return;Object.keys(th).forEach(function(k){adSave('color_'+k,th[k]);});renderColorRows();adToast('✅ Theme applied! Refresh site.');}
+var annItems=[];
+function renderAnnList(){var s=adGet('announcements',null);annItems=s?JSON.parse(JSON.stringify(s)):(window.PT_CONFIG?(window.PT_CONFIG.announcements||[]).slice():[]);buildAnnList();var cfg=JSON.parse(localStorage.getItem('pt_admin_config')||'{}');if(document.getElementById('annToggle'))document.getElementById('annToggle').checked=cfg.feature_showAnnouncements!==false;if(document.getElementById('annSpeed')&&cfg.annSpeed)document.getElementById('annSpeed').value=cfg.annSpeed;}
+function buildAnnList(){document.getElementById('annList').innerHTML=annItems.map(function(a,i){return'<div class="ann-item"><span class="ann-drag">⠿</span><div class="ann-text"><input value="'+(a||'').replace(/"/g,'&quot;')+'" onchange="annItems['+i+']=this.value"></div><button class="delete-btn" onclick="removeAnnItem('+i+')">✕</button></div>';}).join('');}
+function addAnnItem(){annItems.push('🌾 New announcement — edit here');buildAnnList();}
+function removeAnnItem(i){annItems.splice(i,1);buildAnnList();}
+function saveAnnouncements(){var inputs=document.querySelectorAll('#annList .ann-text input');annItems=[];inputs.forEach(function(inp){if(inp.value.trim())annItems.push(inp.value);});adSave('announcements',annItems);adToast('✅ Announcements saved! Refresh site.');}
+function saveAnnSpeed(v){adSave('annSpeed',v);adToast('✅ Speed saved.');}
+function saveFeatureToggle(k,v){adSave('feature_'+k,v);adToast(v?'✅ '+k+' enabled':'🚫 '+k+' disabled');}
+function renderCatList(){var C=window.PT_CONFIG;if(!C||!C.categories){document.getElementById('catList').innerHTML='<p style="color:#9CA3AF">No categories found.</p>';return;}var s=JSON.parse(localStorage.getItem('pt_admin_config')||'{}'),D=window.PT_DATA;document.getElementById('catList').innerHTML=C.categories.map(function(c){var sk='cat_'+c.id+'_active',isA=(sk in s)?s[sk]:(c.active!==false),lk='cat_'+c.id+'_label',cl=s[lk]||c.label,cnt=D?D.workers.filter(function(w){return w.category===c.id;}).length:'?';return'<div class="cat-row"><span style="font-size:22px;width:30px">'+c.icon+'</span><div style="flex:1"><input value="'+cl+'" id="catLabel_'+c.id+'" style="border:1px solid #E5E7EB;border-radius:8px;padding:5px 8px;font-size:13px;width:100%;font-family:var(--font)"><div style="font-size:11px;color:#9CA3AF;margin-top:2px">'+cnt+' workers</div></div><label class="toggle-switch"><input type="checkbox" '+(isA?'checked':'')+' onchange="toggleCat(\''+c.id+'\',this.checked)"><div class="ts-track"></div></label></div>';}).join('');}
+function toggleCat(id,v){adSave('cat_'+id+'_active',v);adToast(v?'✅ '+id+' enabled':'🚫 '+id+' disabled');}
+function saveCategories(){var C=window.PT_CONFIG;if(C&&C.categories)C.categories.forEach(function(c){var el=document.getElementById('catLabel_'+c.id);if(el)adSave('cat_'+c.id+'_label',el.value);});adToast('✅ Categories saved!');}
+var wPage=0,WPP=15;
+function renderWorkersTable(){var D=window.PT_DATA;if(!D||!D.workers||!D.workers.length){document.getElementById('workersTable').innerHTML='<tr><td colspan="7" style="text-align:center;padding:30px;color:#9CA3AF">No workers found.</td></tr>';return;}var q=(document.getElementById('workerSearch').value||'').toLowerCase(),cat=document.getElementById('workerCatFilter').value;var filtered=D.workers.filter(function(w){if(cat&&w.category!==cat)return false;if(q&&!((w.name+' '+w.subcat+' '+w.village).toLowerCase().includes(q)))return false;return true;});var start=wPage*WPP,page=filtered.slice(start,start+WPP);document.getElementById('workersTable').innerHTML=page.map(function(w){return'<tr><td><strong>'+(w.emoji||'')+' '+(w.name||'')+'</strong></td><td style="font-size:12px;color:#6B7280">'+(w.subcat||w.category||'')+'</td><td>'+(w.village||'')+'</td><td style="font-weight:700">₹'+(w.price||0)+'/'+(w.unit||'')+'</td><td>'+(w.rating||'—')+' ⭐</td><td><span class="pill '+(w.verified?'pill-green':'pill-yellow')+'">'+(w.verified?'Verified':'Pending')+'</span></td><td style="display:flex;gap:5px;flex-wrap:nowrap"><button class="edit-btn" onclick="openWorkerEdit(\''+w.id+'\')">✏️</button><button class="edit-btn" style="background:#D1FAE5;color:#065F46" onclick="verifyWorker(\''+w.id+'\',\''+w.name+'\')">✓</button><button class="delete-btn" onclick="removeWorker(\''+w.id+'\',\''+w.name+'\')">✕</button></td></tr>';}).join('');var pager=document.getElementById('workersPager'),tp=Math.ceil(filtered.length/WPP);pager.innerHTML='<span style="font-size:12px;color:#6B7280;line-height:30px">'+filtered.length+' total </span>';for(var i=0;i<tp;i++){var b=document.createElement('button');b.textContent=i+1;b.style.cssText='padding:5px 10px;border-radius:8px;border:1px solid #E5E7EB;background:'+(i===wPage?'#2E7D32':'white')+';color:'+(i===wPage?'white':'#374151')+';cursor:pointer;font-family:var(--font)';(function(pg){b.onclick=function(){wPage=pg;renderWorkersTable();};})(i);pager.appendChild(b);}}
+function verifyWorker(id,name){var D=window.PT_DATA;if(!D)return;var w=D.workers.find(function(x){return x.id===id;});if(w){w.verified=true;renderWorkersTable();adToast('✅ '+name+' verified');}}
+function removeWorker(id,name){if(!confirm('Remove '+name+'? (session only)'))return;var D=window.PT_DATA;if(!D)return;D.workers=D.workers.filter(function(w){return w.id!==id;});renderWorkersTable();loadDashboard();adToast('❌ '+name+' removed');}
+function openWorkerEdit(id){var D=window.PT_DATA;if(!D)return;var w=D.workers.find(function(x){return x.id===id;});if(!w)return;document.getElementById('ew-id').value=w.id;document.getElementById('ew-name').value=w.name||'';document.getElementById('ew-village').value=w.village||'';document.getElementById('ew-subcat').value=w.subcat||'';document.getElementById('ew-price').value=w.price||0;document.getElementById('ew-phone').value=w.phone||'';document.getElementById('ew-desc').value=w.desc||'';document.getElementById('ew-verified').checked=!!w.verified;var bg=document.getElementById('ew-badge');for(var i=0;i<bg.options.length;i++){if(bg.options[i].value===w.badge){bg.selectedIndex=i;break;}}document.getElementById('workerEditModal').classList.add('open');}
+function closeWorkerModal(){document.getElementById('workerEditModal').classList.remove('open');}
+function saveWorkerEdit(){var D=window.PT_DATA;if(!D)return;var id=document.getElementById('ew-id').value,w=D.workers.find(function(x){return x.id===id;});if(!w)return;w.name=document.getElementById('ew-name').value;w.village=document.getElementById('ew-village').value;w.subcat=document.getElementById('ew-subcat').value;w.price=+document.getElementById('ew-price').value;w.phone=document.getElementById('ew-phone').value;w.desc=document.getElementById('ew-desc').value;w.verified=document.getElementById('ew-verified').checked;w.badge=document.getElementById('ew-badge').value;closeWorkerModal();renderWorkersTable();adToast('✅ '+w.name+' updated!');}
+function addWorker(){var name=document.getElementById('aw-name').value.trim(),village=document.getElementById('aw-village').value.trim(),cat=document.getElementById('aw-cat').value,subcat=document.getElementById('aw-subcat').value.trim(),price=+document.getElementById('aw-price').value;if(!name||!village||!subcat||!price){adToast('⚠️ Fill all required fields (*)');return;}var tags=document.getElementById('aw-tags').value.split(',').map(function(t){return t.trim();}).filter(Boolean);var w={id:'w_'+Date.now(),name:name,odia:document.getElementById('aw-odia').value||'',village:village,district:document.getElementById('aw-district').value,category:cat,subcat:subcat,price:price,unit:document.getElementById('aw-unit').value,phone:document.getElementById('aw-phone').value||'98XXXXXX00',radius:+(document.getElementById('aw-radius').value)||10,emoji:document.getElementById('aw-emoji').value||'🌾',badge:document.getElementById('aw-badge').value,verified:document.getElementById('aw-verified').checked,rating:4.5,reviews:0,trust:80,desc:document.getElementById('aw-desc').value,tags:tags};if(window.PT_DATA)window.PT_DATA.workers.unshift(w);clearWorkerForm();loadDashboard();adToast('✅ '+name+' added!');}
+function clearWorkerForm(){['aw-name','aw-odia','aw-village','aw-subcat','aw-price','aw-phone','aw-radius','aw-desc','aw-tags'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('aw-emoji').value='🌾';document.getElementById('aw-verified').checked=false;}
+function renderVendorsTable(){var D=window.PT_DATA;if(!D||!D.vendors||!D.vendors.length){document.getElementById('vendorsTable').innerHTML='<tr><td colspan="6" style="text-align:center;padding:30px;color:#9CA3AF">No vendors.</td></tr>';return;}document.getElementById('vendorsTable').innerHTML=D.vendors.map(function(v){return'<tr><td><strong>'+(v.emoji||'')+' '+(v.name||'')+'</strong></td><td>'+(v.village||'')+'</td><td>'+(v.category||'')+'</td><td><span class="pill pill-blue">'+(v.plan||'Free')+'</span></td><td><span class="pill '+(v.verified?'pill-green':'pill-yellow')+'">'+(v.verified?'Yes':'No')+'</span></td><td style="display:flex;gap:6px"><button class="edit-btn" onclick="verifyVendor(\''+v.id+'\')">✓</button><button class="delete-btn" onclick="removeVendor(\''+v.id+'\',\''+v.name+'\')">✕</button></td></tr>';}).join('');}
+function verifyVendor(id){var D=window.PT_DATA;if(!D)return;var v=(D.vendors||[]).find(function(x){return x.id===id;});if(v){v.verified=true;renderVendorsTable();adToast('✅ Vendor verified');}}
+function removeVendor(id,name){if(!confirm('Remove '+name+'?'))return;var D=window.PT_DATA;if(!D)return;D.vendors=(D.vendors||[]).filter(function(v){return v.id!==id;});renderVendorsTable();adToast('❌ Removed');}
+function addVendor(){var name=document.getElementById('av-name').value.trim();if(!name){adToast('⚠️ Enter vendor name');return;}var D=window.PT_DATA;if(!D)return;D.vendors=D.vendors||[];D.vendors.unshift({id:'v_'+Date.now(),name:name,village:document.getElementById('av-village').value||'',category:document.getElementById('av-cat').value,plan:document.getElementById('av-plan').value,emoji:document.getElementById('av-emoji').value||'🏪',rating:4.0,reviews:0,badge:'New',verified:false,products:[]});document.getElementById('av-name').value='';document.getElementById('av-village').value='';renderVendorsTable();adToast('✅ Vendor added!');}
+function renderHaataList(){var D=window.PT_DATA,items=D?(D.haata||[]):[];if(!items.length){document.getElementById('haataList').innerHTML='<div style="text-align:center;padding:20px;color:#9CA3AF">No haata items found.</div>';return;}document.getElementById('haataList').innerHTML=items.map(function(h,i){return'<div class="haata-row"><div class="hr-emoji">'+h.emoji+'</div><div class="hr-info"><div class="hr-name">'+h.name+' — ₹'+h.price+'/'+h.unit+'</div><div class="hr-meta">'+h.vendor+' • '+h.village+' • Qty: '+(h.qty>0?h.qty:'Out of stock')+'</div></div><button class="delete-btn" onclick="removeHaata('+i+')">✕</button></div>';}).join('');}
+function removeHaata(i){var D=window.PT_DATA;if(!D||!D.haata)return;D.haata.splice(i,1);renderHaataList();adToast('❌ Item removed');}
+function addHaataItem(){var name=document.getElementById('ah-name').value.trim();if(!name){adToast('⚠️ Enter item name');return;}var D=window.PT_DATA;if(!D)return;D.haata=D.haata||[];D.haata.unshift({id:'h_'+Date.now(),name:name,price:+document.getElementById('ah-price').value||0,unit:document.getElementById('ah-unit').value||'kg',vendor:document.getElementById('ah-vendor').value||'Unknown',village:document.getElementById('ah-village').value||'',qty:+document.getElementById('ah-qty').value||0,emoji:document.getElementById('ah-emoji').value||'🛒',category:document.getElementById('ah-cat').value});['ah-name','ah-price','ah-unit','ah-vendor','ah-village','ah-qty'].forEach(function(id){document.getElementById(id).value='';});renderHaataList();adToast('✅ Haata item added!');}
+function renderMarketplaceTable(){var D=window.PT_DATA;if(!D||!D.marketplace||!D.marketplace.length){document.getElementById('marketplaceTable').innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px;color:#9CA3AF">No listings.</td></tr>';return;}document.getElementById('marketplaceTable').innerHTML=D.marketplace.map(function(m,i){return'<tr><td><strong>'+(m.emoji||'')+' '+(m.title||'')+'</strong></td><td style="font-weight:700;color:#FF6F00">₹'+(m.price||0)+'</td><td>'+(m.village||'')+'</td><td><span class="pill pill-blue">'+(m.category||'')+'</span></td><td><button class="delete-btn" onclick="removeMarketItem('+i+')">✕</button></td></tr>';}).join('');}
+function removeMarketItem(i){var D=window.PT_DATA;if(!D||!D.marketplace)return;D.marketplace.splice(i,1);renderMarketplaceTable();adToast('❌ Removed');}
+function addMarketItem(){var title=document.getElementById('am-title').value.trim();if(!title){adToast('⚠️ Enter title');return;}var D=window.PT_DATA;if(!D)return;D.marketplace=D.marketplace||[];D.marketplace.unshift({id:'m_'+Date.now(),title:title,price:+document.getElementById('am-price').value||0,village:document.getElementById('am-village').value||'',category:document.getElementById('am-cat').value,emoji:document.getElementById('am-emoji').value||'🛒',desc:document.getElementById('am-desc').value||''});['am-title','am-price','am-village','am-desc'].forEach(function(id){document.getElementById(id).value='';});renderMarketplaceTable();adToast('✅ Listing added!');}
+function renderOrdersTable(){var orders=[];try{orders=JSON.parse(localStorage.getItem('pt_orders')||'[]');}catch(e){}var filter=document.getElementById('orderStatusFilter').value;if(filter)orders=orders.filter(function(o){return o.status===filter;});if(!orders.length){document.getElementById('ordersAdmin').innerHTML='<div style="text-align:center;padding:40px;color:#9CA3AF">No orders found.</div>';return;}document.getElementById('ordersAdmin').innerHTML='<div class="data-table-wrap"><table class="data-table"><thead><tr><th>Order ID</th><th>Worker</th><th>Date</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+orders.map(function(o,i){var sc=o.status==='confirmed'?'pill-green':o.status==='completed'?'pill-blue':o.status==='pending'?'pill-yellow':'pill-red';return'<tr><td style="font-family:monospace;font-size:11px">'+(o.id||'—')+'</td><td>'+(o.workerEmoji||'')+' '+(o.workerName||'—')+'</td><td style="font-size:12px">'+(o.date||'')+' '+(o.time||'')+'</td><td style="font-weight:700;color:#FF6F00">₹'+(o.totalAmount||0)+'</td><td><span class="pill '+sc+'">'+(o.status||'unknown')+'</span></td><td style="display:flex;gap:5px"><button class="edit-btn" style="font-size:11px" onclick="updateOrder('+i+',\'completed\')">✓ Done</button><button class="delete-btn" style="font-size:11px" onclick="updateOrder('+i+',\'cancelled\')">✕</button></td></tr>';}).join('')+'</tbody></table></div>';}
+function updateOrder(idx,status){var orders=[];try{orders=JSON.parse(localStorage.getItem('pt_orders')||'[]');}catch(e){}if(orders[idx]){orders[idx].status=status;localStorage.setItem('pt_orders',JSON.stringify(orders));renderOrdersTable();adToast('✅ Order updated to '+status);}}
+function clearAllOrders(){if(!confirm('Clear ALL orders?'))return;localStorage.removeItem('pt_orders');renderOrdersTable();loadDashboard();adToast('🗑️ All orders cleared');}
+function clearOrdersOnly(){if(!confirm('Clear all orders?'))return;localStorage.removeItem('pt_orders');adToast('🗑️ Orders cleared');renderOrdersTable();loadDashboard();}
+function exportOrders(){var orders=[];try{orders=JSON.parse(localStorage.getItem('pt_orders')||'[]');}catch(e){}exportCSV(orders,'pt_orders.csv');}
+function renderPlans(){var plans=window.PT_CONFIG?(window.PT_CONFIG.plans||[]):[];document.getElementById('plansCards').innerHTML=plans.map(function(p,i){return'<div class="adm-card"><h3>💳 '+p.name+'</h3><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;flex-wrap:wrap"><div class="adm-form-group"><label class="adm-label">Name</label><input class="adm-input" value="'+p.name+'" onchange="window.PT_CONFIG.plans['+i+'].name=this.value"></div><div class="adm-form-group"><label class="adm-label">Price (₹)</label><input type="number" class="adm-input" value="'+p.price+'" onchange="window.PT_CONFIG.plans['+i+'].price=+this.value"></div><div class="adm-form-group"><label class="adm-label">Period</label><select class="adm-input" onchange="window.PT_CONFIG.plans['+i+'].period=this.value"><option '+(p.period==='month'?'selected':'')+' value="month">Per Month</option><option '+(p.period==='year'?'selected':'')+' value="year">Per Year</option></select></div></div><div class="adm-form-group"><label class="adm-label">Features (comma separated)</label><input class="adm-input" value="'+p.features.join(', ')+'" onchange="window.PT_CONFIG.plans['+i+'].features=this.value.split(\',\').map(function(s){return s.trim()})"></div><button class="save-btn" onclick="savePlan('+i+')">💾 Save Plan</button></div>';}).join('');}
+function savePlan(i){adSave('plan_'+i,window.PT_CONFIG.plans[i]);adToast('✅ Plan saved!');}
+function renderFeatures(){var F=window.PT_CONFIG?(window.PT_CONFIG.features||{}):{},s=JSON.parse(localStorage.getItem('pt_admin_config')||'{}');var features=[['showAnnouncements','Announcement Bar','Scrolling text at top of all pages'],['showGoogleMaps','Google Maps','Live map on search pages'],['showSundayHaata','Sunday Haata','Weekly digital village market'],['showWorkID','Digital Work ID','Workers create digital ID cards'],['darkModeToggle','Dark Mode Toggle','Users can switch light/dark mode'],['multiLanguage','Odia Language Support','Show Odia text throughout'],['whatsappBooking','WhatsApp Booking','WhatsApp contact on profiles']];document.getElementById('featureToggles').innerHTML=features.map(function(f){var key=f[0],label=f[1],sub=f[2],sk='feature_'+key,isOn=(sk in s)?s[sk]:(F[key]!==false);return'<div class="row-between"><div><div class="row-label">'+label+'</div><div class="row-sub">'+sub+'</div></div><label class="toggle-switch"><input type="checkbox" '+(isOn?'checked':'')+' onchange="saveFeatureToggle(\''+key+'\',this.checked)"><div class="ts-track"></div></label></div>';}).join('');}
+
+function saveKmRates() {
+  var min = +document.getElementById('kmMinRate').value;
+  var max = +document.getElementById('kmMaxRate').value;
+  if (!min||!max||min>max) { adToast('⚠️ Enter valid min/max rates (min < max)'); return; }
+  adSave('kmRateMin', min); adSave('kmRateMax', max);
+  if (window.PT_CONFIG && window.PT_CONFIG.booking) { window.PT_CONFIG.booking.kmRateMin=min; window.PT_CONFIG.booking.kmRateMax=max; }
+  adToast('✅ KM rates saved! Min:₹'+min+'/km Max:₹'+max+'/km');
+}
+async function testSheetsConnection() {
+  var s = JSON.parse(localStorage.getItem('pt_admin_config')||'{}');
+  var url = s.sheetsScriptUrl;
+  var el = document.getElementById('sheetsTestResult');
+  el.style.display='block'; el.style.background='#FFF3E0'; el.style.color='#E65100';
+  el.textContent='Testing...';
+  if (!url||url.includes('YOUR')) { el.style.background='#FEE2E2'; el.style.color='#DC2626'; el.textContent='❌ No URL set. Enter Sheets URL first.'; return; }
+  try {
+    var r = await fetch(url+'?action=ping');
+    var d = await r.json();
+    if (d.status==='ok') { el.style.background='#D1FAE5'; el.style.color='#065F46'; el.textContent='✅ Connected! '+d.time; }
+    else { el.style.background='#FEE2E2'; el.style.color='#DC2626'; el.textContent='❌ Error: '+(d.error||'Unknown'); }
+  } catch(e) { el.style.background='#FEE2E2'; el.style.color='#DC2626'; el.textContent='❌ Cannot reach URL. Check CORS/deployment.'; }
+}
+function loadIntegrations(){var G=window.PT_CONFIG?(window.PT_CONFIG.google||{}):{},s=JSON.parse(localStorage.getItem('pt_admin_config')||'{}'),safe=function(v){return v&&!v.includes('YOUR')?v:'';};document.getElementById('gmapsKey').value=s.mapsApiKey||safe(G.mapsApiKey)||'';document.getElementById('sheetsUrl').value=s.sheetsScriptUrl||safe(G.sheetsScriptUrl)||'';document.getElementById('waNum').value=s.whatsapp||(window.PT_CONFIG&&window.PT_CONFIG.brand&&!window.PT_CONFIG.brand.whatsapp.includes('X')?window.PT_CONFIG.brand.whatsapp:'')||'';document.getElementById('gaId').value=s.analyticsId||safe(G.analyticsId)||'';if(document.getElementById('kmMinRate')){document.getElementById('kmMinRate').value=s.kmRateMin||(window.PT_CONFIG&&window.PT_CONFIG.booking&&window.PT_CONFIG.booking.kmRateMin)||10;document.getElementById('kmMaxRate').value=s.kmRateMax||(window.PT_CONFIG&&window.PT_CONFIG.booking&&window.PT_CONFIG.booking.kmRateMax)||30;}}
+function saveIntegration(field,inputId){var val=document.getElementById(inputId).value.trim();if(!val){adToast('⚠️ Enter a value');return;}adSave(field==='whatsapp'?'whatsapp':field,val);adToast('✅ Saved! Refresh site.');}
+function loadLegal(){var s=JSON.parse(localStorage.getItem('pt_admin_config')||'{}');if(s.legalText)document.getElementById('legalText').value=s.legalText;if(s.termsText)document.getElementById('termsText').value=s.termsText;if(s.privacyText)document.getElementById('privacyText').value=s.privacyText;}
+function saveLegalText(){adSave('legalText',document.getElementById('legalText').value);adToast('✅ Legal notice saved!');}
+function saveTerms(){adSave('termsText',document.getElementById('termsText').value);adToast('✅ Terms saved!');}
+function changePassword(){var cur=document.getElementById('curPass').value,np=document.getElementById('newPass').value,cp=document.getElementById('confPass').value,c=getCreds();if(cur!==c.password){adToast('❌ Current password incorrect');return;}if(!np||np.length<6){adToast('⚠️ Min 6 characters');return;}if(np!==cp){adToast('❌ Passwords do not match');return;}localStorage.setItem(CREDS_KEY,JSON.stringify({username:c.username,password:np}));adToast('✅ Password changed!');['curPass','newPass','confPass'].forEach(function(id){document.getElementById(id).value='';});}
+function changeUsername(){var p=document.getElementById('unameConfPass').value,nu=document.getElementById('newUsername').value.trim(),c=getCreds();if(p!==c.password){adToast('❌ Password incorrect');return;}if(!nu||nu.length<3){adToast('⚠️ Min 3 characters');return;}localStorage.setItem(CREDS_KEY,JSON.stringify({username:nu,password:c.password}));document.getElementById('adUserName').textContent=nu;adToast('✅ Username changed to '+nu+'!');document.getElementById('unameConfPass').value='';document.getElementById('newUsername').value='';}
+function resetAllSettings(){if(!confirm('Reset ALL settings? Cannot be undone.'))return;localStorage.removeItem('pt_admin_config');localStorage.removeItem('pt_orders');adToast('✅ Reset done. Refresh site.');loadDashboard();}
+function exportCSV(data,filename){if(!data||!data.length){adToast('⚠️ No data to export');return;}var keys=Object.keys(data[0]),csv=keys.join(',')+'\n';data.forEach(function(row){csv+=keys.map(function(k){var v=row[k]||'';return'"'+String(v).replace(/"/g,'""')+'"';}).join(',')+'\n';});var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=filename;a.click();adToast('📥 Downloaded '+filename);}
+function exportData(type){var D=window.PT_DATA;if(type==='orders'){var o=[];try{o=JSON.parse(localStorage.getItem('pt_orders')||'[]');}catch(e){}exportCSV(o,'pt_orders.csv');}else if(type==='workers'&&D){exportCSV(D.workers||[],'pt_workers.csv');}else if(type==='vendors'&&D){exportCSV(D.vendors||[],'pt_vendors.csv');}else if(type==='haata'&&D){exportCSV(D.haata||[],'pt_haata.csv');}}
+function exportConfig(){var cfg=localStorage.getItem('pt_admin_config')||'{}';var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([cfg],{type:'application/json'}));a.download='pt_admin_backup_'+Date.now()+'.json';a.click();adToast('📥 Config backed up!');}
+function testSheetsConnection() {
+  var url = document.getElementById('sheetsUrl').value.trim() || adGet('sheetsScriptUrl','');
+  var statusEl = document.getElementById('sheetsStatus');
+  if (!url || url.indexOf('YOUR_') !== -1) {
+    statusEl.style.display='block';
+    statusEl.innerHTML='<span style="color:#DC2626">⚠️ URL ଦ୍ୟ ନ. — Please enter URL first</span>';
+    return;
+  }
+  statusEl.style.display='block';
+  statusEl.innerHTML='<span style="color:#6B7280">⏳ ସଂଯୋଗ ପରୀକ୍ଷା ଚ. — Testing...</span>';
+  fetch(url + '?action=ping').then(function(r){ return r.json(); }).then(function(d){
+    if (d && d.status === 'ok') {
+      statusEl.innerHTML='<span style="color:#166534">✅ ସଂଯୋଗ ସଫ. — Connected! Sheets is live.</span>';
+    } else {
+      statusEl.innerHTML='<span style="color:#DC2626">❌ ଭୁଲ ଉତ୍ତର — Unexpected response</span>';
+    }
+  }).catch(function(){
+    statusEl.innerHTML='<span style="color:#DC2626">❌ ସଂଯୋଗ ବ. — Connection failed. Check URL & deployment.</span>';
+  });
+}
+
+function importConfig(input){if(!input.files[0])return;var r=new FileReader();r.onload=function(e){try{JSON.parse(e.target.result);localStorage.setItem('pt_admin_config',e.target.result);adToast('✅ Config imported! Reload to apply.');}catch(err){adToast('❌ Invalid JSON file');}};r.readAsText(input.files[0]);}
+</script>
+</body>
+</html>

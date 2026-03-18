@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Sunday Haata — The Part-Timers</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <style>
+    .haata-hero { background: linear-gradient(135deg, #E65100, #FF6D00, #FFA726); padding: 22px 20px 28px; color: white; position: relative; overflow: hidden; }
+    .haata-hero::after { content:'🏪'; position:absolute; right:-5px; top:-10px; font-size:130px; opacity:0.08; }
+    .countdown { background: rgba(0,0,0,0.2); border-radius: var(--radius); padding: 12px 16px; margin-top: 16px; display: flex; gap: 16px; align-items: center; }
+    .cd-label { font-size: 13px; opacity: 0.85; margin-right: 4px; }
+    .cd-time { font-size: 22px; font-weight: 800; }
+    .cd-unit { font-size: 10px; opacity: 0.8; text-align: center; margin-top: 2px; }
+    .haata-item { background: var(--surface); border-radius: var(--radius-lg); padding: 14px; border: 1px solid var(--border); box-shadow: var(--shadow-xs); margin-bottom: 10px; display: flex; gap: 14px; align-items: center; cursor: pointer; transition: transform 0.2s; }
+    .haata-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+    .hi-icon { font-size: 40px; flex-shrink: 0; width: 56px; text-align: center; }
+    .hi-info { flex: 1; }
+    .hi-name { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .hi-meta { font-size: 12px; color: var(--text-muted); }
+    .hi-price { text-align: right; flex-shrink: 0; }
+    .hi-amount { font-size: 18px; font-weight: 800; color: var(--accent); }
+    .hi-unit   { font-size: 11px; color: var(--text-light); }
+    .sold-out-overlay { opacity: 0.5; }
+    .cat-filters { display: flex; gap: 8px; padding: 12px 16px; overflow-x: auto; scrollbar-width: none; background: var(--surface); border-bottom: 1px solid var(--border); }
+    .cat-filters::-webkit-scrollbar { display: none; }
+    .sell-banner { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); margin: 14px 16px 0; border-radius: var(--radius-lg); padding: 16px; color: white; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+  </style>
+<style>body{padding-bottom:calc(var(--bottom-h) + 20px)}</style>
+</head>
+<body>
+<!-- ════ SITE HEADER ════ -->
+<div class="announcement-bar" id="announcementBar"><div class="announcement-track" id="announcementTrack"></div></div>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo-wrap" href="../../index.html">
+      <div class="logo-icon">🌾</div>
+      <div class="logo-text"><div class="logo-name">The Part-Timers</div><div class="logo-sub">Rural Services Platform</div></div>
+    </a>
+    <div class="header-search">
+      <input type="text" id="headerSearchInput" placeholder="Search services, workers...">
+      <button class="header-search-btn" id="hdrSearchBtn">🔍</button>
+    </div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="toggleDarkMode()">🌙</button>
+      <a class="header-btn" href="../../pages/user/cart.html">🛒</a>
+      <a class="header-btn" href="../../pages/user/login.html">👤</a>
+      <button class="hamburger header-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+  </div>
+</header>
+<!-- Mobile Menu -->
+<div class="modal-overlay" id="mobileMenu" onclick="if(event.target===this)toggleMobileMenu()">
+  <div class="modal-sheet">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <span style="font-size:16px;font-weight:700">☰ Menu</span>
+      <button onclick="toggleMobileMenu()" style="background:var(--bg);border:none;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer">✕ Close</button>
+    </div>
+    <a class="profile-menu-item" href="../../index.html"><div class="pmi-icon" style="background:#E8F5E9">🏠</div><div><div class="pmi-label">Home</div><div class="pmi-sub">Back to homepage</div></div><span class="pmi-arrow">›</span></a>
+    <a class="profile-menu-item" href="../../pages/user/login.html"><div class="pmi-icon" style="background:#E3F2FD">👤</div><div><div class="pmi-label">Login / Register</div><div class="pmi-sub">Access your account</div></div><span class="pmi-arrow">›</span></a>
+    <a class="profile-menu-item" href="../../pages/user/orders.html"><div class="pmi-icon" style="background:#FFF3E0">📋</div><div><div class="pmi-label">My Orders</div><div class="pmi-sub">Booking history</div></div><span class="pmi-arrow">›</span></a>
+    <a class="profile-menu-item" href="../../pages/user/register-worker.html"><div class="pmi-icon" style="background:#F3E5F5">📝</div><div><div class="pmi-label">Register as Worker</div><div class="pmi-sub">Earn from your skills</div></div><span class="pmi-arrow">›</span></a>
+    <a class="profile-menu-item" href="../../pages/work-id/index.html"><div class="pmi-icon" style="background:#E8F5E9">🪪</div><div><div class="pmi-label">Digital Work ID</div></div><span class="pmi-arrow">›</span></a>
+    <a class="profile-menu-item" href="../../pages/search.html"><div class="pmi-icon" style="background:#E3F2FD">🔍</div><div><div class="pmi-label">Smart Search</div><div class="pmi-sub">Find all services</div></div><span class="pmi-arrow">›</span></a>
+  </div>
+</div>
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <div class="bn-items">
+    <a class="bn-item" href="../../index.html"><div class="bn-icon">🏠</div><div class="bn-label">Home<br>ଘର</div></a>
+    <a class="bn-item" href="../../pages/search.html"><div class="bn-icon">🔍</div><div class="bn-label">Search<br>ଖୋଜ</div></a>
+    <a class="bn-item" href="../../pages/food/index.html"><div class="bn-icon">🍽️</div><div class="bn-label">Food<br>ଖାଦ୍ୟ</div></a>
+    <a class="bn-item" href="../../pages/user/orders.html"><div class="bn-icon">📋</div><div class="bn-label">Orders<br>ଅର୍ଡ.</div></a>
+    <a class="bn-item" href="../../pages/user/profile.html"><div class="bn-icon">👤</div><div class="bn-label">Profile<br>ପ୍ରୋ.</div></a>
+  </div>
+</nav>
+
+
+<div class="haata-hero">
+  <button style="background:rgba(255,255,255,0.15);border:none;color:white;width:38px;height:38px;border-radius:12px;font-size:20px;cursor:pointer;margin-bottom:14px" onclick="safeBack()">←</button>
+  <div style="font-size:24px;font-weight:800;margin-bottom:4px">🏪 Sunday Haata</div>
+  <div style="font-size:13px;opacity:0.85">Digital village market • ରବ. ହ.</div>
+  <div class="countdown">
+    <span class="cd-label">⏰ Next Haata in:</span>
+    <div>
+      <div class="cd-time" id="cdDays">00</div>
+      <div class="cd-unit">Days</div>
+    </div>
+    <div>
+      <div class="cd-time" id="cdHours">00</div>
+      <div class="cd-unit">Hrs</div>
+    </div>
+    <div>
+      <div class="cd-time" id="cdMins">00</div>
+      <div class="cd-unit">Min</div>
+    </div>
+  </div>
+</div>
+
+<!-- Sell Banner -->
+<div class="sell-banner" onclick="location.href='../user/register-worker.html'">
+  <div style="font-size:30px">🛍️</div>
+  <div>
+    <div style="font-size:14px;font-weight:700">Want to sell here?</div>
+    <div style="font-size:12px;opacity:0.85">List your products — FREE for first month</div>
+  </div>
+  <div style="margin-left:auto;font-size:20px">→</div>
+</div>
+
+<!-- Category filter -->
+<div class="cat-filters" id="haataFilters">
+  <button class="chip active" onclick="filterHaata(this,'')">All</button>
+  <button class="chip" onclick="filterHaata(this,'fish')">🐟 Fish</button>
+  <button class="chip" onclick="filterHaata(this,'food')">🍌 Food</button>
+  <button class="chip" onclick="filterHaata(this,'spices')">🌿 Spices</button>
+  <button class="chip" onclick="filterHaata(this,'clothing')">👘 Clothing</button>
+  <button class="chip" onclick="filterHaata(this,'poultry')">🐔 Poultry</button>
+  <button class="chip" onclick="filterHaata(this,'handicraft')">🏺 Handicraft</button>
+  <button class="chip" onclick="filterHaata(this,'herbs')">🌱 Herbs</button>
+</div>
+
+<div style="padding:12px 16px 0;background:var(--surface);border-bottom:1px solid var(--border)">
+  <input type="text" id="haataSearch" class="form-control" placeholder="🔍 Search products..." oninput="renderHaata()">
+</div>
+
+<div style="padding:14px 16px 80px" id="haataList"></div>
+
+<script src="../../data/config.js"></script>
+<script src="../../data/data.js"></script>
+<script src="../../assets/js/app.js"></script>
+<script>
+let haataCat = '';
+
+function filterHaata(el, cat) {
+  haataCat = cat;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderHaata();
+}
+
+function renderHaata() {
+  const D = window.PT_DATA;
+  if (!D) return;
+  const q = document.getElementById('haataSearch').value.toLowerCase();
+  let items = D.haata.filter(h => {
+    const matchCat = !haataCat || h.category === haataCat;
+    const matchQ = !q || [h.name, h.vendor, h.village, h.category].join(' ').toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+
+  document.getElementById('haataList').innerHTML = `
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px">${items.length} items available</div>
+    ${items.map(h => `
+      <div class="haata-item ${h.qty === 0 ? 'sold-out-overlay' : ''}" onclick="${h.qty > 0 ? `addToCart('${h.id}','${h.name}',${h.price},'${h.unit}')` : "showToast('❌ Sold out')"}">
+        <div class="hi-icon">${h.emoji}</div>
+        <div class="hi-info">
+          <div class="hi-name">${h.name}</div>
+          <div class="hi-meta">🏪 ${h.vendor} • 📍 ${h.village}</div>
+          <div style="margin-top:4px">
+            ${h.qty > 0
+              ? `<span style="background:#E8F5E9;color:var(--primary);font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px">✅ ${h.qty} ${h.unit} in stock</span>`
+              : `<span style="background:#FEE2E2;color:var(--danger);font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px">❌ Sold out</span>`}
+          </div>
+        </div>
+        <div class="hi-price">
+          <div class="hi-amount">₹${h.price}</div>
+          <div class="hi-unit">/${h.unit}</div>
+          ${h.qty > 0 ? `<button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="event.stopPropagation();addToCart('${h.id}','${h.name}',${h.price},'${h.unit}')">Add 🛒</button>` : ''}
+        </div>
+      </div>`).join('')}`;
+}
+
+function addToCart(id, name, price, unit) {
+  const item = PT_DATA.haata.find(h => h.id === id);
+  let cart = JSON.parse(localStorage.getItem('pt_cart') || '[]');
+  const existing = cart.find(c => c.id === 'haata_' + id);
+  if (existing) existing.qty++;
+  else cart.push({ id: 'haata_' + id, name, price, unit, vendor: item?.vendor || 'Haata', village: item?.village || 'Odisha', emoji: item?.emoji || '🛒', qty: 1 });
+  localStorage.setItem('pt_cart', JSON.stringify(cart));
+  showToast('🛒 ' + name + ' cart mein dala! — ।');
+  updateCartBadge();
+}
+
+function updateCartBadge() {
+  const cart = JSON.parse(localStorage.getItem('pt_cart') || '[]');
+  const total = cart.reduce((s,c) => s + c.qty, 0);
+  const badge = document.getElementById('cartBadge');
+  if (badge) { badge.textContent = total; badge.style.display = total > 0 ? 'inline' : 'none'; }
+}
+
+// Countdown to next Sunday
+function updateCountdown() {
+  const now = new Date();
+  const day = now.getDay();
+  const daysUntilSun = (7 - day) % 7 || 7;
+  const nextSun = new Date(now);
+  nextSun.setDate(now.getDate() + daysUntilSun);
+  nextSun.setHours(7, 0, 0, 0);
+  const diff = nextSun - now;
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  document.getElementById('cdDays').textContent  = String(d).padStart(2,'0');
+  document.getElementById('cdHours').textContent = String(h).padStart(2,'0');
+  document.getElementById('cdMins').textContent  = String(m).padStart(2,'0');
+}
+
+updateCountdown();
+setInterval(updateCountdown, 60000);
+renderHaata();
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var btn = document.getElementById('hdrSearchBtn');
+  var inp = document.getElementById('headerSearchInput');
+  function doSearch() {
+    var q = inp ? inp.value.trim() : '';
+    location.href = '../../pages/search.html' + (q ? '?q=' + encodeURIComponent(q) : '');
+  }
+  if (btn) btn.addEventListener('click', doSearch);
+  if (inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') doSearch(); });
+});
+</script>
+<!-- FUTURE: Add footer here -->
+<div id="toast"></div>
+</body>
+</html>

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>The Part-Timers — Empowering Rural India, One Job at a Time</title>
+  <meta name="description" content="Odisha's rural services platform. Hire workers, sell products, rent tools, SHG marketplace. Fish, Farming, Poultry, SHG and 20+ categories.">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    .hero-fullwidth-wrap{width:100vw;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw}
+    @media(min-width:820px){.hero-fullwidth-wrap{width:auto;position:static;margin:0}}
+    .zero-comm-banner{background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border:2px solid #A5D6A7;border-radius:16px;padding:14px 18px;margin:12px 20px;display:flex;align-items:center;gap:14px;cursor:pointer}
+    .zcb-icon{font-size:32px;flex-shrink:0}
+    .zcb-title{font-size:14px;font-weight:800;color:#1B5E20;margin-bottom:2px}
+    .zcb-sub{font-size:12px;color:#2E7D32}
+    .promo-banner{background:linear-gradient(135deg,#FF6F00,#FFA726);margin:0 20px;border-radius:16px;padding:14px 18px;color:white;display:flex;align-items:center;gap:14px;cursor:pointer;transition:.2s}
+    .promo-banner:hover{transform:translateY(-2px)}
+    .pb-icon{font-size:34px;flex-shrink:0}
+    .pb-title{font-size:14px;font-weight:700;margin-bottom:2px}
+    .pb-sub{font-size:12px;opacity:.9}
+    .live-dot{display:inline-block;width:8px;height:8px;background:#F44336;border-radius:50%;animation:blink 1.2s ease-in-out infinite;margin-right:4px}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    .whatsapp-float{position:fixed;bottom:calc(var(--bottom-h) + 14px);left:20px;width:50px;height:50px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 16px rgba(37,211,102,.4);cursor:pointer;z-index:100;text-decoration:none;transition:.2s}
+    .whatsapp-float:hover{transform:scale(1.1)}
+    @media(min-width:820px){.whatsapp-float{bottom:20px}}
+    .plan-scroll{display:flex;gap:12px;padding:4px 20px 12px;overflow-x:auto;scrollbar-width:none}
+    .plan-scroll::-webkit-scrollbar{display:none}
+    .plan-card{min-width:160px;border-radius:16px;padding:16px 14px;border:2px solid var(--border);background:var(--surface);flex-shrink:0;cursor:pointer;transition:.2s}
+    .plan-card:hover{border-color:var(--primary);transform:translateY(-2px)}
+    .plan-card.featured{border-color:var(--primary);background:linear-gradient(135deg,#E8F5E9,#F1F8E9)}
+    .plan-price{font-size:22px;font-weight:800;color:var(--accent);margin-bottom:2px}
+    .plan-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px}
+    .plan-vis{font-size:11px;color:var(--primary);font-weight:600;margin-bottom:6px}
+    .plan-feat{font-size:11px;color:var(--text-muted);line-height:1.6}
+    .shg-card{min-width:140px;border-radius:14px;background:linear-gradient(135deg,#FCE4EC,#F8BBD0);border:1px solid #F48FB1;padding:14px 12px;flex-shrink:0;cursor:pointer}
+    .shg-card:hover{transform:translateY(-2px)}
+    .shg-emoji{font-size:32px;margin-bottom:6px}
+    .shg-name{font-size:12px;font-weight:700;color:#880E4F;line-height:1.3}
+    .shg-items{font-size:11px;color:#AD1457;margin-top:3px}
+    .stat-strip{display:flex;gap:0;background:var(--primary-dark);padding:12px 20px;overflow-x:auto;scrollbar-width:none}
+    .stat-strip::-webkit-scrollbar{display:none}
+    .stat-item{flex:1;min-width:80px;text-align:center;color:white;border-right:1px solid rgba(255,255,255,.15);padding:0 8px}
+    .stat-item:last-child{border:none}
+    .stat-n{font-size:18px;font-weight:800}
+    .stat-l{font-size:10px;opacity:.8;margin-top:2px}
+    .welcome-bar{display:none;align-items:center;gap:12px;background:var(--bg-2);padding:10px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+  </style>
+</head>
+<body>
+
+<div class="announcement-bar" id="announcementBar"><div class="announcement-track" id="announcementTrack"></div></div>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo-wrap" href="index.html">
+      <div class="logo-icon" style="font-size:22px">🌾</div>
+      <div class="logo-text">
+        <div class="logo-name">The Part-Timers</div>
+        <div class="logo-sub">Rural Services Platform</div>
+      </div>
+    </a>
+    <div class="header-search">
+      <input type="text" id="headerSearchInput" placeholder="ସ. — Search workers, products...">
+      <button class="header-search-btn" onclick="doHeaderSearch()">🔍</button>
+    </div>
+    <div class="header-actions">
+      <button class="location-chip" onclick="changeLocation()">📍 <span class="loc-name" id="locName">Kendrapara</span></button>
+      <button class="header-btn" onclick="toggleDarkMode()" title="Dark mode">🌙</button>
+      <a class="header-btn" href="pages/user/cart.html" title="Cart">🛒<span class="badge" id="cartBadge" style="display:none">0</span></a>
+      <a class="header-btn" href="pages/user/login.html" id="loginBtn" title="Profile">👤</a>
+      <button class="hamburger header-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="modal-overlay" id="mobileMenu" onclick="if(event.target===this)toggleMobileMenu()">
+  <div class="modal-sheet" style="max-height:85vh">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="font-size:16px;font-weight:700">☰ ମ. — Menu</h3>
+      <button onclick="toggleMobileMenu()" style="background:var(--bg);border:none;border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer">✕</button>
+    </div>
+    <a class="profile-menu-item" href="pages/user/login.html"><div class="pmi-icon" style="background:#E8F5E9">👤</div><div><div class="pmi-label">Login / Register</div><div class="pmi-sub">ଆ. ଖ. ଖ.</div></div><span class="pmi-arrow">›</span></a>
+    <a class="profile-menu-item" href="pages/user/orders.html"><div class="pmi-icon" style="background:#E3F2FD">📋</div><div><div class="pmi-label">ଆ. ଅ. — My Orders</div></div><span class="pmi-arrow">›</span></a>
+    <a class="profile-menu-item" href="pages/user/register-worker.html"><div class="pmi-icon" style="background:#FFF3E0">📝</div><div><div class="pmi-label">Worker ଭ. ଯ. ଦ.</div><div class="pmi-sub">0% commission</div></div><span class="pmi-arrow">›</span></a>
+    <a class="profile-menu-item" href="pages/work-id/index.html"><div class="pmi-icon" style="background:#F3E5F5">🪪</div><div><div class="pmi-label">ଡ. ୱ. ID — Digital Work ID</div></div><span class="pmi-arrow">›</span></a>
+    <a class="profile-menu-item" href="pages/shg/index.html"><div class="pmi-icon" style="background:#FCE4EC">🪡</div><div><div class="pmi-label">SHG ମ. ସ. — Women Work</div></div><span class="pmi-arrow">›</span></a>
+    <div style="margin-top:14px;padding:0 4px">
+      <div style="font-size:10px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">ବ. — Categories</div>
+      <div id="mobileMenuCats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div>
+    </div>
+  </div>
+</div>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-section">ମ. — MAIN</div>
+    <a class="sidebar-link active" href="index.html"><span class="s-icon">🏠</span> ଘ. — Home</a>
+    <a class="sidebar-link" href="pages/search.html"><span class="s-icon">🔍</span> ସ. — Smart Search</a>
+    <a class="sidebar-link" href="pages/user/orders.html"><span class="s-icon">📋</span> ଅ. — My Orders</a>
+    <a class="sidebar-link" href="pages/marketplace/index.html"><span class="s-icon">🛒</span> ବ. ସ. ଭ. — Buy/Sell/Rent</a>
+    <div class="sidebar-section">ବ. — CATEGORIES</div>
+    <div id="sidebarCats"></div>
+    <div class="sidebar-section">ଖ. — ACCOUNT</div>
+    <a class="sidebar-link" href="pages/user/profile.html"><span class="s-icon">👤</span> ପ. — Profile</a>
+    <a class="sidebar-link" href="pages/user/register-worker.html"><span class="s-icon">📝</span> Worker ଭ. ଯ.</a>
+    <a class="sidebar-link" href="pages/work-id/index.html"><span class="s-icon">🪪</span> ଡ. ୱ. ID</a>
+    <a class="sidebar-link" href="pages/legal/terms.html"><span class="s-icon">⚖️</span> ନ. — Terms</a>
+  </aside>
+
+  <main class="main-content">
+    <!-- WELCOME BAR -->
+    <div id="welcomeBar" class="welcome-bar">
+      <span style="font-size:14px;font-weight:700;color:var(--text)">🎉 ସ୍ୱ., <span id="wbUserName">User</span>!</span>
+      <button id="wbRole" style="display:none;background:var(--primary);color:white;border:none;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer"></button>
+      <a href="pages/user/profile.html" style="font-size:12px;color:var(--primary);font-weight:600;text-decoration:none;margin-left:auto">ପ. → Profile</a>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero-fullwidth-wrap">
+      <div class="hero">
+        <div class="hero-pattern">🌾</div>
+        <div class="hero-row">
+          <div style="flex:1">
+            <div class="hero-title">ଗ୍ରାମୀଣ ସ.
+              <span style="display:block;font-size:18px;font-weight:600;opacity:.9">Empowering Rural India, One Job at a Time</span>
+            </div>
+            <div class="hero-odia">ଆଜି ଖୋଜ • ଆଜି ଦ • ଆଜି ବ</div>
+            <div class="hero-search">
+              <input type="text" id="heroSearchInput" placeholder="ଚାଷ, ମ., SHG, ଡ. ...">
+              <button onclick="doHeroSearch()">🔍</button>
+            </div>
+            <div class="hero-chips">
+              <a class="hero-chip" href="pages/farming/index.html">🌾 Farming</a>
+              <a class="hero-chip" href="pages/fish/index.html">🐟 Fish</a>
+              <a class="hero-chip" href="pages/shg/index.html">🪡 SHG</a>
+              <a class="hero-chip" href="pages/doctor/index.html">🏥 Doctor</a>
+              <a class="hero-chip" href="pages/marketplace/index.html">🛒 Buy/Sell</a>
+            </div>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="hs-item"><strong>55+</strong>ସ. ଦ.</div>
+          <div class="hs-item"><strong>20</strong>ବ.</div>
+          <div class="hs-item"><strong>0%</strong>ক. — Commission</div>
+          <div class="hs-item"><strong>₹10</strong>র. — Start</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS STRIP -->
+    <div class="stat-strip">
+      <div class="stat-item"><div class="stat-n">55+</div><div class="stat-l">Workers</div></div>
+      <div class="stat-item"><div class="stat-n">20</div><div class="stat-l">Categories</div></div>
+      <div class="stat-item"><div class="stat-n">0%</div><div class="stat-l">Commission</div></div>
+      <div class="stat-item"><div class="stat-n">6L+</div><div class="stat-l">SHG Women</div></div>
+      <div class="stat-item"><div class="stat-n">30+</div><div class="stat-l">Districts</div></div>
+    </div>
+
+    <!-- ZERO COMMISSION BANNER -->
+    <div class="section" style="padding:12px 0 0">
+      <div class="zero-comm-banner" onclick="location.href='pages/user/register-worker.html'">
+        <div class="zcb-icon">🎉</div>
+        <div>
+          <div class="zcb-title">0% Commission — ଶୂନ୍ୟ ଦଲାଲ !</div>
+          <div class="zcb-sub">ସ. ଦ. ✅ No middlemen. Keep 100% of your earnings. Join FREE today!</div>
+        </div>
+        <div style="margin-left:auto;font-size:20px">→</div>
+      </div>
+    </div>
+
+    <!-- QUICK GRID — ALL 20 CATEGORIES -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">ସ. ବ. — All Services <span>20 categories</span></div>
+        <a class="view-all" href="pages/search.html">ସ. → View All</a>
+      </div>
+      <div class="quick-grid" id="quickGrid"></div>
+    </div>
+
+    <!-- SHG WOMEN SECTION -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">🪡 SHG ମ. — Women's Products <span>ମ. ଶ.</span></div>
+        <a class="view-all" href="pages/shg/index.html">ସ. →</a>
+      </div>
+      <div class="h-scroll" id="shgScroll"></div>
+    </div>
+    <div class="divider"></div>
+
+    <!-- TRENDING WORKERS -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">🔥 ଟ. ଏ. — Trending <span style="background:var(--accent);color:white;font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700;letter-spacing:.5px">HOT</span></div>
+        <a class="view-all" href="pages/search.html">ସ. →</a>
+      </div>
+      <div class="h-scroll" id="trendingScroll"></div>
+    </div>
+
+    <!-- BUY SELL RENT -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">🛒 ବ. / ବ. / ଭ. — Buy • Sell • Rent</div>
+        <a class="view-all" href="pages/marketplace/index.html">ସ. →</a>
+      </div>
+      <div class="h-scroll" id="marketScroll"></div>
+    </div>
+    <div class="divider"></div>
+
+    <!-- VENDOR PLANS -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">💳 ଭ. ପ. — Vendor Plans <span>₹10/month start</span></div>
+        <a class="view-all" href="pages/user/register-worker.html">ଯ. →</a>
+      </div>
+      <div class="plan-scroll" id="planScroll"></div>
+    </div>
+    <div class="divider"></div>
+
+    <!-- MAP -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">📍 ନ. ସ. — Services Near You <span>ଆ. ଗ.</span></div>
+        <a class="view-all" href="pages/search.html?near=me">ମ. →</a>
+      </div>
+      <div id="miniMap" style="height:200px;margin:0 20px 16px;border-radius:16px;overflow:hidden;border:1px solid var(--border)"></div>
+    </div>
+
+    <!-- LIVE FEED -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title"><span class="live-dot"></span> ଲ. ଅ. — Live Updates</div>
+        <a class="view-all" href="pages/search.html">ସ. →</a>
+      </div>
+      <div style="padding:0 16px" id="liveFeed"></div>
+    </div>
+
+    <!-- FOOD SECTION -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">🍽️ ଖ. ଡ. — Food & Tiffin <span>ଘ. ଖ.</span></div>
+        <a class="view-all" href="pages/food/index.html">ସ. →</a>
+      </div>
+      <div class="h-scroll" id="foodScroll"></div>
+    </div>
+
+    <!-- BANNER QUICK LINKS -->
+    <div class="section" style="padding-bottom:16px">
+      <div class="banner-cards">
+        <a class="banner-card" href="pages/haata/index.html" style="background:linear-gradient(135deg,#E65100,#FF9800)">
+          <div class="bc-icon">🏪</div><div class="bc-title">Sunday Haata</div><div class="bc-sub">Weekly village market</div>
+        </a>
+        <a class="banner-card" href="pages/shg/index.html" style="background:linear-gradient(135deg,#AD1457,#E91E63)">
+          <div class="bc-icon">🪡</div><div class="bc-title">SHG Market</div><div class="bc-sub">Women-made products</div>
+        </a>
+        <a class="banner-card" href="pages/work-id/index.html" style="background:linear-gradient(135deg,#1A1A2E,#2E2E4E)">
+          <div class="bc-icon">🪪</div><div class="bc-title">Digital Work ID</div><div class="bc-sub">Free identity card</div>
+        </a>
+        <a class="banner-card" href="pages/user/register-worker.html" style="background:linear-gradient(135deg,var(--primary-dark),var(--primary))">
+          <div class="bc-icon">📝</div><div class="bc-title">Join as Provider</div><div class="bc-sub">0% commission</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- LEGAL -->
+    <div class="section" style="padding:0 20px 20px">
+      <div class="legal-notice">
+        ⚖️ <strong>ନ. ନ. — Legal Notice:</strong> <span class="legal-notice-text">ଭ. ନ. ଦ. ।</span>
+        <a href="pages/legal/terms.html" style="color:var(--primary);font-weight:600;margin-left:4px">ପ. →</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bn-items">
+    <a class="bn-item active" href="index.html"><div class="bn-icon">🏠</div><div class="bn-label">ଘର<br>Home</div></a>
+    <a class="bn-item" href="pages/search.html"><div class="bn-icon">🔍</div><div class="bn-label">ଖୋ.<br>Search</div></a>
+    <a class="bn-item" href="pages/marketplace/index.html"><div class="bn-icon">🛒</div><div class="bn-label">ବ.ସ.<br>Buy/Sell</div></a>
+    <a class="bn-item" href="pages/user/orders.html"><div class="bn-icon">📋</div><div class="bn-label">ଅ.<br>Orders</div></a>
+    <a class="bn-item" href="pages/user/profile.html"><div class="bn-icon">👤</div><div class="bn-label">ପ.<br>Profile</div></a>
+  </div>
+</nav>
+
+<a class="fab" href="pages/search.html" title="Search">🔍</a>
+<a class="whatsapp-float" href="https://wa.me/91XXXXXXXXXX" id="waFloat" target="_blank" title="WhatsApp">💬</a>
+<div id="toast"></div>
+
+<script src="data/config.js"></script>
+<script src="data/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+  window.doHeroSearch = function() {
+    var q = document.getElementById('heroSearchInput').value.trim();
+    location.href = 'pages/search.html' + (q ? '?q=' + encodeURIComponent(q) : '');
+  };
+  window.doHeaderSearch = function() {
+    var q = document.getElementById('headerSearchInput').value.trim();
+    if (q) location.href = 'pages/search.html?q=' + encodeURIComponent(q);
+  };
+  window.changeLocation = function() {
+    var loc = prompt('ଆ. ଗ. / ସ. — Your village/city:', localStorage.getItem('pt_location') || 'Kendrapara');
+    if (loc && loc.trim()) {
+      document.querySelectorAll('.loc-name').forEach(function(el){ el.textContent = loc.trim(); });
+      localStorage.setItem('pt_location', loc.trim());
+      showToast('📍 ' + loc.trim() + ' — Location updated');
+    }
+  };
+
+  var savedLoc = localStorage.getItem('pt_location');
+  if (savedLoc) document.querySelectorAll('.loc-name').forEach(function(el){ el.textContent = savedLoc; });
+
+  ['heroSearchInput','headerSearchInput'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('keydown', function(e){ if(e.key==='Enter') window.doHeroSearch(); });
+  });
+
+  // Trending workers
+  var D = window.PT_DATA, C = window.PT_CONFIG;
+  if (D && D.workers) {
+    var top = D.workers.slice().sort(function(a,b){ return b.rating-a.rating; }).slice(0,8);
+    var grads = ['linear-gradient(135deg,#E8F5E8,#C8E6C9)','linear-gradient(135deg,#E3F2FD,#BBDEFB)',
+      'linear-gradient(135deg,#FFF3E0,#FFE0B2)','linear-gradient(135deg,#F3E5F5,#E1BEE7)',
+      'linear-gradient(135deg,#FCE4EC,#F8BBD0)','linear-gradient(135deg,#E0F7FA,#B2EBF2)'];
+    var el = document.getElementById('trendingScroll');
+    if (el) el.innerHTML = top.map(function(w,i){
+      var d = (Math.random()*8+0.5).toFixed(1);
+      return '<div class="service-card" onclick="location.href=\'pages/user/worker-profile.html?id='+w.id+'\'">' +
+        '<div class="sc-thumb" style="background:'+grads[i%grads.length]+'"><span style="font-size:50px">'+w.emoji+'</span>' +
+        (w.badge?'<span class="sc-badge">'+w.badge+'</span>':'') + '</div>' +
+        '<div class="sc-body"><div class="sc-name">'+w.name+'</div>' +
+        '<div class="sc-sub">'+w.subcat+' • '+w.village+'</div>' +
+        '<div class="sc-meta"><div class="sc-rating">⭐ '+w.rating+'</div><div class="sc-price">₹'+w.price+'/'+w.unit+'</div></div>' +
+        '<div class="sc-dist">📍 ~'+d+'km</div></div></div>';
+    }).join('');
+
+    // Marketplace scroll
+    var mEl = document.getElementById('marketScroll');
+    if (mEl && D.marketplace) mEl.innerHTML = D.marketplace.slice(0,8).map(function(m){
+      return '<div class="service-card" onclick="location.href=\'pages/marketplace/index.html\'">' +
+        '<div class="sc-thumb" style="background:linear-gradient(135deg,#F3E5F5,#E1BEE7)"><span style="font-size:48px">'+m.emoji+'</span>' +
+        '<span class="sc-badge">'+(m.forRent&&m.forSale?'Buy/Rent':m.forRent?'Rent':'Buy')+'</span></div>' +
+        '<div class="sc-body"><div class="sc-name">'+m.title+'</div>' +
+        '<div class="sc-sub">📍 '+m.village+'</div>' +
+        '<div class="sc-meta"><div class="sc-rating">'+(m.forRent?'🔄 Rent':'')+' '+(m.forSale?'🏷️ Sale':'')+'</div>' +
+        '<div class="sc-price">₹'+m.price.toLocaleString('en-IN')+'</div></div></div></div>';
+    }).join('');
+
+    // Food scroll
+    var fEl = document.getElementById('foodScroll');
+    if (fEl && D.vendors) fEl.innerHTML = D.vendors.map(function(v){
+      return '<div class="service-card" onclick="location.href=\'pages/food/index.html\'">' +
+        '<div class="sc-thumb" style="background:linear-gradient(135deg,#FFF3E0,#FFCCBC)"><span style="font-size:50px">'+v.emoji+'</span>' +
+        '<span class="sc-badge">'+v.badge+'</span></div>' +
+        '<div class="sc-body"><div class="sc-name">'+v.name+'</div>' +
+        '<div class="sc-sub">'+v.village+'</div>' +
+        '<div class="sc-meta"><div class="sc-rating">⭐ '+v.rating+'</div>' +
+        '<div class="sc-price" style="color:var(--primary)">Open</div></div>' +
+        '<div class="sc-dist">🛒 '+v.products.length+' items</div></div></div>';
+    }).join('');
+
+    // SHG scroll
+    var sEl = document.getElementById('shgScroll');
+    if (sEl) {
+      var shgWorkers = D.workers.filter(function(w){ return w.category==='shg'; });
+      var shgGroups = D.shgGroups || [];
+      sEl.innerHTML = shgWorkers.map(function(w){
+        return '<div class="shg-card" onclick="location.href=\'pages/shg/index.html\'">' +
+          '<div class="shg-emoji">'+w.emoji+'</div>' +
+          '<div class="shg-name">'+w.name+'</div>' +
+          '<div class="shg-items">'+w.subcat+'</div>' +
+          '<div style="font-size:11px;color:#880E4F;margin-top:4px">📍 '+w.village+'</div>' +
+          '<div style="margin-top:6px"><span class="tag" style="background:#FCE4EC;color:#880E4F;font-size:10px">'+w.badge+'</span></div>' +
+        '</div>';
+      }).join('') + shgGroups.slice(0,3).map(function(sg){
+        return '<div class="shg-card" onclick="location.href=\'pages/shg/index.html\'">' +
+          '<div class="shg-emoji">🪡</div>' +
+          '<div class="shg-name">'+sg.name+'</div>' +
+          '<div class="shg-items">'+sg.products.join(' · ')+'</div>' +
+          '<div style="font-size:11px;color:#880E4F;margin-top:4px">📍 '+sg.village+' • '+sg.members+' members</div>' +
+          (sg.verified?'<div style="margin-top:6px"><span class="tag" style="background:#FCE4EC;color:#880E4F;font-size:10px">✓ SHG Verified</span></div>':'') +
+        '</div>';
+      }).join('');
+    }
+  }
+
+  // Plans scroll
+  if (C && C.plans) {
+    var pEl = document.getElementById('planScroll');
+    if (pEl) pEl.innerHTML = C.plans.map(function(p,i){
+      return '<div class="plan-card'+(i===1?' featured':'')+'" onclick="location.href=\'pages/user/register-worker.html\'">' +
+        '<div class="plan-name">'+p.name+' <span style="font-family:var(--font-odia);font-size:10px">'+p.name_odia+'</span></div>' +
+        '<div class="plan-price">₹'+p.price+'<span style="font-size:12px;font-weight:400;color:var(--text-muted)">/'+p.period+'</span></div>' +
+        '<div class="plan-vis">📍 '+p.visibility+'</div>' +
+        '<div class="plan-feat">'+p.features.slice(0,3).join(' • ')+'</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // Live feed
+  var feedData = [
+    { emoji:'🌾', name:'Ramesh Kumar', time:'2 min ago • 1.5 km', text:'ଧ. ବ. ପ. — Need 5 farm workers for paddy harvesting. 3 days. Food provided.', tags:['💼 Job','🌾 Farming','₹300/day'], page:'pages/farming/index.html' },
+    { emoji:'🪡', name:'Sunita SHG', time:'10 min ago • Available', text:'ହ. ପ. ତ. — Fresh handmade papad & badi available. Mission Shakti SHG. Bulk order OK.', tags:['🪡 SHG','🫓 Papad','₹80/pack'], page:'pages/shg/index.html' },
+    { emoji:'🚗', name:'Village Taxi', time:'5 min ago • Now', text:'ଭ. ଟ. — Shared taxi to Bhubaneswar in 30 min. 2 seats available. AC.', tags:['🚗 Transport','🕐 Urgent','₹80/seat'], page:'pages/vehicle/index.html' },
+    { emoji:'🐟', name:'Bikash Aqua', time:'1 hr ago • Chilika', text:'ବ. ଫ. ଓ. — Biofloc pond worker available. Shrimp & fish harvest expert. Day rate.', tags:['🐟 Fish','🦐 Biofloc','₹350/day'], page:'pages/fish/index.html' },
+    { emoji:'🍛', name:'Maa Tarini Kitchen', time:'15 min ago • Open', text:'ଆ. ଓ. ଥ. — Odia thali: Pakhala, fish curry, dalma. Home delivery available.', tags:['🍽️ Food','🏠 Homemade','₹120'], page:'pages/food/index.html' },
+  ];
+  var lEl = document.getElementById('liveFeed');
+  if (lEl) lEl.innerHTML = feedData.map(function(f){
+    return '<div class="feed-item" onclick="location.href=\''+f.page+'\'">' +
+      '<div class="fi-head"><div class="fi-avatar">'+f.emoji+'</div>' +
+      '<div><div class="fi-name">'+f.name+'</div><div class="fi-time">'+f.time+'</div></div></div>' +
+      '<div class="fi-body">'+f.text+'</div>' +
+      '<div class="wc-meta" style="margin-bottom:10px">'+f.tags.map(function(t){ return '<span class="tag tag-orange">'+t+'</span>'; }).join('')+'</div>' +
+      '<div class="fi-actions">' +
+        '<button class="fi-btn" onclick="event.stopPropagation();showToast(\'👍 ଆ. \\'' + f.name + '\\' !\')">👍 Interested</button>' +
+        '<button class="fi-btn" onclick="event.stopPropagation();showToast(\'📞 ସ. ...\')">📞 Contact</button>' +
+      '</div></div>';
+  }).join('');
+
+  // Mobile menu categories
+  if (C && C.categories) {
+    var mmEl = document.getElementById('mobileMenuCats');
+    if (mmEl) mmEl.innerHTML = C.categories.filter(function(c){ return c.active; }).slice(0,9).map(function(cat){
+      return '<a href="'+cat.page+'" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;border-radius:10px;text-decoration:none;background:var(--bg)">' +
+        '<div style="width:38px;height:38px;border-radius:10px;background:'+cat.color+';display:flex;align-items:center;justify-content:center;font-size:18px">'+cat.icon+'</div>' +
+        '<div style="font-size:9px;font-weight:600;color:var(--text);text-align:center;line-height:1.2">'+cat.label+'</div>' +
+      '</a>';
+    }).join('');
+  }
+
+  // WhatsApp from config
+  var wa = PT_CONFIG && PT_CONFIG.brand && PT_CONFIG.brand.whatsapp;
+  var saved = {}; try { saved = JSON.parse(localStorage.getItem('pt_admin_config')||'{}'); } catch(e) {}
+  var waNum = saved.whatsapp || wa || '';
+  var waLink = document.getElementById('waFloat');
+  if (waLink && waNum && waNum.indexOf('X') === -1) waLink.href = 'https://wa.me/' + waNum;
+
+  // Init map
+  if (window.PT_MAPS) PT_MAPS.init('miniMap');
+
+  // Welcome bar
+  (function() {
+    var user = PT_AUTH.getUser();
+    if (!user || user.role === 'guest') return;
+    var wb = document.getElementById('welcomeBar');
+    if (wb) { wb.style.display='flex'; document.getElementById('wbUserName').textContent = user.name || 'User'; }
+    var wbRole = document.getElementById('wbRole');
+    if (wbRole && (user.role==='both'||user.isWorker)) {
+      wbRole.style.display = 'inline-flex';
+      wbRole.textContent = '🔄 ' + (user.activeRole==='worker'?'Worker Mode':'Customer Mode');
+      wbRole.onclick = function() {
+        var nr = user.activeRole==='worker'?'customer':'worker';
+        user.activeRole = nr; localStorage.setItem('pt_user', JSON.stringify(user));
+        wbRole.textContent = '🔄 ' + (nr==='worker'?'Worker Mode':'Customer Mode');
+        showToast('✅ Mode: ' + nr);
+      };
+    }
+  })();
+}); // DOMContentLoaded
+</script>
+</body>
+</html>
