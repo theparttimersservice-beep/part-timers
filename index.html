@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="or">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>The Part-Timer's | ଦ ପାର୍ଟ-ଟାଇମର୍ସ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Oriya&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --saffron:#FF6B00;--saffron-l:#FF8C3A;--saffron-p:#FFF4EC;
+  --green:#1B6B3A;--green-l:#2D9B56;--green-p:#EDFAF2;
+  --gold:#D4A017;--gold-l:#F0C842;
+  --earth:#8B5E3C;--sky:#1A6FA8;--sky-l:#3B9DD6;
+  --bg:#FAFAF7;--card:#fff;--text:#1A1A1A;--muted:#6B6B6B;
+  --border:#E8E4DC;--sh:0 4px 20px rgba(0,0,0,.08);--sh2:0 12px 40px rgba(0,0,0,.15);
+  --r:16px;--r2:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#FF6B00,#D4A017,#1B6B3A);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s}
+#loader h1{font-family:'Tiro Oriya',serif;font-size:2.6rem;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.3);animation:pulse 1.5s infinite}
+#loader p{color:rgba(255,255,255,.8);margin-top:8px;font-size:.95rem}
+.lbar{width:200px;height:4px;background:rgba(255,255,255,.3);border-radius:2px;margin-top:24px;overflow:hidden}
+.lfill{height:100%;background:#fff;border-radius:2px;animation:ld 2.2s ease forwards}
+@keyframes ld{from{width:0}to{width:100%}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+
+/* PAGES */
+.pg{display:none;min-height:100vh}
+.pg.on{display:block}
+
+/* AUTH */
+.auth-wrap{min-height:100vh;background:linear-gradient(160deg,#FF6B00 0%,#D4A017 45%,#1B6B3A 100%);display:flex;align-items:center;justify-content:center;padding:20px;position:relative}
+.auth-card{background:#fff;border-radius:24px;padding:36px 30px;width:100%;max-width:400px;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.logo-wrap{text-align:center;margin-bottom:24px}
+.logo-icon{width:68px;height:68px;background:linear-gradient(135deg,#FF6B00,#D4A017);border-radius:18px;display:inline-flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:10px;box-shadow:0 8px 24px rgba(255,107,0,.35)}
+.logo-wrap h2{font-family:'Tiro Oriya',serif;font-size:1.5rem;color:var(--saffron)}
+.logo-wrap p{color:var(--muted);font-size:.82rem;margin-top:3px}
+
+/* FORM */
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:5px}
+.fg label span{color:var(--muted);font-weight:400;font-size:.75rem}
+.fg input,.fg select,.fg textarea{width:100%;padding:11px 13px;border:2px solid var(--border);border-radius:10px;font-family:'Baloo 2',sans-serif;font-size:.92rem;color:var(--text);transition:border-color .2s;background:#fff}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--saffron)}
+.fg textarea{resize:vertical;min-height:70px}
+
+/* USER TYPE GRID */
+.ut-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.ut-card{border:2px solid var(--border);border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s}
+.ut-card:hover,.ut-card.sel{border-color:var(--saffron);background:var(--saffron-p)}
+.ut-card .ui{font-size:1.7rem;margin-bottom:5px}
+.ut-card .un{font-weight:700;font-size:.85rem}
+.ut-card .us{font-size:.72rem;color:var(--muted);margin-top:2px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:13px 22px;border:none;border-radius:12px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s;text-decoration:none;width:100%}
+.btn-p{background:linear-gradient(135deg,var(--saffron),var(--saffron-l));color:#fff;box-shadow:0 4px 16px rgba(255,107,0,.35)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,107,0,.4)}
+.btn-g{background:var(--green);color:#fff;box-shadow:0 4px 12px rgba(27,107,58,.3)}
+.btn-o{background:transparent;border:2px solid var(--border);color:var(--text)}
+.btn-sm{padding:8px 14px;font-size:.8rem;border-radius:8px;width:auto}
+.btn-sky{background:var(--sky);color:#fff}
+
+/* APP SHELL */
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative}
+
+/* TOP BAR */
+.tbar{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid var(--border);padding:11px 15px;display:flex;align-items:center;gap:11px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.tbar .bk{width:34px;height:34px;border-radius:9px;border:none;background:var(--bg);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center}
+.tbar h3{font-size:.97rem;font-weight:700;flex:1}
+.tbar .extra{font-size:.8rem;color:var(--muted)}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;z-index:100;background:#fff;border-top:1px solid var(--border);display:flex;padding:6px 0 10px;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:5px 3px;transition:all .2s}
+.ni .ic{font-size:1.35rem;line-height:1}
+.ni .lb{font-size:.62rem;font-weight:700;color:var(--muted)}
+.ni.on .lb{color:var(--saffron)}
+.ni.on .ic{transform:scale(1.15)}
+
+/* CONTENT */
+.ca{padding-bottom:80px}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#FF6B00 0%,#D4A017 55%,#1B6B3A 100%);padding:22px 15px 28px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='0.04'%3E%3Cpath d='M20 20h20v20H20zM0 0h20v20H0z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.hero-gr{color:rgba(255,255,255,.8);font-size:.88rem}
+.hero-nm{color:#fff;font-size:1.4rem;font-weight:800}
+.hero-row2{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.loc-chip{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 10px;font-size:.72rem;font-weight:600;color:#fff;cursor:pointer}
+.lang-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:4px 12px;border-radius:20px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer}
+.hsearch{background:#fff;border-radius:13px;display:flex;align-items:center;padding:10px 13px;gap:9px;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.hsearch input{flex:1;border:none;outline:none;font-family:'Baloo 2',sans-serif;font-size:.88rem;color:var(--text);background:transparent}
+
+/* SECTION */
+.sec{padding:18px 15px}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.sec-t{font-size:1rem;font-weight:800}
+.sec-t span{font-size:.75rem;font-weight:400;color:var(--muted);display:block}
+.see-all{font-size:.78rem;font-weight:700;color:var(--saffron);cursor:pointer;border:none;background:none;font-family:'Baloo 2',sans-serif}
+
+/* CATEGORY GRID */
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.cc{background:#fff;border-radius:13px;padding:11px 5px;text-align:center;cursor:pointer;transition:all .2s;border:2px solid transparent;box-shadow:var(--sh)}
+.cc:hover,.cc:active{border-color:var(--saffron);transform:translateY(-3px);box-shadow:var(--sh2)}
+.cc .ci{font-size:1.7rem;margin-bottom:3px}
+.cc .cn{font-size:.62rem;font-weight:700;line-height:1.2}
+.cc .cor{font-size:.58rem;color:var(--muted);margin-top:2px;font-family:'Tiro Oriya',serif}
+
+/* HSCROLL */
+.hs{display:flex;gap:11px;overflow-x:auto;padding-bottom:5px;scrollbar-width:none}
+.hs::-webkit-scrollbar{display:none}
+
+/* WORKER CARD */
+.wc{min-width:132px;background:#fff;border-radius:14px;padding:13px 10px;box-shadow:var(--sh);cursor:pointer;transition:all .2s;flex-shrink:0;text-align:center}
+.wc:hover{transform:translateY(-3px)}
+.wav{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.7rem;margin:0 auto 7px;background:linear-gradient(135deg,var(--saffron-p),#fff4ec);border:2px solid rgba(255,107,0,.1)}
+.wc h4{font-size:.82rem;font-weight:700}
+.wc .wsk{font-size:.68rem;color:var(--muted)}
+.wc .wrt{font-size:.72rem;color:var(--gold);font-weight:600;margin-top:3px}
+.wc .wpr{font-size:.72rem;color:var(--green);font-weight:700;margin-top:2px}
+
+/* SERVICE CARD */
+.svc{min-width:155px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:all .2s;flex-shrink:0}
+.svc:hover{transform:translateY(-3px);box-shadow:var(--sh2)}
+.svc-img{width:100%;height:85px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;background:var(--saffron-p)}
+.svc-bd{padding:9px 11px}
+.svc-bd h4{font-size:.82rem;font-weight:700}
+.svc-bd p{font-size:.68rem;color:var(--muted);margin-top:1px}
+
+/* BADGE */
+.bdg{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.62rem;font-weight:700;margin-top:5px}
+.bdg-s{background:var(--saffron-p);color:var(--saffron)}
+.bdg-g{background:var(--green-p);color:var(--green)}
+.bdg-go{background:#fff9e6;color:var(--gold)}
+.bdg-sky{background:#e8f4fd;color:var(--sky)}
+
+/* BANNERS */
+.hbanner{background:linear-gradient(135deg,var(--green),var(--green-l));border-radius:15px;padding:17px;margin:0 15px}
+.hbanner h3{color:#fff;font-size:1.05rem;font-weight:800}
+.hbanner p{color:rgba(255,255,255,.8);font-size:.77rem;margin-top:3px}
+.live-dot{display:inline-block;background:#FF4444;color:#fff;padding:2px 9px;border-radius:20px;font-size:.65rem;font-weight:700;margin-bottom:7px;animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+.pbanner{background:linear-gradient(135deg,var(--sky),var(--sky-l));border-radius:15px;padding:15px;display:flex;align-items:center;gap:11px;margin:0 15px}
+.pbanner h4{color:#fff;font-size:.95rem;font-weight:800}
+.pbanner p{color:rgba(255,255,255,.8);font-size:.75rem;margin-top:2px}
+
+/* LISTING CARD */
+.lc{background:#fff;border-radius:15px;margin:0 15px 11px;padding:15px;box-shadow:var(--sh);cursor:pointer;transition:all .2s;border:2px solid transparent}
+.lc:hover{border-color:var(--saffron);transform:translateY(-2px)}
+.lc-row{display:flex;gap:12px;align-items:flex-start}
+.lc-img{width:66px;height:66px;border-radius:11px;background:var(--saffron-p);display:flex;align-items:center;justify-content:center;font-size:1.9rem;flex-shrink:0}
+.lc-info h4{font-size:.9rem;font-weight:700}
+.lc-sub{font-size:.73rem;color:var(--muted);margin-top:2px}
+.lc-meta{display:flex;align-items:center;gap:7px;margin-top:7px;flex-wrap:wrap}
+.lc-price{font-weight:800;color:var(--green);font-size:.9rem}
+.lc-rt{font-size:.72rem;color:var(--gold);font-weight:600}
+.lc-actions{display:flex;gap:7px;margin-top:11px}
+.bb{background:var(--saffron);color:#fff;padding:8px 0;border:none;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer;flex:1;transition:background .2s}
+.bb:hover{background:var(--saffron-l)}
+.bc{background:var(--green-p);color:var(--green);padding:8px 13px;border:none;border-radius:8px;font-weight:700;font-size:.82rem;cursor:pointer;font-family:'Baloo 2',sans-serif}
+
+/* VEHICLE CARD */
+.vc{background:#fff;border-radius:14px;margin:0 15px 11px;padding:13px;box-shadow:var(--sh);cursor:pointer;border:2px solid transparent;transition:all .2s}
+.vc:hover{border-color:var(--sky)}
+.vc-row{display:flex;gap:11px;align-items:center}
+.vc-icon{font-size:2.1rem}
+.vc-info{flex:1}
+.vc-info h4{font-size:.88rem;font-weight:700}
+.vc-sub{font-size:.72rem;color:var(--muted)}
+.vc-pr{text-align:right}
+.vc-price{font-size:.95rem;font-weight:800;color:var(--sky)}
+.vc-eta{font-size:.68rem;color:var(--green);font-weight:600}
+
+/* FOOD CARD */
+.fc{background:#fff;border-radius:14px;margin:0 15px 11px;padding:13px;box-shadow:var(--sh);cursor:pointer;border:2px solid transparent;transition:all .2s}
+.fc-row{display:flex;gap:11px}
+.fc-img{width:76px;height:76px;border-radius:11px;background:var(--saffron-p);font-size:2.4rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fc-info h4{font-size:.88rem;font-weight:700}
+.fc-sub{font-size:.72rem;color:var(--muted)}
+.fc-price{font-size:.95rem;font-weight:800;color:var(--green);margin-top:3px}
+.fc-add{background:var(--saffron);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer;margin-top:7px}
+
+/* RENT CARD */
+.rc{background:#fff;border-radius:14px;margin:0 15px 11px;padding:14px;box-shadow:var(--sh);cursor:pointer;border:2px solid transparent;transition:all .2s}
+.rc:hover{border-color:var(--gold)}
+.rc-row{display:flex;gap:11px;align-items:flex-start}
+.rc-img{width:68px;height:68px;border-radius:11px;background:var(--green-p);font-size:1.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rc-info h4{font-size:.88rem;font-weight:700}
+.rc-sub{font-size:.72rem;color:var(--muted)}
+.rc-pr{display:flex;gap:6px;margin-top:5px;align-items:baseline}
+.rc-price{font-size:.88rem;font-weight:800;color:var(--earth)}
+.rc-unit{font-size:.68rem;color:var(--muted)}
+
+/* MODAL */
+.modal{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+.modal.on{display:flex}
+.msheet{background:#fff;width:100%;max-width:430px;border-radius:22px 22px 0 0;padding:18px;max-height:88vh;overflow-y:auto;animation:su .3s ease}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mhandle{width:38px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px}
+.mt{font-size:1.05rem;font-weight:800;margin-bottom:5px}
+.msub{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+
+/* PLAN CARDS */
+.plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}
+.pc{border:2px solid var(--border);border-radius:13px;padding:13px 11px;cursor:pointer;transition:all .2s;position:relative}
+.pc.sel,.pc:hover{border-color:var(--saffron);background:var(--saffron-p)}
+.pc-name{font-weight:800;font-size:.82rem}
+.pc-price{font-size:1.05rem;font-weight:800;color:var(--saffron);margin-top:3px}
+.pc-price span{font-size:.67rem;font-weight:400;color:var(--muted)}
+.pc-detail{font-size:.67rem;color:var(--muted);margin-top:3px}
+.pop-tag{position:absolute;top:-8px;right:7px;background:var(--saffron);color:#fff;padding:2px 7px;border-radius:20px;font-size:.58rem;font-weight:700}
+
+/* TOAST */
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:11px 18px;border-radius:11px;font-size:.82rem;font-weight:600;z-index:9999;display:none;box-shadow:0 8px 24px rgba(0,0,0,.25);white-space:nowrap;animation:su .3s ease}
+
+/* EDIT OVERLAY */
+.eov{position:fixed;inset:0;z-index:600;background:#fff;display:none;flex-direction:column;overflow-y:auto}
+.eov.on{display:flex}
+.eov-hd{position:sticky;top:0;background:#fff;padding:14px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px;z-index:10}
+.eov-hd h3{font-size:.97rem;font-weight:800;flex:1}
+.eov-body{padding:18px;flex:1}
+
+/* PROFILE */
+.prof-hero{background:linear-gradient(135deg,#FF6B00,#D4A017);padding:28px 18px 48px}
+.pav-wrap{display:flex;align-items:center;gap:14px}
+.pav{width:76px;height:76px;border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:2.3rem;box-shadow:0 8px 24px rgba(0,0,0,.2);border:3px solid rgba(255,255,255,.5)}
+.prof-info h2{color:#fff;font-size:1.25rem;font-weight:800}
+.prof-info p{color:rgba(255,255,255,.85);font-size:.82rem;margin-top:2px}
+.pbrow{display:flex;gap:7px;margin-top:7px;flex-wrap:wrap}
+.pb{background:rgba(255,255,255,.2);color:#fff;padding:3px 10px;border-radius:20px;font-size:.67rem;font-weight:600;border:1px solid rgba(255,255,255,.3)}
+
+/* DIGITAL ID */
+.did-card{margin:-22px 15px 0;background:#fff;border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.15);overflow:hidden}
+.did-hd{background:linear-gradient(90deg,#FF6B00,#D4A017);padding:9px 15px;display:flex;align-items:center;justify-content:space-between}
+.did-hd span{color:#fff;font-size:.7rem;font-weight:700;letter-spacing:1px}
+.did-body{padding:18px}
+.did-row{display:flex;align-items:flex-start;gap:11px}
+.did-info{flex:1}
+.did-id{font-size:.67rem;color:var(--muted);margin-bottom:3px;font-family:monospace}
+.did-info h3{font-size:1.05rem;font-weight:800}
+.did-role{font-size:.77rem;color:var(--saffron);font-weight:600;margin-top:2px}
+.did-loc{font-size:.72rem;color:var(--muted);margin-top:3px}
+#qrcode canvas,#qrcode img{width:70px!important;height:70px!important}
+.did-skills{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
+.dtag{background:var(--saffron-p);color:var(--saffron);border:1px solid rgba(255,107,0,.2);padding:3px 9px;border-radius:20px;font-size:.67rem;font-weight:600}
+.did-ft{border-top:1px dashed var(--border);padding:11px 18px;display:flex;justify-content:space-between;align-items:center}
+.did-ft .ver{color:var(--green);font-size:.72rem;font-weight:700}
+.did-ft .rt{color:var(--gold);font-size:.77rem;font-weight:700}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:14px 15px}
+.sb{background:#fff;border-radius:13px;padding:13px 9px;text-align:center;box-shadow:var(--sh)}
+.sb .sn{font-size:1.35rem;font-weight:800;color:var(--saffron)}
+.sb .sl{font-size:.62rem;color:var(--muted);margin-top:2px;font-weight:600}
+
+/* MENU */
+.mg{padding:0 15px 14px}
+.mg-title{font-size:.67rem;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px}
+.mi{display:flex;align-items:center;gap:13px;background:#fff;border-radius:11px;padding:13px 14px;margin-bottom:7px;cursor:pointer;transition:all .2s;border:2px solid transparent}
+.mi:hover{border-color:var(--saffron)}
+.mi .mic{font-size:1.25rem}
+.mi .mit h4{font-size:.87rem;font-weight:700}
+.mi .mit p{font-size:.72rem;color:var(--muted);margin-top:1px}
+.mi .mia{margin-left:auto;color:var(--muted);font-size:.87rem}
+
+/* CHIPS */
+.chips{display:flex;gap:7px;overflow-x:auto;padding:11px 15px 5px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{padding:7px 13px;border-radius:20px;border:2px solid var(--border);background:#fff;font-size:.78rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'Baloo 2',sans-serif}
+.chip.on{background:var(--saffron);border-color:var(--saffron);color:#fff}
+.chip:hover{border-color:var(--saffron)}
+
+/* TAB ROW */
+.tabrow{display:flex;border-bottom:2px solid var(--border);padding:0 15px}
+.ti{padding:11px 14px;font-size:.82rem;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.ti.on{color:var(--saffron);border-bottom-color:var(--saffron)}
+
+/* DIVIDER */
+.div8{height:8px;background:var(--bg)}
+
+/* ORDER MODAL */
+.qty-row{display:flex;align-items:center;gap:14px;margin:14px 0}
+.qty-btn{width:34px;height:34px;border-radius:9px;border:2px solid var(--border);background:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700}
+.qty-num{font-size:1.2rem;font-weight:800;min-width:28px;text-align:center}
+.total-row{background:var(--saffron-p);border-radius:11px;padding:13px;display:flex;justify-content:space-between;align-items:center;margin:14px 0}
+.total-row span{font-weight:700;color:var(--text)}
+.total-row strong{font-size:1.1rem;color:var(--saffron);font-weight:800}
+
+/* SUCCESS */
+.success-sc{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 18px;text-align:center}
+.success-ic{font-size:3.8rem;margin-bottom:14px;animation:bnc .6s ease}
+@keyframes bnc{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.success-sc h3{font-size:1.25rem;font-weight:800;margin-bottom:7px}
+.success-sc p{color:var(--muted);font-size:.87rem}
+
+/* NOTIFICATIONS PAGE */
+.notif-item{background:#fff;border-radius:13px;margin:0 15px 9px;padding:14px;box-shadow:var(--sh);display:flex;gap:12px;align-items:flex-start}
+.notif-icon{font-size:1.5rem;flex-shrink:0}
+.notif-info h4{font-size:.87rem;font-weight:700}
+.notif-info p{font-size:.75rem;color:var(--muted);margin-top:2px}
+.notif-info .ntime{font-size:.67rem;color:var(--muted);margin-top:5px}
+.notif-dot{width:8px;height:8px;background:#FF4444;border-radius:50%;flex-shrink:0;margin-top:5px}
+
+/* ORDERS PAGE */
+.order-item{background:#fff;border-radius:13px;margin:0 15px 9px;padding:14px;box-shadow:var(--sh)}
+.order-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px}
+.order-hd h4{font-size:.88rem;font-weight:700}
+.status-chip{padding:3px 9px;border-radius:20px;font-size:.65rem;font-weight:700}
+.st-pending{background:#FFF4EC;color:#FF6B00}
+.st-confirmed{background:#E8F4FD;color:#1A6FA8}
+.st-done{background:var(--green-p);color:var(--green)}
+.order-det{font-size:.75rem;color:var(--muted)}
+
+/* UTILS */
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}
+.mb8{margin-bottom:8px}.mb16{margin-bottom:16px}
+.p15{padding:15px}.flex{display:flex}.aic{align-items:center}.jb{justify-content:space-between}.g8{gap:8px}
+.w100{width:100%}.tc{text-align:center}.hidden{display:none!important}
+@media(min-width:431px){.app{box-shadow:0 0 60px rgba(0,0,0,.1)}.bnav{max-width:430px}}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <h1>🌾 ଦ ପାର୍ଟ-ଟାଇମର୍ସ</h1>
+  <p>Empowering Rural Odisha • ଗ୍ରାମୀଣ ଓଡ଼ିଶା</p>
+  <div class="lbar"><div class="lfill"></div></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ==================== AUTH ==================== -->
+<div id="auth-section">
+
+<!-- WELCOME -->
+<div id="pg-welcome" class="pg auth-wrap on">
+  <div style="max-width:400px;width:100%;margin:auto;padding:10px">
+    <div style="text-align:center;margin-bottom:36px">
+      <div style="width:88px;height:88px;background:linear-gradient(135deg,#FF6B00,#D4A017);border-radius:22px;display:inline-flex;align-items:center;justify-content:center;font-size:2.8rem;margin-bottom:18px;box-shadow:0 12px 36px rgba(255,107,0,.4)">🌾</div>
+      <h1 style="font-family:'Tiro Oriya',serif;font-size:2rem;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.2)" id="wt">ଦ ପାର୍ଟ-ଟାଇମର୍ସ</h1>
+      <p style="color:rgba(255,255,255,.85);margin-top:5px;font-size:.95rem" id="ws">ଗ୍ରାମୀଣ ଭାରତ ଶକ୍ତି, ଗୋଟିଏ ଚାକିରି</p>
+      <p style="color:rgba(255,255,255,.65);margin-top:3px;font-size:.8rem">Empowering Rural India, One Job at a Time</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px">
+      <div onclick="showPg('pg-register')" style="background:#fff;border-radius:17px;padding:22px 14px;text-align:center;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.15);transition:all .2s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+        <div style="font-size:2.3rem;margin-bottom:7px">🆕</div>
+        <div style="font-weight:800;font-size:.9rem" id="w-new">ନୂତନ ଉପଯୋଗ</div>
+        <div style="font-size:.72rem;color:#888;margin-top:2px">New User</div>
+      </div>
+      <div onclick="showPg('pg-login')" style="background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);border-radius:17px;padding:22px 14px;text-align:center;cursor:pointer;transition:all .2s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+        <div style="font-size:2.3rem;margin-bottom:7px">🔑</div>
+        <div style="font-weight:800;font-size:.9rem;color:#fff" id="w-login">ଲଗ ଇନ୍</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.7);margin-top:2px">Login</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-bottom:14px">
+      <button onclick="demoLogin()" style="background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.3);color:#fff;padding:10px 22px;border-radius:12px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;width:100%">🎯 Demo — Try App / ଡেমো</button>
+    </div>
+    <div style="text-align:center">
+      <button onclick="toggleLang()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 16px;border-radius:20px;font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.78rem;cursor:pointer" id="lang-btn">Switch to English</button>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div id="pg-register" class="pg auth-wrap" style="align-items:flex-start;padding-top:0">
+  <div style="width:100%;max-width:400px;margin:auto">
+    <div style="padding:18px 18px 0;display:flex;align-items:center;gap:11px">
+      <button onclick="showPg('pg-welcome')" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:1.05rem">←</button>
+      <h3 style="color:#fff;font-weight:800;font-size:.97rem" id="reg-t">ଯୋଗ ଦିଅନ୍ତୁ | Register</h3>
+    </div>
+    <div class="auth-card" style="margin:14px">
+      <p style="font-size:.82rem;color:var(--muted);margin-bottom:14px" id="reg-sub">ଆପଣ କିଏ? | Who are you?</p>
+      <div class="ut-grid" id="ut-grid">
+        <div class="ut-card" onclick="selUT(this,'customer')">
+          <div class="ui">👤</div><div class="un" id="ut-c">ଗ୍ରାହକ</div><div class="us">Customer</div>
+        </div>
+        <div class="ut-card" onclick="selUT(this,'worker')">
+          <div class="ui">👷</div><div class="un" id="ut-w">କର୍ମୀ</div><div class="us">Worker/Helper</div>
+        </div>
+        <div class="ut-card" onclick="selUT(this,'vendor')">
+          <div class="ui">🏪</div><div class="un" id="ut-v">ବିକ୍ରେତା</div><div class="us">Vendor/Seller</div>
+        </div>
+        <div class="ut-card" onclick="selUT(this,'vehicle')">
+          <div class="ui">🚜</div><div class="un" id="ut-vh">ଯାନ ମାଲିକ</div><div class="us">Vehicle Owner</div>
+        </div>
+      </div>
+      <div id="reg-form" class="hidden">
+        <div class="fg"><label>ପୂରା ନାମ <span>/ Full Name</span></label><input id="r-name" type="text" placeholder="Your full name"></div>
+        <div class="fg"><label>ମୋବାଇଲ <span>/ Mobile</span></label><input id="r-phone" type="tel" placeholder="10-digit mobile" maxlength="10"></div>
+        <div class="fg"><label>ଜିଲ୍ଲା <span>/ District</span></label>
+          <select id="r-dist">
+            <option value="">ଜିଲ୍ଲା ଚୁଣନ୍ତୁ / Select District</option>
+            <option>Khurda</option><option>Cuttack</option><option>Puri</option><option>Ganjam</option>
+            <option>Balasore</option><option>Mayurbhanj</option><option>Kendrapara</option>
+            <option>Jagatsinghpur</option><option>Jajpur</option><option>Bhadrak</option>
+            <option>Nayagarh</option><option>Bargarh</option><option>Koraput</option>
+            <option>Malkangiri</option><option>Rayagada</option><option>Kandhamal</option>
+            <option>Sundargarh</option><option>Sambalpur</option><option>Angul</option>
+            <option>Dhenkanal</option><option>Bolangir</option><option>Kalahandi</option>
+            <option>Nuapada</option><option>Nabarangpur</option><option>Gajapati</option>
+            <option>Baudh</option><option>Sonepur</option><option>Deogarh</option>
+            <option>Jharsuguda</option><option>Keonjhar</option>
+          </select>
+        </div>
+        <div class="fg"><label>ଗ୍ରାମ <span>/ Village</span></label><input id="r-village" type="text" placeholder="Your village name"></div>
+        <!-- Worker Fields -->
+        <div id="wf" class="hidden">
+          <div class="fg"><label>ଦକ୍ଷତା <span>/ Skill</span></label>
+            <select id="r-skill">
+              <option value="">Select your skill</option>
+              <option>ଶସ୍ୟ ଚାଷ / Crop Farming</option><option>ମତ୍ସ୍ୟ ଚାଷ / Fish & Aqua</option>
+              <option>ମୁର୍ଗୀ ପାଳନ / Poultry</option><option>ନିର୍ମାଣ / Construction Mason</option>
+              <option>ଇଲେକ୍ଟ୍ରିସିଆନ / Electrician</option><option>ଜଳ ସଂଯୋଗ / Plumber</option>
+              <option>ଟ୍ରାକ୍ଟର / Tractor Driver</option><option>ଫଟୋ / Photo-Video</option>
+              <option>ଶିକ୍ଷା / Tuition</option><option>ରନ୍ଧନ / Cooking</option>
+              <option>ଡ୍ରାଇଭର / Driver</option><option>ଜାଲ ତୈରି / Net Making</option>
+              <option>ଚିତ୍ରକ / Painter</option><option>ଅନ୍ୟ / Other</option>
+            </select>
+          </div>
+          <div class="fg"><label>ଦୈନିକ ମଜୁରି <span>/ Daily Rate (₹)</span></label><input id="r-rate" type="number" placeholder="e.g. 400"></div>
+          <div class="fg"><label>ଅଭିଜ୍ଞତା <span>/ Experience (years)</span></label><input id="r-exp" type="number" placeholder="e.g. 3"></div>
+        </div>
+        <!-- Vendor Fields -->
+        <div id="vdf" class="hidden">
+          <div class="fg"><label>ଦୋକାନ ନାମ <span>/ Shop Name</span></label><input id="r-shop" type="text" placeholder="Your shop/business name"></div>
+          <div class="fg"><label>ବ୍ୟବସାୟ <span>/ Business Type</span></label>
+            <select id="r-biz">
+              <option>ଖାଦ୍ୟ / Food Shop</option><option>ଚାଷ ଉପକରଣ / Agri Tools</option>
+              <option>ମତ୍ସ୍ୟ / Fish Shop</option><option>ମୁର୍ଗୀ / Poultry</option>
+              <option>ଔଷଧ / Pharmacy</option><option>ଷ୍ଟେଜ ହାଉସ / Tent & Events</option>
+              <option>ଫଟୋ ଷ୍ଟୁଡ଼ିଓ / Photo Studio</option><option>ଡ୍ରାଇଭର / Transport</option>
+              <option>ଅନ୍ୟ / Other</option>
+            </select>
+          </div>
+          <div class="fg"><label>ମାସିକ ବିକ୍ରୟ <span>/ Monthly Sales</span></label>
+            <select id="r-sales">
+              <option>₹0 – ₹1,000</option><option>₹1,000 – ₹10,000</option>
+              <option>₹10,000 – ₹1 Lakh</option><option>₹1 Lakh – ₹10 Lakh</option><option>₹10 Lakh+</option>
+            </select>
+          </div>
+        </div>
+        <!-- Vehicle Fields -->
+        <div id="vhf" class="hidden">
+          <div class="fg"><label>ଯାନ ପ୍ରକାର <span>/ Vehicle Type</span></label>
+            <select id="r-vtype">
+              <option>ଟ୍ରାକ୍ଟର / Tractor</option><option>ଟେମ୍ପୋ / Tempo</option>
+              <option>ଅଟୋ / Auto Rickshaw</option><option>ଟ୍ରକ / Truck</option>
+              <option>ଇ-ରିକ୍ସା / E-Rickshaw</option><option>ଗାଡ଼ି / Car (Taxi)</option>
+              <option>ଜଳଯାନ / Boat</option><option>ମୋଟରସାଇକେଲ / Bike</option>
+            </select>
+          </div>
+          <div class="fg"><label>ଯାନ ନମ୍ବର <span>/ Vehicle Number</span></label><input id="r-vnum" type="text" placeholder="OD-XX-XXXX"></div>
+          <div class="fg"><label>ଭଡ଼ା <span>/ Rental Rate</span></label><input id="r-vrate" type="text" placeholder="e.g. ₹800/day or ₹40/km"></div>
+        </div>
+        <div class="fg"><label>ପାସୱାର୍ଡ <span>/ Password</span></label><input id="r-pass" type="password" placeholder="Create password"></div>
+        <button class="btn btn-p" onclick="doRegister()">✅ ଯୋଗ ଦିଅନ୍ତୁ | Register</button>
+        <p style="text-align:center;margin-top:12px;font-size:.82rem;color:var(--muted)">ଆଗରୁ ଯୋଗ ଦେଇଛନ୍ତି? <span onclick="showPg('pg-login')" style="color:var(--saffron);font-weight:700;cursor:pointer">Login →</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="pg-login" class="pg auth-wrap">
+  <div class="auth-card">
+    <div class="logo-wrap">
+      <div class="logo-icon">🌾</div>
+      <h2>ଦ ପାର୍ଟ-ଟାଇମର୍ସ</h2>
+      <p>ଲଗ ଇନ୍ | Sign In to your account</p>
+    </div>
+    <div class="fg"><label>ମୋବାଇଲ <span>/ Mobile Number</span></label><input id="l-phone" type="tel" placeholder="10-digit mobile"></div>
+    <div class="fg"><label>ପାସୱାର୍ଡ <span>/ Password</span></label><input id="l-pass" type="password" placeholder="Your password"></div>
+    <button class="btn btn-p" onclick="doLogin()">🔑 ଲଗ ଇନ୍ | Login</button>
+    <button class="btn" onclick="demoLogin()" style="background:var(--green-p);color:var(--green);margin-top:10px">🎯 Demo Login</button>
+    <p style="text-align:center;margin-top:14px;font-size:.82rem;color:var(--muted)">ନୂତନ? <span onclick="showPg('pg-register')" style="color:var(--saffron);font-weight:700;cursor:pointer">ଯୋଗ ଦିଅନ୍ତୁ →</span></p>
+    <p style="text-align:center;margin-top:8px;font-size:.78rem"><span onclick="showPg('pg-welcome')" style="color:var(--muted);cursor:pointer">← Back</span></p>
+  </div>
+</div>
+</div><!-- /auth -->
+
+<!-- ==================== MAIN APP ==================== -->
+<div id="main-app" class="hidden">
+<div class="app">
+
+<!-- HOME -->
+<div id="ap-home" class="ca">
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="hero-gr" id="h-gr">ନମସ୍କାର 🙏</div>
+        <div class="hero-nm" id="h-nm">Loading...</div>
+      </div>
+      <div onclick="goTab('profile')" style="width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.25rem">👤</div>
+    </div>
+    <div class="hero-row2">
+      <div class="loc-chip">📍 <span id="h-loc">Odisha</span></div>
+      <button class="lang-btn" onclick="toggleLang()" id="alb">EN</button>
+    </div>
+    <div class="hsearch"><span>🔍</span><input type="text" placeholder="ସେବା ଖୋଜନ୍ତୁ | Search services..." oninput="doSearch(this.value)" id="srch"></div>
+  </div>
+
+  <!-- Categories -->
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-t">ସେବା ବର୍ଗ <span>Service Categories</span></div></div>
+    <div class="cat-grid">
+      <div class="cc" onclick="goSvc('farming')"><div class="ci">🌾</div><div class="cn">Crop Farming</div><div class="cor">ଶସ୍ୟ ଚାଷ</div></div>
+      <div class="cc" onclick="goSvc('fish')"><div class="ci">🐟</div><div class="cn">Fish & Aqua</div><div class="cor">ମତ୍ସ୍ୟ</div></div>
+      <div class="cc" onclick="goSvc('poultry')"><div class="ci">🐔</div><div class="cn">Poultry</div><div class="cor">ମୁର୍ଗୀ</div></div>
+      <div class="cc" onclick="goSvc('buysell')"><div class="ci">🛒</div><div class="cn">Buy/Sell/Rent</div><div class="cor">କ/ବ/ଭ</div></div>
+      <div class="cc" onclick="goSvc('transport')"><div class="ci">🚜</div><div class="cn">Transport</div><div class="cor">ପରିବହନ</div></div>
+      <div class="cc" onclick="goSvc('food')"><div class="ci">🍱</div><div class="cn">Food Order</div><div class="cor">ଖାଦ୍ୟ</div></div>
+      <div class="cc" onclick="goSvc('homeservice')"><div class="ci">🔧</div><div class="cn">Home Services</div><div class="cor">ଘର ସେବା</div></div>
+      <div class="cc" onclick="goSvc('photo')"><div class="ci">📸</div><div class="cn">Photo/Video</div><div class="cor">ଫଟୋ</div></div>
+      <div class="cc" onclick="goSvc('tent')"><div class="ci">⛺</div><div class="cn">Tent & Events</div><div class="cor">ଷ୍ଟେଜ</div></div>
+      <div class="cc" onclick="goSvc('pandit')"><div class="ci">🙏</div><div class="cn">Pandit</div><div class="cor">ପୂଜା</div></div>
+      <div class="cc" onclick="goSvc('doctor')"><div class="ci">🩺</div><div class="cn">Doctor</div><div class="cor">ଡାକ୍ତର</div></div>
+      <div class="cc" onclick="goSvc('tuition')"><div class="ci">📚</div><div class="cn">Tuition</div><div class="cor">ଟ୍ୟୁଶନ</div></div>
+    </div>
+  </div>
+
+  <!-- Sunday Haata -->
+  <div class="hbanner">
+    <div class="live-dot">🔴 LIVE NOW</div>
+    <h3>🛍️ ରବିବାର ହଟ | Sunday Local Haata</h3>
+    <p>ସ୍ଥାନୀୟ ବିକ୍ରେତାଙ୍କ ଠାରୁ ସିଧା ଖରିଦ | Buy directly from local vendors near you</p>
+    <button onclick="goSvc('buysell')" style="margin-top:11px;background:#fff;color:var(--green);border:none;border-radius:8px;padding:8px 18px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.82rem;cursor:pointer">ଦେଖନ୍ତୁ | Explore →</button>
+  </div>
+
+  <!-- Nearby Workers -->
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-t">ନିକଟ କର୍ମୀ <span>Nearby Workers</span></div><button class="see-all" onclick="goSvc('farming')">ସବୁ ଦେଖ →</button></div>
+    <div class="hs" id="workers-hs">
+      <div class="wc" onclick="openBook('Ramesh Sahoo','👨‍🌾','Crop Farming','₹350/day','⭐ 4.8','Nayagarh')"><div class="wav">👨‍🌾</div><h4>Ramesh Sahoo</h4><div class="wsk">Crop Farming</div><div class="wrt">⭐ 4.8 (42)</div><div class="wpr">₹350/day</div></div>
+      <div class="wc" onclick="openBook('Suna Nayak','👩','Fish Harvest','₹300/day','⭐ 4.6','Kendrapara')"><div class="wav">👩</div><h4>Suna Nayak</h4><div class="wsk">Fish Harvesting</div><div class="wrt">⭐ 4.6 (28)</div><div class="wpr">₹300/day</div></div>
+      <div class="wc" onclick="openBook('Bijay Das','👨','Electrician','₹500/day','⭐ 4.9','Khurda')"><div class="wav">⚡</div><h4>Bijay Das</h4><div class="wsk">Electrician</div><div class="wrt">⭐ 4.9 (67)</div><div class="wpr">₹500/day</div></div>
+      <div class="wc" onclick="openBook('Krushna Panda','🔧','Plumber','₹450/day','⭐ 4.5','Cuttack')"><div class="wav">🔧</div><h4>Krushna Panda</h4><div class="wsk">Plumber</div><div class="wrt">⭐ 4.5 (33)</div><div class="wpr">₹450/day</div></div>
+      <div class="wc" onclick="openBook('Lipsa Mohanty','👩','Tractor Driver','₹600/day','⭐ 4.7','Puri')"><div class="wav">🚜</div><h4>Lipsa Mohanty</h4><div class="wsk">Tractor Driver</div><div class="wrt">⭐ 4.7 (19)</div><div class="wpr">₹600/day</div></div>
+    </div>
+  </div>
+
+  <div class="pbanner">
+    <div style="font-size:2.3rem">🎁</div>
+    <div><h4>ପ୍ରଥମ ୩ ମାସ ମାଗଣା!</h4><p>First 3 months free for new vendors. Join now!</p></div>
+  </div>
+
+  <!-- Hot Deals -->
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-t">ଜୋରଦାର ଅଫର <span>Hot Deals Near You</span></div></div>
+    <div class="hs">
+      <div class="svc" onclick="goSvc('buysell')"><div class="svc-img">🚜</div><div class="svc-bd"><h4>Tractor Rent</h4><p>Balasore, 3.2km</p><span class="bdg bdg-go">₹800/day</span></div></div>
+      <div class="svc" onclick="goSvc('fish')"><div class="svc-img">🐟</div><div class="svc-bd"><h4>Fresh Rohu Fish</h4><p>Kendrapara, 1.8km</p><span class="bdg bdg-s">₹180/kg</span></div></div>
+      <div class="svc" onclick="goSvc('poultry')"><div class="svc-img">🥚</div><div class="svc-bd"><h4>Country Eggs</h4><p>Cuttack, 4.1km</p><span class="bdg bdg-g">₹7/piece</span></div></div>
+      <div class="svc" onclick="goSvc('farming')"><div class="svc-img">🌱</div><div class="svc-bd"><h4>Paddy Seeds</h4><p>Puri, 2.5km</p><span class="bdg bdg-g">₹40/bundle</span></div></div>
+      <div class="svc" onclick="goSvc('food')"><div class="svc-img">🍛</div><div class="svc-bd"><h4>Pakhala Thali</h4><p>Khurda, 0.8km</p><span class="bdg bdg-s">₹80/plate</span></div></div>
+    </div>
+  </div>
+  <div style="height:16px"></div>
+</div><!-- /home -->
+
+<!-- ===== SERVICE: FARMING ===== -->
+<div id="ap-farming" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🌾 Crop Farming | ଶସ୍ୟ ଚାଷ</h3></div>
+  <div class="chips">
+    <div class="chip on" onclick="chipSel(this)">ସବୁ | All</div>
+    <div class="chip" onclick="chipSel(this)">ଶ୍ରମିକ | Workers</div>
+    <div class="chip" onclick="chipSel(this)">ଉପକରଣ | Tools Rent</div>
+    <div class="chip" onclick="chipSel(this)">ମଞ୍ଜି | Seeds</div>
+    <div class="chip" onclick="chipSel(this)">ଫସଲ | Produce</div>
+  </div>
+  <div class="lc" onclick="openBook('Paddy Weeding Team','👨‍🌾','4-member team, paddy weeding','₹1,200/day','⭐ 4.7','Nayagarh')">
+    <div class="lc-row"><div class="lc-img">👨‍🌾</div><div class="lc-info"><h4>Paddy Weeding Team (4 Workers)</h4><div class="lc-sub">📍 Nayagarh, 2.4 km</div><div class="lc-meta"><span class="lc-price">₹1,200/day</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-g">Available</span></div></div></div>
+    <div class="lc-actions"><button class="bb" onclick="event.stopPropagation();openBook('Paddy Weeding Team','👨‍🌾','4-member weeding team','₹1,200/day','⭐ 4.7','Nayagarh')">📅 Book Now</button><button class="bc" onclick="event.stopPropagation();showToast('📞 Connecting...')">📞 Call</button></div>
+  </div>
+  <div class="lc">
+    <div class="lc-row"><div class="lc-img" style="background:#FFF9E6">🚜</div><div class="lc-info"><h4>Tractor + Driver (Ploughing)</h4><div class="lc-sub">📍 Khurda, 1.1 km</div><div class="lc-meta"><span class="lc-price">₹800/4hrs</span><span class="lc-rt">⭐ 4.9</span><span class="bdg bdg-go">Tool Rental</span></div></div></div>
+    <div class="lc-actions"><button class="bb" onclick="openBook('Tractor Ploughing','🚜','Tractor + driver, field prep','₹800/4hrs','⭐ 4.9','Khurda')">📅 Rent Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div>
+  </div>
+  <div class="lc">
+    <div class="lc-row"><div class="lc-img">🌱</div><div class="lc-info"><h4>Paddy Seeds — HB-101</h4><div class="lc-sub">📍 Cuttack • Ram Agri Store</div><div class="lc-meta"><span class="lc-price">₹40/kg</span><span class="lc-rt">⭐ 4.8</span><span class="bdg bdg-g">In Stock</span></div></div></div>
+    <div class="lc-actions"><button class="bb" onclick="openOrder('Paddy Seeds HB-101','🌱','₹40','kg')">🛒 Order</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div>
+  </div>
+  <div class="lc">
+    <div class="lc-row"><div class="lc-img">💧</div><div class="lc-info"><h4>Sprayer Machine (Battery)</h4><div class="lc-sub">📍 Balasore, 3.7 km</div><div class="lc-meta"><span class="lc-price">₹150/day</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-go">For Rent</span></div></div></div>
+    <div class="lc-actions"><button class="bb" onclick="openBook('Sprayer Machine','💧','Battery sprayer rental','₹150/day','⭐ 4.6','Balasore')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div>
+  </div>
+  <div class="lc">
+    <div class="lc-row"><div class="lc-img">🌾</div><div class="lc-info"><h4>Fresh Paddy — Sona Masuri</h4><div class="lc-sub">📍 Puri • Direct from Farmer</div><div class="lc-meta"><span class="lc-price">₹22/kg</span><span class="lc-rt">⭐ 4.5</span><span class="bdg bdg-s">Bulk Available</span></div></div></div>
+    <div class="lc-actions"><button class="bb" onclick="openOrder('Sona Masuri Paddy','🌾','₹22','kg')">🛒 Order</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div>
+  </div>
+  <div class="lc">
+    <div class="lc-row"><div class="lc-img">👩</div><div class="lc-info"><h4>Harvesting Helper — Female</h4><div class="lc-sub">📍 Ganjam, 1.9 km</div><div class="lc-meta"><span class="lc-price">₹280/day</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-g">Available</span></div></div></div>
+    <div class="lc-actions"><button class="bb" onclick="openBook('Harvesting Helper','👩','Female harvesting helper','₹280/day','⭐ 4.6','Ganjam')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div>
+  </div>
+</div><!-- /farming -->
+
+<!-- ===== SERVICE: FISH ===== -->
+<div id="ap-fish" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🐟 Fish & Aqua | ମତ୍ସ୍ୟ</h3></div>
+  <div class="tabrow">
+    <div class="ti on" onclick="tabSel(this,'fish-workers')">Workers</div>
+    <div class="ti" onclick="tabSel(this,'fish-sell')">Buy Fish</div>
+    <div class="ti" onclick="tabSel(this,'fish-rent')">Rent Tools</div>
+    <div class="ti" onclick="tabSel(this,'fish-boat')">Boat Fishing</div>
+  </div>
+  <div id="fish-workers">
+    <div class="lc"><div class="lc-row"><div class="lc-img">🎣</div><div class="lc-info"><h4>Pond Cleaner + Feeder</h4><div class="lc-sub">📍 Kendrapara, 2.1 km</div><div class="lc-meta"><span class="lc-price">₹350/day</span><span class="lc-rt">⭐ 4.8</span><span class="bdg bdg-g">Available</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Pond Cleaner','🎣','Pond cleaning & daily feeding','₹350/day','⭐ 4.8','Kendrapara')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🕸️</div><div class="lc-info"><h4>Net Caster — Harvest Team</h4><div class="lc-sub">📍 Jagatsinghpur, 3.4 km</div><div class="lc-meta"><span class="lc-price">₹400/day</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-g">Available</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Net Caster Team','🕸️','Fish harvest net team','₹400/day','⭐ 4.7','Jagatsinghpur')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🧪</div><div class="lc-info"><h4>Biofloc Technician</h4><div class="lc-sub">📍 Bhadrak, 5.2 km</div><div class="lc-meta"><span class="lc-price">₹600/day</span><span class="lc-rt">⭐ 4.9</span><span class="bdg bdg-sky">Expert</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Biofloc Technician','🧪','Biofloc tank setup & maintenance','₹600/day','⭐ 4.9','Bhadrak')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
+  </div>
+  <div id="fish-sell" class="hidden">
+    <div class="lc"><div class="lc-row"><div class="lc-img">🐟</div><div class="lc-info"><h4>Fresh Rohu (Rui)</h4><div class="lc-sub">📍 Puri, Direct Fisher</div><div class="lc-meta"><span class="lc-price">₹180/kg</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-g">Fresh Today</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Fresh Rohu Fish','🐟','₹180','kg')">🛒 Order</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🦐</div><div class="lc-info"><h4>Tiger Prawns (Export Grade)</h4><div class="lc-sub">📍 Balasore, 4.8 km</div><div class="lc-meta"><span class="lc-price">₹650/kg</span><span class="lc-rt">⭐ 4.9</span><span class="bdg bdg-s">Premium</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Tiger Prawns','🦐','₹650','kg')">🛒 Order</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🐠</div><div class="lc-info"><h4>Catla Fish (Live)</h4><div class="lc-sub">📍 Cuttack, 2.3 km</div><div class="lc-meta"><span class="lc-price">₹200/kg</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-g">Live Fish</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Catla Fish Live','🐠','₹200','kg')">🛒 Order</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
+  </div>
+  <div id="fish-rent" class="hidden">
+    <div class="rc"><div class="rc-row"><div class="rc-img">🕸️</div><div class="rc-info"><h4>Jhaala Net (Fishing Net)</h4><div class="rc-sub">📍 Kendrapara, 1.8 km</div><div class="rc-pr"><span class="rc-price">₹200/day</span><span class="rc-unit">• Deposit ₹500</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('Jhaala Net','🕸️','Traditional fishing net rental','₹200/day','⭐ 4.5','Kendrapara')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+    <div class="rc"><div class="rc-row"><div class="rc-img">🧊</div><div class="rc-info"><h4>Ice Box (Fish Storage)</h4><div class="rc-sub">📍 Puri, 2.2 km</div><div class="rc-pr"><span class="rc-price">₹100/day</span><span class="rc-unit">• 100 litre</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('Ice Box','🧊','100L ice box for fish storage','₹100/day','⭐ 4.6','Puri')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  </div>
+  <div id="fish-boat" class="hidden">
+    <div class="vc" onclick="openBook('Wooden Boat + Crew','⛵','3-person fishing boat team','₹1,500/trip','⭐ 4.8','Chilika')"><div class="vc-row"><div class="vc-icon">⛵</div><div class="vc-info"><h4>Wooden Boat + 3 Crew</h4><div class="vc-sub">📍 Chilika Lake • 4-6 hrs trip</div></div><div class="vc-pr"><div class="vc-price">₹1,500</div><div class="vc-eta">per trip</div></div></div></div>
+    <div class="vc" onclick="openBook('Motor Boat','🚤','Fiber motor boat with engine','₹2,500/trip','⭐ 4.9','Paradip')"><div class="vc-row"><div class="vc-icon">🚤</div><div class="vc-info"><h4>Fiber Motor Boat (9HP OBM)</h4><div class="vc-sub">📍 Paradip • Morning slot</div></div><div class="vc-pr"><div class="vc-price">₹2,500</div><div class="vc-eta">per trip</div></div></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🔧</div><div class="lc-info"><h4>Boat Mechanic (OBM Repair)</h4><div class="lc-sub">📍 Balasore, 3.1 km</div><div class="lc-meta"><span class="lc-price">₹500/visit</span><span class="lc-rt">⭐ 4.7</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Boat Mechanic','🔧','OBM engine repair & service','₹500/visit','⭐ 4.7','Balasore')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  </div>
+</div><!-- /fish -->
+
+<!-- ===== SERVICE: POULTRY ===== -->
+<div id="ap-poultry" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🐔 Poultry & Livestock | ମୁର୍ଗୀ</h3></div>
+  <div class="chips">
+    <div class="chip on" onclick="chipSel(this)">ସବୁ | All</div>
+    <div class="chip" onclick="chipSel(this)">ଚିଙ୍ଗୁଡ଼ | Buy Poultry</div>
+    <div class="chip" onclick="chipSel(this)">ଗୋ / ଛେଳି | Livestock</div>
+    <div class="chip" onclick="chipSel(this)">ଚିକିତ୍ସା | Vet</div>
+  </div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🐔</div><div class="lc-info"><h4>Live Broiler Chicken</h4><div class="lc-sub">📍 Cuttack • Poultry Farm Direct</div><div class="lc-meta"><span class="lc-price">₹160/kg</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-g">Today Fresh</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Broiler Chicken','🐔','₹160','kg')">🛒 Order</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🥚</div><div class="lc-info"><h4>Country Eggs (Desi)</h4><div class="lc-sub">📍 Khurda, 1.5 km</div><div class="lc-meta"><span class="lc-price">₹8/egg</span><span class="lc-rt">⭐ 4.8</span><span class="bdg bdg-g">Farm Fresh</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Desi Country Eggs','🥚','₹8','egg')">🛒 Order</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🐐</div><div class="lc-info"><h4>Live Goat (Black Bengal)</h4><div class="lc-sub">📍 Mayurbhanj, 8.2 km</div><div class="lc-meta"><span class="lc-price">₹4,500/goat</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-s">6-8 months</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Live Goat','🐐','Black Bengal goat purchase','₹4,500','⭐ 4.6','Mayurbhanj')">📅 Enquire</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🐄</div><div class="lc-info"><h4>Dairy Cow (HF Cross)</h4><div class="lc-sub">📍 Bargarh, 12 km</div><div class="lc-meta"><span class="lc-price">₹35,000</span><span class="lc-rt">⭐ 4.5</span><span class="bdg bdg-sky">6L/day milk</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Dairy Cow','🐄','HF cross dairy cow, 6L milk/day','₹35,000','⭐ 4.5','Bargarh')">📅 Enquire</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">💊</div><div class="lc-info"><h4>Mobile Vet Doctor</h4><div class="lc-sub">📍 Covers Khurda & Nayagarh</div><div class="lc-meta"><span class="lc-price">₹300/visit</span><span class="lc-rt">⭐ 4.9</span><span class="bdg bdg-g">On-Call</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Mobile Vet','💊','Animal doctor home visit','₹300/visit','⭐ 4.9','Khurda')">📅 Book Vet</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+</div><!-- /poultry -->
+
+<!-- ===== SERVICE: BUY/SELL/RENT ===== -->
+<div id="ap-buysell" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🛒 Buy • Sell • Rent</h3></div>
+  <div class="tabrow">
+    <div class="ti on" onclick="tabSel(this,'bs-all')">🛍️ All</div>
+    <div class="ti" onclick="tabSel(this,'bs-sell')">💰 Sell</div>
+    <div class="ti" onclick="tabSel(this,'bs-rent')">🔑 Rent</div>
+    <div class="ti" onclick="tabSel(this,'bs-haata')">🎪 Haata</div>
+  </div>
+  <div id="bs-all">
+    <div style="padding:12px 15px 4px"><div class="hsearch" style="box-shadow:var(--sh)"><span>🔍</span><input type="text" placeholder="Search items..."></div></div>
+    <div class="rc"><div class="rc-row"><div class="rc-img">🚜</div><div class="rc-info"><h4>Tractor for Rent</h4><div class="rc-sub">📍 Balasore • Mahindra 575 DI</div><div class="rc-pr"><span class="rc-price">₹800/day</span><span class="rc-unit">• Deposit ₹2000</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('Tractor Rent','🚜','Mahindra 575DI with driver','₹800/day','⭐ 4.8','Balasore')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+    <div class="rc"><div class="rc-row"><div class="rc-img">📷</div><div class="rc-info"><h4>DSLR Camera Rent</h4><div class="rc-sub">📍 Cuttack • Canon 1500D</div><div class="rc-pr"><span class="rc-price">₹500/day</span><span class="rc-unit">• Deposit ₹5000</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('DSLR Camera','📷','Canon 1500D with lens kit','₹500/day','⭐ 4.7','Cuttack')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🪚</div><div class="lc-info"><h4>Used Carpenter Tools (Set)</h4><div class="lc-sub">📍 Puri • Second-hand, good condition</div><div class="lc-meta"><span class="lc-price">₹2,500</span><span class="lc-rt">⭐ 4.4</span><span class="bdg bdg-go">For Sale</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Carpenter Tools Set','🪚','₹2,500','set')">🛒 Buy</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">⛺</div><div class="lc-info"><h4>Tent House Setup (50 pax)</h4><div class="lc-sub">📍 Khurda • Includes chairs, lights</div><div class="lc-meta"><span class="lc-price">₹8,000/event</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-s">Popular</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Tent House','⛺','50-person tent setup with chairs','₹8,000/event','⭐ 4.6','Khurda')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  </div>
+  <div id="bs-sell" class="hidden">
+    <div style="padding:14px 15px"><button class="btn btn-p" onclick="openVendorModal()">➕ Post Your Item to Sell</button></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🌿</div><div class="lc-info"><h4>Organic Turmeric Powder</h4><div class="lc-sub">📍 Rayagada • SHG Product</div><div class="lc-meta"><span class="lc-price">₹120/250g</span><span class="lc-rt">⭐ 4.9</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Organic Turmeric','🌿','₹120','250g pack')">🛒 Order</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🥭</div><div class="lc-info"><h4>Langra Mango (Fresh)</h4><div class="lc-sub">📍 Ganjam • Direct Orchard</div><div class="lc-meta"><span class="lc-price">₹60/kg</span><span class="lc-rt">⭐ 4.7</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Langra Mango','🥭','₹60','kg')">🛒 Order</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  </div>
+  <div id="bs-rent" class="hidden">
+    <div class="rc"><div class="rc-row"><div class="rc-img">🔊</div><div class="rc-info"><h4>DJ Sound System</h4><div class="rc-sub">📍 Cuttack • 10,000W setup</div><div class="rc-pr"><span class="rc-price">₹5,000/event</span><span class="rc-unit">• 12 hrs</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('DJ Sound System','🔊','10000W DJ sound setup','₹5,000/event','⭐ 4.8','Cuttack')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+    <div class="rc"><div class="rc-row"><div class="rc-img">🏗️</div><div class="rc-info"><h4>Cement Mixer Machine</h4><div class="rc-sub">📍 Khurda, 2.4 km</div><div class="rc-pr"><span class="rc-price">₹400/day</span><span class="rc-unit">• Deposit ₹1500</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('Cement Mixer','🏗️','Electric cement mixer rental','₹400/day','⭐ 4.5','Khurda')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  </div>
+  <div id="bs-haata" class="hidden">
+    <div class="hbanner" style="margin:14px 15px"><div class="live-dot">🔴 LIVE</div><h3>🎪 ରବିବାର ହଟ</h3><p>Local vendors near you — every Sunday</p></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🧹</div><div class="lc-info"><h4>Homemade Phenyl (5L)</h4><div class="lc-sub">📍 Sunita SHG, Nayagarh</div><div class="lc-meta"><span class="lc-price">₹120/5L</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-g">Haata Deal</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Homemade Phenyl','🧹','₹120','5L bottle')">🛒 Buy</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🧆</div><div class="lc-info"><h4>Handmade Papad (500g)</h4><div class="lc-sub">📍 Bhubaneswar SHG group</div><div class="lc-meta"><span class="lc-price">₹60/500g</span><span class="lc-rt">⭐ 4.8</span><span class="bdg bdg-g">Haata Deal</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Handmade Papad','🧆','₹60','500g pack')">🛒 Buy</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  </div>
+</div><!-- /buysell -->
+
+<!-- ===== SERVICE: TRANSPORT (OLA LOGIC) ===== -->
+<div id="ap-transport" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🚜 Transport | ପରିବହନ</h3></div>
+  <div style="padding:14px 15px">
+    <div class="fg"><label>📍 ଉଠିବା ସ୍ଥାନ <span>/ Pickup Location</span></label><input type="text" id="t-from" placeholder="From: Your village/location" style="background:white"></div>
+    <div class="fg"><label>🎯 ଯିବା ସ୍ଥାନ <span>/ Drop Location</span></label><input type="text" id="t-to" placeholder="To: Destination"></div>
+    <div class="fg"><label>📦 ଯାତ୍ରା ପ୍ରକାର <span>/ Trip Type</span></label>
+      <select id="t-type" style="background:white">
+        <option>ବ୍ୟକ୍ତି / Passenger</option>
+        <option>ମାଲ ପରିବହନ / Goods Transport</option>
+        <option>ଶସ୍ୟ / Farm Produce</option>
+        <option>ନିର୍ମାଣ ସାମଗ୍ରୀ / Construction Material</option>
+      </select>
+    </div>
+    <button class="btn btn-p" onclick="searchVehicles()" style="margin-bottom:14px">🔍 ଯାନ ଖୋଜ | Find Vehicles</button>
+  </div>
+  <div style="padding:0 15px 8px;font-size:.82rem;font-weight:700;color:var(--muted)">AVAILABLE VEHICLES NEARBY</div>
+  <div class="vc" onclick="openBook('Auto Rickshaw','🛺','Passenger auto, up to 3 persons','₹15/km','⭐ 4.6','Khurda')"><div class="vc-row"><div class="vc-icon">🛺</div><div class="vc-info"><h4>Auto Rickshaw</h4><div class="vc-sub">Binod Auto • 1.2 km away • 3 seats</div></div><div class="vc-pr"><div class="vc-price">₹15/km</div><div class="vc-eta">~4 min</div></div></div></div>
+  <div class="vc" onclick="openBook('Tempo (Goods)','🚐','Mini tempo for goods transport','₹20/km','⭐ 4.8','Cuttack')"><div class="vc-row"><div class="vc-icon">🚐</div><div class="vc-info"><h4>Tempo — Goods Transport</h4><div class="vc-sub">Raju Tempo • 2.8 km • 500kg capacity</div></div><div class="vc-pr"><div class="vc-price">₹20/km</div><div class="vc-eta">~8 min</div></div></div></div>
+  <div class="vc" onclick="openBook('Tractor (Farm)','🚜','Farm tractor, field or village roads','₹800/day','⭐ 4.9','Nayagarh')"><div class="vc-row"><div class="vc-icon">🚜</div><div class="vc-info"><h4>Tractor — Farm Transport</h4><div class="vc-sub">Sura Tractor • 3.5 km • Full day rental</div></div><div class="vc-pr"><div class="vc-price">₹800/day</div><div class="vc-eta">~12 min</div></div></div></div>
+  <div class="vc" onclick="openBook('Car/Cab','🚗','Shared cab to city or hospital','₹12/km','⭐ 4.7','Puri')"><div class="vc-row"><div class="vc-icon">🚗</div><div class="vc-info"><h4>Car — City / Hospital Trip</h4><div class="vc-sub">Manoj Cab • 4.1 km • AC car</div></div><div class="vc-pr"><div class="vc-price">₹12/km</div><div class="vc-eta">~14 min</div></div></div></div>
+  <div class="vc" onclick="openBook('E-Rickshaw','⚡','Electric rickshaw, local trips','₹10/km','⭐ 4.5','Balasore')"><div class="vc-row"><div class="vc-icon">⚡</div><div class="vc-info"><h4>E-Rickshaw — Local</h4><div class="vc-sub">Raju E-Rikshaw • 0.9 km</div></div><div class="vc-pr"><div class="vc-price">₹10/km</div><div class="vc-eta">~3 min</div></div></div></div>
+  <div class="vc" onclick="openBook('Truck','🚛','Heavy truck for large loads','₹25/km','⭐ 4.6','Ganjam')"><div class="vc-row"><div class="vc-icon">🚛</div><div class="vc-info"><h4>Truck — Heavy Goods</h4><div class="vc-sub">SK Logistics • 7.2 km • 5-tonne</div></div><div class="vc-pr"><div class="vc-price">₹25/km</div><div class="vc-eta">~22 min</div></div></div></div>
+</div><!-- /transport -->
+
+<!-- ===== SERVICE: FOOD (ZOMATO LOGIC) ===== -->
+<div id="ap-food" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🍱 Food Order | ଖାଦ୍ୟ ଅର୍ଡ଼ର</h3><div class="extra" id="cart-count" onclick="openCartModal()" style="cursor:pointer;color:var(--saffron);font-weight:700">🛒 0</div></div>
+  <div class="chips">
+    <div class="chip on" onclick="chipSel(this)">ସବୁ | All</div>
+    <div class="chip" onclick="chipSel(this)">ଓଡ଼ିଆ ଖାଦ୍ୟ</div>
+    <div class="chip" onclick="chipSel(this)">ଟିଫିନ</div>
+    <div class="chip" onclick="chipSel(this)">ସ୍ଟ୍ରିଟ ଫୁଡ</div>
+    <div class="chip" onclick="chipSel(this)">ଭୋଜ ପ୍ୟାକ</div>
+  </div>
+  <div style="padding:8px 15px;font-size:.82rem;font-weight:700;color:var(--muted)">🏪 HOTELS & HOME COOKS NEAR YOU</div>
+  <!-- Restaurant 1 -->
+  <div style="background:#fff;border-radius:14px;margin:0 15px 11px;overflow:hidden;box-shadow:var(--sh)">
+    <div style="background:var(--saffron-p);padding:13px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font-weight:800;font-size:.95rem">🏠 Maa Ki Rasoi</div><div style="font-size:.72rem;color:var(--muted)">📍 Khurda • Home Cook • 1.2km</div></div>
+      <div style="text-align:right"><div style="color:var(--gold);font-size:.78rem;font-weight:700">⭐ 4.8</div><div style="font-size:.68rem;color:var(--green)">🟢 Open</div></div>
+    </div>
+    <div class="fc"><div class="fc-row"><div class="fc-img">🍛</div><div class="fc-info"><h4>Pakhala Bhat Thali</h4><div class="fc-sub">Rice water + 5 items, Odia special</div><div class="fc-price">₹80/plate</div><button class="fc-add" onclick="addToCart('Pakhala Thali','🍛',80)">+ Add</button></div></div></div>
+    <div class="fc" style="border-top:1px solid var(--border)"><div class="fc-row"><div class="fc-img">🐟</div><div class="fc-info"><h4>Machha Besara Thali</h4><div class="fc-sub">Fish curry + rice + dal + achar</div><div class="fc-price">₹120/plate</div><button class="fc-add" onclick="addToCart('Machha Besara Thali','🐟',120)">+ Add</button></div></div></div>
+    <div class="fc" style="border-top:1px solid var(--border)"><div class="fc-row"><div class="fc-img">🥘</div><div class="fc-info"><h4>Dalma + Rice (Veg)</h4><div class="fc-sub">Traditional Odia dalma, seasonal vegs</div><div class="fc-price">₹60/plate</div><button class="fc-add" onclick="addToCart('Dalma Rice Thali','🥘',60)">+ Add</button></div></div></div>
+  </div>
+  <!-- Restaurant 2 -->
+  <div style="background:#fff;border-radius:14px;margin:0 15px 11px;overflow:hidden;box-shadow:var(--sh)">
+    <div style="background:var(--green-p);padding:13px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font-weight:800;font-size:.95rem">🍜 Sunita Tiffin Center</div><div style="font-size:.72rem;color:var(--muted)">📍 Cuttack • Tiffin • 2.4km</div></div>
+      <div style="text-align:right"><div style="color:var(--gold);font-size:.78rem;font-weight:700">⭐ 4.6</div><div style="font-size:.68rem;color:var(--green)">🟢 Open</div></div>
+    </div>
+    <div class="fc"><div class="fc-row"><div class="fc-img">🫓</div><div class="fc-info"><h4>Roti + Tarkari (4 pcs)</h4><div class="fc-sub">4 rotis + mixed vegetable curry</div><div class="fc-price">₹50/set</div><button class="fc-add" onclick="addToCart('Roti Tarkari','🫓',50)">+ Add</button></div></div></div>
+    <div class="fc" style="border-top:1px solid var(--border)"><div class="fc-row"><div class="fc-img">🍚</div><div class="fc-info"><h4>Lunch Box (Office Pack)</h4><div class="fc-sub">Rice + dal + 2 sabji + roti</div><div class="fc-price">₹70/box</div><button class="fc-add" onclick="addToCart('Office Lunch Box','🍚',70)">+ Add</button></div></div></div>
+  </div>
+  <!-- Street Food -->
+  <div style="background:#fff;border-radius:14px;margin:0 15px 11px;overflow:hidden;box-shadow:var(--sh)">
+    <div style="background:#FFF9E6;padding:13px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font-weight:800;font-size:.95rem">🛺 Chaat Wala Ramesh</div><div style="font-size:.72rem;color:var(--muted)">📍 Puri • Street Food • 0.8km</div></div>
+      <div style="text-align:right"><div style="color:var(--gold);font-size:.78rem;font-weight:700">⭐ 4.9</div><div style="font-size:.68rem;color:var(--green)">🟢 Open</div></div>
+    </div>
+    <div class="fc"><div class="fc-row"><div class="fc-img">💧</div><div class="fc-info"><h4>Pani Puri (10 pcs)</h4><div class="fc-sub">Tangy puri with mint water</div><div class="fc-price">₹30/plate</div><button class="fc-add" onclick="addToCart('Pani Puri 10pcs','💧',30)">+ Add</button></div></div></div>
+    <div class="fc" style="border-top:1px solid var(--border)"><div class="fc-row"><div class="fc-img">🍡</div><div class="fc-info"><h4>Dahi Vada (4 pcs)</h4><div class="fc-sub">Vada in curd with chutney</div><div class="fc-price">₹40/plate</div><button class="fc-add" onclick="addToCart('Dahi Vada 4pcs','🍡',40)">+ Add</button></div></div></div>
+  </div>
+</div><!-- /food -->
+
+<!-- ===== SERVICE: HOME SERVICES (URBAN COMPANY LOGIC) ===== -->
+<div id="ap-homeservice" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🔧 Home Services | ଘର ସେବା</h3></div>
+  <div class="chips">
+    <div class="chip on" onclick="chipSel(this)">ସବୁ | All</div>
+    <div class="chip" onclick="chipSel(this)">ଇଲେକ୍ଟ୍ରିକ</div>
+    <div class="chip" onclick="chipSel(this)">ଜଳ ସଂଯୋଗ</div>
+    <div class="chip" onclick="chipSel(this)">ନିର୍ମାଣ</div>
+    <div class="chip" onclick="chipSel(this)">ବାଇକ ମରାମତ</div>
+  </div>
+  <div class="lc"><div class="lc-row"><div class="lc-img" style="background:#FFF9E6">⚡</div><div class="lc-info"><h4>Electrician — Home Wiring</h4><div class="lc-sub">📍 Bijay Das • Khurda, 1.2 km</div><div class="lc-meta"><span class="lc-price">₹500/visit</span><span class="lc-rt">⭐ 4.9</span><span class="bdg bdg-go">Same Day</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Electrician','⚡','Home wiring, switch & fan repair','₹500/visit','⭐ 4.9','Khurda')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🚿</div><div class="lc-info"><h4>Plumber — Pipe & Tap Repair</h4><div class="lc-sub">📍 Krushna Panda • Cuttack, 2.1 km</div><div class="lc-meta"><span class="lc-price">₹350/visit</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-g">Available</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Plumber','🚿','Pipe, tap & motor repair','₹350/visit','⭐ 4.7','Cuttack')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🧱</div><div class="lc-info"><h4>Mason — Wall & Construction</h4><div class="lc-sub">📍 Sundargarh, 5.8 km</div><div class="lc-meta"><span class="lc-price">₹700/day</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-g">Skilled Mason</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Mason','🧱','Wall building, plastering, tiles','₹700/day','⭐ 4.6','Sundargarh')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🏍️</div><div class="lc-info"><h4>Bike / Motorcycle Repair</h4><div class="lc-sub">📍 Sonu Garage • Puri, 0.9 km</div><div class="lc-meta"><span class="lc-price">₹200/visit</span><span class="lc-rt">⭐ 4.8</span><span class="bdg bdg-sky">Doorstep</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Bike Mechanic','🏍️','2-wheeler doorstep repair','₹200/visit','⭐ 4.8','Puri')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🎨</div><div class="lc-info"><h4>House Painter</h4><div class="lc-sub">📍 Ganjam, 4.2 km</div><div class="lc-meta"><span class="lc-price">₹500/day</span><span class="lc-rt">⭐ 4.5</span><span class="bdg bdg-g">Available</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('House Painter','🎨','Interior & exterior wall painting','₹500/day','⭐ 4.5','Ganjam')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">❄️</div><div class="lc-info"><h4>AC / Cooler Repair</h4><div class="lc-sub">📍 Bhubaneswar area, 6.5 km</div><div class="lc-meta"><span class="lc-price">₹400/visit</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-sky">Expert</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('AC Repair','❄️','AC servicing, gas refill, cooler repair','₹400/visit','⭐ 4.7','Khurda')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+</div><!-- /homeservice -->
+
+<!-- ===== SERVICE: PHOTO/VIDEO ===== -->
+<div id="ap-photo" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>📸 Photo & Video | ଫଟୋ</h3></div>
+  <div class="chips">
+    <div class="chip on" onclick="chipSel(this)">ସବୁ | All</div>
+    <div class="chip" onclick="chipSel(this)">ବିବାହ | Wedding</div>
+    <div class="chip" onclick="chipSel(this)">ପାସପୋର୍ଟ</div>
+    <div class="chip" onclick="chipSel(this)">ଭ୍ୟୁ / ଡ୍ରୋନ</div>
+  </div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">📷</div><div class="lc-info"><h4>Wedding Photography (Full Day)</h4><div class="lc-sub">📍 Raja Studio • Cuttack</div><div class="lc-meta"><span class="lc-price">₹8,000/day</span><span class="lc-rt">⭐ 4.9</span><span class="bdg bdg-s">Premium</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Wedding Photography','📷','Full day wedding shoot + editing','₹8,000/day','⭐ 4.9','Cuttack')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🎬</div><div class="lc-info"><h4>Video + Reels (Event)</h4><div class="lc-sub">📍 Creative Vision • Puri</div><div class="lc-meta"><span class="lc-price">₹5,000/event</span><span class="lc-rt">⭐ 4.7</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Event Videography','🎬','Event video + 3 reels editing','₹5,000/event','⭐ 4.7','Puri')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🛸</div><div class="lc-info"><h4>Drone Videography</h4><div class="lc-sub">📍 Bhubaneswar area</div><div class="lc-meta"><span class="lc-price">₹3,000/hr</span><span class="lc-rt">⭐ 4.8</span><span class="bdg bdg-sky">Aerial</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Drone Video','🛸','Aerial drone videography','₹3,000/hr','⭐ 4.8','Khurda')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🪪</div><div class="lc-info"><h4>Passport / ID Photo</h4><div class="lc-sub">📍 Multiple locations</div><div class="lc-meta"><span class="lc-price">₹50/4 photos</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-g">Instant</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Passport Photo','🪪','Passport size, ID, visa photos','₹50/set','⭐ 4.6','Cuttack')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">📷</div><div class="lc-info"><h4>DSLR Camera Rent</h4><div class="lc-sub">📍 Cuttack, 3.3 km</div><div class="lc-meta"><span class="lc-price">₹500/day</span><span class="lc-rt">⭐ 4.5</span><span class="bdg bdg-go">Rent</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('DSLR Rent','📷','Canon 1500D + lens kit rental','₹500/day','⭐ 4.5','Cuttack')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+</div><!-- /photo -->
+
+<!-- ===== SERVICE: TENT & EVENTS ===== -->
+<div id="ap-tent" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>⛺ Tent & Events | ଷ୍ଟେଜ</h3></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">⛺</div><div class="lc-info"><h4>Tent Setup — 100 Person</h4><div class="lc-sub">📍 Khurda • Includes chairs + lights</div><div class="lc-meta"><span class="lc-price">₹12,000/event</span><span class="lc-rt">⭐ 4.8</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Tent 100pax','⛺','100-person tent with chairs & lights','₹12,000/event','⭐ 4.8','Khurda')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🔊</div><div class="lc-info"><h4>DJ Sound System</h4><div class="lc-sub">📍 Cuttack • 10,000W + DJ</div><div class="lc-meta"><span class="lc-price">₹6,000/event</span><span class="lc-rt">⭐ 4.7</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('DJ Sound','🔊','Full DJ setup with operator','₹6,000/event','⭐ 4.7','Cuttack')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🍽️</div><div class="lc-info"><h4>Catering Service (Veg)</h4><div class="lc-sub">📍 Puri • Per plate, 50+ guests</div><div class="lc-meta"><span class="lc-price">₹150/plate</span><span class="lc-rt">⭐ 4.6</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Catering Veg','🍽️','Full veg catering, 50+ guests','₹150/plate','⭐ 4.6','Puri')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">💐</div><div class="lc-info"><h4>Decoration — Flower + Lights</h4><div class="lc-sub">📍 Bhubaneswar, event decor</div><div class="lc-meta"><span class="lc-price">₹5,000 onwards</span><span class="lc-rt">⭐ 4.8</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Decoration','💐','Flower + LED light decoration','₹5,000+','⭐ 4.8','Khurda')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+</div><!-- /tent -->
+
+<!-- ===== SERVICE: PANDIT ===== -->
+<div id="ap-pandit" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🙏 Pandit & Pooja | ପୂଜା</h3></div>
+  <div class="chips">
+    <div class="chip on" onclick="chipSel(this)">ସବୁ | All</div>
+    <div class="chip" onclick="chipSel(this)">ଗୃହ ପ୍ରବେଶ</div>
+    <div class="chip" onclick="chipSel(this)">ବିବାହ</div>
+    <div class="chip" onclick="chipSel(this)">ଶ୍ରାଦ୍ଧ</div>
+  </div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🙏</div><div class="lc-info"><h4>Pandit — Griha Pravesh</h4><div class="lc-sub">📍 Khurda • Vedic ritual specialist</div><div class="lc-meta"><span class="lc-price">₹2,100/pooja</span><span class="lc-rt">⭐ 4.9</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Griha Pravesh Pandit','🙏','Vedic griha pravesh pooja','₹2,100','⭐ 4.9','Khurda')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🕉️</div><div class="lc-info"><h4>Pandit — Vivah (Wedding)</h4><div class="lc-sub">📍 Puri • Marriage ceremony</div><div class="lc-meta"><span class="lc-price">₹5,100/ceremony</span><span class="lc-rt">⭐ 4.8</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Wedding Pandit','🕉️','Full marriage ceremony ritual','₹5,100','⭐ 4.8','Puri')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">⭐</div><div class="lc-info"><h4>Jyotish — Kundali / Horoscope</h4><div class="lc-sub">📍 Cuttack • Astrology</div><div class="lc-meta"><span class="lc-price">₹500/session</span><span class="lc-rt">⭐ 4.7</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Jyotish','⭐','Kundali reading & astrology','₹500/session','⭐ 4.7','Cuttack')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+</div><!-- /pandit -->
+
+<!-- ===== SERVICE: DOCTOR ===== -->
+<div id="ap-doctor" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🩺 Doctor & Health | ଡାକ୍ତର</h3></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🩺</div><div class="lc-info"><h4>Village Doctor — General</h4><div class="lc-sub">📍 Dr. Ramesh • Nayagarh, 2.1 km</div><div class="lc-meta"><span class="lc-price">₹200/visit</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-g">On-Call</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Village Doctor','🩺','General health consultation, home visit','₹200/visit','⭐ 4.7','Nayagarh')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🏥</div><div class="lc-info"><h4>Mobile Health Camp</h4><div class="lc-sub">📍 NGO Health Van • Covers 5km</div><div class="lc-meta"><span class="lc-price">Free / ₹50</span><span class="lc-rt">⭐ 4.9</span><span class="bdg bdg-g">This Week</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Health Camp','🏥','Mobile health checkup camp','Free/₹50','⭐ 4.9','Khurda')">📅 Register</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">💊</div><div class="lc-info"><h4>Nurse on Call — Home Care</h4><div class="lc-sub">📍 Balasore, 3.8 km</div><div class="lc-meta"><span class="lc-price">₹400/day</span><span class="lc-rt">⭐ 4.6</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Home Nurse','💊','Daily home nursing care','₹400/day','⭐ 4.6','Balasore')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+</div><!-- /doctor -->
+
+<!-- ===== SERVICE: TUITION ===== -->
+<div id="ap-tuition" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>📚 Tuition & Coaching | ଟ୍ୟୁଶନ</h3></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">📚</div><div class="lc-info"><h4>Home Tutor — Class 1–10</h4><div class="lc-sub">📍 Sita Ma'am • Khurda, 1.8 km</div><div class="lc-meta"><span class="lc-price">₹800/month</span><span class="lc-rt">⭐ 4.8</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Home Tutor','📚','Class 1-10 all subjects','₹800/month','⭐ 4.8','Khurda')">📅 Enquire</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">💻</div><div class="lc-info"><h4>Computer Classes</h4><div class="lc-sub">📍 Gyan Computer Centre • Puri</div><div class="lc-meta"><span class="lc-price">₹500/month</span><span class="lc-rt">⭐ 4.6</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Computer Classes','💻','Basic computer + MS Office','₹500/month','⭐ 4.6','Puri')">📅 Enquire</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">📝</div><div class="lc-info"><h4>Exam Coaching — OSSSC / Railway</h4><div class="lc-sub">📍 Success Academy • Cuttack</div><div class="lc-meta"><span class="lc-price">₹1,500/month</span><span class="lc-rt">⭐ 4.7</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Exam Coaching','📝','OSSSC, railway, bank exam prep','₹1,500/month','⭐ 4.7','Cuttack')">📅 Enquire</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+</div><!-- /tuition -->
+
+<!-- ===== NOTIFICATIONS ===== -->
+<div id="ap-notif" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🔔 Notifications | ସୂଚନା</h3></div>
+  <div style="padding:12px 0" id="notif-list">
+    <div class="notif-item"><div class="notif-icon">✅</div><div class="notif-info"><h4>Booking Confirmed!</h4><p>Ramesh Sahoo (Crop Worker) confirmed for tomorrow 8AM</p><div class="ntime">2 hours ago</div></div><div class="notif-dot"></div></div>
+    <div class="notif-item"><div class="notif-icon">🛒</div><div class="notif-info"><h4>Order Received</h4><p>Your Paddy Seeds HB-101 order is being processed</p><div class="ntime">5 hours ago</div></div><div class="notif-dot"></div></div>
+    <div class="notif-item"><div class="notif-icon">🎁</div><div class="notif-info"><h4>Special Offer!</h4><p>Sunday Haata is live — 50+ vendors near you!</p><div class="ntime">Today 9:00 AM</div></div></div>
+    <div class="notif-item"><div class="notif-icon">📍</div><div class="notif-info"><h4>New Worker Nearby</h4><p>Bijay (Electrician, ⭐4.9) joined in Khurda</p><div class="ntime">Yesterday</div></div></div>
+  </div>
+</div>
+
+<!-- ===== ORDERS ===== -->
+<div id="ap-orders" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>📋 My Orders | ମୋ ଅର୍ଡ଼ର</h3></div>
+  <div style="padding:12px 0" id="orders-list">
+    <div class="order-item">
+      <div class="order-hd"><h4>🌾 Paddy Weeding Team</h4><span class="status-chip st-confirmed">Confirmed</span></div>
+      <div class="order-det">📅 Tomorrow 8:00 AM • 📍 Your Farm, Khurda<br>💰 ₹1,200/day • 👷 4 workers</div>
+    </div>
+    <div class="order-item">
+      <div class="order-hd"><h4>🐟 Fresh Rohu Fish — 2kg</h4><span class="status-chip st-done">Delivered</span></div>
+      <div class="order-det">📅 Yesterday • 💰 ₹360 paid</div>
+    </div>
+    <div class="order-item">
+      <div class="order-hd"><h4>🚜 Tractor Ploughing</h4><span class="status-chip st-pending">Pending</span></div>
+      <div class="order-det">📅 Day after tomorrow • 💰 ₹800/4hrs</div>
+    </div>
+  </div>
+  <div style="padding:0 15px" id="orders-user-list"></div>
+</div>
+
+<!-- ===== PROFILE ===== -->
+<div id="ap-profile" class="ca hidden">
+  <div class="prof-hero">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <button onclick="backHome()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:9px;cursor:pointer">←</button>
+      <button onclick="openEditProfile()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;border-radius:20px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">✏️ Edit</button>
+    </div>
+    <div class="pav-wrap">
+      <div class="pav" id="p-avatar">👤</div>
+      <div class="prof-info">
+        <h2 id="p-name">Loading...</h2>
+        <p id="p-type">User</p>
+        <div class="pbrow">
+          <span class="pb" id="p-loc">📍 Odisha</span>
+          <span class="pb" id="p-plan-badge">Free Plan</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Digital ID Card -->
+  <div class="did-card">
+    <div class="did-hd"><span>THE PART-TIMER'S • DIGITAL ID</span><span id="did-status">✅ VERIFIED</span></div>
+    <div class="did-body">
+      <div class="did-row">
+        <div class="did-info">
+          <div class="did-id" id="did-id">PT-000000</div>
+          <h3 id="did-name">User Name</h3>
+          <div class="did-role" id="did-role">Customer</div>
+          <div class="did-loc" id="did-loc">📍 Village, District, Odisha</div>
+        </div>
+        <div id="qrcode"></div>
+      </div>
+      <div class="did-skills" id="did-skills"></div>
+    </div>
+    <div class="did-ft">
+      <span class="ver">✅ Verified Member</span>
+      <span class="rt" id="did-rating">⭐ 4.8 Rating</span>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="sb"><div class="sn" id="stat-jobs">0</div><div class="sl">Jobs / Orders</div></div>
+    <div class="sb"><div class="sn" id="stat-rating">4.8</div><div class="sl">Avg Rating</div></div>
+    <div class="sb"><div class="sn" id="stat-member">New</div><div class="sl">Member Since</div></div>
+  </div>
+
+  <!-- Vendor Plan -->
+  <div id="vendor-plan-section" class="hidden">
+    <div style="padding:0 15px 14px">
+      <div style="background:linear-gradient(135deg,var(--saffron),var(--gold));border-radius:14px;padding:16px">
+        <div style="color:rgba(255,255,255,.8);font-size:.72rem;font-weight:700;letter-spacing:1px">CURRENT PLAN</div>
+        <div style="color:#fff;font-size:1.1rem;font-weight:800;margin-top:4px" id="plan-name-display">Local Mini</div>
+        <div style="color:rgba(255,255,255,.85);font-size:.77rem;margin-top:3px" id="plan-detail-display">₹10/month • 5km reach • 5 items</div>
+        <button onclick="openPlanModal()" style="margin-top:11px;background:#fff;color:var(--saffron);border:none;border-radius:8px;padding:7px 16px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.78rem;cursor:pointer">⬆️ Upgrade Plan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu -->
+  <div class="mg">
+    <div class="mg-title">Account</div>
+    <div class="mi" onclick="openEditProfile()"><div class="mic">✏️</div><div class="mit"><h4>Edit Profile</h4><p>Update your info & skills</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="goTab('orders')"><div class="mic">📋</div><div class="mit"><h4>My Bookings & Orders</h4><p>View all your activity</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="openPlanModal()"><div class="mic">💎</div><div class="mit"><h4>Upgrade Plan</h4><p>Get more visibility & features</p></div><div class="mia">›</div></div>
+  </div>
+  <div class="mg">
+    <div class="mg-title">Settings</div>
+    <div class="mi" onclick="toggleLang()"><div class="mic">🌐</div><div class="mit"><h4>Language / ଭାଷା</h4><p id="lang-status">Odia (Primary)</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="shareProfile()"><div class="mic">📤</div><div class="mit"><h4>Share Digital ID</h4><p>Share your work profile</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="confirmLogout()" style="border:2px solid #FFE8E8"><div class="mic">🚪</div><div class="mit"><h4 style="color:#FF4444">Logout</h4><p>Sign out of your account</p></div><div class="mia">›</div></div>
+  </div>
+  <div style="height:16px"></div>
+</div><!-- /profile -->
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <div class="ni on" onclick="goTab('home')" id="nav-home"><div class="ic">🏠</div><div class="lb">Home</div></div>
+  <div class="ni" onclick="goTab('orders')" id="nav-orders"><div class="ic">📋</div><div class="lb">Orders</div></div>
+  <div class="ni" onclick="goTab('notif')" id="nav-notif"><div class="ic">🔔</div><div class="lb">Alerts</div></div>
+  <div class="ni" onclick="goTab('profile')" id="nav-profile"><div class="ic">👤</div><div class="lb">Profile</div></div>
+</nav>
+
+</div><!-- /app -->
+</div><!-- /main-app -->
+
+<!-- ==================== MODALS ==================== -->
+
+<!-- BOOKING MODAL -->
+<div class="modal" id="modal-book">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt" id="bk-title">Book Service</div>
+    <div class="msub" id="bk-sub">Confirm your booking details</div>
+    <div style="background:var(--saffron-p);border-radius:12px;padding:14px;margin-bottom:16px;display:flex;gap:12px;align-items:center">
+      <div style="font-size:2rem" id="bk-icon">🌾</div>
+      <div><div style="font-weight:800" id="bk-name">Service Name</div><div style="font-size:.77rem;color:var(--muted)" id="bk-desc">Description</div><div style="font-weight:800;color:var(--green);margin-top:4px" id="bk-price">₹000</div></div>
+    </div>
+    <div class="fg"><label>📅 ତାରିଖ <span>/ Date</span></label><input type="date" id="bk-date"></div>
+    <div class="fg"><label>🕐 ସମୟ <span>/ Time</span></label><input type="time" id="bk-time"></div>
+    <div class="fg"><label>📍 ଆପଣଙ୍କ ଗ୍ରାମ <span>/ Your Location</span></label><input type="text" id="bk-loc" placeholder="Village, landmark"></div>
+    <div class="fg"><label>📝 ଟିପ୍ପଣୀ <span>/ Note (optional)</span></label><textarea id="bk-note" placeholder="Any special instructions..."></textarea></div>
+    <button class="btn btn-p" onclick="confirmBook()">✅ Confirm Booking</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-book')">Cancel</button>
+  </div>
+</div>
+
+<!-- ORDER MODAL -->
+<div class="modal" id="modal-order">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt" id="or-title">Order Item</div>
+    <div style="background:var(--green-p);border-radius:12px;padding:14px;margin-bottom:16px;display:flex;gap:12px;align-items:center">
+      <div style="font-size:2rem" id="or-icon">🌾</div>
+      <div><div style="font-weight:800" id="or-name">Item</div><div style="font-size:.77rem;color:var(--muted)" id="or-unit-label">per kg</div><div style="font-weight:800;color:var(--green);margin-top:4px" id="or-price-label">₹00/unit</div></div>
+    </div>
+    <div class="qty-row">
+      <button class="qty-btn" onclick="changeQty(-1)">−</button>
+      <div class="qty-num" id="qty-disp">1</div>
+      <button class="qty-btn" onclick="changeQty(1)">+</button>
+      <div style="font-size:.82rem;color:var(--muted)" id="qty-unit">kg</div>
+    </div>
+    <div class="fg"><label>📍 Delivery Address</label><input type="text" id="or-addr" placeholder="Village, landmark, pincode"></div>
+    <div class="total-row"><span>Total Amount:</span><strong id="or-total">₹00</strong></div>
+    <button class="btn btn-p" onclick="confirmOrder()">🛒 Place Order</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-order')">Cancel</button>
+  </div>
+</div>
+
+<!-- CART MODAL -->
+<div class="modal" id="modal-cart">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">🛒 Your Cart</div>
+    <div id="cart-items" style="margin-bottom:14px"></div>
+    <div class="total-row"><span>Grand Total:</span><strong id="cart-total">₹0</strong></div>
+    <div class="fg" style="margin-top:12px"><label>📍 Delivery Address</label><input type="text" id="cart-addr" placeholder="Your delivery address"></div>
+    <button class="btn btn-p" onclick="placeCartOrder()">🚚 Place Order</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-cart')">Close</button>
+  </div>
+</div>
+
+<!-- PLAN MODAL -->
+<div class="modal" id="modal-plan">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">💎 Choose Vendor Plan</div>
+    <div class="msub">No commission ever. Pay only a flat monthly fee.</div>
+    <div class="plan-grid">
+      <div class="pc sel" onclick="selPlan(this,'Local Mini','₹10/month','5km reach • 5 items')">
+        <div class="pc-name">Local Mini</div>
+        <div class="pc-price">₹10 <span>/month</span></div>
+        <div class="pc-detail">5km reach<br>Up to 5 items</div>
+      </div>
+      <div class="pc" onclick="selPlan(this,'Local Plus','₹20/month','5km+ • 10 items')">
+        <div class="pop-tag">POPULAR</div>
+        <div class="pc-name">Local Plus</div>
+        <div class="pc-price">₹20 <span>/month</span></div>
+        <div class="pc-detail">5km+ highlighted<br>Up to 10 items</div>
+      </div>
+      <div class="pc" onclick="selPlan(this,'Block Reach','₹100/month','1 Block • 20 items')">
+        <div class="pc-name">Block Reach</div>
+        <div class="pc-price">₹100 <span>/month</span></div>
+        <div class="pc-detail">~15km reach<br>15–20 items</div>
+      </div>
+      <div class="pc" onclick="selPlan(this,'District Seller','₹999/month','Full district • 50 items')">
+        <div class="pc-name">District Seller</div>
+        <div class="pc-price">₹999 <span>/month</span></div>
+        <div class="pc-detail">Full district<br>50 items</div>
+      </div>
+    </div>
+    <div class="pc" style="margin-bottom:12px" onclick="selPlan(this,'Super Vendor','₹3,999/month','Full Odisha • Unlimited')">
+      <div class="pc-name">⭐ Super Vendor — Full Odisha</div>
+      <div class="pc-price">₹3,999 <span>/month</span></div>
+      <div class="pc-detail">State-wide visibility • Unlimited items • Priority listing</div>
+    </div>
+    <div style="background:var(--green-p);border-radius:11px;padding:12px;margin-bottom:14px;font-size:.78rem;color:var(--green);font-weight:600">✅ No commission on any sale<br>✅ Upgrade or downgrade anytime<br>✅ First 3 months FREE for new vendors</div>
+    <button class="btn btn-p" onclick="activatePlan()">✅ Activate Plan</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-plan')">Cancel</button>
+  </div>
+</div>
+
+<!-- VENDOR POST MODAL -->
+<div class="modal" id="modal-vendor">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">➕ Post Item to Sell / Rent</div>
+    <div class="fg"><label>Item Name</label><input type="text" id="vi-name" placeholder="e.g. Fresh Paddy, Tractor, Camera"></div>
+    <div class="fg"><label>Category</label>
+      <select id="vi-cat"><option>Crop Farming</option><option>Fish & Aqua</option><option>Poultry</option><option>Buy/Sell</option><option>Rent</option><option>Food</option><option>Other</option></select>
+    </div>
+    <div class="fg"><label>Price</label><input type="text" id="vi-price" placeholder="e.g. ₹40/kg or ₹800/day"></div>
+    <div class="fg"><label>Type</label>
+      <select id="vi-type"><option>For Sale</option><option>For Rent</option><option>Service</option></select>
+    </div>
+    <div class="fg"><label>Description</label><textarea id="vi-desc" placeholder="Describe your item or service..."></textarea></div>
+    <button class="btn btn-p" onclick="postVendorItem()">📤 Post Listing</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-vendor')">Cancel</button>
+  </div>
+</div>
+
+<!-- EDIT PROFILE OVERLAY -->
+<div class="eov" id="eov-profile">
+  <div class="eov-hd">
+    <button onclick="closeEditProfile()" style="background:var(--bg);border:none;width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:1.05rem">←</button>
+    <h3>✏️ Edit Profile</h3>
+    <button onclick="saveProfile()" style="background:var(--saffron);color:#fff;border:none;padding:7px 16px;border-radius:9px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer">Save</button>
+  </div>
+  <div class="eov-body">
+    <div class="fg"><label>ପୂରା ନାମ <span>/ Full Name</span></label><input id="ep-name" type="text"></div>
+    <div class="fg"><label>ମୋବାଇଲ <span>/ Mobile</span></label><input id="ep-phone" type="tel"></div>
+    <div class="fg"><label>ଗ୍ରାମ <span>/ Village</span></label><input id="ep-village" type="text"></div>
+    <div class="fg"><label>ଜିଲ୍ଲା <span>/ District</span></label>
+      <select id="ep-dist">
+        <option>Khurda</option><option>Cuttack</option><option>Puri</option><option>Ganjam</option>
+        <option>Balasore</option><option>Mayurbhanj</option><option>Kendrapara</option><option>Jajpur</option>
+        <option>Bhadrak</option><option>Nayagarh</option><option>Bargarh</option><option>Koraput</option>
+        <option>Sundargarh</option><option>Sambalpur</option><option>Rayagada</option>
+      </select>
+    </div>
+    <div id="ep-worker-extra">
+      <div class="fg"><label>ଦକ୍ଷତା <span>/ Skill</span></label><input id="ep-skill" type="text" placeholder="Your skills"></div>
+      <div class="fg"><label>ଦୈନିକ ମଜୁରି <span>/ Daily Rate ₹</span></label><input id="ep-rate" type="number" placeholder="e.g. 400"></div>
+    </div>
+    <div id="ep-vendor-extra">
+      <div class="fg"><label>ଦୋକାନ ନାମ <span>/ Shop Name</span></label><input id="ep-shop" type="text"></div>
+    </div>
+    <div class="fg"><label>ବ୍ୟକ୍ତିଗତ ବିବରଣ <span>/ Bio (optional)</span></label><textarea id="ep-bio" placeholder="Tell something about yourself..."></textarea></div>
+    <button class="btn btn-p" onclick="saveProfile()">✅ Save Changes</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA & STATE
+// ============================================================
+const SHEET_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE'; // Replace after setup
+let currentUser = null;
+let currentLang = 'or';
+let cart = [];
+let currentOrderItem = null;
+let currentPlan = { name:'Local Mini', price:'₹10/month', detail:'5km reach • 5 items' };
+let qrGenerated = false;
+
+const PLANS = {
+  'Local Mini':     { price:'₹10/month',   detail:'5km reach • 5 items' },
+  'Local Plus':     { price:'₹20/month',   detail:'5km+ highlight • 10 items' },
+  'Block Reach':    { price:'₹100/month',  detail:'~15km reach • 20 items' },
+  'District Seller':{ price:'₹999/month',  detail:'Full district • 50 items' },
+  'Super Vendor':   { price:'₹3,999/month',detail:'Full Odisha • Unlimited' }
+};
+
+const TRANSLATIONS = {
+  or: { greeting:'ନମସ୍କାର 🙏', search:'ସେବା ଖୋଜନ୍ତୁ', langBtn:'EN' },
+  en: { greeting:'Welcome 🙏',  search:'Search services...', langBtn:'ଓଡ଼ିଆ' }
+};
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').style.opacity = '0';
+    setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+    const saved = localStorage.getItem('pt_user');
+    if (saved) {
+      currentUser = JSON.parse(saved);
+      launchApp();
+    }
+  }, 2400);
+
+  // Set today as default booking date
+  const today = new Date().toISOString().split('T')[0];
+  const bkDate = document.getElementById('bk-date');
+  if (bkDate) bkDate.value = today;
+});
+
+// ============================================================
+// AUTH
+// ============================================================
+let selectedUserType = '';
+
+function showPg(id) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+function selUT(el, type) {
+  document.querySelectorAll('.ut-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedUserType = type;
+  document.getElementById('reg-form').classList.remove('hidden');
+  ['wf','vdf','vhf'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  if (type === 'worker') document.getElementById('wf').classList.remove('hidden');
+  if (type === 'vendor') document.getElementById('vdf').classList.remove('hidden');
+  if (type === 'vehicle') document.getElementById('vhf').classList.remove('hidden');
+}
+
+function doRegister() {
+  const name = document.getElementById('r-name').value.trim();
+  const phone = document.getElementById('r-phone').value.trim();
+  const dist = document.getElementById('r-dist').value;
+  const village = document.getElementById('r-village').value.trim();
+  const pass = document.getElementById('r-pass').value;
+
+  if (!name || !phone || !dist || !village || !pass || !selectedUserType) {
+    showToast('⚠️ Please fill all required fields'); return;
+  }
+  if (phone.length !== 10) { showToast('⚠️ Enter valid 10-digit mobile'); return; }
+
+  const uid = 'PT-' + Date.now().toString().slice(-6);
+  const user = {
+    id: uid, name, phone, district: dist, village, type: selectedUserType,
+    pass, createdAt: new Date().toISOString(),
+    skill: document.getElementById('r-skill')?.value || '',
+    rate: document.getElementById('r-rate')?.value || '',
+    exp: document.getElementById('r-exp')?.value || '',
+    shop: document.getElementById('r-shop')?.value || '',
+    biz: document.getElementById('r-biz')?.value || '',
+    sales: document.getElementById('r-sales')?.value || '',
+    vtype: document.getElementById('r-vtype')?.value || '',
+    vnum: document.getElementById('r-vnum')?.value || '',
+    vrate: document.getElementById('r-vrate')?.value || '',
+    plan: 'Local Mini', rating: '4.8', jobs: 0, bio: '',
+    status: 'active'
+  };
+
+  // Save locally
+  localStorage.setItem('pt_user', JSON.stringify(user));
+  // Save all users list
+  let allUsers = JSON.parse(localStorage.getItem('pt_all_users') || '[]');
+  allUsers.push(user);
+  localStorage.setItem('pt_all_users', JSON.stringify(allUsers));
+
+  // Send to Google Sheets
+  sendToSheet('register', user);
+
+  currentUser = user;
+  showToast('✅ Registration successful!');
+  setTimeout(launchApp, 800);
+}
+
+function doLogin() {
+  const phone = document.getElementById('l-phone').value.trim();
+  const pass = document.getElementById('l-pass').value;
+  let allUsers = JSON.parse(localStorage.getItem('pt_all_users') || '[]');
+  const user = allUsers.find(u => u.phone === phone && u.pass === pass);
+  if (!user) { showToast('❌ Wrong mobile or password'); return; }
+  if (user.status === 'blocked') { showToast('🚫 Account blocked. Contact admin.'); return; }
+  localStorage.setItem('pt_user', JSON.stringify(user));
+  currentUser = user;
+  showToast('✅ Welcome back, ' + user.name + '!');
+  setTimeout(launchApp, 700);
+}
+
+function demoLogin() {
+  const demo = {
+    id:'PT-DEMO01', name:'Ramesh Sahoo', phone:'9876543210', district:'Khurda',
+    village:'Balianta', type:'worker', pass:'demo',
+    skill:'ଶସ୍ୟ ଚାଷ / Crop Farming', rate:'350', exp:'5', shop:'', biz:'',
+    plan:'Local Plus', rating:'4.8', jobs:42, bio:'Experienced crop farmer.',
+    createdAt: new Date().toISOString(), status:'active'
+  };
+  localStorage.setItem('pt_user', JSON.stringify(demo));
+  currentUser = demo;
+  showToast('🎯 Demo mode activated!');
+  setTimeout(launchApp, 700);
+}
+
+function launchApp() {
+  document.getElementById('auth-section').classList.add('hidden');
+  document.getElementById('main-app').classList.remove('hidden');
+  loadHomeData();
+  loadProfileData();
+  goTab('home');
+}
+
+// ============================================================
+// GOOGLE SHEETS INTEGRATION
+// ============================================================
+function sendToSheet(action, data) {
+  if (!SHEET_URL || SHEET_URL.includes('YOUR_GOOGLE')) return;
+  const payload = { action, ...data, timestamp: new Date().toISOString() };
+  fetch(SHEET_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function goTab(tab) {
+  ['home','orders','notif','profile'].forEach(t => {
+    document.getElementById('ap-' + t)?.classList.add('hidden');
+    document.getElementById('nav-' + t)?.classList.remove('on');
+  });
+  // Also hide service pages
+  ['farming','fish','poultry','buysell','transport','food','homeservice','photo','tent','pandit','doctor','tuition'].forEach(t => {
+    document.getElementById('ap-' + t)?.classList.add('hidden');
+  });
+  document.getElementById('ap-' + tab)?.classList.remove('hidden');
+  document.getElementById('nav-' + tab)?.classList.add('on');
+
+  if (tab === 'orders') loadOrders();
+}
+
+function goSvc(svc) {
+  ['home','orders','notif','profile','farming','fish','poultry','buysell','transport','food','homeservice','photo','tent','pandit','doctor','tuition'].forEach(t => {
+    document.getElementById('ap-' + t)?.classList.add('hidden');
+  });
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
+  document.getElementById('ap-' + svc)?.classList.remove('hidden');
+
+  // Handle fish tab init
+  if (svc === 'fish') showTab('fish-workers');
+  if (svc === 'buysell') showTab('bs-all');
+}
+
+function backHome() { goTab('home'); }
+
+// ============================================================
+// HOME DATA
+// ============================================================
+function loadHomeData() {
+  if (!currentUser) return;
+  document.getElementById('h-nm').textContent = currentUser.name || 'User';
+  document.getElementById('h-loc').textContent = currentUser.district + ', Odisha';
+  document.getElementById('h-gr').textContent = currentLang === 'or' ? 'ନମସ୍କାର 🙏' : 'Welcome 🙏';
+
+  // Load dynamic workers from localStorage
+  let allUsers = JSON.parse(localStorage.getItem('pt_all_users') || '[]');
+  let workers = allUsers.filter(u => u.type === 'worker' && u.id !== currentUser.id).slice(0, 5);
+  if (workers.length > 0) {
+    const hs = document.getElementById('workers-hs');
+    workers.forEach(w => {
+      const div = document.createElement('div');
+      div.className = 'wc';
+      div.onclick = () => openBook(w.name,'👷', w.skill || 'Worker', '₹'+(w.rate||'300')+'/day','⭐ '+w.rating, w.district);
+      div.innerHTML = `<div class="wav">👷</div><h4>${w.name}</h4><div class="wsk">${w.skill||'Worker'}</div><div class="wrt">⭐ ${w.rating} New</div><div class="wpr">₹${w.rate||'300'}/day</div>`;
+      hs.appendChild(div);
+    });
+  }
+}
+
+// ============================================================
+// PROFILE DATA
+// ============================================================
+function loadProfileData() {
+  if (!currentUser) return;
+  const u = currentUser;
+  document.getElementById('p-name').textContent = u.name;
+  document.getElementById('p-type').textContent = u.type.charAt(0).toUpperCase() + u.type.slice(1);
+  document.getElementById('p-loc').textContent = '📍 ' + u.village + ', ' + u.district;
+  document.getElementById('p-plan-badge').textContent = u.plan || 'Free';
+
+  document.getElementById('did-id').textContent = u.id;
+  document.getElementById('did-name').textContent = u.name;
+  document.getElementById('did-role').textContent = u.type.charAt(0).toUpperCase() + u.type.slice(1) + ' • ' + (u.skill || u.biz || u.vtype || 'Member');
+  document.getElementById('did-loc').textContent = '📍 ' + u.village + ', ' + u.district + ', Odisha';
+
+  document.getElementById('stat-jobs').textContent = u.jobs || '0';
+  document.getElementById('stat-rating').textContent = u.rating || '4.8';
+  document.getElementById('stat-member').textContent = u.createdAt ? new Date(u.createdAt).getFullYear() : new Date().getFullYear();
+
+  // Skills tags
+  const sk = document.getElementById('did-skills');
+  sk.innerHTML = '';
+  const tags = [u.skill, u.biz, u.vtype].filter(Boolean);
+  if (tags.length === 0) tags.push(u.type.charAt(0).toUpperCase() + u.type.slice(1));
+  tags.forEach(t => { const span = document.createElement('span'); span.className = 'dtag'; span.textContent = t; sk.appendChild(span); });
+
+  // Vendor plan section
+  if (u.type === 'vendor' || u.type === 'worker') {
+    document.getElementById('vendor-plan-section').classList.remove('hidden');
+    document.getElementById('plan-name-display').textContent = u.plan || 'Local Mini';
+    const pd = PLANS[u.plan] || PLANS['Local Mini'];
+    document.getElementById('plan-detail-display').textContent = pd.price + ' • ' + pd.detail;
+  }
+
+  // QR Code — generate once
+  if (!qrGenerated) {
+    const qrEl = document.getElementById('qrcode');
+    qrEl.innerHTML = '';
+    new QRCode(qrEl, {
+      text: 'https://part-timers.app/id/' + u.id + '?name=' + encodeURIComponent(u.name),
+      width: 70, height: 70, colorDark: '#1A1A1A', colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+    qrGenerated = true;
+  }
+
+  // Edit form prefill
+  document.getElementById('ep-name').value = u.name || '';
+  document.getElementById('ep-phone').value = u.phone || '';
+  document.getElementById('ep-village').value = u.village || '';
+  document.getElementById('ep-skill').value = u.skill || '';
+  document.getElementById('ep-rate').value = u.rate || '';
+  document.getElementById('ep-shop').value = u.shop || '';
+  document.getElementById('ep-bio').value = u.bio || '';
+
+  // Show/hide edit extras
+  document.getElementById('ep-worker-extra').style.display = (u.type==='worker'||u.type==='vehicle') ? '' : 'none';
+  document.getElementById('ep-vendor-extra').style.display = (u.type==='vendor') ? '' : 'none';
+}
+
+function saveProfile() {
+  if (!currentUser) return;
+  currentUser.name = document.getElementById('ep-name').value.trim() || currentUser.name;
+  currentUser.phone = document.getElementById('ep-phone').value.trim() || currentUser.phone;
+  currentUser.village = document.getElementById('ep-village').value.trim() || currentUser.village;
+  currentUser.district = document.getElementById('ep-dist').value || currentUser.district;
+  currentUser.skill = document.getElementById('ep-skill').value;
+  currentUser.rate = document.getElementById('ep-rate').value;
+  currentUser.shop = document.getElementById('ep-shop').value;
+  currentUser.bio = document.getElementById('ep-bio').value;
+
+  localStorage.setItem('pt_user', JSON.stringify(currentUser));
+  // Update in all_users
+  let allUsers = JSON.parse(localStorage.getItem('pt_all_users') || '[]');
+  const idx = allUsers.findIndex(u => u.id === currentUser.id);
+  if (idx >= 0) allUsers[idx] = currentUser;
+  localStorage.setItem('pt_all_users', JSON.stringify(allUsers));
+
+  sendToSheet('updateProfile', currentUser);
+  qrGenerated = false;
+  loadProfileData();
+  closeEditProfile();
+  showToast('✅ Profile updated!');
+}
+
+function openEditProfile() { document.getElementById('eov-profile').classList.add('on'); }
+function closeEditProfile() { document.getElementById('eov-profile').classList.remove('on'); }
+
+// ============================================================
+// BOOKING
+// ============================================================
+function openBook(name, icon, desc, price, rating, loc) {
+  document.getElementById('bk-title').textContent = 'Book: ' + name;
+  document.getElementById('bk-icon').textContent = icon;
+  document.getElementById('bk-name').textContent = name;
+  document.getElementById('bk-desc').textContent = desc + ' • 📍 ' + loc;
+  document.getElementById('bk-price').textContent = price + ' • ' + rating;
+  document.getElementById('bk-loc').value = currentUser ? currentUser.village + ', ' + currentUser.district : '';
+  openModal('modal-book');
+}
+
+function confirmBook() {
+  const date = document.getElementById('bk-date').value;
+  const loc = document.getElementById('bk-loc').value.trim();
+  if (!date || !loc) { showToast('⚠️ Fill date & location'); return; }
+
+  const booking = {
+    id: 'BK-' + Date.now().toString().slice(-6),
+    userId: currentUser?.id,
+    userName: currentUser?.name,
+    service: document.getElementById('bk-name').textContent,
+    desc: document.getElementById('bk-desc').textContent,
+    price: document.getElementById('bk-price').textContent,
+    date, loc,
+    note: document.getElementById('bk-note').value,
+    status: 'pending', type: 'booking',
+    createdAt: new Date().toISOString()
+  };
+
+  // Save booking
+  let bookings = JSON.parse(localStorage.getItem('pt_bookings') || '[]');
+  bookings.unshift(booking);
+  localStorage.setItem('pt_bookings', JSON.stringify(bookings));
+  sendToSheet('booking', booking);
+
+  closeModal('modal-book');
+  showToast('✅ Booking confirmed! ₹0 upfront.');
+  loadOrders();
+}
+
+// ============================================================
+// ORDERS
+// ============================================================
+let orderPrice = 0;
+let orderQty = 1;
+let orderUnit = '';
+
+function openOrder(name, icon, price, unit) {
+  const p = parseInt(price.replace('₹','')) || 0;
+  orderPrice = p; orderQty = 1; orderUnit = unit;
+  document.getElementById('or-title').textContent = 'Order: ' + name;
+  document.getElementById('or-icon').textContent = icon;
+  document.getElementById('or-name').textContent = name;
+  document.getElementById('or-unit-label').textContent = 'per ' + unit;
+  document.getElementById('or-price-label').textContent = price + ' / ' + unit;
+  document.getElementById('qty-unit').textContent = unit;
+  document.getElementById('qty-disp').textContent = '1';
+  document.getElementById('or-total').textContent = price;
+  currentOrderItem = { name, icon, price: p, unit };
+  openModal('modal-order');
+}
+
+function changeQty(d) {
+  orderQty = Math.max(1, orderQty + d);
+  document.getElementById('qty-disp').textContent = orderQty;
+  document.getElementById('or-total').textContent = '₹' + (orderPrice * orderQty);
+}
+
+function confirmOrder() {
+  const addr = document.getElementById('or-addr').value.trim();
+  if (!addr) { showToast('⚠️ Enter delivery address'); return; }
+  const order = {
+    id: 'ORD-' + Date.now().toString().slice(-6),
+    userId: currentUser?.id, userName: currentUser?.name,
+    item: currentOrderItem?.name, icon: currentOrderItem?.icon,
+    qty: orderQty + ' ' + orderUnit,
+    total: '₹' + (orderPrice * orderQty),
+    address: addr, status: 'pending', type: 'order',
+    createdAt: new Date().toISOString()
+  };
+  let orders = JSON.parse(localStorage.getItem('pt_orders') || '[]');
+  orders.unshift(order);
+  localStorage.setItem('pt_orders', JSON.stringify(orders));
+  sendToSheet('order', order);
+  closeModal('modal-order');
+  showToast('✅ Order placed! ' + order.total + ' COD');
+  if (currentUser) { currentUser.jobs = (parseInt(currentUser.jobs)||0)+1; localStorage.setItem('pt_user', JSON.stringify(currentUser)); }
+  loadOrders();
+}
+
+// FOOD CART
+function addToCart(name, icon, price) {
+  cart.push({ name, icon, price });
+  document.getElementById('cart-count').textContent = '🛒 ' + cart.length;
+  showToast('✅ Added: ' + name);
+}
+
+function openCartModal() {
+  const el = document.getElementById('cart-items');
+  if (cart.length === 0) { showToast('🛒 Cart is empty'); return; }
+  el.innerHTML = cart.map((c,i) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)"><div>${c.icon} ${c.name}</div><div style="display:flex;gap:12px;align-items:center"><strong>₹${c.price}</strong><button onclick="removeCart(${i})" style="background:#FFE8E8;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;color:#FF4444;font-weight:700">✕</button></div></div>`).join('');
+  const total = cart.reduce((s,c) => s+c.price, 0);
+  document.getElementById('cart-total').textContent = '₹' + total;
+  openModal('modal-cart');
+}
+
+function removeCart(i) { cart.splice(i,1); openCartModal(); }
+
+function placeCartOrder() {
+  const addr = document.getElementById('cart-addr').value.trim();
+  if (!addr) { showToast('⚠️ Enter delivery address'); return; }
+  const total = cart.reduce((s,c)=>s+c.price,0);
+  const order = {
+    id:'ORD-'+Date.now().toString().slice(-6), userId:currentUser?.id,
+    userName:currentUser?.name, item:'Food Order ('+cart.length+' items)',
+    icon:'🍱', qty:'1 order', total:'₹'+total, address:addr,
+    status:'pending', type:'order', createdAt:new Date().toISOString()
+  };
+  let orders = JSON.parse(localStorage.getItem('pt_orders')||'[]');
+  orders.unshift(order);
+  localStorage.setItem('pt_orders', JSON.stringify(orders));
+  sendToSheet('order', order);
+  cart = [];
+  document.getElementById('cart-count').textContent = '🛒 0';
+  closeModal('modal-cart');
+  showToast('✅ Food order placed! Total ₹'+total);
+  loadOrders();
+}
+
+function loadOrders() {
+  const el = document.getElementById('orders-user-list');
+  if (!el || !currentUser) return;
+  let bookings = JSON.parse(localStorage.getItem('pt_bookings')||'[]').filter(b=>b.userId===currentUser.id);
+  let orders = JSON.parse(localStorage.getItem('pt_orders')||'[]').filter(o=>o.userId===currentUser.id);
+  const all = [...bookings, ...orders].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+  if (all.length === 0) { el.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted)">No bookings yet. Book a service!</div>'; return; }
+  el.innerHTML = all.map(o=>`
+    <div class="order-item">
+      <div class="order-hd"><h4>${o.icon||'📋'} ${o.item||o.service}</h4><span class="status-chip st-${o.status==='confirmed'?'confirmed':o.status==='done'?'done':'pending'}">${o.status||'Pending'}</span></div>
+      <div class="order-det">📅 ${o.date||o.createdAt?.slice(0,10)} • 💰 ${o.total||o.price||''} ${o.qty?'• Qty: '+o.qty:''}</div>
+    </div>`).join('');
+}
+
+// ============================================================
+// PLAN
+// ============================================================
+let selectedPlanName = 'Local Mini';
+
+function selPlan(el, name, price, detail) {
+  document.querySelectorAll('.pc').forEach(p=>p.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedPlanName = name;
+}
+
+function activatePlan() {
+  if (!currentUser) return;
+  currentUser.plan = selectedPlanName;
+  localStorage.setItem('pt_user', JSON.stringify(currentUser));
+  let allUsers = JSON.parse(localStorage.getItem('pt_all_users')||'[]');
+  const idx = allUsers.findIndex(u=>u.id===currentUser.id);
+  if (idx>=0) allUsers[idx]=currentUser;
+  localStorage.setItem('pt_all_users', JSON.stringify(allUsers));
+  sendToSheet('planUpgrade',{id:currentUser.id,plan:selectedPlanName});
+  closeModal('modal-plan');
+  loadProfileData();
+  showToast('✅ Plan upgraded to ' + selectedPlanName + '!');
+}
+
+function openPlanModal() { openModal('modal-plan'); }
+
+// ============================================================
+// VENDOR POST
+// ============================================================
+function openVendorModal() { openModal('modal-vendor'); }
+
+function postVendorItem() {
+  const name = document.getElementById('vi-name').value.trim();
+  const price = document.getElementById('vi-price').value.trim();
+  if (!name||!price) { showToast('⚠️ Fill item name & price'); return; }
+  const item = {
+    id:'ITEM-'+Date.now().toString().slice(-6),
+    vendorId:currentUser?.id, vendorName:currentUser?.name,
+    name, category:document.getElementById('vi-cat').value,
+    price, type:document.getElementById('vi-type').value,
+    desc:document.getElementById('vi-desc').value,
+    district:currentUser?.district, status:'pending',
+    createdAt:new Date().toISOString()
+  };
+  let items = JSON.parse(localStorage.getItem('pt_listings')||'[]');
+  items.unshift(item);
+  localStorage.setItem('pt_listings', JSON.stringify(items));
+  sendToSheet('listing', item);
+  closeModal('modal-vendor');
+  showToast('✅ Listing posted! Pending admin approval.');
+}
+
+// ============================================================
+// SEARCH
+// ============================================================
+function doSearch(val) {
+  if (!val.trim()) return;
+  const v = val.toLowerCase();
+  const map = {
+    'farm':'farming','paddy':'farming','crop':'farming','seed':'farming',
+    'fish':'fish','prawn':'fish','aqua':'fish','boat':'fish',
+    'chicken':'poultry','egg':'poultry','goat':'poultry','cow':'poultry',
+    'tractor':'transport','auto':'transport','tempo':'transport','truck':'transport',
+    'food':'food','thali':'food','rice':'food','lunch':'food',
+    'electric':'homeservice','plumb':'homeservice','mason':'homeservice','paint':'homeservice',
+    'photo':'photo','camera':'photo','video':'photo','drone':'photo',
+    'tent':'tent','dj':'tent','cater':'tent',
+    'pandit':'pandit','pooja':'pandit','puja':'pandit',
+    'doctor':'doctor','health':'doctor','nurse':'doctor',
+    'tuition':'tuition','coaching':'tuition','computer':'tuition'
+  };
+  for (const [key,svc] of Object.entries(map)) {
+    if (v.includes(key)) { goSvc(svc); showToast('🔍 Showing ' + svc + ' results'); return; }
+  }
+  showToast('🔍 Try: farming, fish, transport, food...');
+}
+
+function searchVehicles() { showToast('🔍 Searching vehicles near you...'); }
+
+// ============================================================
+// LANG
+// ============================================================
+function toggleLang() {
+  currentLang = currentLang === 'or' ? 'en' : 'or';
+  const t = TRANSLATIONS[currentLang];
+  const alb = document.getElementById('alb');
+  if (alb) alb.textContent = t.langBtn;
+  const lbtn = document.getElementById('lang-btn');
+  if (lbtn) lbtn.textContent = currentLang==='or'?'Switch to English':'ଓଡ଼ିଆ ଭାଷା';
+  const ls = document.getElementById('lang-status');
+  if (ls) ls.textContent = currentLang==='or'?'Odia (Primary)':'English (Secondary)';
+  const srch = document.getElementById('srch');
+  if (srch) srch.placeholder = t.search;
+  const hgr = document.getElementById('h-gr');
+  if (hgr) hgr.textContent = t.greeting;
+  showToast(currentLang==='or'?'ଓଡ଼ିଆ ଭାଷା ସକ୍ରିୟ':'English mode active');
+}
+
+// ============================================================
+// CHIPS & TABS
+// ============================================================
+function chipSel(el) {
+  el.closest('.chips')?.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function tabSel(el, target) {
+  const parent = el.closest('.ca') || el.closest('#ap-fish') || document.getElementById('ap-fish') || document.getElementById('ap-buysell');
+  el.parentElement.querySelectorAll('.ti').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  showTab(target);
+}
+
+function showTab(id) {
+  const allTabs = ['fish-workers','fish-sell','fish-rent','fish-boat','bs-all','bs-sell','bs-rent','bs-haata'];
+  allTabs.forEach(t => { const el=document.getElementById(t); if(el) el.classList.add('hidden'); });
+  const show = document.getElementById(id);
+  if (show) show.classList.remove('hidden');
+}
+
+// ============================================================
+// MODAL HELPERS
+// ============================================================
+function openModal(id) { document.getElementById(id).classList.add('on'); }
+function closeModal(id) { document.getElementById(id).classList.remove('on'); }
+
+// Close modal on overlay click
+document.querySelectorAll('.modal').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('on'); });
+});
+
+// ============================================================
+// MISC
+// ============================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display='block';
+  setTimeout(()=>t.style.display='none', 2800);
+}
+
+function shareProfile() {
+  const url = 'https://part-timers.app/id/' + (currentUser?.id||'demo');
+  if (navigator.share) {
+    navigator.share({ title:'My Part-Timer Profile', text: currentUser?.name + ' — ' + currentUser?.skill, url });
+  } else {
+    navigator.clipboard?.writeText(url).then(()=>showToast('📋 Profile link copied!'));
+  }
+}
+
+function confirmLogout() {
+  if (confirm('Logout karna chahte hain? / Logout?')) {
+    localStorage.removeItem('pt_user');
+    currentUser = null; cart = []; qrGenerated = false;
+    document.getElementById('main-app').classList.add('hidden');
+    document.getElementById('auth-section').classList.remove('hidden');
+    showPg('pg-welcome');
+  }
+}
+</script>
+</body>
+</html>

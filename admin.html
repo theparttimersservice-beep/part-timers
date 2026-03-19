@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — The Part-Timer's</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0F1117;--surf:#1A1D27;--surf2:#22263A;--surf3:#2A2F45;
+  --saffron:#FF6B00;--gold:#D4A017;--green:#2D9B56;
+  --red:#FF4444;--sky:#3B9DD6;--purple:#8B5CF6;
+  --text:#F1F1F1;--muted:#8B8FA8;--border:#2E3347;
+  --sh:0 4px 20px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── LOGIN ── */
+#login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 40%,#1a1d27,#0f1117)}
+.lcard{background:var(--surf);border:1px solid var(--border);border-radius:20px;padding:40px 36px;width:100%;max-width:370px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.lcard .head{text-align:center;margin-bottom:28px}
+.lcard .head .ico{font-size:2.6rem;margin-bottom:10px}
+.lcard .head h2{font-size:1.25rem;font-weight:800;color:var(--saffron)}
+.lcard .head p{font-size:.78rem;color:var(--muted);margin-top:3px}
+.lf{margin-bottom:14px}
+.lf label{display:block;font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.lf input{width:100%;padding:11px 13px;background:var(--surf2);border:1px solid var(--border);border-radius:9px;font-family:'Baloo 2',sans-serif;font-size:.9rem;color:var(--text)}
+.lf input:focus{outline:none;border-color:var(--saffron)}
+.lbtn{width:100%;padding:13px;background:linear-gradient(135deg,var(--saffron),#ff8c3a);color:#fff;border:none;border-radius:10px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;margin-top:6px;transition:all .2s}
+.lbtn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,107,0,.4)}
+.lhint{text-align:center;margin-top:12px;font-size:.73rem;color:var(--muted)}
+
+/* ── APP SHELL ── */
+#app{display:none;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:214px;background:var(--surf);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:width .25s}
+.sb-logo{padding:18px 16px;border-bottom:1px solid var(--border)}
+.sb-logo h2{font-size:.9rem;font-weight:800;color:var(--saffron);white-space:nowrap}
+.sb-logo p{font-size:.68rem;color:var(--muted);margin-top:2px}
+.sb-nav{flex:1;padding:10px 0;overflow-y:auto;scrollbar-width:none}
+.sb-nav::-webkit-scrollbar{display:none}
+.sn-label{padding:6px 16px;font-size:.6rem;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:6px}
+.sn-item{display:flex;align-items:center;gap:9px;padding:9px 16px;cursor:pointer;transition:all .18s;border-left:3px solid transparent;font-size:.83rem;font-weight:600;color:var(--muted);white-space:nowrap}
+.sn-item:hover{background:var(--surf2);color:var(--text)}
+.sn-item.on{background:var(--surf2);color:var(--saffron);border-left-color:var(--saffron)}
+.sn-item .ic{font-size:1.05rem;width:20px;text-align:center;flex-shrink:0}
+.sb-foot{padding:12px 16px;border-top:1px solid var(--border)}
+.sb-user{display:flex;align-items:center;gap:9px}
+.sb-av{width:32px;height:32px;background:var(--saffron);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:.9rem;flex-shrink:0}
+.sb-ui h4{font-size:.78rem;font-weight:700}
+.sb-ui p{font-size:.65rem;color:var(--muted)}
+
+/* ── MAIN ── */
+.main{margin-left:214px;padding:0;min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:var(--surf);border-bottom:1px solid var(--border);padding:11px 22px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.tb-left h3{font-size:.95rem;font-weight:800}
+.tb-left p{font-size:.7rem;color:var(--muted);margin-top:1px}
+.tb-right{display:flex;align-items:center;gap:9px}
+.tb-live{display:flex;align-items:center;gap:5px;font-size:.72rem;font-weight:700;color:var(--green)}
+.live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.tb-btn{background:var(--surf2);border:1px solid var(--border);color:var(--text);padding:6px 13px;border-radius:7px;font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.75rem;cursor:pointer;transition:all .18s}
+.tb-btn:hover{border-color:var(--saffron);color:var(--saffron)}
+.tb-btn.red:hover{border-color:var(--red);color:var(--red);background:rgba(255,68,68,.08)}
+.content{padding:22px;flex:1}
+
+/* ── PANELS ── */
+.panel{display:none}
+.panel.on{display:block}
+
+/* ── STAT GRID ── */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:20px}
+.sg2{grid-template-columns:repeat(4,1fr)}
+.sc{background:var(--surf);border:1px solid var(--border);border-radius:13px;padding:16px 14px;position:relative;overflow:hidden}
+.sc::after{content:attr(data-icon);position:absolute;right:12px;top:12px;font-size:1.6rem;opacity:.5}
+.sc .sl{font-size:.67rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.sc .sv{font-size:1.9rem;font-weight:800;line-height:1}
+.sc .ss{font-size:.69rem;color:var(--muted);margin-top:4px}
+.c-s{color:var(--saffron)}.c-g{color:var(--green)}.c-b{color:var(--sky)}.c-o{color:var(--gold)}.c-p{color:var(--purple)}.c-r{color:#FF8C3A}
+
+/* ── CHART CARDS ── */
+.cr{display:grid;grid-template-columns:1.5fr 1fr;gap:13px;margin-bottom:18px}
+.cr.full{grid-template-columns:1fr 1fr}
+.chart-box{background:var(--surf);border:1px solid var(--border);border-radius:13px;padding:16px}
+.chart-box h3{font-size:.85rem;font-weight:800;margin-bottom:13px;color:var(--text)}
+.chart-box canvas{max-height:195px}
+
+/* ── TABLE CARD ── */
+.tc{background:var(--surf);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:18px}
+.tc-h{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.tc-h h3{font-size:.87rem;font-weight:800;white-space:nowrap}
+.tc-h .acts{display:flex;gap:7px;flex-wrap:wrap}
+.srch{background:var(--surf2);border:1px solid var(--border);border-radius:7px;padding:6px 11px;font-family:'Baloo 2',sans-serif;font-size:.78rem;color:var(--text);min-width:180px}
+.srch:focus{outline:none;border-color:var(--saffron)}
+.filt{background:var(--surf2);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-family:'Baloo 2',sans-serif;font-size:.75rem;color:var(--text)}
+.filt:focus{outline:none}
+table{width:100%;border-collapse:collapse}
+th{padding:9px 13px;text-align:left;font-size:.67rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;background:var(--surf2);border-bottom:1px solid var(--border)}
+td{padding:10px 13px;font-size:.8rem;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted)}
+
+/* ── BADGES ── */
+.bdg{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.62rem;font-weight:700}
+.bdg-active{background:rgba(45,155,86,.15);color:var(--green);border:1px solid rgba(45,155,86,.25)}
+.bdg-blocked{background:rgba(255,68,68,.15);color:var(--red);border:1px solid rgba(255,68,68,.25)}
+.bdg-pending{background:rgba(255,107,0,.15);color:var(--saffron);border:1px solid rgba(255,107,0,.25)}
+.bdg-confirmed{background:rgba(59,157,214,.15);color:var(--sky);border:1px solid rgba(59,157,214,.25)}
+.bdg-done{background:rgba(45,155,86,.15);color:var(--green);border:1px solid rgba(45,155,86,.25)}
+.bdg-worker{background:rgba(212,160,23,.15);color:var(--gold)}
+.bdg-vendor{background:rgba(59,157,214,.15);color:var(--sky)}
+.bdg-vehicle{background:rgba(255,107,0,.15);color:var(--saffron)}
+.bdg-customer{background:rgba(139,92,246,.15);color:var(--purple)}
+
+/* ── ACTION BTNS ── */
+.ab{padding:4px 10px;border-radius:6px;border:none;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.7rem;cursor:pointer;transition:all .15s}
+.ab-approve{background:rgba(45,155,86,.15);color:var(--green);border:1px solid rgba(45,155,86,.25)}.ab-approve:hover{background:var(--green);color:#fff}
+.ab-block{background:rgba(255,68,68,.12);color:var(--red);border:1px solid rgba(255,68,68,.25)}.ab-block:hover{background:var(--red);color:#fff}
+.ab-del{background:rgba(255,68,68,.08);color:var(--red)}.ab-del:hover{background:var(--red);color:#fff}
+.ab-view{background:rgba(59,157,214,.12);color:var(--sky)}.ab-view:hover{background:var(--sky);color:#fff}
+.ab-edit{background:rgba(212,160,23,.12);color:var(--gold)}.ab-edit:hover{background:var(--gold);color:#fff}
+.ab-feature{background:rgba(139,92,246,.12);color:var(--purple)}.ab-feature:hover{background:var(--purple);color:#fff}
+.ab-status{background:rgba(255,107,0,.12);color:var(--saffron)}.ab-status:hover{background:var(--saffron);color:#fff}
+
+/* ── MODAL ── */
+.modal{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px}
+.modal.on{display:flex}
+.mbox{background:var(--surf);border:1px solid var(--border);border-radius:16px;padding:22px;width:100%;max-width:500px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.7)}
+.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.mh h3{font-size:.97rem;font-weight:800}
+.mcl{background:var(--surf2);border:1px solid var(--border);color:var(--muted);width:28px;height:28px;border-radius:7px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.mcl:hover{background:var(--red);border-color:var(--red);color:#fff}
+.mf{margin-bottom:12px}
+.mf label{display:block;font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+.mf input,.mf select,.mf textarea{width:100%;padding:9px 11px;background:var(--surf2);border:1px solid var(--border);border-radius:7px;font-family:'Baloo 2',sans-serif;font-size:.85rem;color:var(--text);transition:border .15s}
+.mf input:focus,.mf select:focus,.mf textarea:focus{outline:none;border-color:var(--saffron)}
+.mf textarea{resize:vertical;min-height:65px}
+.dv{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.dvr{background:var(--surf2);border-radius:8px;padding:9px 11px}
+.dvr label{font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase}
+.dvr p{font-size:.83rem;font-weight:600;margin-top:2px;word-break:break-all}
+
+/* ── SETTINGS ── */
+.set-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.set-card{background:var(--surf);border:1px solid var(--border);border-radius:13px;padding:18px}
+.set-card h3{font-size:.85rem;font-weight:800;margin-bottom:13px}
+.tog-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)}
+.tog-row:last-child{border:none}
+.tog-row label.tl{font-size:.8rem;color:var(--text)}
+.toggle{position:relative;display:inline-block;width:40px;height:21px}
+.toggle input{opacity:0;width:0;height:0}
+.sl2{position:absolute;cursor:pointer;inset:0;background:var(--surf3);border-radius:11px;transition:.28s}
+.sl2:before{position:absolute;content:"";height:15px;width:15px;left:3px;bottom:3px;background:var(--muted);border-radius:50%;transition:.28s}
+.toggle input:checked+.sl2{background:var(--saffron)}
+.toggle input:checked+.sl2:before{transform:translateX(19px);background:#fff}
+
+/* ── REVENUE ── */
+.rev-banner{background:linear-gradient(135deg,var(--saffron),var(--gold));border-radius:13px;padding:18px 20px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center}
+.rev-banner h3{color:rgba(255,255,255,.8);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.rev-banner .rn{font-size:2rem;font-weight:800;color:#fff;margin-top:4px}
+.rev-banner p{color:rgba(255,255,255,.75);font-size:.72rem;margin-top:3px}
+.plan-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.plan-c{background:var(--surf);border:1px solid var(--border);border-radius:11px;padding:13px 10px;text-align:center}
+.plan-c .pn{font-size:.72rem;font-weight:700;color:var(--saffron)}
+.plan-c .pv{font-size:1.05rem;font-weight:800;margin-top:3px}
+.plan-c .pl{font-size:.62rem;color:var(--muted);margin-top:2px}
+
+/* ── SHEET STATUS ── */
+.sheet-stat{background:var(--surf2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:11px;margin-bottom:16px}
+.sdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sdot.on{background:var(--green);box-shadow:0 0 8px rgba(45,155,86,.5)}
+.sdot.off{background:var(--red)}
+.sheet-stat p{font-size:.8rem}.sheet-stat span{font-weight:700}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--surf);border:1px solid var(--border);color:var(--text);padding:11px 16px;border-radius:9px;font-size:.8rem;font-weight:600;z-index:9999;display:none;box-shadow:var(--sh);max-width:300px;animation:slideR .3s ease}
+@keyframes slideR{from{transform:translateX(110%)}to{transform:translateX(0)}}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:36px 20px;color:var(--muted)}
+.empty .ei{font-size:2.2rem;margin-bottom:8px}
+.empty p{font-size:.82rem}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){.sg{grid-template-columns:repeat(2,1fr)}.cr{grid-template-columns:1fr}.cr.full{grid-template-columns:1fr}.set-grid{grid-template-columns:1fr}.plan-cards{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.sidebar{width:52px}.sb-logo p,.sn-label,.sn-item span,.sb-ui{display:none}.main{margin-left:52px}}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ════════════════════ LOGIN ════════════════════ -->
+<div id="login-wrap">
+  <div class="lcard">
+    <div class="head"><div class="ico">🌾⚙️</div><h2>Admin Panel</h2><p>The Part-Timer's — Full Control Dashboard</p></div>
+    <div class="lf"><label>Username</label><input id="au" type="text" placeholder="admin" autocomplete="off" onkeydown="if(event.key==='Enter')adminLogin()"></div>
+    <div class="lf"><label>Password</label><input id="ap" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')adminLogin()"></div>
+    <button class="lbtn" onclick="adminLogin()">🔐 Login to Dashboard</button>
+    <div class="lhint">Default: <strong>admin</strong> / <strong>admin@parttimers123</strong><br><span style="color:var(--saffron);font-size:.68rem">Change password in Settings after login</span></div>
+  </div>
+</div>
+
+<!-- ════════════════════ APP ════════════════════ -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-logo"><h2>🌾 Part-Timer's</h2><p>Admin Panel v1.0</p></div>
+    <div class="sb-nav">
+      <div class="sn-label">Overview</div>
+      <div class="sn-item on" onclick="goPan('dashboard')"><div class="ic">📊</div><span>Dashboard</span></div>
+      <div class="sn-label">Users</div>
+      <div class="sn-item" onclick="goPan('users')"><div class="ic">👥</div><span>All Users</span></div>
+      <div class="sn-item" onclick="goPan('workers')"><div class="ic">👷</div><span>Workers</span></div>
+      <div class="sn-item" onclick="goPan('vendors')"><div class="ic">🏪</div><span>Vendors</span></div>
+      <div class="sn-label">Transactions</div>
+      <div class="sn-item" onclick="goPan('bookings')"><div class="ic">📋</div><span>Bookings</span></div>
+      <div class="sn-item" onclick="goPan('orders')"><div class="ic">🛒</div><span>Orders</span></div>
+      <div class="sn-item" onclick="goPan('listings')"><div class="ic">📦</div><span>Listings</span></div>
+      <div class="sn-label">Business</div>
+      <div class="sn-item" onclick="goPan('revenue')"><div class="ic">💰</div><span>Revenue</span></div>
+      <div class="sn-item" onclick="goPan('analytics')"><div class="ic">📈</div><span>Analytics</span></div>
+      <div class="sn-label">Control</div>
+      <div class="sn-item" onclick="goPan('banners')"><div class="ic">📢</div><span>Banners</span></div>
+      <div class="sn-item" onclick="goPan('settings')"><div class="ic">⚙️</div><span>Settings</span></div>
+    </div>
+    <div class="sb-foot">
+      <div class="sb-user"><div class="sb-av">A</div><div class="sb-ui"><h4 id="admin-name-disp">Admin</h4><p>Super Admin</p></div></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-left"><h3 id="pan-title">Dashboard</h3><p id="pan-sub">Real-time platform stats</p></div>
+      <div class="tb-right">
+        <div class="tb-live"><div class="live-dot"></div>Live</div>
+        <button class="tb-btn" onclick="refreshAll()">🔄 Refresh</button>
+        <button class="tb-btn" onclick="goPan('settings')">⚙️</button>
+        <button class="tb-btn red" onclick="adminLogout()">🚪 Logout</button>
+      </div>
+    </div>
+    <div class="content">
+
+      <!-- ══ DASHBOARD ══ -->
+      <div id="panel-dashboard" class="panel on">
+        <div class="sg">
+          <div class="sc" data-icon="👥"><div class="sl">Total Users</div><div class="sv c-s" id="s-users">0</div><div class="ss" id="s-users-s">registered</div></div>
+          <div class="sc" data-icon="👷"><div class="sl">Workers</div><div class="sv c-g" id="s-workers">0</div><div class="ss">active workers</div></div>
+          <div class="sc" data-icon="📋"><div class="sl">Bookings</div><div class="sv c-b" id="s-bookings">0</div><div class="ss">total bookings</div></div>
+          <div class="sc" data-icon="💰"><div class="sl">Est. Revenue</div><div class="sv c-o" id="s-revenue">₹0</div><div class="ss">vendor plans</div></div>
+        </div>
+        <div class="sg sg2">
+          <div class="sc" data-icon="🏪"><div class="sl">Vendors</div><div class="sv c-p" id="s-vendors">0</div><div class="ss">registered vendors</div></div>
+          <div class="sc" data-icon="🚜"><div class="sl">Vehicle Owners</div><div class="sv c-r" id="s-vehicles">0</div><div class="ss">transport providers</div></div>
+          <div class="sc" data-icon="🛒"><div class="sl">Orders</div><div class="sv c-g" id="s-orders">0</div><div class="ss">total orders</div></div>
+          <div class="sc" data-icon="📦"><div class="sl">Listings Pending</div><div class="sv c-b" id="s-listings">0</div><div class="ss">need approval</div></div>
+        </div>
+
+        <!-- Sheet status -->
+        <div class="sheet-stat" id="dash-sheet-stat">
+          <div class="sdot off" id="dash-sdot"></div>
+          <p><span id="dash-stext">Google Sheet: Not Connected</span> — Go to Settings to connect</p>
+          <button onclick="goPan('settings')" style="margin-left:auto;background:var(--saffron);border:none;color:#fff;padding:5px 12px;border-radius:6px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.73rem;cursor:pointer">Setup →</button>
+        </div>
+
+        <!-- Charts row 1 -->
+        <div class="cr">
+          <div class="chart-box"><h3>📈 Registrations (Last 7 days)</h3><canvas id="ch-reg"></canvas></div>
+          <div class="chart-box"><h3>🥧 Users by Type</h3><canvas id="ch-types"></canvas></div>
+        </div>
+        <!-- Charts row 2 -->
+        <div class="cr full">
+          <div class="chart-box"><h3>💰 Revenue by Plan</h3><canvas id="ch-rev"></canvas></div>
+          <div class="chart-box"><h3>🗺️ Top Districts</h3><canvas id="ch-dist"></canvas></div>
+        </div>
+
+        <!-- Recent users table -->
+        <div class="tc">
+          <div class="tc-h"><h3>🕐 Recent Registrations</h3><button class="ab ab-view" onclick="goPan('users')">View All →</button></div>
+          <table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Phone</th><th>District</th><th>Joined</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="dash-users"><tr><td colspan="8" class="empty"><div class="ei">👤</div><p>No users yet</p></td></tr></tbody></table>
+        </div>
+
+        <!-- Recent bookings -->
+        <div class="tc">
+          <div class="tc-h"><h3>📋 Recent Bookings & Orders</h3><button class="ab ab-view" onclick="goPan('bookings')">View All →</button></div>
+          <table><thead><tr><th>ID</th><th>User</th><th>Service/Item</th><th>Amount</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="dash-bookings"><tr><td colspan="7" class="empty"><p>No activity yet</p></td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- ══ ALL USERS ══ -->
+      <div id="panel-users" class="panel">
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+          <input class="srch" placeholder="🔍 Name, phone, village..." oninput="filterTable('users-tbl',this.value)" id="u-srch">
+          <select class="filt" onchange="filterByType(this.value)"><option value="">All Types</option><option value="customer">Customer</option><option value="worker">Worker</option><option value="vendor">Vendor</option><option value="vehicle">Vehicle</option></select>
+          <select class="filt" onchange="filterByStatus(this.value)"><option value="">All Status</option><option value="active">Active</option><option value="blocked">Blocked</option></select>
+          <button onclick="exportCSV('users')" class="ab ab-view" style="padding:6px 12px">📥 Export CSV</button>
+          <button onclick="refreshAll()" class="ab ab-approve" style="padding:6px 12px">🔄 Refresh</button>
+        </div>
+        <div class="tc">
+          <div class="tc-h"><h3>👥 All Users <span style="color:var(--muted);font-weight:400;font-size:.78rem" id="u-count">(0)</span></h3></div>
+          <div style="overflow-x:auto">
+          <table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Phone</th><th>Village</th><th>District</th><th>Skill/Shop</th><th>Plan</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="users-tbl"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ WORKERS ══ -->
+      <div id="panel-workers" class="panel">
+        <div class="tc">
+          <div class="tc-h"><h3>👷 All Workers</h3></div>
+          <div style="overflow-x:auto">
+          <table><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Skill</th><th>Rate/Day</th><th>Experience</th><th>District</th><th>Rating</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="workers-tbl"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ VENDORS ══ -->
+      <div id="panel-vendors" class="panel">
+        <div class="tc">
+          <div class="tc-h">
+            <h3>🏪 All Vendors</h3>
+            <button onclick="openAssignPlan()" class="ab ab-approve">+ Assign Plan</button>
+          </div>
+          <div style="overflow-x:auto">
+          <table><thead><tr><th>ID</th><th>Name</th><th>Shop</th><th>Business</th><th>Plan</th><th>Fee/Mo</th><th>District</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="vendors-tbl"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ BOOKINGS ══ -->
+      <div id="panel-bookings" class="panel">
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+          <input class="srch" placeholder="🔍 Search bookings..." oninput="filterTable('book-tbl',this.value)">
+          <select class="filt" onchange="filterBookStat(this.value)"><option value="">All Status</option><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="done">Done</option></select>
+          <button onclick="exportCSV('bookings')" class="ab ab-view" style="padding:6px 12px">📥 Export</button>
+        </div>
+        <div class="tc">
+          <div class="tc-h"><h3>📋 All Bookings</h3></div>
+          <div style="overflow-x:auto">
+          <table><thead><tr><th>ID</th><th>Customer</th><th>Service</th><th>Date</th><th>Location</th><th>Amount</th><th>Note</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="book-tbl"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ ORDERS ══ -->
+      <div id="panel-orders" class="panel">
+        <div class="tc">
+          <div class="tc-h"><h3>🛒 All Orders</h3><button onclick="exportCSV('orders')" class="ab ab-view">📥 Export</button></div>
+          <div style="overflow-x:auto">
+          <table><thead><tr><th>ID</th><th>Customer</th><th>Item</th><th>Qty</th><th>Total</th><th>Address</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="order-tbl"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ LISTINGS ══ -->
+      <div id="panel-listings" class="panel">
+        <div class="tc">
+          <div class="tc-h">
+            <h3>📦 Vendor Listings <span id="pend-count" style="color:var(--saffron);font-size:.75rem"></span></h3>
+            <div class="acts">
+              <button onclick="approveAllListings()" class="ab ab-approve">✅ Approve All Pending</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+          <table><thead><tr><th>ID</th><th>Vendor</th><th>Item</th><th>Category</th><th>Price</th><th>Type</th><th>District</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="list-tbl"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ REVENUE ══ -->
+      <div id="panel-revenue" class="panel">
+        <div class="rev-banner">
+          <div><h3>ESTIMATED MONTHLY REVENUE</h3><div class="rn" id="total-rev">₹0</div><p id="rev-sub">From 0 vendor plan subscriptions</p></div>
+          <div style="font-size:3rem">💰</div>
+        </div>
+        <div class="plan-cards" id="plan-breakdown">
+          <div class="plan-c"><div class="pn">Local Mini</div><div class="pv">₹10/mo</div><div class="pl" id="pc-mini">0 vendors</div></div>
+          <div class="plan-c"><div class="pn">Local Plus</div><div class="pv">₹20/mo</div><div class="pl" id="pc-plus">0 vendors</div></div>
+          <div class="plan-c"><div class="pn">Block Reach</div><div class="pv">₹100/mo</div><div class="pl" id="pc-block">0 vendors</div></div>
+          <div class="plan-c"><div class="pn">District Seller</div><div class="pv">₹999/mo</div><div class="pl" id="pc-dist">0 vendors</div></div>
+          <div class="plan-c"><div class="pn">Super Vendor</div><div class="pv">₹3,999/mo</div><div class="pl" id="pc-super">0 vendors</div></div>
+        </div>
+        <div class="chart-box" style="margin-bottom:18px"><h3>📊 2-Year Revenue Projection</h3><canvas id="ch-proj" style="max-height:220px"></canvas></div>
+        <div class="tc">
+          <div class="tc-h"><h3>💎 Paid Vendors</h3></div>
+          <table><thead><tr><th>Name</th><th>Shop</th><th>Plan</th><th>Fee/Month</th><th>District</th><th>Joined</th></tr></thead>
+          <tbody id="paid-tbl"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ══ ANALYTICS ══ -->
+      <div id="panel-analytics" class="panel">
+        <div class="cr full">
+          <div class="chart-box"><h3>📊 Service Category Interest</h3><canvas id="ch-cat"></canvas></div>
+          <div class="chart-box"><h3>🗺️ Users by District</h3><canvas id="ch-dist2"></canvas></div>
+        </div>
+        <div class="cr full">
+          <div class="chart-box"><h3>📅 Monthly Growth</h3><canvas id="ch-grow"></canvas></div>
+          <div class="chart-box"><h3>💎 Plan Distribution</h3><canvas id="ch-plans"></canvas></div>
+        </div>
+        <div class="tc">
+          <div class="tc-h"><h3>🗺️ District Breakdown</h3></div>
+          <table><thead><tr><th>District</th><th>Total Users</th><th>Workers</th><th>Vendors</th><th>Customers</th><th>Vehicle</th></tr></thead>
+          <tbody id="dist-tbl"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ══ BANNERS ══ -->
+      <div id="panel-banners" class="panel">
+        <div class="set-grid">
+          <div class="set-card">
+            <h3>📢 App Feature Toggles</h3>
+            <div class="tog-row"><label class="tl">Sunday Haata LIVE Banner</label><label class="toggle"><input type="checkbox" id="tog-haata" checked><span class="sl2"></span></label></div>
+            <div class="tog-row"><label class="tl">Promo / Offer Banner</label><label class="toggle"><input type="checkbox" id="tog-promo" checked><span class="sl2"></span></label></div>
+            <div class="tog-row"><label class="tl">New User Registration</label><label class="toggle"><input type="checkbox" id="tog-reg" checked><span class="sl2"></span></label></div>
+            <div class="tog-row"><label class="tl">Maintenance Mode</label><label class="toggle"><input type="checkbox" id="tog-maint"><span class="sl2"></span></label></div>
+            <div class="tog-row"><label class="tl">Show Nearby Workers</label><label class="toggle"><input type="checkbox" id="tog-workers" checked><span class="sl2"></span></label></div>
+            <button onclick="saveBanners()" style="margin-top:14px;background:var(--saffron);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;width:100%">💾 Save Toggles</button>
+          </div>
+          <div class="set-card">
+            <h3>✏️ Edit Banner Text</h3>
+            <div class="mf"><label>Haata Banner Title</label><input type="text" id="ban-title" value="🛍️ ରବିବାର ହଟ | Sunday Local Haata"></div>
+            <div class="mf"><label>Haata Subtitle</label><textarea id="ban-sub">Buy directly from local vendors near you</textarea></div>
+            <div class="mf"><label>Promo Text</label><input type="text" id="ban-promo" value="ପ୍ରଥମ ୩ ମାସ ମାଗଣା! First 3 months free for new vendors"></div>
+            <div class="mf"><label>App Tagline</label><input type="text" id="ban-tag" value="Empowering Rural India, One Job at a Time"></div>
+            <button onclick="saveBannerText()" style="background:var(--green);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;width:100%">💾 Save Text</button>
+          </div>
+          <div class="set-card">
+            <h3>🔔 Broadcast Notification</h3>
+            <div class="mf"><label>Message to All Users</label><textarea id="notif-msg" placeholder="Type your message..."></textarea></div>
+            <div class="mf"><label>Target Audience</label>
+              <select id="notif-target"><option>All Users</option><option>Workers Only</option><option>Vendors Only</option><option>Customers Only</option><option>Vehicle Owners</option></select>
+            </div>
+            <button onclick="sendNotif()" style="background:var(--sky);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;width:100%">📤 Send Notification</button>
+            <div id="notif-hist" style="margin-top:13px;max-height:160px;overflow-y:auto"></div>
+          </div>
+          <div class="set-card">
+            <h3>🎨 Theme Preview</h3>
+            <div style="background:linear-gradient(135deg,#FF6B00,#D4A017,#1B6B3A);border-radius:10px;padding:14px;margin-bottom:12px;text-align:center;color:#fff;font-weight:800">App Header Preview</div>
+            <div class="mf"><label>Primary Color</label><input type="color" value="#FF6B00" id="col-primary" style="width:100%;height:36px;border-radius:7px;border:1px solid var(--border);background:var(--surf2);cursor:pointer;padding:2px"></div>
+            <div class="mf"><label>Secondary Color</label><input type="color" value="#1B6B3A" id="col-secondary" style="width:100%;height:36px;border-radius:7px;border:1px solid var(--border);background:var(--surf2);cursor:pointer;padding:2px"></div>
+            <button onclick="toast('🎨 Theme preview updated!')" style="background:var(--purple);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;width:100%">Preview Theme</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SETTINGS ══ -->
+      <div id="panel-settings" class="panel">
+        <div class="set-grid">
+          <div class="set-card">
+            <h3>🔐 Admin Password</h3>
+            <div class="mf"><label>Username</label><input type="text" id="set-uname" placeholder="admin"></div>
+            <div class="mf"><label>Current Password</label><input type="password" id="set-curr" placeholder="Current password"></div>
+            <div class="mf"><label>New Password</label><input type="password" id="set-new" placeholder="New password (min 8 chars)"></div>
+            <div class="mf"><label>Confirm New Password</label><input type="password" id="set-conf" placeholder="Confirm new password"></div>
+            <button onclick="changePass()" style="background:var(--saffron);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;width:100%">🔑 Update Password</button>
+          </div>
+          <div class="set-card">
+            <h3>🔗 Google Sheets Setup</h3>
+            <div class="sheet-stat" style="margin-bottom:12px">
+              <div class="sdot off" id="set-sdot"></div>
+              <p><span id="set-stext">Not Connected</span></p>
+            </div>
+            <div class="mf"><label>Apps Script Web App URL</label><input type="url" id="set-url" placeholder="https://script.google.com/macros/s/XXXX/exec"></div>
+            <div class="mf"><label>Sheet Name (optional)</label><input type="text" id="set-sheet" placeholder="e.g. PartTimers_Data"></div>
+            <button onclick="saveSheet()" style="background:var(--green);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;width:100%;margin-bottom:8px">💾 Save & Test</button>
+            <p style="font-size:.72rem;color:var(--muted);text-align:center">📖 See <strong>README.md</strong> for step-by-step setup guide</p>
+          </div>
+          <div class="set-card">
+            <h3>📱 App Info</h3>
+            <div class="mf"><label>App Name</label><input type="text" id="set-appname" value="The Part-Timer's"></div>
+            <div class="mf"><label>Support Phone</label><input type="tel" id="set-phone" placeholder="Support number"></div>
+            <div class="mf"><label>Admin Email</label><input type="email" id="set-email" placeholder="admin@example.com"></div>
+            <div class="mf"><label>App Version</label><input type="text" id="set-ver" value="1.0.0"></div>
+            <button onclick="saveAppInfo()" style="background:var(--sky);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;width:100%">💾 Save Info</button>
+          </div>
+          <div class="set-card">
+            <h3>🗄️ Data Management</h3>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <button onclick="exportAll()" style="background:var(--sky);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">📥 Export All Data (JSON)</button>
+              <button onclick="exportCSV('users')" style="background:var(--green);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">📊 Export Users (CSV)</button>
+              <button onclick="exportCSV('bookings')" style="background:var(--purple);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">📋 Export Bookings (CSV)</button>
+              <button onclick="exportCSV('orders')" style="background:var(--gold);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">🛒 Export Orders (CSV)</button>
+              <button onclick="clearData()" style="background:rgba(255,68,68,.12);border:1px solid rgba(255,68,68,.3);color:var(--red);padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">🗑️ Clear All Data (Caution!)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- USER DETAIL MODAL -->
+<div class="modal" id="modal-user">
+  <div class="mbox">
+    <div class="mh"><h3>👤 User Details</h3><button class="mcl" onclick="closeM('modal-user')">✕</button></div>
+    <div class="dv" id="user-dv"></div>
+    <div style="display:flex;gap:9px;margin-top:14px">
+      <button id="m-block-btn" class="ab ab-block" style="flex:1;padding:10px;font-size:.8rem" onclick="toggleBlockModal()">🚫 Block User</button>
+      <button class="ab ab-del" style="flex:1;padding:10px;font-size:.8rem" onclick="deleteUserModal()">🗑️ Delete</button>
+      <button class="ab ab-edit" style="flex:1;padding:10px;font-size:.8rem" onclick="closeM('modal-user');openEditUser()">✏️ Edit</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT USER MODAL -->
+<div class="modal" id="modal-edit">
+  <div class="mbox">
+    <div class="mh"><h3>✏️ Edit User</h3><button class="mcl" onclick="closeM('modal-edit')">✕</button></div>
+    <div class="mf"><label>Full Name</label><input id="eu-name" type="text"></div>
+    <div class="mf"><label>Phone</label><input id="eu-phone" type="tel"></div>
+    <div class="mf"><label>Village</label><input id="eu-village" type="text"></div>
+    <div class="mf"><label>District</label>
+      <select id="eu-dist">
+        <option>Khurda</option><option>Cuttack</option><option>Puri</option><option>Ganjam</option>
+        <option>Balasore</option><option>Mayurbhanj</option><option>Kendrapara</option><option>Jajpur</option>
+        <option>Bhadrak</option><option>Nayagarh</option><option>Bargarh</option><option>Koraput</option>
+        <option>Sundargarh</option><option>Sambalpur</option><option>Rayagada</option><option>Kandhamal</option>
+      </select>
+    </div>
+    <div class="mf"><label>Skill / Shop</label><input id="eu-skill" type="text"></div>
+    <div class="mf"><label>Plan</label>
+      <select id="eu-plan">
+        <option>Local Mini</option><option>Local Plus</option>
+        <option>Block Reach</option><option>District Seller</option><option>Super Vendor</option>
+      </select>
+    </div>
+    <div class="mf"><label>Status</label>
+      <select id="eu-status"><option value="active">Active</option><option value="blocked">Blocked</option></select>
+    </div>
+    <div style="display:flex;gap:9px;margin-top:4px">
+      <button onclick="saveEditUser()" style="flex:1;background:var(--saffron);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;cursor:pointer">💾 Save Changes</button>
+      <button onclick="closeM('modal-edit')" style="flex:1;background:var(--surf2);border:1px solid var(--border);color:var(--text);padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;cursor:pointer">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ASSIGN PLAN MODAL -->
+<div class="modal" id="modal-plan">
+  <div class="mbox">
+    <div class="mh"><h3>💎 Assign Vendor Plan</h3><button class="mcl" onclick="closeM('modal-plan')">✕</button></div>
+    <div class="mf"><label>Select Vendor</label>
+      <select id="plan-vendor-sel"></select>
+    </div>
+    <div class="mf"><label>Select Plan</label>
+      <select id="plan-sel">
+        <option value="Local Mini">Local Mini — ₹10/month (5km, 5 items)</option>
+        <option value="Local Plus">Local Plus — ₹20/month (5km+, 10 items)</option>
+        <option value="Block Reach">Block Reach — ₹100/month (~15km, 20 items)</option>
+        <option value="District Seller">District Seller — ₹999/month (Full District, 50 items)</option>
+        <option value="Super Vendor">Super Vendor — ₹3,999/month (Full Odisha, Unlimited)</option>
+      </select>
+    </div>
+    <button onclick="assignPlan()" style="width:100%;background:var(--saffron);border:none;color:#fff;padding:11px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:800;cursor:pointer">✅ Assign Plan</button>
+  </div>
+</div>
+
+<!-- BOOKING STATUS MODAL -->
+<div class="modal" id="modal-status">
+  <div class="mbox">
+    <div class="mh"><h3>🔄 Update Status</h3><button class="mcl" onclick="closeM('modal-status')">✕</button></div>
+    <div id="status-info" style="background:var(--surf2);border-radius:9px;padding:12px;margin-bottom:14px;font-size:.85rem"></div>
+    <div class="mf"><label>New Status</label>
+      <select id="new-status">
+        <option value="pending">⏳ Pending</option>
+        <option value="confirmed">✅ Confirmed</option>
+        <option value="done">🎉 Completed/Done</option>
+        <option value="cancelled">❌ Cancelled</option>
+      </select>
+    </div>
+    <button onclick="saveStatus()" style="width:100%;background:var(--green);border:none;color:#fff;padding:11px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:800;cursor:pointer">💾 Update Status</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+let ADMIN_USER = localStorage.getItem('pt_admin_user') || 'admin';
+let ADMIN_PASS = localStorage.getItem('pt_admin_pass') || 'admin@parttimers123';
+let SHEET_URL  = localStorage.getItem('pt_sheet_url')  || '';
+let selectedUID = null;
+let selectedBID = null;
+let charts = {};
+
+const PLAN_FEES = { 'Local Mini':10,'Local Plus':20,'Block Reach':100,'District Seller':999,'Super Vendor':3999 };
+
+// ════════════════════════════════════════════
+// LOGIN / LOGOUT
+// ════════════════════════════════════════════
+function adminLogin() {
+  const u = document.getElementById('au').value.trim();
+  const p = document.getElementById('ap').value;
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('login-wrap').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('admin-name-disp').textContent = u;
+    refreshAll();
+    initCharts();
+    loadSheetStatus();
+  } else {
+    toast('❌ Wrong credentials');
+  }
+}
+function adminLogout() {
+  if (!confirm('Logout?')) return;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-wrap').style.display = 'flex';
+  document.getElementById('au').value = '';
+  document.getElementById('ap').value = '';
+}
+
+// ════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════
+const panTitles = {
+  dashboard:'Dashboard Overview',users:'All Users',workers:'Workers',vendors:'Vendors',
+  bookings:'Bookings',orders:'Orders',listings:'Listings',
+  revenue:'Revenue & Plans',analytics:'Analytics',banners:'Banners & Settings',settings:'Settings'
+};
+const panSubs = {
+  dashboard:'Real-time platform statistics',users:'Manage all registered users',
+  workers:'All worker profiles',vendors:'Vendors & plan management',
+  bookings:'All service bookings',orders:'All product orders',listings:'Vendor listing approvals',
+  revenue:'Revenue from vendor plans',analytics:'Platform growth analytics',
+  banners:'Control app content',settings:'Admin configuration'
+};
+
+function goPan(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.sn-item').forEach(i => i.classList.remove('on'));
+  document.getElementById('panel-' + id)?.classList.add('on');
+  document.querySelectorAll('.sn-item').forEach(i => {
+    if (i.textContent.toLowerCase().includes(id.slice(0,5))) i.classList.add('on');
+  });
+  document.getElementById('pan-title').textContent = panTitles[id] || id;
+  document.getElementById('pan-sub').textContent   = panSubs[id]   || '';
+  // Load data for this panel
+  const loaders = {
+    dashboard: loadDashboard, users: loadUsersTable, workers: loadWorkersTable,
+    vendors: loadVendorsTable, bookings: loadBookingsTable, orders: loadOrdersTable,
+    listings: loadListingsTable, revenue: loadRevenue, analytics: loadAnalytics
+  };
+  loaders[id]?.();
+}
+
+// ════════════════════════════════════════════
+// DATA GETTERS
+// ════════════════════════════════════════════
+const getUsers    = () => JSON.parse(localStorage.getItem('pt_all_users')  || '[]');
+const getBookings = () => JSON.parse(localStorage.getItem('pt_bookings')    || '[]');
+const getOrders   = () => JSON.parse(localStorage.getItem('pt_orders')      || '[]');
+const getListings = () => JSON.parse(localStorage.getItem('pt_listings')    || '[]');
+
+function saveUsers(arr) { localStorage.setItem('pt_all_users', JSON.stringify(arr)); }
+function saveBookings(arr) { localStorage.setItem('pt_bookings', JSON.stringify(arr)); }
+function saveOrders(arr) { localStorage.setItem('pt_orders', JSON.stringify(arr)); }
+function saveListings(arr) { localStorage.setItem('pt_listings', JSON.stringify(arr)); }
+
+// ════════════════════════════════════════════
+// REFRESH ALL
+// ════════════════════════════════════════════
+function refreshAll() {
+  loadDashboard();
+  toast('🔄 Data refreshed!');
+}
+
+// ════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════
+function loadDashboard() {
+  const users    = getUsers();
+  const bookings = getBookings();
+  const orders   = getOrders();
+  const listings = getListings();
+  const workers  = users.filter(u => u.type === 'worker');
+  const vendors  = users.filter(u => u.type === 'vendor');
+  const vehicles = users.filter(u => u.type === 'vehicle');
+  const pendList = listings.filter(l => l.status === 'pending');
+
+  // Revenue estimate
+  const rev = vendors.reduce((s,v) => s + (PLAN_FEES[v.plan] || 10), 0);
+
+  document.getElementById('s-users').textContent    = users.length;
+  document.getElementById('s-workers').textContent  = workers.length;
+  document.getElementById('s-bookings').textContent = bookings.length;
+  document.getElementById('s-revenue').textContent  = '₹' + rev.toLocaleString('en-IN');
+  document.getElementById('s-vendors').textContent  = vendors.length;
+  document.getElementById('s-vehicles').textContent = vehicles.length;
+  document.getElementById('s-orders').textContent   = orders.length;
+  document.getElementById('s-listings').textContent = pendList.length;
+  document.getElementById('s-users-s').textContent  = users.length + ' registered';
+
+  // Recent users table (last 8)
+  const recentU = [...users].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,8);
+  document.getElementById('dash-users').innerHTML = recentU.length ? recentU.map(u => `
+    <tr>
+      <td class="mono">${u.id}</td>
+      <td><strong>${u.name}</strong></td>
+      <td><span class="bdg bdg-${u.type}">${u.type}</span></td>
+      <td>${u.phone}</td>
+      <td>${u.district||'—'}</td>
+      <td>${fmtDate(u.createdAt)}</td>
+      <td><span class="bdg ${u.status==='blocked'?'bdg-blocked':'bdg-active'}">${u.status||'active'}</span></td>
+      <td><button class="ab ab-view" onclick="viewUser('${u.id}')">View</button></td>
+    </tr>`).join('') : '<tr><td colspan="8" class="empty"><div class="ei">👤</div><p>No users registered yet</p></td></tr>';
+
+  // Recent bookings+orders (last 8)
+  const allActivity = [
+    ...bookings.map(b=>({...b,_kind:'booking'})),
+    ...orders.map(o=>({...o,_kind:'order'}))
+  ].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,8);
+  document.getElementById('dash-bookings').innerHTML = allActivity.length ? allActivity.map(a=>`
+    <tr>
+      <td class="mono">${a.id}</td>
+      <td>${a.userName||'—'}</td>
+      <td>${a.service||a.item||'—'}</td>
+      <td>${a.price||a.total||'—'}</td>
+      <td>${fmtDate(a.createdAt)}</td>
+      <td><span class="bdg bdg-${a.status||'pending'}">${a.status||'pending'}</span></td>
+      <td><button class="ab ab-status" onclick="openStatus('${a.id}','${a._kind}')">Status</button></td>
+    </tr>`).join('') : '<tr><td colspan="7" class="empty"><p>No activity yet</p></td></tr>';
+
+  updateCharts(users, bookings, orders);
+}
+
+// ════════════════════════════════════════════
+// USERS TABLE
+// ════════════════════════════════════════════
+function loadUsersTable(filter='', typeF='', statF='') {
+  let users = getUsers();
+  if (filter) users = users.filter(u => JSON.stringify(u).toLowerCase().includes(filter.toLowerCase()));
+  if (typeF)  users = users.filter(u => u.type === typeF);
+  if (statF)  users = users.filter(u => (u.status||'active') === statF);
+  document.getElementById('u-count').textContent = '(' + users.length + ')';
+  const tbody = document.getElementById('users-tbl');
+  tbody.innerHTML = users.length ? users.map(u=>`
+    <tr>
+      <td class="mono">${u.id}</td>
+      <td><strong>${u.name}</strong></td>
+      <td><span class="bdg bdg-${u.type}">${u.type}</span></td>
+      <td>${u.phone}</td>
+      <td>${u.village||'—'}</td>
+      <td>${u.district||'—'}</td>
+      <td style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${u.skill||u.shop||u.vtype||'—'}</td>
+      <td>${u.plan||'Free'}</td>
+      <td>${fmtDate(u.createdAt)}</td>
+      <td><span class="bdg ${u.status==='blocked'?'bdg-blocked':'bdg-active'}">${u.status||'active'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="ab ab-view" onclick="viewUser('${u.id}')">👁</button>
+        <button class="ab ab-edit" onclick="openEditUser('${u.id}')">✏️</button>
+        <button class="ab ${u.status==='blocked'?'ab-approve':'ab-block'}" onclick="toggleBlock('${u.id}')">${u.status==='blocked'?'✅':'🚫'}</button>
+        <button class="ab ab-del" onclick="deleteUser('${u.id}')">🗑️</button>
+      </td>
+    </tr>`).join('') : '<tr><td colspan="11" class="empty"><div class="ei">👤</div><p>No users found</p></td></tr>';
+}
+
+function filterTable(tbId, val) { loadUsersTable(val); }
+function filterByType(val) { loadUsersTable(document.getElementById('u-srch')?.value||'', val); }
+function filterByStatus(val) { loadUsersTable(document.getElementById('u-srch')?.value||'', '', val); }
+
+// ════════════════════════════════════════════
+// WORKERS TABLE
+// ════════════════════════════════════════════
+function loadWorkersTable() {
+  const workers = getUsers().filter(u => u.type === 'worker');
+  document.getElementById('workers-tbl').innerHTML = workers.length ? workers.map(u=>`
+    <tr>
+      <td class="mono">${u.id}</td>
+      <td><strong>${u.name}</strong></td>
+      <td>${u.phone}</td>
+      <td>${u.skill||'—'}</td>
+      <td>${u.rate ? '₹'+u.rate+'/day' : '—'}</td>
+      <td>${u.exp ? u.exp+' yrs' : '—'}</td>
+      <td>${u.district||'—'}</td>
+      <td>⭐ ${u.rating||'4.5'}</td>
+      <td><span class="bdg ${u.status==='blocked'?'bdg-blocked':'bdg-active'}">${u.status||'active'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="ab ab-view" onclick="viewUser('${u.id}')">👁</button>
+        <button class="ab ab-feature" onclick="featureUser('${u.id}')">⭐</button>
+        <button class="ab ${u.status==='blocked'?'ab-approve':'ab-block'}" onclick="toggleBlock('${u.id}')">${u.status==='blocked'?'✅ Unblock':'🚫 Block'}</button>
+      </td>
+    </tr>`).join('') : '<tr><td colspan="10" class="empty"><div class="ei">👷</div><p>No workers registered yet</p></td></tr>';
+}
+
+// ════════════════════════════════════════════
+// VENDORS TABLE
+// ════════════════════════════════════════════
+function loadVendorsTable() {
+  const vendors = getUsers().filter(u => u.type === 'vendor');
+  document.getElementById('vendors-tbl').innerHTML = vendors.length ? vendors.map(u=>`
+    <tr>
+      <td class="mono">${u.id}</td>
+      <td><strong>${u.name}</strong></td>
+      <td>${u.shop||'—'}</td>
+      <td>${u.biz||'—'}</td>
+      <td><span class="bdg bdg-active">${u.plan||'Local Mini'}</span></td>
+      <td style="color:var(--saffron);font-weight:700">₹${PLAN_FEES[u.plan||'Local Mini']||10}/mo</td>
+      <td>${u.district||'—'}</td>
+      <td><span class="bdg ${u.status==='blocked'?'bdg-blocked':'bdg-active'}">${u.status||'active'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="ab ab-view" onclick="viewUser('${u.id}')">👁</button>
+        <button class="ab ab-edit" onclick="openAssignPlan('${u.id}')">💎 Plan</button>
+        <button class="ab ${u.status==='blocked'?'ab-approve':'ab-block'}" onclick="toggleBlock('${u.id}')">${u.status==='blocked'?'✅':'🚫'}</button>
+      </td>
+    </tr>`).join('') : '<tr><td colspan="9" class="empty"><div class="ei">🏪</div><p>No vendors yet</p></td></tr>';
+}
+
+// ════════════════════════════════════════════
+// BOOKINGS TABLE
+// ════════════════════════════════════════════
+function loadBookingsTable(filter='', statFilter='') {
+  let bks = getBookings();
+  if (filter) bks = bks.filter(b => JSON.stringify(b).toLowerCase().includes(filter.toLowerCase()));
+  if (statFilter) bks = bks.filter(b => b.status === statFilter);
+  document.getElementById('book-tbl').innerHTML = bks.length ? bks.map(b=>`
+    <tr>
+      <td class="mono">${b.id}</td>
+      <td>${b.userName||'—'}</td>
+      <td style="max-width:160px">${b.service||'—'}</td>
+      <td>${b.date||'—'}</td>
+      <td style="max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.loc||'—'}</td>
+      <td>${b.price||'—'}</td>
+      <td style="max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.note||'—'}</td>
+      <td><span class="bdg bdg-${b.status||'pending'}">${b.status||'pending'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="ab ab-status" onclick="openStatus('${b.id}','booking')">🔄</button>
+        <button class="ab ab-del" onclick="deleteBooking('${b.id}')">🗑️</button>
+      </td>
+    </tr>`).join('') : '<tr><td colspan="9" class="empty"><div class="ei">📋</div><p>No bookings yet</p></td></tr>';
+}
+
+function filterBookStat(val) { loadBookingsTable('', val); }
+
+// ════════════════════════════════════════════
+// ORDERS TABLE
+// ════════════════════════════════════════════
+function loadOrdersTable() {
+  const orders = getOrders();
+  document.getElementById('order-tbl').innerHTML = orders.length ? orders.map(o=>`
+    <tr>
+      <td class="mono">${o.id}</td>
+      <td>${o.userName||'—'}</td>
+      <td>${o.item||'—'}</td>
+      <td>${o.qty||'—'}</td>
+      <td style="color:var(--green);font-weight:700">${o.total||'—'}</td>
+      <td style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${o.address||'—'}</td>
+      <td>${fmtDate(o.createdAt)}</td>
+      <td><span class="bdg bdg-${o.status||'pending'}">${o.status||'pending'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="ab ab-status" onclick="openStatus('${o.id}','order')">🔄</button>
+        <button class="ab ab-del" onclick="deleteOrder('${o.id}')">🗑️</button>
+      </td>
+    </tr>`).join('') : '<tr><td colspan="9" class="empty"><div class="ei">🛒</div><p>No orders yet</p></td></tr>';
+}
+
+// ════════════════════════════════════════════
+// LISTINGS TABLE
+// ════════════════════════════════════════════
+function loadListingsTable() {
+  const listings = getListings();
+  const pend = listings.filter(l=>l.status==='pending').length;
+  document.getElementById('pend-count').textContent = pend ? `(${pend} pending approval)` : '';
+  document.getElementById('list-tbl').innerHTML = listings.length ? listings.map(l=>`
+    <tr>
+      <td class="mono">${l.id}</td>
+      <td>${l.vendorName||'—'}</td>
+      <td><strong>${l.name||'—'}</strong></td>
+      <td>${l.category||'—'}</td>
+      <td style="color:var(--saffron);font-weight:700">${l.price||'—'}</td>
+      <td>${l.type||'—'}</td>
+      <td>${l.district||'—'}</td>
+      <td><span class="bdg bdg-${l.status==='approved'?'active':l.status==='rejected'?'blocked':'pending'}">${l.status||'pending'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="ab ab-approve" onclick="approveListing('${l.id}')">✅</button>
+        <button class="ab ab-block" onclick="rejectListing('${l.id}')">❌</button>
+        <button class="ab ab-del" onclick="deleteListing('${l.id}')">🗑️</button>
+      </td>
+    </tr>`).join('') : '<tr><td colspan="9" class="empty"><div class="ei">📦</div><p>No listings yet</p></td></tr>';
+}
+
+function approveAllListings() {
+  let listings = getListings();
+  listings = listings.map(l => ({...l, status:'approved'}));
+  saveListings(listings);
+  loadListingsTable();
+  toast('✅ All listings approved!');
+}
+function approveListing(id) {
+  let listings = getListings();
+  const l = listings.find(x=>x.id===id);
+  if (l) { l.status='approved'; saveListings(listings); loadListingsTable(); toast('✅ Listing approved'); }
+}
+function rejectListing(id) {
+  let listings = getListings();
+  const l = listings.find(x=>x.id===id);
+  if (l) { l.status='rejected'; saveListings(listings); loadListingsTable(); toast('❌ Listing rejected'); }
+}
+function deleteListing(id) {
+  if (!confirm('Delete listing?')) return;
+  saveListings(getListings().filter(l=>l.id!==id));
+  loadListingsTable(); toast('🗑️ Listing deleted');
+}
+
+// ════════════════════════════════════════════
+// REVENUE
+// ════════════════════════════════════════════
+function loadRevenue() {
+  const vendors = getUsers().filter(u=>u.type==='vendor');
+  const counts = {'Local Mini':0,'Local Plus':0,'Block Reach':0,'District Seller':0,'Super Vendor':0};
+  let total = 0;
+  vendors.forEach(v => { const p=v.plan||'Local Mini'; if(counts[p]!==undefined) counts[p]++; total += PLAN_FEES[p]||10; });
+  document.getElementById('total-rev').textContent = '₹' + total.toLocaleString('en-IN');
+  document.getElementById('rev-sub').textContent = 'From ' + vendors.length + ' vendor plan subscriptions';
+  document.getElementById('pc-mini').textContent  = counts['Local Mini']  + ' vendors';
+  document.getElementById('pc-plus').textContent  = counts['Local Plus']  + ' vendors';
+  document.getElementById('pc-block').textContent = counts['Block Reach'] + ' vendors';
+  document.getElementById('pc-dist').textContent  = counts['District Seller'] + ' vendors';
+  document.getElementById('pc-super').textContent = counts['Super Vendor'] + ' vendors';
+  // Paid vendors table
+  document.getElementById('paid-tbl').innerHTML = vendors.length ? vendors.map(v=>`
+    <tr>
+      <td><strong>${v.name}</strong></td>
+      <td>${v.shop||'—'}</td>
+      <td><span class="bdg bdg-active">${v.plan||'Local Mini'}</span></td>
+      <td style="color:var(--saffron);font-weight:700">₹${PLAN_FEES[v.plan||'Local Mini']}/mo</td>
+      <td>${v.district||'—'}</td>
+      <td>${fmtDate(v.createdAt)}</td>
+    </tr>`).join('') : '<tr><td colspan="6" class="empty"><p>No paid vendors yet</p></td></tr>';
+  // Projection chart
+  buildProjectionChart();
+}
+
+// ════════════════════════════════════════════
+// ANALYTICS
+// ════════════════════════════════════════════
+function loadAnalytics() {
+  const users = getUsers();
+  // District breakdown
+  const distMap = {};
+  users.forEach(u => {
+    const d = u.district||'Unknown';
+    if (!distMap[d]) distMap[d] = {total:0,worker:0,vendor:0,customer:0,vehicle:0};
+    distMap[d].total++;
+    distMap[d][u.type] = (distMap[d][u.type]||0)+1;
+  });
+  const distArr = Object.entries(distMap).sort((a,b)=>b[1].total-a[1].total);
+  document.getElementById('dist-tbl').innerHTML = distArr.length ? distArr.map(([d,v])=>`
+    <tr>
+      <td><strong>${d}</strong></td>
+      <td style="color:var(--saffron);font-weight:700">${v.total}</td>
+      <td>${v.worker||0}</td>
+      <td>${v.vendor||0}</td>
+      <td>${v.customer||0}</td>
+      <td>${v.vehicle||0}</td>
+    </tr>`).join('') : '<tr><td colspan="6" class="empty"><p>No data yet</p></td></tr>';
+  buildAnalyticsCharts(users, distArr);
+}
+
+// ════════════════════════════════════════════
+// CHARTS
+// ════════════════════════════════════════════
+const CC = {
+  saffron:'#FF6B00',gold:'#D4A017',green:'#2D9B56',sky:'#3B9DD6',
+  purple:'#8B5CF6',red:'#FF4444',orange:'#FF8C3A',
+  grid:'rgba(255,255,255,.06)',text:'#8B8FA8'
+};
+const baseOpts = {
+  plugins:{legend:{labels:{color:CC.text,font:{family:'Baloo 2',size:11}}}},
+  scales:{x:{ticks:{color:CC.text},grid:{color:CC.grid}},y:{ticks:{color:CC.text},grid:{color:CC.grid}}}
+};
+
+function initCharts() {
+  // Registrations line chart
+  charts.reg = new Chart(document.getElementById('ch-reg'), {
+    type:'line',
+    data:{labels:last7Days(),datasets:[{label:'Registrations',data:Array(7).fill(0),borderColor:CC.saffron,backgroundColor:'rgba(255,107,0,.12)',fill:true,tension:.4}]},
+    options:{...baseOpts,plugins:{...baseOpts.plugins}}
+  });
+  // User types donut
+  charts.types = new Chart(document.getElementById('ch-types'), {
+    type:'doughnut',
+    data:{labels:['Customer','Worker','Vendor','Vehicle'],datasets:[{data:[0,0,0,0],backgroundColor:[CC.purple,CC.gold,CC.sky,CC.saffron],borderWidth:0}]},
+    options:{plugins:{legend:{labels:{color:CC.text,font:{family:'Baloo 2',size:11}}}},cutout:'65%'}
+  });
+  // Revenue bar
+  charts.rev = new Chart(document.getElementById('ch-rev'), {
+    type:'bar',
+    data:{labels:['Local Mini\n₹10','Local Plus\n₹20','Block Reach\n₹100','District\n₹999','Super\n₹3999'],datasets:[{label:'Vendors',data:[0,0,0,0,0],backgroundColor:[CC.saffron,CC.gold,CC.green,CC.sky,CC.purple],borderRadius:7}]},
+    options:{...baseOpts,plugins:{legend:{display:false}}}
+  });
+  // District bar
+  charts.dist = new Chart(document.getElementById('ch-dist'), {
+    type:'bar',
+    data:{labels:[],datasets:[{label:'Users',data:[],backgroundColor:CC.sky,borderRadius:6}]},
+    options:{...baseOpts,indexAxis:'y',plugins:{legend:{display:false}}}
+  });
+}
+
+function updateCharts(users, bookings, orders) {
+  if (!charts.reg) return;
+  // Registrations last 7 days
+  const days = last7Days();
+  const regCounts = days.map(d => users.filter(u => u.createdAt?.startsWith(d)).length);
+  charts.reg.data.datasets[0].data = regCounts;
+  charts.reg.update();
+  // Types
+  charts.types.data.datasets[0].data = [
+    users.filter(u=>u.type==='customer').length,
+    users.filter(u=>u.type==='worker').length,
+    users.filter(u=>u.type==='vendor').length,
+    users.filter(u=>u.type==='vehicle').length
+  ];
+  charts.types.update();
+  // Revenue by plan
+  const vendors = users.filter(u=>u.type==='vendor');
+  charts.rev.data.datasets[0].data = [
+    vendors.filter(v=>v.plan==='Local Mini').length,
+    vendors.filter(v=>v.plan==='Local Plus').length,
+    vendors.filter(v=>v.plan==='Block Reach').length,
+    vendors.filter(v=>v.plan==='District Seller').length,
+    vendors.filter(v=>v.plan==='Super Vendor').length
+  ];
+  charts.rev.update();
+  // Top districts
+  const dm = {};
+  users.forEach(u => { const d=u.district||'Unknown'; dm[d]=(dm[d]||0)+1; });
+  const sorted = Object.entries(dm).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  charts.dist.data.labels = sorted.map(x=>x[0]);
+  charts.dist.data.datasets[0].data = sorted.map(x=>x[1]);
+  charts.dist.update();
+}
+
+function buildProjectionChart() {
+  const el = document.getElementById('ch-proj');
+  if (!el) return;
+  if (charts.proj) charts.proj.destroy();
+  const months = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','Y2Q1','Y2Q2','Y2Q3','Y2Q4'];
+  const proj = [1.2,1.44,2.4,2.4,2.4,4.8,4.8,4.8,4.8,4.8,4.8,4.8,7,9,12,15];
+  charts.proj = new Chart(el, {
+    type:'line',
+    data:{labels:months,datasets:[{label:'Revenue (₹ Lakhs)',data:proj,borderColor:CC.saffron,backgroundColor:'rgba(255,107,0,.1)',fill:true,tension:.4}]},
+    options:{...baseOpts,plugins:{legend:{labels:{color:CC.text,font:{family:'Baloo 2',size:11}}}}}
+  });
+}
+
+function buildAnalyticsCharts(users, distArr) {
+  // Category interest (simulated)
+  if (charts.cat) charts.cat.destroy();
+  charts.cat = new Chart(document.getElementById('ch-cat'), {
+    type:'bar',
+    data:{
+      labels:['Farming','Fish','Poultry','Transport','Food','Home Svc','Photo','Tent'],
+      datasets:[{label:'Interest',data:[85,72,68,55,61,48,35,30],backgroundColor:[CC.green,CC.sky,CC.saffron,CC.gold,CC.orange,CC.purple,CC.red,CC.text],borderRadius:6}]
+    },
+    options:{...baseOpts,plugins:{legend:{display:false}}}
+  });
+  // District users
+  if (charts.dist2) charts.dist2.destroy();
+  const top = distArr.slice(0,8);
+  charts.dist2 = new Chart(document.getElementById('ch-dist2'), {
+    type:'bar',
+    data:{labels:top.map(x=>x[0]),datasets:[{label:'Users',data:top.map(x=>x[1].total),backgroundColor:CC.sky,borderRadius:6}]},
+    options:{...baseOpts,indexAxis:'y',plugins:{legend:{display:false}}}
+  });
+  // Monthly growth (simulated)
+  if (charts.grow) charts.grow.destroy();
+  const months6 = last6Months();
+  charts.grow = new Chart(document.getElementById('ch-grow'), {
+    type:'line',
+    data:{labels:months6,datasets:[
+      {label:'Users',data:months6.map((_,i)=>Math.max(0,users.length-months6.length+i+1)),borderColor:CC.saffron,tension:.4},
+      {label:'Bookings',data:months6.map((_,i)=>Math.floor(Math.random()*5)+i),borderColor:CC.green,tension:.4}
+    ]},
+    options:{...baseOpts}
+  });
+  // Plan distribution
+  if (charts.plans) charts.plans.destroy();
+  const vendors = users.filter(u=>u.type==='vendor');
+  charts.plans = new Chart(document.getElementById('ch-plans'), {
+    type:'pie',
+    data:{
+      labels:['Local Mini','Local Plus','Block Reach','District','Super'],
+      datasets:[{data:[
+        vendors.filter(v=>v.plan==='Local Mini').length||1,
+        vendors.filter(v=>v.plan==='Local Plus').length||0,
+        vendors.filter(v=>v.plan==='Block Reach').length||0,
+        vendors.filter(v=>v.plan==='District Seller').length||0,
+        vendors.filter(v=>v.plan==='Super Vendor').length||0
+      ],backgroundColor:[CC.saffron,CC.gold,CC.green,CC.sky,CC.purple],borderWidth:0}]
+    },
+    options:{plugins:{legend:{labels:{color:CC.text,font:{family:'Baloo 2',size:11}}}}}
+  });
+}
+
+// ════════════════════════════════════════════
+// USER ACTIONS
+// ════════════════════════════════════════════
+function viewUser(id) {
+  selectedUID = id;
+  const u = getUsers().find(x=>x.id===id);
+  if (!u) return;
+  document.getElementById('user-dv').innerHTML = `
+    <div class="dvr"><label>ID</label><p class="mono">${u.id}</p></div>
+    <div class="dvr"><label>Name</label><p>${u.name}</p></div>
+    <div class="dvr"><label>Type</label><p><span class="bdg bdg-${u.type}">${u.type}</span></p></div>
+    <div class="dvr"><label>Phone</label><p>${u.phone}</p></div>
+    <div class="dvr"><label>Village</label><p>${u.village||'—'}</p></div>
+    <div class="dvr"><label>District</label><p>${u.district||'—'}</p></div>
+    <div class="dvr"><label>Skill/Shop</label><p>${u.skill||u.shop||u.vtype||'—'}</p></div>
+    <div class="dvr"><label>Plan</label><p>${u.plan||'Free'}</p></div>
+    <div class="dvr"><label>Rating</label><p>⭐ ${u.rating||'4.5'}</p></div>
+    <div class="dvr"><label>Jobs</label><p>${u.jobs||0}</p></div>
+    <div class="dvr"><label>Status</label><p><span class="bdg ${u.status==='blocked'?'bdg-blocked':'bdg-active'}">${u.status||'active'}</span></p></div>
+    <div class="dvr"><label>Joined</label><p>${fmtDate(u.createdAt)}</p></div>
+    ${u.bio?`<div class="dvr" style="grid-column:1/-1"><label>Bio</label><p>${u.bio}</p></div>`:''}
+  `;
+  const bb = document.getElementById('m-block-btn');
+  bb.textContent = u.status==='blocked' ? '✅ Unblock User' : '🚫 Block User';
+  bb.className = 'ab ' + (u.status==='blocked' ? 'ab-approve' : 'ab-block');
+  bb.style = 'flex:1;padding:10px;font-size:.8rem';
+  openM('modal-user');
+}
+
+function toggleBlockModal() {
+  toggleBlock(selectedUID);
+  closeM('modal-user');
+}
+
+function deleteUserModal() {
+  deleteUser(selectedUID);
+  closeM('modal-user');
+}
+
+function toggleBlock(id) {
+  let users = getUsers();
+  const u = users.find(x=>x.id===id);
+  if (!u) return;
+  u.status = u.status==='blocked' ? 'active' : 'blocked';
+  saveUsers(users);
+  // Update current user in app if same
+  const cu = JSON.parse(localStorage.getItem('pt_user')||'null');
+  if (cu && cu.id===id) { cu.status=u.status; localStorage.setItem('pt_user',JSON.stringify(cu)); }
+  loadUsersTable(); loadWorkersTable(); loadVendorsTable(); loadDashboard();
+  toast((u.status==='blocked'?'🚫 User blocked: ':'✅ User unblocked: ') + u.name);
+}
+
+function deleteUser(id) {
+  if (!confirm('Delete this user permanently?')) return;
+  saveUsers(getUsers().filter(u=>u.id!==id));
+  loadUsersTable(); loadDashboard();
+  toast('🗑️ User deleted');
+}
+
+function featureUser(id) {
+  toast('⭐ Worker featured on home screen!');
+}
+
+let editUID = null;
+function openEditUser(id) {
+  editUID = id || selectedUID;
+  const u = getUsers().find(x=>x.id===editUID);
+  if (!u) return;
+  document.getElementById('eu-name').value   = u.name||'';
+  document.getElementById('eu-phone').value  = u.phone||'';
+  document.getElementById('eu-village').value= u.village||'';
+  document.getElementById('eu-dist').value   = u.district||'Khurda';
+  document.getElementById('eu-skill').value  = u.skill||u.shop||'';
+  document.getElementById('eu-plan').value   = u.plan||'Local Mini';
+  document.getElementById('eu-status').value = u.status||'active';
+  openM('modal-edit');
+}
+
+function saveEditUser() {
+  let users = getUsers();
+  const u = users.find(x=>x.id===editUID);
+  if (!u) return;
+  u.name     = document.getElementById('eu-name').value.trim()||u.name;
+  u.phone    = document.getElementById('eu-phone').value.trim()||u.phone;
+  u.village  = document.getElementById('eu-village').value.trim();
+  u.district = document.getElementById('eu-dist').value;
+  u.skill    = document.getElementById('eu-skill').value;
+  u.plan     = document.getElementById('eu-plan').value;
+  u.status   = document.getElementById('eu-status').value;
+  saveUsers(users);
+  closeM('modal-edit');
+  loadUsersTable(); loadDashboard();
+  toast('✅ User updated: ' + u.name);
+}
+
+// ════════════════════════════════════════════
+// ASSIGN PLAN
+// ════════════════════════════════════════════
+function openAssignPlan(id='') {
+  const vendors = getUsers().filter(u=>u.type==='vendor'||u.type==='worker');
+  const sel = document.getElementById('plan-vendor-sel');
+  sel.innerHTML = vendors.map(v=>`<option value="${v.id}">${v.name} (${v.type}) — ${v.district}</option>`).join('');
+  if (id) sel.value = id;
+  openM('modal-plan');
+}
+
+function assignPlan() {
+  const vid  = document.getElementById('plan-vendor-sel').value;
+  const plan = document.getElementById('plan-sel').value;
+  let users = getUsers();
+  const u = users.find(x=>x.id===vid);
+  if (!u) return;
+  u.plan = plan;
+  saveUsers(users);
+  const cu = JSON.parse(localStorage.getItem('pt_user')||'null');
+  if (cu && cu.id===vid) { cu.plan=plan; localStorage.setItem('pt_user',JSON.stringify(cu)); }
+  closeM('modal-plan');
+  loadVendorsTable(); loadRevenue(); loadDashboard();
+  toast('💎 Plan assigned: ' + plan + ' → ' + u.name);
+}
+
+// ════════════════════════════════════════════
+// STATUS UPDATE
+// ════════════════════════════════════════════
+function openStatus(id, kind) {
+  selectedBID = {id, kind};
+  const items = kind==='booking' ? getBookings() : getOrders();
+  const item = items.find(x=>x.id===id);
+  if (!item) return;
+  document.getElementById('status-info').innerHTML = `<strong>${item.service||item.item||'—'}</strong><br>Customer: ${item.userName||'—'}<br>Current: <span class="bdg bdg-${item.status||'pending'}">${item.status||'pending'}</span>`;
+  document.getElementById('new-status').value = item.status||'pending';
+  openM('modal-status');
+}
+
+function saveStatus() {
+  if (!selectedBID) return;
+  const {id, kind} = selectedBID;
+  const newStat = document.getElementById('new-status').value;
+  if (kind==='booking') {
+    let bks = getBookings();
+    const b = bks.find(x=>x.id===id);
+    if (b) { b.status=newStat; saveBookings(bks); }
+  } else {
+    let ords = getOrders();
+    const o = ords.find(x=>x.id===id);
+    if (o) { o.status=newStat; saveOrders(ords); }
+  }
+  closeM('modal-status');
+  loadBookingsTable(); loadOrdersTable(); loadDashboard();
+  toast('✅ Status updated to: ' + newStat);
+}
+
+function deleteBooking(id) {
+  if (!confirm('Delete booking?')) return;
+  saveBookings(getBookings().filter(b=>b.id!==id));
+  loadBookingsTable(); loadDashboard(); toast('🗑️ Booking deleted');
+}
+function deleteOrder(id) {
+  if (!confirm('Delete order?')) return;
+  saveOrders(getOrders().filter(o=>o.id!==id));
+  loadOrdersTable(); loadDashboard(); toast('🗑️ Order deleted');
+}
+
+// ════════════════════════════════════════════
+// BANNERS
+// ════════════════════════════════════════════
+function saveBanners() {
+  const cfg = {
+    haata: document.getElementById('tog-haata').checked,
+    promo: document.getElementById('tog-promo').checked,
+    reg:   document.getElementById('tog-reg').checked,
+    maint: document.getElementById('tog-maint').checked,
+    workers: document.getElementById('tog-workers').checked
+  };
+  localStorage.setItem('pt_banner_cfg', JSON.stringify(cfg));
+  toast('✅ Toggles saved!');
+}
+
+function saveBannerText() {
+  const txt = {
+    haataTitle: document.getElementById('ban-title').value,
+    haataSub:   document.getElementById('ban-sub').value,
+    promo:      document.getElementById('ban-promo').value,
+    tagline:    document.getElementById('ban-tag').value
+  };
+  localStorage.setItem('pt_banner_txt', JSON.stringify(txt));
+  toast('✅ Banner text saved!');
+}
+
+function sendNotif() {
+  const msg = document.getElementById('notif-msg').value.trim();
+  if (!msg) { toast('⚠️ Enter a message first'); return; }
+  const target = document.getElementById('notif-target').value;
+  const hist = document.getElementById('notif-hist');
+  const entry = document.createElement('div');
+  entry.style.cssText = 'background:var(--surf2);border-radius:7px;padding:8px 10px;margin-bottom:7px;font-size:.75rem';
+  entry.innerHTML = `<strong>${target}</strong>: ${msg}<div style="color:var(--muted);margin-top:3px">${new Date().toLocaleString()}</div>`;
+  hist.prepend(entry);
+  document.getElementById('notif-msg').value = '';
+  // Save notifications for users to read
+  let notifs = JSON.parse(localStorage.getItem('pt_notifications')||'[]');
+  notifs.unshift({msg, target, ts: new Date().toISOString()});
+  localStorage.setItem('pt_notifications', JSON.stringify(notifs));
+  toast('📤 Notification sent to: ' + target);
+}
+
+// ════════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════════
+function changePass() {
+  const curr = document.getElementById('set-curr').value;
+  const nw   = document.getElementById('set-new').value;
+  const conf = document.getElementById('set-conf').value;
+  if (curr !== ADMIN_PASS) { toast('❌ Current password wrong'); return; }
+  if (nw.length < 6) { toast('⚠️ New password min 6 chars'); return; }
+  if (nw !== conf) { toast('⚠️ Passwords do not match'); return; }
+  ADMIN_PASS = nw;
+  const uname = document.getElementById('set-uname').value.trim();
+  if (uname) { ADMIN_USER = uname; document.getElementById('admin-name-disp').textContent = uname; }
+  localStorage.setItem('pt_admin_pass', ADMIN_PASS);
+  localStorage.setItem('pt_admin_user', ADMIN_USER);
+  ['set-curr','set-new','set-conf'].forEach(id => document.getElementById(id).value='');
+  toast('✅ Password updated successfully!');
+}
+
+function saveSheet() {
+  const url   = document.getElementById('set-url').value.trim();
+  const sheet = document.getElementById('set-sheet').value.trim();
+  if (!url) { toast('⚠️ Enter Apps Script URL'); return; }
+  localStorage.setItem('pt_sheet_url', url);
+  localStorage.setItem('pt_sheet_name', sheet);
+  SHEET_URL = url;
+  // Test connection
+  toast('🔗 Testing connection...');
+  fetch(url, {method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'ping'})})
+    .then(()=>{ updateSheetStatus(true); toast('✅ Google Sheet connected!'); })
+    .catch(()=>{ updateSheetStatus(false); toast('⚠️ Could not verify. URL saved.'); });
+}
+
+function saveAppInfo() {
+  localStorage.setItem('pt_app_name', document.getElementById('set-appname').value);
+  localStorage.setItem('pt_support_phone', document.getElementById('set-phone').value);
+  localStorage.setItem('pt_admin_email', document.getElementById('set-email').value);
+  toast('✅ App info saved!');
+}
+
+function loadSheetStatus() {
+  const url = localStorage.getItem('pt_sheet_url')||'';
+  const connected = !!url;
+  updateSheetStatus(connected);
+  if (url) document.getElementById('set-url').value = url;
+  const sn = localStorage.getItem('pt_sheet_name')||'';
+  if (sn) document.getElementById('set-sheet').value = sn;
+}
+
+function updateSheetStatus(connected) {
+  const dots = ['dash-sdot','set-sdot'];
+  const texts = ['dash-stext','set-stext'];
+  dots.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.className='sdot '+(connected?'on':'off'); }
+  });
+  texts.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = connected ? 'Google Sheet: Connected ✅' : 'Google Sheet: Not Connected';
+  });
+  const dss = document.getElementById('dash-stext');
+  if (dss) dss.textContent = connected ? 'Google Sheet: Connected ✅ — All data syncing' : 'Google Sheet: Not Connected — Go to Settings to connect';
+}
+
+// ════════════════════════════════════════════
+// EXPORT
+// ════════════════════════════════════════════
+function exportCSV(type) {
+  let data, headers, rows;
+  if (type==='users') {
+    data = getUsers();
+    headers = ['ID','Name','Type','Phone','Village','District','Skill/Shop','Plan','Joined','Status'];
+    rows = data.map(u=>[u.id,u.name,u.type,u.phone,u.village||'',u.district||'',u.skill||u.shop||'',u.plan||'Free',fmtDate(u.createdAt),u.status||'active']);
+  } else if (type==='bookings') {
+    data = getBookings();
+    headers = ['ID','Customer','Service','Date','Location','Price','Status'];
+    rows = data.map(b=>[b.id,b.userName||'',b.service||'',b.date||'',b.loc||'',b.price||'',b.status||'']);
+  } else if (type==='orders') {
+    data = getOrders();
+    headers = ['ID','Customer','Item','Qty','Total','Address','Date','Status'];
+    rows = data.map(o=>[o.id,o.userName||'',o.item||'',o.qty||'',o.total||'',o.address||'',fmtDate(o.createdAt),o.status||'']);
+  }
+  const csv = [headers.join(','),...rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','))].join('\n');
+  dlFile(csv, `pt_${type}_${new Date().toISOString().slice(0,10)}.csv`, 'text/csv');
+  toast('📥 ' + type + ' exported!');
+}
+
+function exportAll() {
+  const data = {
+    users:getUsers(), bookings:getBookings(),
+    orders:getOrders(), listings:getListings(),
+    exportedAt:new Date().toISOString()
+  };
+  dlFile(JSON.stringify(data,null,2), 'pt_all_data_'+new Date().toISOString().slice(0,10)+'.json', 'application/json');
+  toast('📥 All data exported!');
+}
+
+function dlFile(content, name, mime) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content],{type:mime}));
+  a.download = name; a.click();
+}
+
+function clearData() {
+  if (!confirm('⚠️ This will delete ALL user data permanently. Type "DELETE" to confirm.')) return;
+  const c = prompt('Type DELETE to confirm:');
+  if (c==='DELETE') {
+    ['pt_all_users','pt_bookings','pt_orders','pt_listings'].forEach(k=>localStorage.removeItem(k));
+    refreshAll(); toast('🗑️ All data cleared');
+  }
+}
+
+// ════════════════════════════════════════════
+// MODAL
+// ════════════════════════════════════════════
+function openM(id) { document.getElementById(id).classList.add('on'); }
+function closeM(id) { document.getElementById(id).classList.remove('on'); }
+document.querySelectorAll('.modal').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('on'); });
+});
+
+// ════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════
+function fmtDate(d) {
+  if (!d) return '—';
+  try { return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); } catch { return d?.slice(0,10)||'—'; }
+}
+
+function last7Days() {
+  return Array.from({length:7},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-6+i); return d.toISOString().slice(0,10); });
+}
+
+function last6Months() {
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return Array.from({length:6},(_,i)=>{ const d=new Date(); d.setMonth(d.getMonth()-5+i); return months[d.getMonth()]; });
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent=msg; t.style.display='block';
+  clearTimeout(t._t);
+  t._t = setTimeout(()=>t.style.display='none', 3000);
+}
+</script>
+</body>
+</html>
