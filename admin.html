@@ -984,7 +984,40 @@ tr:hover td{background:rgba(255,255,255,.02)}
             <button onclick="saveContact()" style="background:var(--green);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;width:100%">💾 Save Contact</button>
           </div>
 
-          <!-- APP FEATURE TOGGLES -->
+          <!-- APP PAYMENT UPI -->
+          <div class="set-card" style="grid-column:1/-1">
+            <h3>💰 App Payment Settings — Vendor Plan Collection</h3>
+            <p style="font-size:.74rem;color:var(--muted);margin-bottom:14px">Vendors will see this UPI when they choose a plan. Add your UPI so vendors can pay you directly.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div>
+                <div class="mf"><label>Your UPI ID</label><input type="text" id="set-app-upi" placeholder="yourname@upi or phone@paytm"></div>
+                <div class="mf"><label>UPI Display Name</label><input type="text" id="set-app-upi-name" placeholder="The Part-Timers" value="The Part-Timers"></div>
+                <div class="mf"><label>Bank Account (optional)</label><input type="text" id="set-app-bank" placeholder="Account number"></div>
+                <div class="mf"><label>IFSC Code (optional)</label><input type="text" id="set-app-ifsc" placeholder="e.g. SBIN0001234"></div>
+              </div>
+              <div>
+                <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">UPI QR Code</div>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                  <div id="app-upi-qr-preview" style="width:80px;height:80px;border-radius:10px;background:var(--surf2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;border:1px solid var(--border);overflow:hidden">📱</div>
+                  <label style="background:var(--green);color:#fff;padding:8px 14px;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer">
+                    Upload QR
+                    <input type="file" id="app-upi-qr-upload" accept="image/*" style="display:none" onchange="previewAppUpiQR(this)">
+                  </label>
+                </div>
+                <div style="font-size:.68rem;color:var(--muted)">Vendors scan this QR to pay for plans</div>
+              </div>
+            </div>
+            <button onclick="saveAppPayment()" style="background:var(--saffron);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;margin-top:8px">💾 Save Payment Settings</button>
+          </div>
+
+          <!-- PLAN ACTIVATION — pending payments -->
+          <div class="set-card" style="grid-column:1/-1">
+            <h3>⏳ Pending Plan Activations</h3>
+            <div id="pending-plan-list">
+              <div style="font-size:.78rem;color:var(--muted);text-align:center;padding:10px">Loading pending payments...</div>
+            </div>
+            <button onclick="loadPendingPlans()" style="background:var(--surf2);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer;margin-top:8px">🔄 Refresh</button>
+          </div>
           <div class="set-card">
             <h3>🔛 Feature Toggles</h3>
             <div class="tog-row"><label class="tl">New User Registration</label><label class="toggle"><input type="checkbox" id="tog-reg" checked><span class="sl2"></span></label></div>
@@ -1225,7 +1258,7 @@ function goPan(id) {
     vendors: loadVendorsTable, vehicles: loadVehiclesTable, bookings: loadBookingsTable, orders: loadOrdersTable,
     listings: loadListingsTable, revenue: loadRevenue, analytics: loadAnalytics,
     planmgmt: loadPlansConfig,
-    pagecontent: loadPageContent, settings: () => { loadSheetStatus(); loadSettings(); }
+    pagecontent: loadPageContent, settings: () => { loadSheetStatus(); loadSettings(); loadAppPaymentSettings(); }
   };
   loaders[id]?.();
 }
@@ -1975,8 +2008,29 @@ async function saveStatus() {
   const {id, kind} = selectedBID;
   const newStat = document.getElementById('new-status').value;
   const table = kind==='booking' ? 'bookings' : 'orders';
+
+  // Get the record details for notification
+  let record = null;
   if (isSbReady()) {
+    const { data } = await sb.from(table).select('*').eq('id', id).single();
+    record = data;
     await sbUpdate(table, id, { status: newStat });
+    // Send notification to user — triggers realtime on their phone
+    const statusLabels = {
+      'confirmed':   'Booking Confirmed ✅',
+      'done':        'Service Completed 🎉',
+      'cancelled':   'Booking Cancelled ❌',
+      'in progress': 'Work In Progress 🔄',
+    };
+    const notifMsg = (statusLabels[newStat] || 'Status Updated') +
+      (record?.service ? ` — ${record.service}` : '') +
+      (record?.date    ? ` on ${record.date}` : '');
+    await sb.from('notifications').insert([{
+      message: notifMsg,
+      target: 'All Users',
+      title: statusLabels[newStat] || 'Update',
+      type: 'status_update'
+    }]).catch(() => {});
   } else {
     if (kind==='booking') {
       let bks = await getBookings(); const b = bks.find(x=>x.id===id);
@@ -1988,7 +2042,7 @@ async function saveStatus() {
   }
   closeM('modal-status');
   loadBookingsTable(); loadOrdersTable(); loadDashboard();
-  toast('✅ Status updated to: ' + newStat);
+  toast('✅ Status updated to: ' + newStat + ' — User notified');
 }
 
 async function deleteBooking(id) {
@@ -2230,6 +2284,118 @@ function saveSheet() {
 }
 
 // ── LOGO & BRANDING ────────────────────────────────
+function previewAppUpiQR(input) {
+  if (!input.files?.[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('app-upi-qr-preview');
+    prev.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:contain;border-radius:9px">`;
+    localStorage.setItem('pt_app_upi_qr', e.target.result);
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+async function saveAppPayment() {
+  const upi    = document.getElementById('set-app-upi')?.value.trim() || '';
+  const name   = document.getElementById('set-app-upi-name')?.value.trim() || 'The Part-Timers';
+  const bank   = document.getElementById('set-app-bank')?.value.trim() || '';
+  const ifsc   = document.getElementById('set-app-ifsc')?.value.trim() || '';
+  const qr     = localStorage.getItem('pt_app_upi_qr') || '';
+
+  localStorage.setItem('pt_app_upi', upi);
+  localStorage.setItem('pt_app_upi_name', name);
+
+  if (isSbReady()) {
+    const updates = [
+      { key: 'app_upi_id',   value: upi },
+      { key: 'app_upi_name', value: name },
+      { key: 'app_bank_ac',  value: bank },
+      { key: 'app_bank_ifsc',value: ifsc },
+      { key: 'app_upi_qr',   value: qr.substring(0, 500) },
+    ];
+    for (const u of updates) {
+      await sb.from('app_config').upsert({ key: u.key, value: u.value }).catch(() => {});
+    }
+  }
+  toast('✅ Payment settings saved! Vendors will see this UPI when choosing a plan.');
+}
+
+async function loadPendingPlans() {
+  const el = document.getElementById('pending-plan-list');
+  if (!el) return;
+  let vendors = [];
+  if (isSbReady()) {
+    const { data } = await sb.from('users').select('*').eq('plan_status', 'pending_payment');
+    vendors = data || [];
+  } else {
+    vendors = (JSON.parse(localStorage.getItem('pt_all_users') || '[]'))
+      .filter(u => u.plan_status === 'pending_payment');
+  }
+  if (vendors.length === 0) {
+    el.innerHTML = '<div style="font-size:.78rem;color:var(--green);text-align:center;padding:10px">✅ No pending plan payments</div>';
+    return;
+  }
+  el.innerHTML = vendors.map(v => `
+    <div style="background:var(--surf2);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:12px">
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:.85rem">${v.name}</div>
+        <div style="font-size:.72rem;color:var(--muted)">${v.phone} • ${v.district}</div>
+        <div style="font-size:.75rem;color:var(--saffron);font-weight:700">Plan: ${v.plan}</div>
+        ${v.plan_payment_proof ? `<a href="${v.plan_payment_proof}" target="_blank" style="font-size:.7rem;color:var(--sky)">View payment screenshot →</a>` : '<span style="font-size:.7rem;color:var(--muted)">No screenshot</span>'}
+      </div>
+      <button onclick="activateVendorPlan('${v.id}','${v.plan}')" style="background:var(--green);border:none;color:#fff;padding:8px 14px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">✅ Activate</button>
+      <button onclick="rejectVendorPlan('${v.id}')" style="background:rgba(255,68,68,.12);border:1px solid rgba(255,68,68,.3);color:var(--red);padding:8px 12px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">❌ Reject</button>
+    </div>`).join('');
+}
+
+async function activateVendorPlan(userId, planName) {
+  if (!confirm(`Activate ${planName} plan for this vendor?`)) return;
+  const startDate = new Date().toISOString().split('T')[0];
+  const expDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+  if (isSbReady()) {
+    await sbUpdate('users', userId, {
+      plan_status: 'active',
+      plan_start: startDate,
+      plan_expiry: expDate
+    });
+    // Notify vendor
+    await sb.from('notifications').insert([{
+      message: `Your ${planName} plan is now active! Valid until ${expDate}. Start posting listings.`,
+      target: 'All Users',
+      title: 'Plan Activated ✅',
+      type: 'plan_activated'
+    }]).catch(() => {});
+  }
+  toast(`✅ ${planName} plan activated! Vendor notified.`);
+  loadPendingPlans();
+  loadVendorsTable();
+}
+
+async function rejectVendorPlan(userId) {
+  if (!confirm('Reject this payment? Vendor will need to re-submit.')) return;
+  if (isSbReady()) {
+    await sbUpdate('users', userId, { plan_status: 'free', plan_payment_proof: '' });
+    await sb.from('notifications').insert([{
+      message: 'Your plan payment could not be verified. Please re-submit or contact admin.',
+      target: 'All Users', title: 'Plan Payment Rejected', type: 'plan_rejected'
+    }]).catch(() => {});
+  }
+  toast('Payment rejected. Vendor notified.');
+  loadPendingPlans();
+}
+
+function loadAppPaymentSettings() {
+  const upi = localStorage.getItem('pt_app_upi') || '';
+  const name = localStorage.getItem('pt_app_upi_name') || 'The Part-Timers';
+  const qr   = localStorage.getItem('pt_app_upi_qr') || '';
+  if (document.getElementById('set-app-upi')) {
+    document.getElementById('set-app-upi').value = upi;
+    document.getElementById('set-app-upi-name').value = name;
+    if (qr) document.getElementById('app-upi-qr-preview').innerHTML = `<img src="${qr}" style="width:100%;height:100%;object-fit:contain;border-radius:9px">`;
+  }
+  loadPendingPlans();
+}
+
 function previewLogo(input) {
   if (!input.files?.[0]) return;
   if (input.files[0].size > 2 * 1024 * 1024) { toast('⚠️ Logo must be under 2MB'); input.value = ''; return; }
