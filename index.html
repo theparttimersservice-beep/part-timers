@@ -357,149 +357,78 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
 
 <!-- WELCOME -->
 <div id="pg-welcome" class="pg auth-wrap on">
-  <div style="max-width:400px;width:100%;margin:auto;padding:10px">
-    <div style="text-align:center;margin-bottom:36px">
-      <div style="width:88px;height:88px;background:linear-gradient(135deg,#FF6B00,#D4A017);border-radius:22px;display:inline-flex;align-items:center;justify-content:center;font-size:2.8rem;margin-bottom:18px;box-shadow:0 12px 36px rgba(255,107,0,.4)">🌾</div>
-      <h1 style="font-family:'Tiro Oriya',serif;font-size:2rem;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.2)" id="wt">ଦ ପାର୍ଟ-ଟାଇମର୍ସ</h1>
-      <p style="color:rgba(255,255,255,.85);margin-top:5px;font-size:.95rem" id="ws">ଗ୍ରାମୀଣ ଭାରତ ଶକ୍ତି, ଗୋଟିଏ ଚାକିରି</p>
-      <p style="color:rgba(255,255,255,.65);margin-top:3px;font-size:.8rem">Empowering Rural India, One Job at a Time</p>
+  <div style="max-width:400px;width:100%;margin:auto;padding:10px 14px">
+    <!-- Logo -->
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="width:72px;height:72px;background:linear-gradient(135deg,#FF6B00,#D4A017);border-radius:20px;display:inline-flex;align-items:center;justify-content:center;font-size:2.2rem;margin-bottom:10px;box-shadow:0 10px 30px rgba(255,107,0,.4)">🌾</div>
+      <h1 style="font-family:'Tiro Oriya',serif;font-size:1.7rem;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.2)">ଦ ପାର୍ଟ-ଟାଇମର୍ସ</h1>
+      <p style="color:rgba(255,255,255,.8);margin-top:3px;font-size:.78rem">Empowering Rural Odisha • ଗ୍ରାମୀଣ ଓଡ଼ିଶା</p>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px">
-      <div onclick="showPg('pg-register')" style="background:#fff;border-radius:17px;padding:22px 14px;text-align:center;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.15);transition:all .2s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
-        <div style="font-size:2.3rem;margin-bottom:7px">🆕</div>
-        <div style="font-weight:800;font-size:.9rem" id="w-new">ନୂତନ ଉପଯୋଗ</div>
-        <div style="font-size:.72rem;color:#888;margin-top:2px">New User</div>
-      </div>
-      <div onclick="showPg('pg-login')" style="background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);border-radius:17px;padding:22px 14px;text-align:center;cursor:pointer;transition:all .2s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
-        <div style="font-size:2.3rem;margin-bottom:7px">🔑</div>
-        <div style="font-weight:800;font-size:.9rem;color:#fff" id="w-login">ଲଗ ଇନ୍</div>
-        <div style="font-size:.72rem;color:rgba(255,255,255,.7);margin-top:2px">Login</div>
-      </div>
+    <!-- Tab switcher -->
+    <div style="display:flex;background:rgba(255,255,255,.15);border-radius:14px;padding:4px;margin-bottom:16px;gap:4px">
+      <button id="tab-login-btn" onclick="switchAuthTab('login')" style="flex:1;padding:11px;border:none;border-radius:10px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.88rem;cursor:pointer;background:#fff;color:var(--saffron)">🔑 ଲଗ ଇନ୍</button>
+      <button id="tab-reg-btn" onclick="switchAuthTab('register')" style="flex:1;padding:11px;border:none;border-radius:10px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.88rem;cursor:pointer;background:transparent;color:rgba(255,255,255,.85)">🆕 ନୂତନ ଉପଯୋଗ</button>
     </div>
-    <div style="text-align:center;margin-bottom:14px">
-      <button onclick="demoLogin()" style="background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.3);color:#fff;padding:10px 22px;border-radius:12px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;width:100%">🎯 Demo — Try App / ଡেমো</button>
+    <!-- LOGIN PANEL -->
+    <div id="auth-login-panel" style="background:#fff;border-radius:20px;padding:22px;box-shadow:0 16px 48px rgba(0,0,0,.2)">
+      <div class="fg"><label>📱 ମୋବାଇଲ <span>/ Mobile Number</span></label><input id="l-phone" type="tel" placeholder="10-digit mobile" maxlength="10"></div>
+      <div class="fg"><label>🔒 ପାସୱାର୍ଡ <span>/ Password</span></label><input id="l-pass" type="password" placeholder="Your password"></div>
+      <button class="btn btn-p" onclick="doLogin()" style="margin-bottom:10px">🔑 ଲଗ ଇନ୍ | Login</button>
+      <button class="btn" onclick="demoLogin()" style="background:var(--green-p);color:var(--green)">🎯 Demo Login</button>
+      <p style="text-align:center;margin-top:12px;font-size:.8rem;color:var(--muted)">ନୂତନ ଉପଯୋଗକର୍ତ୍ତା? <span onclick="switchAuthTab('register')" style="color:var(--saffron);font-weight:700;cursor:pointer">ଯୋଗ ଦିଅନ୍ତୁ →</span></p>
     </div>
-    <div style="text-align:center">
-      <button onclick="toggleLang()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 16px;border-radius:20px;font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.78rem;cursor:pointer" id="lang-btn">Switch to English</button>
-    </div>
-  </div>
-</div>
-
-<!-- REGISTER -->
-<div id="pg-register" class="pg auth-wrap" style="align-items:flex-start;padding-top:0">
-  <div style="width:100%;max-width:400px;margin:auto">
-    <div style="padding:18px 18px 0;display:flex;align-items:center;gap:11px">
-      <button onclick="showPg('pg-welcome')" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:1.05rem">←</button>
-      <h3 style="color:#fff;font-weight:800;font-size:.97rem" id="reg-t">ଯୋଗ ଦିଅନ୍ତୁ | Register</h3>
-    </div>
-    <div class="auth-card" style="margin:14px">
-      <p style="font-size:.82rem;color:var(--muted);margin-bottom:14px" id="reg-sub">ଆପଣ କିଏ? | Who are you?</p>
-      <div class="ut-grid" id="ut-grid">
-        <div class="ut-card" onclick="selUT(this,'customer')">
-          <div class="ui">👤</div><div class="un" id="ut-c">ଗ୍ରାହକ</div><div class="us">Customer</div>
-        </div>
-        <div class="ut-card" onclick="selUT(this,'worker')">
-          <div class="ui">👷</div><div class="un" id="ut-w">କର୍ମୀ</div><div class="us">Worker/Helper</div>
-        </div>
-        <div class="ut-card" onclick="selUT(this,'vendor')">
-          <div class="ui">🏪</div><div class="un" id="ut-v">ବିକ୍ରେତା</div><div class="us">Vendor/Seller</div>
-        </div>
-        <div class="ut-card" onclick="selUT(this,'vehicle')">
-          <div class="ui">🚜</div><div class="un" id="ut-vh">ଯାନ ମାଲିକ</div><div class="us">Vehicle Owner</div>
-        </div>
+    <!-- REGISTER PANEL -->
+    <div id="auth-reg-panel" style="display:none;background:#fff;border-radius:20px;padding:20px;box-shadow:0 16px 48px rgba(0,0,0,.2);max-height:68vh;overflow-y:auto">
+      <p style="font-size:.82rem;color:var(--muted);margin-bottom:12px;font-weight:700">ଆପଣ କିଏ? | Who are you?</p>
+      <div class="ut-grid" style="margin-bottom:12px">
+        <div class="ut-card" onclick="selUT(this,'customer')"><div class="ui">👤</div><div class="un">ଗ୍ରାହକ</div><div class="us">Customer</div></div>
+        <div class="ut-card" onclick="selUT(this,'worker')"><div class="ui">👷</div><div class="un">କର୍ମୀ</div><div class="us">Worker</div></div>
+        <div class="ut-card" onclick="selUT(this,'vendor')"><div class="ui">🏪</div><div class="un">ବିକ୍ରେତା</div><div class="us">Vendor</div></div>
+        <div class="ut-card" onclick="selUT(this,'vehicle')"><div class="ui">🚜</div><div class="un">ଯାନ ମାଲିକ</div><div class="us">Vehicle</div></div>
       </div>
       <div id="reg-form" class="hidden">
         <div class="fg"><label>ପୂରା ନାମ <span>/ Full Name</span></label><input id="r-name" type="text" placeholder="Your full name"></div>
         <div class="fg"><label>ମୋବାଇଲ <span>/ Mobile</span></label><input id="r-phone" type="tel" placeholder="10-digit mobile" maxlength="10"></div>
         <div class="fg"><label>ଜିଲ୍ଲା <span>/ District</span></label>
-          <select id="r-dist">
-            <option value="">ଜିଲ୍ଲା ଚୁଣନ୍ତୁ / Select District</option>
-            <option>Khurda</option><option>Cuttack</option><option>Puri</option><option>Ganjam</option>
-            <option>Balasore</option><option>Mayurbhanj</option><option>Kendrapara</option>
-            <option>Jagatsinghpur</option><option>Jajpur</option><option>Bhadrak</option>
-            <option>Nayagarh</option><option>Bargarh</option><option>Koraput</option>
-            <option>Malkangiri</option><option>Rayagada</option><option>Kandhamal</option>
-            <option>Sundargarh</option><option>Sambalpur</option><option>Angul</option>
-            <option>Dhenkanal</option><option>Bolangir</option><option>Kalahandi</option>
-            <option>Nuapada</option><option>Nabarangpur</option><option>Gajapati</option>
-            <option>Baudh</option><option>Sonepur</option><option>Deogarh</option>
-            <option>Jharsuguda</option><option>Keonjhar</option>
-          </select>
+          <select id="r-dist"><option value="">ଜିଲ୍ଲା ଚୁଣନ୍ତୁ / Select District</option><option>Khurda</option><option>Cuttack</option><option>Puri</option><option>Ganjam</option><option>Balasore</option><option>Mayurbhanj</option><option>Kendrapara</option><option>Jagatsinghpur</option><option>Jajpur</option><option>Bhadrak</option><option>Nayagarh</option><option>Bargarh</option><option>Koraput</option><option>Malkangiri</option><option>Rayagada</option><option>Kandhamal</option><option>Sundargarh</option><option>Sambalpur</option><option>Angul</option><option>Dhenkanal</option><option>Bolangir</option><option>Kalahandi</option><option>Nuapada</option><option>Nabarangpur</option><option>Gajapati</option><option>Baudh</option><option>Sonepur</option><option>Deogarh</option><option>Jharsuguda</option><option>Keonjhar</option></select>
         </div>
         <div class="fg"><label>ଗ୍ରାମ <span>/ Village</span></label><input id="r-village" type="text" placeholder="Your village name"></div>
-        <!-- Worker Fields -->
         <div id="wf" class="hidden">
           <div class="fg"><label>ଦକ୍ଷତା <span>/ Skill</span></label>
-            <select id="r-skill">
-              <option value="">Select your skill</option>
-              <option>ଶସ୍ୟ ଚାଷ / Crop Farming</option><option>ମତ୍ସ୍ୟ ଚାଷ / Fish & Aqua</option>
-              <option>ମୁର୍ଗୀ ପାଳନ / Poultry</option><option>ନିର୍ମାଣ / Construction Mason</option>
-              <option>ଇଲେକ୍ଟ୍ରିସିଆନ / Electrician</option><option>ଜଳ ସଂଯୋଗ / Plumber</option>
-              <option>ଟ୍ରାକ୍ଟର / Tractor Driver</option><option>ଫଟୋ / Photo-Video</option>
-              <option>ଶିକ୍ଷା / Tuition</option><option>ରନ୍ଧନ / Cooking</option>
-              <option>ଡ୍ରାଇଭର / Driver</option><option>ଜାଲ ତୈରି / Net Making</option>
-              <option>ଚିତ୍ରକ / Painter</option><option>ଅନ୍ୟ / Other</option>
-            </select>
+            <select id="r-skill"><option value="">Select your skill</option><option>ଶସ୍ୟ ଚାଷ / Crop Farming</option><option>ମତ୍ସ୍ୟ ଚାଷ / Fish &amp; Aqua</option><option>ମୁର୍ଗୀ ପାଳନ / Poultry</option><option>ନିର୍ମାଣ / Construction Mason</option><option>ଇଲେକ୍ଟ୍ରିସିଆନ / Electrician</option><option>ଜଳ ସଂଯୋଗ / Plumber</option><option>ଟ୍ରାକ୍ଟର / Tractor Driver</option><option>ଫଟୋ / Photo-Video</option><option>ଶିକ୍ଷା / Tuition</option><option>ରନ୍ଧନ / Cooking</option><option>ଡ୍ରାଇଭର / Driver</option><option>ଜାଲ ତୈରି / Net Making</option><option>ଚିତ୍ରକ / Painter</option><option>ଅନ୍ୟ / Other</option></select>
           </div>
           <div class="fg"><label>ଦୈନିକ ମଜୁରି <span>/ Daily Rate (₹)</span></label><input id="r-rate" type="number" placeholder="e.g. 400"></div>
           <div class="fg"><label>ଅଭିଜ୍ଞତା <span>/ Experience (years)</span></label><input id="r-exp" type="number" placeholder="e.g. 3"></div>
         </div>
-        <!-- Vendor Fields -->
         <div id="vdf" class="hidden">
           <div class="fg"><label>ଦୋକାନ ନାମ <span>/ Shop Name</span></label><input id="r-shop" type="text" placeholder="Your shop/business name"></div>
           <div class="fg"><label>ବ୍ୟବସାୟ <span>/ Business Type</span></label>
-            <select id="r-biz">
-              <option>ଖାଦ୍ୟ / Food Shop</option><option>ଚାଷ ଉପକରଣ / Agri Tools</option>
-              <option>ମତ୍ସ୍ୟ / Fish Shop</option><option>ମୁର୍ଗୀ / Poultry</option>
-              <option>ଔଷଧ / Pharmacy</option><option>ଷ୍ଟେଜ ହାଉସ / Tent & Events</option>
-              <option>ଫଟୋ ଷ୍ଟୁଡ଼ିଓ / Photo Studio</option><option>ଡ୍ରାଇଭର / Transport</option>
-              <option>ଅନ୍ୟ / Other</option>
-            </select>
+            <select id="r-biz"><option>ଖାଦ୍ୟ / Food Shop</option><option>ଚାଷ ଉପକରଣ / Agri Tools</option><option>ମତ୍ସ୍ୟ / Fish Shop</option><option>ମୁର୍ଗୀ / Poultry</option><option>ଔଷଧ / Pharmacy</option><option>ଷ୍ଟେଜ ହାଉସ / Tent &amp; Events</option><option>ଫଟୋ ଷ୍ଟୁଡ଼ିଓ / Photo Studio</option><option>ଡ୍ରାଇଭର / Transport</option><option>ଅନ୍ୟ / Other</option></select>
           </div>
           <div class="fg"><label>ମାସିକ ବିକ୍ରୟ <span>/ Monthly Sales</span></label>
-            <select id="r-sales">
-              <option>₹0 – ₹1,000</option><option>₹1,000 – ₹10,000</option>
-              <option>₹10,000 – ₹1 Lakh</option><option>₹1 Lakh – ₹10 Lakh</option><option>₹10 Lakh+</option>
-            </select>
+            <select id="r-sales"><option>₹0 – ₹1,000</option><option>₹1,000 – ₹10,000</option><option>₹10,000 – ₹1 Lakh</option><option>₹1 Lakh – ₹10 Lakh</option><option>₹10 Lakh+</option></select>
           </div>
         </div>
-        <!-- Vehicle Fields -->
         <div id="vhf" class="hidden">
           <div class="fg"><label>ଯାନ ପ୍ରକାର <span>/ Vehicle Type</span></label>
-            <select id="r-vtype">
-              <option>ଟ୍ରାକ୍ଟର / Tractor</option><option>ଟେମ୍ପୋ / Tempo</option>
-              <option>ଅଟୋ / Auto Rickshaw</option><option>ଟ୍ରକ / Truck</option>
-              <option>ଇ-ରିକ୍ସା / E-Rickshaw</option><option>ଗାଡ଼ି / Car (Taxi)</option>
-              <option>ଜଳଯାନ / Boat</option><option>ମୋଟରସାଇକେଲ / Bike</option>
-            </select>
+            <select id="r-vtype"><option>ଟ୍ରାକ୍ଟର / Tractor</option><option>ଟେମ୍ପୋ / Tempo</option><option>ଅଟୋ / Auto Rickshaw</option><option>ଟ୍ରକ / Truck</option><option>ଇ-ରିକ୍ସା / E-Rickshaw</option><option>ଗାଡ଼ି / Car (Taxi)</option><option>ଜଳଯାନ / Boat</option><option>ମୋଟରସାଇକେଲ / Bike</option></select>
           </div>
           <div class="fg"><label>ଯାନ ନମ୍ବର <span>/ Vehicle Number</span></label><input id="r-vnum" type="text" placeholder="OD-XX-XXXX"></div>
           <div class="fg"><label>ଭଡ଼ା <span>/ Rental Rate</span></label><input id="r-vrate" type="text" placeholder="e.g. ₹800/day or ₹40/km"></div>
         </div>
         <div class="fg"><label>ପାସୱାର୍ଡ <span>/ Password</span></label><input id="r-pass" type="password" placeholder="Create password"></div>
         <button class="btn btn-p" onclick="doRegister()">✅ ଯୋଗ ଦିଅନ୍ତୁ | Register</button>
-        <p style="text-align:center;margin-top:12px;font-size:.82rem;color:var(--muted)">ଆଗରୁ ଯୋଗ ଦେଇଛନ୍ତି? <span onclick="showPg('pg-login')" style="color:var(--saffron);font-weight:700;cursor:pointer">Login →</span></p>
+        <p style="text-align:center;margin-top:10px;font-size:.8rem;color:var(--muted)">ଆଗରୁ ଆଛନ୍ତି? <span onclick="switchAuthTab('login')" style="color:var(--saffron);font-weight:700;cursor:pointer">Login →</span></p>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- LOGIN -->
-<div id="pg-login" class="pg auth-wrap">
-  <div class="auth-card">
-    <div class="logo-wrap">
-      <div class="logo-icon">🌾</div>
-      <h2>ଦ ପାର୍ଟ-ଟାଇମର୍ସ</h2>
-      <p>ଲଗ ଇନ୍ | Sign In to your account</p>
+    <!-- Language toggle -->
+    <div style="text-align:center;margin-top:12px">
+      <button onclick="toggleLang()" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 16px;border-radius:20px;font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.75rem;cursor:pointer" id="lang-btn">Switch to English</button>
     </div>
-    <div class="fg"><label>ମୋବାଇଲ <span>/ Mobile Number</span></label><input id="l-phone" type="tel" placeholder="10-digit mobile"></div>
-    <div class="fg"><label>ପାସୱାର୍ଡ <span>/ Password</span></label><input id="l-pass" type="password" placeholder="Your password"></div>
-    <button class="btn btn-p" onclick="doLogin()">🔑 ଲଗ ଇନ୍ | Login</button>
-    <button class="btn" onclick="demoLogin()" style="background:var(--green-p);color:var(--green);margin-top:10px">🎯 Demo Login</button>
-    <p style="text-align:center;margin-top:14px;font-size:.82rem;color:var(--muted)">ନୂତନ? <span onclick="showPg('pg-register')" style="color:var(--saffron);font-weight:700;cursor:pointer">ଯୋଗ ଦିଅନ୍ତୁ →</span></p>
-    <p style="text-align:center;margin-top:8px;font-size:.78rem"><span onclick="showPg('pg-welcome')" style="color:var(--muted);cursor:pointer">← Back</span></p>
   </div>
 </div>
+<div id="pg-register" class="pg" style="display:none"></div>
+<div id="pg-login" class="pg" style="display:none"></div>
 </div><!-- /auth -->
 
 <!-- ==================== MAIN APP ==================== -->
@@ -937,6 +866,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     <div class="mi" onclick="toggleLang()"><div class="mic">🌐</div><div class="mit"><h4>Language / ଭାଷା</h4><p id="lang-status">Odia (Primary)</p></div><div class="mia">›</div></div>
     <div class="mi" onclick="shareProfile()"><div class="mic">📤</div><div class="mit"><h4>Share Digital ID</h4><p>Share your work profile</p></div><div class="mia">›</div></div>
     <div class="mi" onclick="confirmLogout()" style="border:2px solid #FFE8E8"><div class="mic">🚪</div><div class="mit"><h4 style="color:#FF4444">Logout</h4><p>Sign out of your account</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="openModal('modal-tnc')"><div class="mic">📋</div><div class="mit"><h4>Terms & Conditions</h4><p>Indian law ke anusar niyam</p></div><div class="mia">›</div></div>
   </div>
   <div style="height:16px"></div>
 </div><!-- /profile -->
@@ -1048,7 +978,167 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
-<!-- VENDOR POST MODAL -->
+<!-- PAYMENT MODAL — shown after booking confirmed -->
+<div class="modal" id="modal-payment">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">💳 Payment Info</div>
+    <div class="msub">Service provider ko directly pay karo</div>
+    <div id="payment-worker-info" style="background:var(--saffron-p);border-radius:12px;padding:16px;margin-bottom:14px">
+      <div style="font-size:.88rem;font-weight:800;margin-bottom:10px" id="pay-worker-name">Worker Name</div>
+      <!-- UPI Section -->
+      <div id="pay-upi-section">
+        <div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">📲 UPI se pay karo:</div>
+        <div style="display:flex;align-items:center;gap:10px;background:#fff;border-radius:10px;padding:11px 13px;margin-bottom:10px">
+          <span style="font-size:1.4rem">📱</span>
+          <div>
+            <div style="font-size:.72rem;color:var(--muted)">UPI ID</div>
+            <div style="font-weight:800;font-size:.9rem" id="pay-upi-id">—</div>
+          </div>
+          <button onclick="copyUPI()" style="margin-left:auto;background:var(--sky);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.72rem;cursor:pointer">Copy</button>
+        </div>
+        <!-- QR Code -->
+        <div id="pay-qr-section" style="text-align:center;margin-bottom:10px">
+          <img id="pay-qr-img" style="width:120px;height:120px;border-radius:10px;border:2px solid var(--border);display:none">
+          <div id="pay-no-qr" style="font-size:.72rem;color:var(--muted)">QR code available nahi hai</div>
+        </div>
+      </div>
+      <!-- Cash Section -->
+      <div id="pay-cash-section" style="background:#fff;border-radius:10px;padding:11px 13px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:1.3rem">💵</span>
+          <div>
+            <div style="font-weight:700;font-size:.82rem">Cash Payment</div>
+            <div style="font-size:.72rem;color:var(--muted)" id="pay-cash-status">Service ke baad cash dena</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--green-p);border-radius:10px;padding:11px;font-size:.75rem;color:var(--green);font-weight:600;margin-bottom:14px">
+      ✅ App ka koi commission nahi<br>
+      ✅ Direct payment — tumhara aur worker ka mamla<br>
+      ✅ Amount pe dispute ho toh admin se contact karo
+    </div>
+    <button class="btn btn-g" onclick="closeModal('modal-payment')">✅ Samajh gaya</button>
+  </div>
+</div>
+
+<!-- 3-WAY RATING MODAL -->
+<div class="modal" id="modal-rating">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">⭐ Service Rate Karo</div>
+    <div class="msub" id="rating-sub">Service kaisi rahi?</div>
+    <div id="rating-target-info" style="background:var(--saffron-p);border-radius:10px;padding:12px;margin-bottom:14px;font-size:.85rem;font-weight:700"></div>
+    <!-- Star Rating -->
+    <div style="text-align:center;margin-bottom:14px">
+      <div style="font-size:.8rem;color:var(--muted);margin-bottom:8px">Rating do:</div>
+      <div id="rating-stars" style="display:flex;gap:10px;justify-content:center">
+        <span onclick="setRating(1)" style="font-size:2.2rem;cursor:pointer;opacity:.4;transition:all .15s;color:var(--gold)">★</span>
+        <span onclick="setRating(2)" style="font-size:2.2rem;cursor:pointer;opacity:.4;transition:all .15s;color:var(--gold)">★</span>
+        <span onclick="setRating(3)" style="font-size:2.2rem;cursor:pointer;opacity:.4;transition:all .15s;color:var(--gold)">★</span>
+        <span onclick="setRating(4)" style="font-size:2.2rem;cursor:pointer;opacity:.4;transition:all .15s;color:var(--gold)">★</span>
+        <span onclick="setRating(5)" style="font-size:2.2rem;cursor:pointer;opacity:.4;transition:all .15s;color:var(--gold)">★</span>
+      </div>
+      <div id="rating-label" style="font-size:.78rem;color:var(--muted);margin-top:6px">Star tap karo</div>
+    </div>
+    <!-- Tags for quick feedback -->
+    <div style="margin-bottom:12px">
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:7px">Quick feedback (optional):</div>
+      <div id="rating-tags" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+    </div>
+    <div class="fg"><label>Comment (optional)</label><textarea id="rating-comment" placeholder="Apna experience likho..." style="min-height:60px"></textarea></div>
+    <button class="btn btn-p" onclick="submitRating()">✅ Rating Submit Karo</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-rating')">Skip</button>
+  </div>
+</div>
+
+<!-- TERMS & CONDITIONS MODAL -->
+<div class="modal" id="modal-tnc">
+  <div class="msheet" style="max-height:90vh">
+    <div class="mhandle"></div>
+    <div class="mt">📋 Terms & Conditions</div>
+    <div style="font-size:.72rem;color:var(--muted);margin-bottom:14px">The Part-Timer's App — Effective Date: 2026 | Indian Law ke anusar</div>
+    <div style="overflow-y:auto;max-height:55vh;font-size:.78rem;line-height:1.7;color:var(--text)" id="tnc-content">
+
+      <div style="background:var(--saffron-p);border-radius:10px;padding:12px;margin-bottom:12px">
+        <div style="font-weight:800;font-size:.85rem;color:var(--saffron);margin-bottom:4px">1. Platform ka Role</div>
+        <p>The Part-Timer's ek discovery platform hai — service providers aur customers ko milata hai. App kisi bhi transaction mein directly involved nahi hai. Payment, kaam ki quality, aur delivery ki zimmedari service provider aur customer ki hai.</p>
+      </div>
+
+      <div style="background:var(--green-p);border-radius:10px;padding:12px;margin-bottom:12px">
+        <div style="font-weight:800;font-size:.85rem;color:var(--green);margin-bottom:4px">2. Worker / Technician Rules (MSME Act 2006 ke anusar)</div>
+        <p>• Worker khud apni daily rate set kar sakta hai<br>
+        • App kisi bhi kaam par commission nahi leta<br>
+        • Worker registered artisan, skilled labor ya self-employed person ho sakta hai<br>
+        • Disputes mein local MSME facilitation council se madad li ja sakti hai<br>
+        • Worker ka payment sirf direct hoga — UPI ya Cash</p>
+      </div>
+
+      <div style="background:#E8F4FD;border-radius:10px;padding:12px;margin-bottom:12px">
+        <div style="font-weight:800;font-size:.85rem;color:var(--sky);margin-bottom:4px">3. Vendor / Seller Rules</div>
+        <p>• Vendor plan ke hisab se listing aur area visibility milegi<br>
+        • Galat ya misleading listings ban hogi<br>
+        • Food items ke liye FSSAI license required hai<br>
+        • Agricultural produce ke liye APMC rules follow karne honge<br>
+        • App listings ko approve/reject karne ka adhikar rakhta hai</p>
+      </div>
+
+      <div style="background:#FFF4EC;border-radius:10px;padding:12px;margin-bottom:12px">
+        <div style="font-weight:800;font-size:.85rem;color:var(--saffron);margin-bottom:4px">4. Customer Cancellation Policy</div>
+        <p>• Booking cancel karne ke liye worker ko inform karna zaroori hai<br>
+        • Booking start hone ke baad cancel kiya toh worker ka partial payment dena hoga (agreed amount ka 25-50%)<br>
+        • App ka cancellation mein koi financial role nahi hai<br>
+        • Refund directly worker ya vendor se lena hoga</p>
+      </div>
+
+      <div style="border-radius:10px;padding:12px;margin-bottom:12px;border:1px solid var(--border)">
+        <div style="font-weight:800;font-size:.85rem;margin-bottom:4px">5. Payment & Financial Terms</div>
+        <p>• App koi payment gateway nahi hai — sirf UPI ID aur Cash facilitate karta hai<br>
+        • Subscription plans (vendor) ke liye payment app ke bahar hogi<br>
+        • App kisi bhi financial transaction ka record nahi rakhta<br>
+        • GST/Tax ki zimmedari service provider ki hai<br>
+        • Consumer Protection Act 2019 ke rights protect hain</p>
+      </div>
+
+      <div style="border-radius:10px;padding:12px;margin-bottom:12px;border:1px solid var(--border)">
+        <div style="font-weight:800;font-size:.85rem;margin-bottom:4px">6. Privacy Policy (IT Act 2000)</div>
+        <p>• Aapka phone number aur data sirf app ke liye use hoga<br>
+        • Data kisi third party ko nahi becha jayega<br>
+        • Right to deletion: account delete karne ka adhikar hai<br>
+        • Data Supabase (encrypted) mein store hota hai<br>
+        • Cookies sirf app functionality ke liye use hoti hain</p>
+      </div>
+
+      <div style="border-radius:10px;padding:12px;margin-bottom:12px;border:1px solid var(--border)">
+        <div style="font-weight:800;font-size:.85rem;margin-bottom:4px">7. Rating & Review System</div>
+        <p>• Customer, Worker, aur Admin teen-teen taraf se rating de sakte hain<br>
+        • Fake ratings ban hain — account suspend ho sakta hai<br>
+        • 3 baar booking reject karne par re-submit karna padega<br>
+        • Galat review report karne ka option hai</p>
+      </div>
+
+      <div style="border-radius:10px;padding:12px;margin-bottom:12px;border:1px solid var(--border)">
+        <div style="font-weight:800;font-size:.85rem;margin-bottom:4px">8. Governing Law</div>
+        <p>Yeh terms Indian law ke anusar govern hoti hain — specifically:<br>
+        • Information Technology Act, 2000<br>
+        • Consumer Protection Act, 2019<br>
+        • MSME Development Act, 2006<br>
+        • Indian Contract Act, 1872<br>
+        Disputes ke liye jurisdiction: Odisha Courts</p>
+      </div>
+
+      <div style="text-align:center;font-size:.7rem;color:var(--muted);padding:8px 0">
+        Version 1.0 • The Part-Timer's App • Odisha, India<br>
+        Contact: Admin Panel se support le sakte ho
+      </div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn btn-p" onclick="acceptTnC()">✅ Accept & Continue</button>
+      <button class="btn btn-o" onclick="closeModal('modal-tnc')" style="width:auto;padding:13px 16px">Close</button>
+    </div>
+  </div>
+</div>
 <div class="modal" id="modal-vendor">
   <div class="msheet">
     <div class="mhandle"></div>
@@ -1101,9 +1191,42 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     <div id="ep-worker-extra">
       <div class="fg"><label>ଦକ୍ଷତା <span>/ Skill</span></label><input id="ep-skill" type="text" placeholder="Your skills"></div>
       <div class="fg"><label>ଦୈନିକ ମଜୁରି <span>/ Daily Rate ₹</span></label><input id="ep-rate" type="number" placeholder="e.g. 400"></div>
+      <!-- UPI Payment Section -->
+      <div style="background:var(--green-p);border-radius:12px;padding:14px;margin-bottom:12px">
+        <div style="font-size:.82rem;font-weight:800;color:var(--green);margin-bottom:10px">💳 Payment Details (UPI / Cash)</div>
+        <div class="fg" style="margin-bottom:8px"><label>UPI ID <span>/ UPI ଆଇଡି</span></label><input id="ep-upi" type="text" placeholder="e.g. ramesh@upi or 9876543210@paytm"></div>
+        <div class="fg" style="margin-bottom:8px"><label>UPI QR Code <span>/ ଫଟୋ</span></label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <span style="background:var(--green);color:#fff;padding:7px 14px;border-radius:8px;font-size:.75rem;font-weight:700">📷 Upload QR</span>
+            <input type="file" id="ep-upi-qr" accept="image/*" style="display:none" onchange="previewUpiQR(this)">
+          </label>
+          <div id="ep-upi-qr-preview" style="display:none;margin-top:8px"><img id="ep-upi-qr-img" style="width:100px;height:100px;object-fit:contain;border-radius:8px;border:2px solid var(--border)"></div>
+        </div>
+        <div class="fg"><label>Cash Accept karte ho? <span>/ Cash OK?</span></label>
+          <select id="ep-cash"><option value="yes">✅ Haan, Cash Accept karta/karti hoon</option><option value="no">❌ Nahi, Sirf UPI</option><option value="both">✅ Dono — Cash + UPI</option></select>
+        </div>
+      </div>
     </div>
     <div id="ep-vendor-extra">
       <div class="fg"><label>ଦୋକାନ ନାମ <span>/ Shop Name</span></label><input id="ep-shop" type="text"></div>
+      <!-- Vendor UPI too -->
+      <div style="background:var(--green-p);border-radius:12px;padding:14px;margin-bottom:12px">
+        <div style="font-size:.82rem;font-weight:800;color:var(--green);margin-bottom:10px">💳 Payment Details</div>
+        <div class="fg" style="margin-bottom:8px"><label>UPI ID</label><input id="ep-vendor-upi" type="text" placeholder="e.g. shop@upi"></div>
+        <div class="fg"><label>QR Code Upload</label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <span style="background:var(--green);color:#fff;padding:7px 14px;border-radius:8px;font-size:.75rem;font-weight:700">📷 Upload QR</span>
+            <input type="file" id="ep-vendor-qr" accept="image/*" style="display:none" onchange="previewVendorQR(this)">
+          </label>
+          <div id="ep-vendor-qr-preview" style="display:none;margin-top:8px"><img id="ep-vendor-qr-img" style="width:100px;height:100px;object-fit:contain;border-radius:8px;border:2px solid var(--border)"></div>
+        </div>
+      </div>
+    </div>
+    <!-- ADD-ON ROLES SECTION -->
+    <div style="background:#E8F4FD;border-radius:12px;padding:14px;margin-bottom:12px">
+      <div style="font-size:.82rem;font-weight:800;color:var(--sky);margin-bottom:8px">➕ Add-on Roles <span style="font-weight:400;font-size:.72rem;color:var(--muted)">/ ଅତିରିକ୍ତ ଭୂମିକା</span></div>
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:10px">Primary role ke alawa aur kya karte ho?</div>
+      <div id="addon-roles-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:7px"></div>
     </div>
     <div class="fg"><label>ବ୍ୟକ୍ତିଗତ ବିବରଣ <span>/ Bio (optional)</span></label><textarea id="ep-bio" placeholder="Tell something about yourself..."></textarea></div>
     <button class="btn btn-p" onclick="saveProfile()">✅ Save Changes</button>
@@ -1189,6 +1312,22 @@ window.addEventListener('load', () => {
 // PAGE CONTENT — reads admin edits and applies to DOM
 // ============================================================
 function applyPageContent() {
+  // Apply branding from admin settings
+  const branding = JSON.parse(localStorage.getItem('pt_branding') || '{}');
+  if (branding.colPrimary) document.documentElement.style.setProperty('--saffron', branding.colPrimary);
+  if (branding.colSecondary) document.documentElement.style.setProperty('--green', branding.colSecondary);
+  if (branding.colAccent) document.documentElement.style.setProperty('--gold', branding.colAccent);
+
+  // Apply logo to loader and profile avatars
+  const logo = localStorage.getItem('pt_logo');
+  if (logo) {
+    const loaderIcon = document.querySelector('#loader h1');
+    // Logo in splash is text-based (Odia), keep it
+  }
+
+  // Apply app name if changed
+  if (branding.appName) document.title = branding.appName + ' | Admin';
+
   const data = JSON.parse(localStorage.getItem('pt_page_content') || '{}');
   if (!Object.keys(data).length) return;
 
@@ -1287,7 +1426,33 @@ let selectedUserType = '';
 
 function showPg(id) {
   document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
-  document.getElementById(id).classList.add('on');
+  document.getElementById(id)?.classList.add('on');
+  // If someone calls showPg('pg-register'), switch to register tab on welcome
+  if (id === 'pg-register') { document.getElementById('pg-welcome').classList.add('on'); switchAuthTab('register'); }
+  if (id === 'pg-login')    { document.getElementById('pg-welcome').classList.add('on'); switchAuthTab('login'); }
+}
+
+function switchAuthTab(tab) {
+  const loginPanel = document.getElementById('auth-login-panel');
+  const regPanel   = document.getElementById('auth-reg-panel');
+  const loginBtn   = document.getElementById('tab-login-btn');
+  const regBtn     = document.getElementById('tab-reg-btn');
+  if (!loginPanel) return;
+  if (tab === 'login') {
+    loginPanel.style.display = '';
+    regPanel.style.display   = 'none';
+    loginBtn.style.background = '#fff';
+    loginBtn.style.color      = 'var(--saffron)';
+    regBtn.style.background   = 'transparent';
+    regBtn.style.color        = 'rgba(255,255,255,.85)';
+  } else {
+    loginPanel.style.display = 'none';
+    regPanel.style.display   = '';
+    regBtn.style.background   = '#fff';
+    regBtn.style.color        = 'var(--saffron)';
+    loginBtn.style.background = 'transparent';
+    loginBtn.style.color      = 'rgba(255,255,255,.85)';
+  }
 }
 
 function selUT(el, type) {
@@ -1435,6 +1600,7 @@ async function launchApp() {
   loadHomeData();
   loadProfileData();
   goTab('home');
+  checkTnC(); // Show T&C on first use
 }
 
 function startRealtimeListener() {
@@ -1652,6 +1818,17 @@ async function saveProfile() {
   currentUser.shop     = document.getElementById('ep-shop').value;
   currentUser.bio      = document.getElementById('ep-bio').value;
 
+  // UPI & payment
+  const upiEl = document.getElementById('ep-upi') || document.getElementById('ep-vendor-upi');
+  if (upiEl) currentUser.upi_id = upiEl.value.trim();
+  const cashEl = document.getElementById('ep-cash');
+  if (cashEl) currentUser.cash_accept = cashEl.value;
+  if (currentUser._upiQR) currentUser.upi_qr = currentUser._upiQR;
+  if (currentUser._vendorQR) currentUser.upi_qr = currentUser._vendorQR;
+
+  // Addon roles from toggles
+  // (already updated in currentUser.addon_roles by toggleAddonRole)
+
   // Handle photo upload
   const photoInput = document.getElementById('ep-photo');
   if (photoInput?.files?.[0] && isSupabaseReady()) {
@@ -1710,14 +1887,23 @@ function updateAvatarDisplay() {
 
 function openEditProfile() {
   document.getElementById('eov-profile').classList.add('on');
-  // Load current avatar into edit preview
-  const avatar = document.getElementById('p-avatar');
+  const u = currentUser;
+  if (!u) return;
+  // Load avatar
   const preview = document.getElementById('ep-avatar-preview');
-  if (currentUser?.avatar_url) {
-    preview.innerHTML = `<img src="${currentUser.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:13px">`;
-  } else {
-    preview.innerHTML = '👤';
+  if (u.avatar_url) preview.innerHTML = `<img src="${u.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:13px">`;
+  else preview.innerHTML = '👤';
+  // Load UPI
+  if (document.getElementById('ep-upi')) document.getElementById('ep-upi').value = u.upi_id || '';
+  if (document.getElementById('ep-cash')) document.getElementById('ep-cash').value = u.cash_accept || 'both';
+  if (document.getElementById('ep-vendor-upi')) document.getElementById('ep-vendor-upi').value = u.upi_id || '';
+  // Load UPI QR preview
+  if (u.upi_qr && document.getElementById('ep-upi-qr-img')) {
+    document.getElementById('ep-upi-qr-img').src = u.upi_qr;
+    document.getElementById('ep-upi-qr-preview').style.display = '';
   }
+  // Render addon roles
+  renderAddonRoles();
 }
 function closeEditProfile() { document.getElementById('eov-profile').classList.remove('on'); }
 
@@ -2009,9 +2195,296 @@ async function loadOrders() {
 }
 
 // ============================================================
-// PLAN
+// PLAN CONFIG — loaded from admin settings (dynamic)
 // ============================================================
-let selectedPlanName = 'Local Mini';
+function getPlansConfig() {
+  const saved = localStorage.getItem('pt_plans_config');
+  if (saved) return JSON.parse(saved);
+  return {
+    'Local Mini':      { price: 10,   label: '₹10/month',    km: 5,   items: 5,   detail: '5km reach • 5 items' },
+    'Local Plus':      { price: 20,   label: '₹20/month',    km: 10,  items: 10,  detail: '5km+ highlight • 10 items' },
+    'Block Reach':     { price: 100,  label: '₹100/month',   km: 15,  items: 20,  detail: '~15km reach • 20 items' },
+    'District Seller': { price: 999,  label: '₹999/month',   km: 999, items: 50,  detail: 'Full district • 50 items' },
+    'Super Vendor':    { price: 3999, label: '₹3,999/month', km: 9999,items: 9999,detail: 'Full Odisha • Unlimited' }
+  };
+}
+
+// ============================================================
+// UPI / PAYMENT
+// ============================================================
+function previewUpiQR(input) {
+  if (!input.files?.[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('ep-upi-qr-preview').style.display = '';
+    document.getElementById('ep-upi-qr-img').src = e.target.result;
+    currentUser._upiQR = e.target.result;
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function previewVendorQR(input) {
+  if (!input.files?.[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('ep-vendor-qr-preview').style.display = '';
+    document.getElementById('ep-vendor-qr-img').src = e.target.result;
+    currentUser._vendorQR = e.target.result;
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function openPaymentModal(worker) {
+  // worker = { name, upi_id, upi_qr, cash_accept }
+  document.getElementById('pay-worker-name').textContent = worker.name || 'Service Provider';
+  const upiId = worker.upi_id || worker.upiId || '';
+  const upiQR = worker.upi_qr || worker.upiQR || worker._upiQR || '';
+  const cashOk = worker.cash_accept || worker.cashAccept || 'both';
+
+  document.getElementById('pay-upi-id').textContent = upiId || 'UPI nahi diya';
+  const qrImg = document.getElementById('pay-qr-img');
+  const noQr  = document.getElementById('pay-no-qr');
+  if (upiQR) { qrImg.src = upiQR; qrImg.style.display = ''; noQr.style.display = 'none'; }
+  else { qrImg.style.display = 'none'; noQr.style.display = ''; }
+
+  const cashSec = document.getElementById('pay-cash-section');
+  cashSec.style.display = (cashOk === 'no') ? 'none' : '';
+  if (cashOk === 'yes') document.getElementById('pay-cash-status').textContent = 'Cash accepted hai';
+  else if (cashOk === 'both') document.getElementById('pay-cash-status').textContent = 'Cash + UPI dono accepted';
+
+  document.getElementById('pay-upi-section').style.display = upiId ? '' : 'none';
+  openModal('modal-payment');
+}
+
+function copyUPI() {
+  const upi = document.getElementById('pay-upi-id').textContent;
+  navigator.clipboard?.writeText(upi).then(() => showToast('📋 UPI ID copied: ' + upi));
+}
+
+// ============================================================
+// DUAL ROLE SYSTEM
+// ============================================================
+const ALL_ROLES = [
+  { id:'worker',   label:'👷 Worker/Helper',    desc:'Kaam karta/karti hoon' },
+  { id:'vendor',   label:'🏪 Vendor/Seller',    desc:'Saman bechta/bechti hoon' },
+  { id:'vehicle',  label:'🚜 Vehicle Owner',    desc:'Gaadi/tractor hai' },
+  { id:'customer', label:'👤 Customer',         desc:'Service leta/leti hoon' },
+];
+
+function renderAddonRoles() {
+  if (!currentUser) return;
+  const grid = document.getElementById('addon-roles-grid');
+  if (!grid) return;
+  const primaryRole = currentUser.type;
+  const existingAddons = currentUser.addon_roles || [];
+
+  grid.innerHTML = ALL_ROLES
+    .filter(r => r.id !== primaryRole)
+    .map(r => {
+      const isActive = existingAddons.includes(r.id);
+      return `<div onclick="toggleAddonRole('${r.id}', this)"
+        style="border:2px solid ${isActive ? 'var(--saffron)' : 'var(--border)'};
+               background:${isActive ? 'var(--saffron-p)' : '#fff'};
+               border-radius:10px;padding:10px 8px;cursor:pointer;text-align:center;transition:all .2s"
+        data-role="${r.id}">
+        <div style="font-size:.82rem;font-weight:700">${r.label}</div>
+        <div style="font-size:.65rem;color:var(--muted);margin-top:2px">${r.desc}</div>
+      </div>`;
+    }).join('');
+}
+
+function toggleAddonRole(roleId, el) {
+  if (!currentUser) return;
+  if (!currentUser.addon_roles) currentUser.addon_roles = [];
+  const idx = currentUser.addon_roles.indexOf(roleId);
+  if (idx >= 0) {
+    currentUser.addon_roles.splice(idx, 1);
+    el.style.border = '2px solid var(--border)';
+    el.style.background = '#fff';
+  } else {
+    currentUser.addon_roles.push(roleId);
+    el.style.border = '2px solid var(--saffron)';
+    el.style.background = 'var(--saffron-p)';
+  }
+}
+
+// ============================================================
+// 3-WAY RATING SYSTEM
+// ============================================================
+let currentRatingCtx = null; // { bookingId, targetId, targetName, targetType, raterType }
+let currentRatingVal = 0;
+
+const RATING_LABELS = ['', 'Bahut bura', 'Theek nahi tha', 'Theek tha', 'Achha tha', 'Bahut achha!'];
+const RATING_TAGS = {
+  worker:   ['Samay pe aaya', 'Achha kaam', 'Polite tha', 'Late aaya', 'Kaam theek nahi tha', 'Saman khud laya'],
+  vendor:   ['Fresh product', 'Sahi price', 'Jaldi delivery', 'Quality kharab', 'Late delivery', 'Sahi weight'],
+  customer: ['Sahi payment kiya', 'Cooperative tha', 'Clear requirement', 'Late payment', 'Rude behaviour', 'Achha customer']
+};
+
+function openRatingModal(bookingId, targetId, targetName, targetType, raterType) {
+  currentRatingCtx = { bookingId, targetId, targetName, targetType, raterType };
+  currentRatingVal = 0;
+  document.getElementById('rating-sub').textContent = `${targetName} ko rate karo`;
+  document.getElementById('rating-target-info').textContent = `${targetType === 'worker' ? '👷' : targetType === 'vendor' ? '🏪' : '👤'} ${targetName}`;
+  document.getElementById('rating-label').textContent = 'Star tap karo';
+  document.getElementById('rating-comment').value = '';
+  // Reset stars
+  document.querySelectorAll('#rating-stars span').forEach(s => { s.style.opacity = '.4'; s.style.transform = ''; });
+  // Render tags
+  const tags = RATING_TAGS[targetType] || RATING_TAGS.worker;
+  document.getElementById('rating-tags').innerHTML = tags.map(t =>
+    `<span onclick="toggleRatingTag(this)" style="padding:5px 11px;border-radius:20px;border:1px solid var(--border);font-size:.72rem;cursor:pointer;transition:all .2s;background:#fff">${t}</span>`
+  ).join('');
+  openModal('modal-rating');
+}
+
+function setRating(n) {
+  currentRatingVal = n;
+  document.querySelectorAll('#rating-stars span').forEach((s, i) => {
+    s.style.opacity = i < n ? '1' : '.4';
+    s.style.transform = i < n ? 'scale(1.15)' : '';
+  });
+  document.getElementById('rating-label').textContent = RATING_LABELS[n] || '';
+}
+
+function toggleRatingTag(el) {
+  const on = el.style.background === 'var(--saffron-p)' || el.dataset.on === '1';
+  if (on) { el.style.background = '#fff'; el.style.color = ''; el.dataset.on = '0'; }
+  else { el.style.background = 'var(--saffron-p)'; el.style.color = 'var(--saffron)'; el.style.borderColor = 'var(--saffron)'; el.dataset.on = '1'; }
+}
+
+async function submitRating() {
+  if (!currentRatingVal) { showToast('⚠️ Star rating do pehle'); return; }
+  const tags = [...document.querySelectorAll('#rating-tags span[data-on="1"]')].map(t => t.textContent);
+  const review = {
+    id: 'RAT-' + Date.now().toString().slice(-6),
+    booking_id: currentRatingCtx?.bookingId,
+    rater_id: currentUser?.id,
+    rater_name: currentUser?.name,
+    rater_type: currentRatingCtx?.raterType,
+    target_id: currentRatingCtx?.targetId,
+    target_name: currentRatingCtx?.targetName,
+    target_type: currentRatingCtx?.targetType,
+    rating: currentRatingVal,
+    tags: tags.join(', '),
+    comment: document.getElementById('rating-comment').value,
+    created_at: new Date().toISOString()
+  };
+  // Save locally
+  let reviews = lsGet('pt_reviews') || [];
+  reviews.unshift(review);
+  lsSet('pt_reviews', reviews);
+  // Save to Supabase
+  if (isSupabaseReady()) {
+    await sb.from('reviews').insert([{
+      id: review.id, booking_id: review.booking_id,
+      user_id: review.rater_id, user_name: review.rater_name,
+      rating: review.rating, comment: review.comment + (tags.length ? ' [' + review.tags + ']' : '')
+    }]);
+    // Update target's average rating in users table
+    const allRatings = await sbSelect('reviews', { target_id: review.target_id });
+    if (allRatings.length > 0) {
+      const avg = (allRatings.reduce((s, r) => s + r.rating, 0) / allRatings.length).toFixed(1);
+      await sbUpdate('users', review.target_id, { rating: parseFloat(avg) });
+    }
+  }
+  closeModal('modal-rating');
+  showToast('⭐ Rating submit ho gayi! Shukriya.');
+}
+
+// ============================================================
+// SMART BOOKING — auto-assign, reject → next worker, 3 reject → re-submit
+// ============================================================
+async function confirmBook() {
+  const date = document.getElementById('bk-date').value;
+  const loc  = document.getElementById('bk-loc').value.trim();
+  const time = document.getElementById('bk-time')?.value || '';
+  if (!date || !loc) { showToast('⚠️ Fill date & location'); return; }
+
+  const booking = {
+    id: 'BK-' + Date.now().toString().slice(-6),
+    user_id: currentUser?.id, user_name: currentUser?.name,
+    service: document.getElementById('bk-name').textContent,
+    description: document.getElementById('bk-desc').textContent,
+    price: document.getElementById('bk-price').textContent,
+    date, time_slot: time, loc,
+    note: document.getElementById('bk-note')?.value || '',
+    status: 'pending',
+    reject_count: 0,          // Smart booking: track rejections
+    assigned_worker_id: null,
+    created_at: new Date().toISOString()
+  };
+
+  if (isSupabaseReady()) {
+    const { error } = await sb.from('bookings').insert([{
+      id: booking.id, user_id: booking.user_id, user_name: booking.user_name,
+      service: booking.service, description: booking.description, price: booking.price,
+      date: booking.date, time_slot: booking.time_slot, loc: booking.loc,
+      note: booking.note, status: 'pending'
+    }]);
+    if (error) { showToast('⚠️ Cloud save failed — saved locally'); console.error(error); }
+  }
+
+  let bookings = lsGet('pt_bookings') || [];
+  bookings.unshift(booking);
+  lsSet('pt_bookings', bookings);
+
+  if (currentUser) {
+    currentUser.jobs = (parseInt(currentUser.jobs) || 0) + 1;
+    lsSet('pt_user', currentUser);
+    if (isSupabaseReady()) await sbUpdate('users', currentUser.id, { jobs: currentUser.jobs });
+  }
+
+  closeModal('modal-book');
+  showToast('✅ Booking confirmed! Worker ko assign kiya ja raha hai...');
+
+  // Show payment info if worker has UPI
+  const workerName = document.getElementById('bk-name').textContent;
+  setTimeout(() => {
+    openPaymentModal({
+      name: workerName,
+      upi_id: '', upi_qr: '', cash_accept: 'both'
+    });
+  }, 1000);
+  loadOrders();
+}
+
+// Worker rejects booking → move to next → after 3 rejections, ask user to re-submit
+async function handleBookingReject(bookingId) {
+  let bookings = lsGet('pt_bookings') || [];
+  const b = bookings.find(x => x.id === bookingId);
+  if (!b) return;
+  b.reject_count = (b.reject_count || 0) + 1;
+  b.assigned_worker_id = null;
+
+  if (b.reject_count >= 3) {
+    b.status = 'needs_resubmit';
+    showToast('⚠️ 3 workers ne reject kiya. Booking dobara bhejo.');
+    if (isSupabaseReady()) await sbUpdate('bookings', bookingId, { status: 'needs_resubmit' });
+  } else {
+    b.status = 'pending';
+    showToast('Worker ne reject kiya — dusra worker dhundhne ki koshish ho rahi hai...');
+    if (isSupabaseReady()) await sbUpdate('bookings', bookingId, { status: 'pending' });
+  }
+
+  lsSet('pt_bookings', bookings);
+  loadOrders();
+}
+
+// ============================================================
+// T&C
+// ============================================================
+function acceptTnC() {
+  lsSet('pt_tnc_accepted', { accepted: true, ts: new Date().toISOString() });
+  closeModal('modal-tnc');
+  showToast('✅ Terms accepted!');
+}
+
+// Show T&C on first register
+function checkTnC() {
+  const accepted = lsGet('pt_tnc_accepted');
+  if (!accepted) setTimeout(() => openModal('modal-tnc'), 1500);
+}
 
 function selPlan(el, name, price, detail) {
   document.querySelectorAll('.pc').forEach(p=>p.classList.remove('sel'));
@@ -2033,7 +2506,33 @@ async function activatePlan() {
   showToast('✅ Plan upgraded to ' + selectedPlanName + '!');
 }
 
-function openPlanModal() { openModal('modal-plan'); }
+function openPlanModal() {
+  // Load plan config from admin settings (dynamic prices/limits)
+  const cfg = getPlansConfig();
+  const grid = document.querySelector('#modal-plan .plan-grid');
+  if (grid) {
+    const planNames = ['Local Mini','Local Plus','Block Reach','District Seller'];
+    grid.innerHTML = planNames.map((name, i) => {
+      const p = cfg[name];
+      return `<div class="pc ${i===0?'sel':''}" onclick="selPlan(this,'${name}','${p.label}','${p.detail}')">
+        ${i===1?'<div class="pop-tag">POPULAR</div>':''}
+        <div class="pc-name">${name}</div>
+        <div class="pc-price">${p.label.split('/')[0]} <span>/month</span></div>
+        <div class="pc-detail">${p.detail.replace(' • ','<br>')}</div>
+      </div>`;
+    }).join('');
+  }
+  // Super vendor row
+  const sv = cfg['Super Vendor'];
+  const svEl = document.querySelector('#modal-plan .pc[onclick*="Super"]');
+  if (svEl && sv) {
+    svEl.innerHTML = `<div class="pc-name">⭐ Super Vendor — Full Odisha</div>
+      <div class="pc-price">${sv.label.split('/')[0]} <span>/month</span></div>
+      <div class="pc-detail">${sv.detail}</div>`;
+    svEl.onclick = () => selPlan(svEl, 'Super Vendor', sv.label, sv.detail);
+  }
+  openModal('modal-plan');
+}
 
 // ============================================================
 // VENDOR POST
