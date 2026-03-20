@@ -243,6 +243,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="sn-item" data-pan="analytics" onclick="goPan('analytics')"><div class="ic">📈</div><span>Analytics</span></div>
       <div class="sn-label">Control</div>
       <div class="sn-item" data-pan="pagecontent" onclick="goPan('pagecontent')"><div class="ic">✏️</div><span>Page Content</span></div>
+      <div class="sn-item" data-pan="iddesigner" onclick="goPan('iddesigner')"><div class="ic">🪪</div><span>ID Card Design</span></div>
       <div class="sn-item" data-pan="banners" onclick="goPan('banners')"><div class="ic">📢</div><span>Banners</span></div>
       <div class="sn-item" data-pan="settings" onclick="goPan('settings')"><div class="ic">⚙️</div><span>Settings</span></div>
     </div>
@@ -538,6 +539,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
           <button class="pc-tab" onclick="pcTab(this,'pc-nav')">🔻 Navigation</button>
           <button class="pc-tab" onclick="pcTab(this,'pc-plans')">💎 Plans</button>
           <button class="pc-tab" onclick="pcTab(this,'pc-misc')">🌐 App-wide</button>
+          <button class="pc-tab" onclick="pcTab(this,'pc-tnc')">📋 Terms & Conditions</button>
         </div>
 
         <!-- HOME TAB -->
@@ -851,11 +853,166 @@ tr:hover td{background:rgba(255,255,255,.02)}
           </div>
         </div>
 
+        <!-- T&C TAB -->
+        <div id="pc-tnc" class="pc-panel hidden">
+          <div style="background:var(--surf2);border-radius:10px;padding:12px;margin-bottom:14px;font-size:.75rem;color:var(--muted)">
+            ℹ️ Edit each section of Terms & Conditions. Changes save to app instantly. Write in English + Odia both.
+          </div>
+          <div class="pc-section">
+            <div class="pc-sec-title">1. Platform Role | ପ୍ଲାଟଫର୍ମ ଭୂମିକା</div>
+            <div class="pc-row" style="grid-template-columns:1fr"><label>Section text (English + Odia)</label></div>
+            <textarea id="ct-tnc-1" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:8px;font-family:'Baloo 2',sans-serif;font-size:.78rem;color:var(--text);background:var(--bg);min-height:80px;resize:vertical" oninput="previewTnC()">The Part-Timer's is a discovery platform that connects service providers with customers. The app is not directly involved in any transaction.
+ଏହି ଆପ୍ ସେବା ଦାତା ଓ ଗ୍ରାହକଙ୍କୁ ସଂଯୋଗ କରେ। ଆର୍ଥିକ ଲେଣଦେଣ ସିଧା ଦୁଇ ପକ୍ଷ ମଧ୍ୟରେ।</textarea>
+          </div>
+          <div class="pc-section">
+            <div class="pc-sec-title">2. Worker / Technician Rules | କର୍ମୀ ନିୟମ</div>
+            <textarea id="ct-tnc-2" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:8px;font-family:'Baloo 2',sans-serif;font-size:.78rem;color:var(--text);background:var(--bg);min-height:100px;resize:vertical">• Worker sets their own hourly rate | ନିଜ ମଜୁରି ଧାର୍ଯ୍ୟ କରନ୍ତି
+• App charges zero commission | ଶୂନ୍ୟ କମିଶନ
+• Payment is direct only — UPI or Cash | ସିଧା ଦେୟ</textarea>
+          </div>
+          <div class="pc-section">
+            <div class="pc-sec-title">3. Vendor / Seller Rules | ବିକ୍ରେତା ନିୟମ</div>
+            <textarea id="ct-tnc-3" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:8px;font-family:'Baloo 2',sans-serif;font-size:.78rem;color:var(--text);background:var(--bg);min-height:100px;resize:vertical">• Visibility based on chosen plan | ଯୋଜନା ଅନୁଯାୟୀ ଦୃଶ୍ୟମାନତା
+• False listings will be banned | ଭ୍ରାମକ ଲିଷ୍ଟିଂ ନିଷିଦ୍ଧ
+• Food items require FSSAI license | FSSAI ଲାଇସେନ୍ସ ଆବଶ୍ୟକ</textarea>
+          </div>
+          <div class="pc-section">
+            <div class="pc-sec-title">4. Cancellation Policy | ବାତିଲ ନୀତି</div>
+            <textarea id="ct-tnc-4" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:8px;font-family:'Baloo 2',sans-serif;font-size:.78rem;color:var(--text);background:var(--bg);min-height:80px;resize:vertical">• Inform worker before cancelling | ବାତିଲ ପୂର୍ବରୁ ଜଣାନ୍ତୁ
+• If work started, partial payment (25–50%) is due | ଆଂଶିକ ଦେୟ ଦେୟ</textarea>
+          </div>
+          <div class="pc-section">
+            <div class="pc-sec-title">5. Payment Terms | ଦେୟ ସର୍ତ</div>
+            <textarea id="ct-tnc-5" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:8px;font-family:'Baloo 2',sans-serif;font-size:.78rem;color:var(--text);background:var(--bg);min-height:80px;resize:vertical">• App facilitates UPI and Cash only | UPI ଓ ନଗଦ ସୁବିଧା ମାତ୍ର
+• GST/Tax responsibility lies with service provider | GST ଦାୟିତ୍ୱ ସେବା ଦାତାର</textarea>
+          </div>
+          <div class="pc-section">
+            <div class="pc-sec-title">6. Privacy Policy | ଗୋପନୀୟତା (IT Act 2000)</div>
+            <textarea id="ct-tnc-6" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:8px;font-family:'Baloo 2',sans-serif;font-size:.78rem;color:var(--text);background:var(--bg);min-height:80px;resize:vertical">• Data used only for app functionality | ଡାଟା କେବଳ ଆପ୍ ପାଇଁ
+• Data will not be sold to third parties | ବିକ୍ରୟ ନ ହେବ
+• Right to account deletion | ଖାତା ଡିଲିଟ ଅଧିକାର</textarea>
+          </div>
+          <div class="pc-section">
+            <div class="pc-sec-title">7. Rating System | ରେଟିଂ ବ୍ୟବସ୍ଥା</div>
+            <textarea id="ct-tnc-7" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:8px;font-family:'Baloo 2',sans-serif;font-size:.78rem;color:var(--text);background:var(--bg);min-height:80px;resize:vertical">• Customer, Worker, and Admin can all give ratings | ତ୍ରିପକ୍ଷୀୟ ରେଟିଂ
+• Fake ratings are banned | ଜାଲ ରେଟିଂ ନିଷିଦ୍ଧ</textarea>
+          </div>
+          <div class="pc-section">
+            <div class="pc-sec-title">8. Governing Law | ଶାସନ ଆଇନ</div>
+            <textarea id="ct-tnc-8" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:8px;font-family:'Baloo 2',sans-serif;font-size:.78rem;color:var(--text);background:var(--bg);min-height:80px;resize:vertical">Governed by Indian law: IT Act 2000, Consumer Protection Act 2019, MSME Act 2006, Indian Contract Act 1872.
+Disputes: Odisha Courts | ବିବାଦ: ଓଡ଼ିଶା ନ୍ୟାୟାଳୟ</textarea>
+          </div>
+          <button onclick="saveTnCContent()" style="background:var(--saffron);border:none;color:#fff;padding:11px;border-radius:9px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.85rem;cursor:pointer;width:100%;margin-top:4px">💾 Save Terms & Conditions</button>
+        </div>
+
         <!-- SAVE BAR -->
         <div style="position:sticky;bottom:0;background:var(--bg);padding:14px 0 4px;border-top:1px solid var(--border);margin-top:20px;display:flex;gap:10px;align-items:center">
           <button onclick="saveAllContent()" style="background:var(--saffron);border:none;color:#fff;padding:11px 28px;border-radius:10px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.88rem;cursor:pointer;flex:1">💾 Save All Changes to App</button>
           <button onclick="resetContent()" style="background:transparent;border:2px solid var(--border);color:var(--muted);padding:11px 20px;border-radius:10px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer">↺ Reset</button>
           <button onclick="exportContent()" style="background:var(--green);border:none;color:#fff;padding:11px 20px;border-radius:10px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer">📥 Export JSON</button>
+        </div>
+      </div>
+
+      <!-- ══ ID CARD DESIGNER ══ -->
+      <div id="panel-iddesigner" class="panel">
+        <div style="background:linear-gradient(135deg,var(--saffron),var(--gold));padding:16px 20px;border-radius:12px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
+          <div style="font-size:2rem">🪪</div>
+          <div><h3 style="color:#fff;font-size:1rem;font-weight:800">Digital ID Card Designer</h3>
+          <p style="color:rgba(255,255,255,.8);font-size:.75rem;margin-top:2px">Design the ID card — all users will get the same template with their own details</p></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+
+          <!-- LEFT: Controls -->
+          <div>
+            <div class="set-card" style="margin-bottom:14px">
+              <h3>🎨 Card Colors</h3>
+              <div class="mf"><label>Header Background</label>
+                <input type="color" id="id-hd-color1" value="#FF6B00" style="width:48%;height:36px;border-radius:6px;border:1px solid var(--border);cursor:pointer;padding:2px">
+                <input type="color" id="id-hd-color2" value="#D4A017" style="width:48%;height:36px;border-radius:6px;border:1px solid var(--border);cursor:pointer;padding:2px;margin-left:2%">
+              </div>
+              <div class="mf"><label>Card Background</label>
+                <input type="color" id="id-card-bg" value="#FFFFFF" style="width:100%;height:36px;border-radius:6px;border:1px solid var(--border);cursor:pointer;padding:2px">
+              </div>
+              <div class="mf"><label>Accent Color (role text, tags)</label>
+                <input type="color" id="id-accent" value="#FF6B00" style="width:100%;height:36px;border-radius:6px;border:1px solid var(--border);cursor:pointer;padding:2px">
+              </div>
+              <div class="mf"><label>Footer Color</label>
+                <input type="color" id="id-footer-color" value="#1B6B3A" style="width:100%;height:36px;border-radius:6px;border:1px solid var(--border);cursor:pointer;padding:2px">
+              </div>
+            </div>
+
+            <div class="set-card" style="margin-bottom:14px">
+              <h3>📝 Card Text</h3>
+              <div class="mf"><label>Header Title</label><input type="text" id="id-hd-title" value="THE PART-TIMER'S • DIGITAL ID"></div>
+              <div class="mf"><label>Verified Badge Text</label><input type="text" id="id-verified" value="✅ VERIFIED"></div>
+              <div class="mf"><label>Footer Left Text</label><input type="text" id="id-ft-left" value="✅ Verified Member"></div>
+              <div class="mf"><label>App Name on Card</label><input type="text" id="id-appname-card" value="The Part-Timer's"></div>
+            </div>
+
+            <div class="set-card" style="margin-bottom:14px">
+              <h3>🖼️ Logo on Card</h3>
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+                <div id="id-logo-preview" style="width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,#FF6B00,#D4A017);display:flex;align-items:center;justify-content:center;font-size:1.6rem;overflow:hidden;flex-shrink:0">🌾</div>
+                <div>
+                  <label style="display:block;background:var(--saffron);color:#fff;padding:7px 14px;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer">
+                    Upload Logo for ID Card
+                    <input type="file" id="id-logo-upload" accept="image/*" style="display:none" onchange="previewIDLogo(this)">
+                  </label>
+                  <div style="font-size:.65rem;color:var(--muted);margin-top:4px">Appears on top-left of card</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px">
+              <button onclick="saveIDDesign()" style="flex:1;background:var(--saffron);border:none;color:#fff;padding:11px;border-radius:9px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.85rem;cursor:pointer">💾 Save Design</button>
+              <button onclick="resetIDDesign()" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:11px 16px;border-radius:9px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">↺ Reset</button>
+            </div>
+          </div>
+
+          <!-- RIGHT: Live Preview -->
+          <div>
+            <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Live Preview</div>
+            <!-- ID Card Preview -->
+            <div id="id-card-preview" style="border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.2);max-width:340px">
+              <!-- Header -->
+              <div id="prev-hd" style="background:linear-gradient(90deg,#FF6B00,#D4A017);padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div id="prev-logo" style="width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:.9rem;overflow:hidden">🌾</div>
+                  <span id="prev-hd-title" style="color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.8px">THE PART-TIMER'S • DIGITAL ID</span>
+                </div>
+                <span id="prev-verified" style="color:#fff;font-size:.62rem;font-weight:700">✅ VERIFIED</span>
+              </div>
+              <!-- Body -->
+              <div id="prev-body" style="background:#fff;padding:14px">
+                <div style="display:flex;gap:10px;align-items:flex-start">
+                  <div style="flex:1">
+                    <div style="font-size:.6rem;color:#888;font-family:monospace;margin-bottom:2px">PT-000000</div>
+                    <div style="font-size:.95rem;font-weight:800;color:#1a1a1a">User Name</div>
+                    <div id="prev-role" style="font-size:.72rem;font-weight:600;color:#FF6B00;margin-top:2px">Worker • Crop Farming</div>
+                    <div style="font-size:.68rem;color:#888;margin-top:3px">📍 Village, District, Odisha</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">
+                      <span id="prev-tag1" style="background:#FFF4EC;color:#FF6B00;border-radius:20px;padding:2px 8px;font-size:.62rem;font-weight:600">Crop Farming</span>
+                      <span style="background:#FFF4EC;color:#FF6B00;border-radius:20px;padding:2px 8px;font-size:.62rem;font-weight:600">5 yrs exp</span>
+                    </div>
+                  </div>
+                  <!-- QR placeholder -->
+                  <div style="width:64px;height:64px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <div style="font-size:1.6rem">⬛</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Footer -->
+              <div id="prev-ft" style="background:#1B6B3A;padding:9px 14px;display:flex;justify-content:space-between;align-items:center">
+                <span id="prev-ft-left" style="color:#fff;font-size:.65rem;font-weight:700">✅ Verified Member</span>
+                <span style="color:#D4A017;font-size:.68rem;font-weight:700">⭐ 4.8 Rating</span>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;background:var(--surf2);border-radius:10px;padding:12px;font-size:.73rem;color:var(--muted)">
+              💡 This design will apply to all users when they share or download their Digital ID as PDF.
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1233,6 +1390,7 @@ const panTitles = {
   bookings:'Bookings',orders:'Orders',listings:'Listings',
   revenue:'Revenue & Plans',analytics:'Analytics',
   planmgmt:'Plan Management',
+  iddesigner:'Digital ID Card Designer',
   pagecontent:'Page Content Editor',
   banners:'Banners & Settings',settings:'Settings'
 };
@@ -1242,6 +1400,7 @@ const panSubs = {
   bookings:'All service bookings',orders:'All product orders',listings:'Vendor listing approvals',
   revenue:'Revenue from vendor plans',analytics:'Platform growth analytics',
   planmgmt:'Manage plan prices, area limits and listing counts',
+  iddesigner:'Design the Digital ID card for all users',
   pagecontent:'Edit every Odia/English text shown in the user app',
   banners:'Control app content',settings:'Admin configuration'
 };
@@ -1258,7 +1417,8 @@ function goPan(id) {
     vendors: loadVendorsTable, vehicles: loadVehiclesTable, bookings: loadBookingsTable, orders: loadOrdersTable,
     listings: loadListingsTable, revenue: loadRevenue, analytics: loadAnalytics,
     planmgmt: loadPlansConfig,
-    pagecontent: loadPageContent, settings: () => { loadSheetStatus(); loadSettings(); loadAppPaymentSettings(); }
+    iddesigner: loadIDDesigner,
+    pagecontent: () => { loadPageContent(); loadTnCContent(); }, settings: () => { loadSheetStatus(); loadSettings(); loadAppPaymentSettings(); }
   };
   loaders[id]?.();
 }
@@ -2125,8 +2285,100 @@ function exportContent() {
 // BANNERS
 // ════════════════════════════════════════════
 // ════════════════════════════════════════════
-// PLAN MANAGEMENT
+// ID CARD DESIGNER
 // ════════════════════════════════════════════
+function loadIDDesigner() {
+  const d = JSON.parse(localStorage.getItem('pt_id_design') || '{}');
+  if (d.hdColor1)    { document.getElementById('id-hd-color1').value = d.hdColor1; }
+  if (d.hdColor2)    { document.getElementById('id-hd-color2').value = d.hdColor2; }
+  if (d.cardBg)      { document.getElementById('id-card-bg').value = d.cardBg; }
+  if (d.accent)      { document.getElementById('id-accent').value = d.accent; }
+  if (d.footerColor) { document.getElementById('id-footer-color').value = d.footerColor; }
+  if (d.hdTitle)     { document.getElementById('id-hd-title').value = d.hdTitle; }
+  if (d.verified)    { document.getElementById('id-verified').value = d.verified; }
+  if (d.ftLeft)      { document.getElementById('id-ft-left').value = d.ftLeft; }
+  if (d.appName)     { document.getElementById('id-appname-card').value = d.appName; }
+  if (d.logo) {
+    document.getElementById('id-logo-preview').innerHTML = `<img src="${d.logo}" style="width:100%;height:100%;object-fit:contain;border-radius:11px">`;
+    document.getElementById('prev-logo').innerHTML = `<img src="${d.logo}" style="width:100%;height:100%;object-fit:contain;border-radius:5px">`;
+  }
+  updateIDPreview();
+}
+
+function previewIDLogo(input) {
+  if (!input.files?.[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('id-logo-preview').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:contain;border-radius:11px">`;
+    document.getElementById('prev-logo').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:contain;border-radius:5px">`;
+    localStorage.setItem('pt_id_logo', e.target.result);
+    updateIDPreview();
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function updateIDPreview() {
+  const c1 = document.getElementById('id-hd-color1')?.value || '#FF6B00';
+  const c2 = document.getElementById('id-hd-color2')?.value || '#D4A017';
+  const bg = document.getElementById('id-card-bg')?.value || '#FFFFFF';
+  const ac = document.getElementById('id-accent')?.value || '#FF6B00';
+  const fc = document.getElementById('id-footer-color')?.value || '#1B6B3A';
+  const ht = document.getElementById('id-hd-title')?.value || 'THE PART-TIMER\'S • DIGITAL ID';
+  const vf = document.getElementById('id-verified')?.value || '✅ VERIFIED';
+  const fl = document.getElementById('id-ft-left')?.value || '✅ Verified Member';
+
+  const hd = document.getElementById('prev-hd');
+  if (hd) hd.style.background = `linear-gradient(90deg,${c1},${c2})`;
+  const bd = document.getElementById('prev-body');
+  if (bd) bd.style.background = bg;
+  const ft = document.getElementById('prev-ft');
+  if (ft) ft.style.background = fc;
+  const role = document.getElementById('prev-role');
+  if (role) role.style.color = ac;
+  const tag1 = document.getElementById('prev-tag1');
+  if (tag1) { tag1.style.color = ac; tag1.style.background = ac + '18'; }
+  const hdTitle = document.getElementById('prev-hd-title');
+  if (hdTitle) hdTitle.textContent = ht;
+  const verEl = document.getElementById('prev-verified');
+  if (verEl) verEl.textContent = vf;
+  const ftLeft = document.getElementById('prev-ft-left');
+  if (ftLeft) ftLeft.textContent = fl;
+}
+
+// Add live preview update on every input change
+document.addEventListener('input', e => {
+  if (e.target?.id?.startsWith('id-')) updateIDPreview();
+});
+
+function saveIDDesign() {
+  const design = {
+    hdColor1:    document.getElementById('id-hd-color1')?.value,
+    hdColor2:    document.getElementById('id-hd-color2')?.value,
+    cardBg:      document.getElementById('id-card-bg')?.value,
+    accent:      document.getElementById('id-accent')?.value,
+    footerColor: document.getElementById('id-footer-color')?.value,
+    hdTitle:     document.getElementById('id-hd-title')?.value,
+    verified:    document.getElementById('id-verified')?.value,
+    ftLeft:      document.getElementById('id-ft-left')?.value,
+    appName:     document.getElementById('id-appname-card')?.value,
+    logo:        localStorage.getItem('pt_id_logo') || localStorage.getItem('pt_logo') || '',
+  };
+  localStorage.setItem('pt_id_design', JSON.stringify(design));
+  if (isSbReady()) {
+    sb.from('app_config').upsert({ key: 'id_design', value: JSON.stringify(design) }).then(() => {});
+  }
+  toast('✅ ID Card design saved! All users will see this design when they share their Digital ID.');
+}
+
+function resetIDDesign() {
+  if (!confirm('Reset to default design?')) return;
+  localStorage.removeItem('pt_id_design');
+  localStorage.removeItem('pt_id_logo');
+  loadIDDesigner();
+  toast('↺ ID Card design reset to defaults');
+}
+
+
 const PLAN_KEYS = ['Local Mini','Local Plus','Block Reach','District Seller','Super Vendor'];
 
 function loadPlansConfig() {
@@ -2203,6 +2455,27 @@ function loadPlanAlerts() {
       <div style="background:${a.type==='red'?'rgba(255,68,68,.1)':'rgba(212,160,23,.1)'};border-radius:8px;padding:10px;margin-bottom:8px;font-size:.78rem;color:${a.type==='red'?'var(--red)':'var(--gold)'}">
         ${a.msg}
       </div>`).join('');
+  }
+}
+
+function saveTnCContent() {
+  const tnc = {};
+  for (let i = 1; i <= 8; i++) {
+    const el = document.getElementById('ct-tnc-' + i);
+    if (el) tnc['section_' + i] = el.value;
+  }
+  localStorage.setItem('pt_tnc_content', JSON.stringify(tnc));
+  if (isSbReady()) {
+    sb.from('app_config').upsert({ key: 'tnc_content', value: JSON.stringify(tnc) }).then(() => {});
+  }
+  toast('✅ Terms & Conditions saved! App mein reflect ho gaya.');
+}
+
+function loadTnCContent() {
+  const saved = JSON.parse(localStorage.getItem('pt_tnc_content') || '{}');
+  for (let i = 1; i <= 8; i++) {
+    const el = document.getElementById('ct-tnc-' + i);
+    if (el && saved['section_' + i]) el.value = saved['section_' + i];
   }
 }
 
