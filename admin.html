@@ -234,6 +234,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="sn-item" data-pan="listings" onclick="goPan('listings')"><div class="ic">📦</div><span>Listings</span></div>
       <div class="sn-label">Business</div>
       <div class="sn-item" data-pan="revenue" onclick="goPan('revenue')"><div class="ic">💰</div><span>Revenue</span></div>
+      <div class="sn-item" data-pan="planmgmt" onclick="goPan('planmgmt')"><div class="ic">💎</div><span>Plan Management</span></div>
       <div class="sn-item" data-pan="analytics" onclick="goPan('analytics')"><div class="ic">📈</div><span>Analytics</span></div>
       <div class="sn-label">Control</div>
       <div class="sn-item" data-pan="pagecontent" onclick="goPan('pagecontent')"><div class="ic">✏️</div><span>Page Content</span></div>
@@ -422,6 +423,80 @@ tr:hover td{background:rgba(255,255,255,.02)}
           <table><thead><tr><th>Name</th><th>Shop</th><th>Plan</th><th>Fee/Month</th><th>District</th><th>Joined</th></tr></thead>
           <tbody id="paid-tbl"></tbody></table>
         </div>
+      </div>
+
+
+      <!-- ══ PLAN MANAGEMENT ══ -->
+      <div id="panel-planmgmt" class="panel">
+        <div style="background:linear-gradient(135deg,#FF6B00,#D4A017);padding:16px 20px;border-radius:12px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
+          <div style="font-size:2rem">💎</div>
+          <div><h3 style="color:#fff;font-size:1rem;font-weight:800">Plan Management</h3>
+          <p style="color:rgba(255,255,255,.8);font-size:.75rem;margin-top:2px">Plan prices, limits aur features admin se change karo — app mein automatically reflect hoga</p></div>
+        </div>
+
+        <div class="set-grid">
+          <!-- Plan 1 -->
+          <div class="set-card" id="plan-card-0">
+            <h3>🌱 Local Mini</h3>
+            <div class="mf"><label>Plan Name</label><input type="text" id="pm-name-0" value="Local Mini"></div>
+            <div class="mf"><label>Price (₹/month)</label><input type="number" id="pm-price-0" value="10"></div>
+            <div class="mf"><label>Area Radius (km)</label><input type="number" id="pm-km-0" value="5"></div>
+            <div class="mf"><label>Max Listings</label><input type="number" id="pm-items-0" value="5"></div>
+            <div class="mf"><label>Description</label><input type="text" id="pm-detail-0" value="5km reach • 5 items"></div>
+          </div>
+          <!-- Plan 2 -->
+          <div class="set-card" id="plan-card-1">
+            <h3>⭐ Local Plus</h3>
+            <div class="mf"><label>Plan Name</label><input type="text" id="pm-name-1" value="Local Plus"></div>
+            <div class="mf"><label>Price (₹/month)</label><input type="number" id="pm-price-1" value="20"></div>
+            <div class="mf"><label>Area Radius (km)</label><input type="number" id="pm-km-1" value="10"></div>
+            <div class="mf"><label>Max Listings</label><input type="number" id="pm-items-1" value="10"></div>
+            <div class="mf"><label>Description</label><input type="text" id="pm-detail-1" value="5km+ highlight • 10 items"></div>
+          </div>
+          <!-- Plan 3 -->
+          <div class="set-card" id="plan-card-2">
+            <h3>🚀 Block Reach</h3>
+            <div class="mf"><label>Plan Name</label><input type="text" id="pm-name-2" value="Block Reach"></div>
+            <div class="mf"><label>Price (₹/month)</label><input type="number" id="pm-price-2" value="100"></div>
+            <div class="mf"><label>Area Radius (km)</label><input type="number" id="pm-km-2" value="15"></div>
+            <div class="mf"><label>Max Listings</label><input type="number" id="pm-items-2" value="20"></div>
+            <div class="mf"><label>Description</label><input type="text" id="pm-detail-2" value="~15km reach • 20 items"></div>
+          </div>
+          <!-- Plan 4 -->
+          <div class="set-card" id="plan-card-3">
+            <h3>🏙️ District Seller</h3>
+            <div class="mf"><label>Plan Name</label><input type="text" id="pm-name-3" value="District Seller"></div>
+            <div class="mf"><label>Price (₹/month)</label><input type="number" id="pm-price-3" value="999"></div>
+            <div class="mf"><label>Area Radius (km)</label><input type="number" id="pm-km-3" value="999"></div>
+            <div class="mf"><label>Max Listings</label><input type="number" id="pm-items-3" value="50"></div>
+            <div class="mf"><label>Description</label><input type="text" id="pm-detail-3" value="Full district • 50 items"></div>
+          </div>
+          <!-- Plan 5 -->
+          <div class="set-card" id="plan-card-4" style="grid-column:1/-1">
+            <h3>🌟 Super Vendor — Full Odisha</h3>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+              <div class="mf"><label>Plan Name</label><input type="text" id="pm-name-4" value="Super Vendor"></div>
+              <div class="mf"><label>Price (₹/month)</label><input type="number" id="pm-price-4" value="3999"></div>
+              <div class="mf"><label>Area Radius (km)</label><input type="number" id="pm-km-4" value="9999"></div>
+              <div class="mf"><label>Max Listings</label><input type="number" id="pm-items-4" value="9999"></div>
+            </div>
+            <div class="mf"><label>Description</label><input type="text" id="pm-detail-4" value="Full Odisha • Unlimited items • Priority listing"></div>
+          </div>
+        </div>
+
+        <!-- Alert box for suspicious activity -->
+        <div style="background:rgba(255,68,68,.08);border:1px solid rgba(255,68,68,.2);border-radius:12px;padding:16px;margin-top:8px">
+          <h3 style="color:var(--red);font-size:.85rem;margin-bottom:10px">⚠️ Suspicious Activity Alerts</h3>
+          <div id="plan-alerts">
+            <div style="font-size:.78rem;color:var(--muted);text-align:center;padding:10px">Loading alerts...</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:16px">
+          <button onclick="savePlansConfig()" style="flex:1;background:var(--saffron);border:none;color:#fff;padding:11px;border-radius:9px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.88rem;cursor:pointer">💾 Save Plans — App mein Apply Karo</button>
+          <button onclick="resetPlansConfig()" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:11px 18px;border-radius:9px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer">↺ Reset</button>
+        </div>
+        <p style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:8px">Changes user app ke plan modal mein immediately reflect honge</p>
       </div>
 
       <!-- ══ ANALYTICS ══ -->
@@ -820,34 +895,114 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
       <!-- ══ SETTINGS ══ -->
       <div id="panel-settings" class="panel">
+        <!-- SITE SETTINGS HEADER -->
+        <div style="background:linear-gradient(135deg,var(--saffron),var(--gold));border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
+          <div style="font-size:2rem">⚙️</div>
+          <div><h3 style="color:#fff;font-size:1rem;font-weight:800">Site Settings & Configuration</h3>
+          <p style="color:rgba(255,255,255,.8);font-size:.75rem;margin-top:2px">Manage logo, branding, security and app configuration</p></div>
+        </div>
+
         <div class="set-grid">
-          <div class="set-card">
-            <h3>🔐 Admin Password</h3>
-            <div class="mf"><label>Username</label><input type="text" id="set-uname" placeholder="admin"></div>
-            <div class="mf"><label>Current Password</label><input type="password" id="set-curr" placeholder="Current password"></div>
-            <div class="mf"><label>New Password</label><input type="password" id="set-new" placeholder="New password (min 8 chars)"></div>
-            <div class="mf"><label>Confirm New Password</label><input type="password" id="set-conf" placeholder="Confirm new password"></div>
-            <button onclick="changePass()" style="background:var(--saffron);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;width:100%">🔑 Update Password</button>
-          </div>
-          <div class="set-card">
-            <h3>🔗 Google Sheets Setup</h3>
-            <div class="sheet-stat" style="margin-bottom:12px">
-              <div class="sdot off" id="set-sdot"></div>
-              <p><span id="set-stext">Not Connected</span></p>
+
+          <!-- LOGO & BRANDING -->
+          <div class="set-card" style="grid-column:1/-1">
+            <h3>🎨 Logo & Branding</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:12px">
+              <!-- Logo Upload -->
+              <div>
+                <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">App Logo</div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div id="logo-preview" style="width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,#FF6B00,#D4A017);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;overflow:hidden">🌾</div>
+                  <div>
+                    <label style="display:block;background:var(--saffron);color:#fff;padding:8px 14px;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;margin-bottom:6px">
+                      📷 Upload Logo
+                      <input type="file" id="logo-upload" accept="image/*" style="display:none" onchange="previewLogo(this)">
+                    </label>
+                    <div style="font-size:.65rem;color:var(--muted)">PNG/JPG • Recommended 200×200px</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Favicon -->
+              <div>
+                <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Favicon (Browser Icon)</div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div id="fav-preview" style="width:40px;height:40px;border-radius:8px;background:var(--surf2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;border:1px solid var(--border)">🌾</div>
+                  <label style="display:block;background:var(--surf3);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer">
+                    Upload .ico/.png
+                    <input type="file" id="fav-upload" accept="image/*,.ico" style="display:none" onchange="previewFavicon(this)">
+                  </label>
+                </div>
+              </div>
+              <!-- Brand Colors -->
+              <div>
+                <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Brand Colors</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="display:flex;align-items:center;gap:8px"><input type="color" id="col-primary" value="#FF6B00" style="width:36px;height:28px;border-radius:6px;border:1px solid var(--border);cursor:pointer;background:transparent"><label style="font-size:.75rem;color:var(--muted)">Primary (Saffron)</label></div>
+                  <div style="display:flex;align-items:center;gap:8px"><input type="color" id="col-secondary" value="#1B6B3A" style="width:36px;height:28px;border-radius:6px;border:1px solid var(--border);cursor:pointer;background:transparent"><label style="font-size:.75rem;color:var(--muted)">Secondary (Green)</label></div>
+                  <div style="display:flex;align-items:center;gap:8px"><input type="color" id="col-accent" value="#D4A017" style="width:36px;height:28px;border-radius:6px;border:1px solid var(--border);cursor:pointer;background:transparent"><label style="font-size:.75rem;color:var(--muted)">Accent (Gold)</label></div>
+                </div>
+              </div>
             </div>
-            <div class="mf"><label>Apps Script Web App URL</label><input type="url" id="set-url" placeholder="https://script.google.com/macros/s/XXXX/exec"></div>
-            <div class="mf"><label>Sheet Name (optional)</label><input type="text" id="set-sheet" placeholder="e.g. PartTimers_Data"></div>
-            <button onclick="saveSheet()" style="background:var(--green);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;width:100%;margin-bottom:8px">💾 Save & Test</button>
-            <p style="font-size:.72rem;color:var(--muted);text-align:center">📖 See <strong>README.md</strong> for step-by-step setup guide</p>
+            <div style="margin-top:14px;display:flex;gap:10px">
+              <button onclick="saveBranding()" style="background:var(--saffron);border:none;color:#fff;padding:9px 20px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">💾 Save Branding</button>
+              <button onclick="resetBranding()" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 20px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">↺ Reset to Default</button>
+            </div>
           </div>
+
+          <!-- APP IDENTITY -->
           <div class="set-card">
-            <h3>📱 App Info</h3>
-            <div class="mf"><label>App Name</label><input type="text" id="set-appname" value="The Part-Timer's"></div>
-            <div class="mf"><label>Support Phone</label><input type="tel" id="set-phone" placeholder="Support number"></div>
-            <div class="mf"><label>Admin Email</label><input type="email" id="set-email" placeholder="admin@example.com"></div>
+            <h3>📱 App Identity</h3>
+            <div class="mf"><label>App Name (English)</label><input type="text" id="set-appname" value="The Part-Timer's"></div>
+            <div class="mf"><label>App Name (Odia)</label><input type="text" id="set-appname-or" value="ଦ ପାର୍ଟ-ଟାଇମର୍ସ"></div>
+            <div class="mf"><label>Tagline (English)</label><input type="text" id="set-tagline" value="Empowering Rural Odisha"></div>
+            <div class="mf"><label>Tagline (Odia)</label><input type="text" id="set-tagline-or" value="ଗ୍ରାମୀଣ ଭାରତ ଶକ୍ତି"></div>
             <div class="mf"><label>App Version</label><input type="text" id="set-ver" value="1.0.0"></div>
-            <button onclick="saveAppInfo()" style="background:var(--sky);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;width:100%">💾 Save Info</button>
+            <button onclick="saveAppInfo()" style="background:var(--sky);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;width:100%">💾 Save Identity</button>
           </div>
+
+          <!-- CONTACT & SUPPORT -->
+          <div class="set-card">
+            <h3>📞 Contact & Support</h3>
+            <div class="mf"><label>Support Phone</label><input type="tel" id="set-phone" placeholder="e.g. 9876543210"></div>
+            <div class="mf"><label>WhatsApp Number</label><input type="tel" id="set-whatsapp" placeholder="91XXXXXXXXXX"></div>
+            <div class="mf"><label>Admin Email</label><input type="email" id="set-email" placeholder="admin@example.com"></div>
+            <div class="mf"><label>Office Address</label><textarea id="set-address" style="width:100%;padding:9px;background:var(--surf2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Baloo 2',sans-serif;font-size:.82rem;min-height:60px;resize:vertical" placeholder="Office address..."></textarea></div>
+            <button onclick="saveContact()" style="background:var(--green);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;width:100%">💾 Save Contact</button>
+          </div>
+
+          <!-- APP FEATURE TOGGLES -->
+          <div class="set-card">
+            <h3>🔛 Feature Toggles</h3>
+            <div class="tog-row"><label class="tl">New User Registration</label><label class="toggle"><input type="checkbox" id="tog-reg" checked><span class="sl2"></span></label></div>
+            <div class="tog-row"><label class="tl">Sunday Haata LIVE Banner</label><label class="toggle"><input type="checkbox" id="tog-haata" checked><span class="sl2"></span></label></div>
+            <div class="tog-row"><label class="tl">Promo / Offer Banner</label><label class="toggle"><input type="checkbox" id="tog-promo" checked><span class="sl2"></span></label></div>
+            <div class="tog-row"><label class="tl">Show Nearby Workers</label><label class="toggle"><input type="checkbox" id="tog-workers" checked><span class="sl2"></span></label></div>
+            <div class="tog-row"><label class="tl">Food Ordering</label><label class="toggle"><input type="checkbox" id="tog-food" checked><span class="sl2"></span></label></div>
+            <div class="tog-row"><label class="tl">Vehicle Booking</label><label class="toggle"><input type="checkbox" id="tog-vehicle" checked><span class="sl2"></span></label></div>
+            <div class="tog-row" style="border:none"><label class="tl" style="color:var(--red)">🔴 Maintenance Mode</label><label class="toggle"><input type="checkbox" id="tog-maint"><span class="sl2"></span></label></div>
+            <button onclick="saveBanners()" style="margin-top:12px;background:var(--saffron);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;width:100%">💾 Save Toggles</button>
+          </div>
+
+          <!-- ADMIN SECURITY -->
+          <div class="set-card">
+            <h3>🔐 Admin Security</h3>
+            <div class="mf"><label>Admin Username</label><input type="text" id="set-uname" placeholder="admin"></div>
+            <div class="mf"><label>Current Password</label><input type="password" id="set-curr" placeholder="Current password"></div>
+            <div class="mf"><label>New Password</label><input type="password" id="set-new" placeholder="Min 8 characters"></div>
+            <div class="mf"><label>Confirm Password</label><input type="password" id="set-conf" placeholder="Confirm new password"></div>
+            <button onclick="changePass()" style="background:var(--saffron);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;width:100%">🔑 Update Password</button>
+          </div>
+
+          <!-- GOOGLE SHEETS -->
+          <div class="set-card">
+            <h3>🔗 Google Sheets</h3>
+            <div class="sheet-stat" style="margin-bottom:12px"><div class="sdot off" id="set-sdot"></div><p><span id="set-stext">Not Connected</span></p></div>
+            <div class="mf"><label>Apps Script Web App URL</label><input type="url" id="set-url" placeholder="https://script.google.com/macros/s/XXXX/exec"></div>
+            <button onclick="saveSheet()" style="background:var(--green);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;width:100%;margin-bottom:8px">💾 Save & Test</button>
+            <p style="font-size:.7rem;color:var(--muted);text-align:center">Supabase use karo — Sheets optional hai</p>
+          </div>
+
+          <!-- DATA MANAGEMENT -->
           <div class="set-card">
             <h3>🗄️ Data Management</h3>
             <div style="display:flex;flex-direction:column;gap:9px">
@@ -855,9 +1010,10 @@ tr:hover td{background:rgba(255,255,255,.02)}
               <button onclick="exportCSV('users')" style="background:var(--green);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">📊 Export Users (CSV)</button>
               <button onclick="exportCSV('bookings')" style="background:var(--purple);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">📋 Export Bookings (CSV)</button>
               <button onclick="exportCSV('orders')" style="background:var(--gold);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">🛒 Export Orders (CSV)</button>
-              <button onclick="clearData()" style="background:rgba(255,68,68,.12);border:1px solid rgba(255,68,68,.3);color:var(--red);padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">🗑️ Clear All Data (Caution!)</button>
+              <button onclick="clearData()" style="background:rgba(255,68,68,.12);border:1px solid rgba(255,68,68,.3);color:var(--red);padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">🗑️ Clear All Local Data</button>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -1014,6 +1170,7 @@ const panTitles = {
   dashboard:'Dashboard Overview',users:'All Users',workers:'Workers',vendors:'Vendors',vehicles:'Vehicle Owners',
   bookings:'Bookings',orders:'Orders',listings:'Listings',
   revenue:'Revenue & Plans',analytics:'Analytics',
+  planmgmt:'Plan Management',
   pagecontent:'Page Content Editor',
   banners:'Banners & Settings',settings:'Settings'
 };
@@ -1022,6 +1179,7 @@ const panSubs = {
   workers:'All worker profiles',vendors:'Vendors & plan management',vehicles:'Transport & vehicle providers',
   bookings:'All service bookings',orders:'All product orders',listings:'Vendor listing approvals',
   revenue:'Revenue from vendor plans',analytics:'Platform growth analytics',
+  planmgmt:'Plan prices aur limits admin se change karo',
   pagecontent:'Edit every Odia/English text shown in the user app',
   banners:'Control app content',settings:'Admin configuration'
 };
@@ -1037,7 +1195,8 @@ function goPan(id) {
     dashboard: loadDashboard, users: loadUsersTable, workers: loadWorkersTable,
     vendors: loadVendorsTable, vehicles: loadVehiclesTable, bookings: loadBookingsTable, orders: loadOrdersTable,
     listings: loadListingsTable, revenue: loadRevenue, analytics: loadAnalytics,
-    pagecontent: loadPageContent
+    planmgmt: loadPlansConfig,
+    pagecontent: loadPageContent, settings: () => { loadSheetStatus(); loadSettings(); }
   };
   loaders[id]?.();
 }
@@ -1882,6 +2041,88 @@ function exportContent() {
 // ════════════════════════════════════════════
 // BANNERS
 // ════════════════════════════════════════════
+// ════════════════════════════════════════════
+// PLAN MANAGEMENT
+// ════════════════════════════════════════════
+const PLAN_KEYS = ['Local Mini','Local Plus','Block Reach','District Seller','Super Vendor'];
+
+function loadPlansConfig() {
+  const saved = JSON.parse(localStorage.getItem('pt_plans_config') || '{}');
+  PLAN_KEYS.forEach((key, i) => {
+    const p = saved[key] || {};
+    const nameEl  = document.getElementById('pm-name-'  + i);
+    const priceEl = document.getElementById('pm-price-' + i);
+    const kmEl    = document.getElementById('pm-km-'    + i);
+    const itemsEl = document.getElementById('pm-items-' + i);
+    const detEl   = document.getElementById('pm-detail-'+ i);
+    if (nameEl)  nameEl.value  = p.name  || key;
+    if (priceEl) priceEl.value = p.price || [10,20,100,999,3999][i];
+    if (kmEl)    kmEl.value    = p.km    || [5,10,15,999,9999][i];
+    if (itemsEl) itemsEl.value = p.items || [5,10,20,50,9999][i];
+    if (detEl)   detEl.value   = p.detail|| key;
+  });
+  loadPlanAlerts();
+}
+
+function savePlansConfig() {
+  const config = {};
+  PLAN_KEYS.forEach((key, i) => {
+    const name  = document.getElementById('pm-name-'  + i)?.value || key;
+    const price = parseInt(document.getElementById('pm-price-' + i)?.value) || 0;
+    const km    = parseInt(document.getElementById('pm-km-'    + i)?.value) || 5;
+    const items = parseInt(document.getElementById('pm-items-' + i)?.value) || 5;
+    const detail= document.getElementById('pm-detail-'+ i)?.value || '';
+    const label = '₹' + price + '/month';
+    config[name] = { name, price, km, items, detail, label };
+  });
+  localStorage.setItem('pt_plans_config', JSON.stringify(config));
+  // Sync to Supabase app_config
+  if (isSbReady()) {
+    sb.from('app_config').upsert({ key: 'plans_config', value: JSON.stringify(config) }).then(() => {});
+  }
+  toast('✅ Plans saved! App mein reflect ho gaya.');
+}
+
+function resetPlansConfig() {
+  if (!confirm('Reset all plans to default values?')) return;
+  localStorage.removeItem('pt_plans_config');
+  loadPlansConfig();
+  toast('↺ Plans reset to defaults');
+}
+
+function loadPlanAlerts() {
+  const alertBox = document.getElementById('plan-alerts');
+  if (!alertBox) return;
+  // Check for suspicious patterns
+  const alerts = [];
+  const users = JSON.parse(localStorage.getItem('pt_all_users') || '[]');
+
+  // Check duplicate phone numbers
+  const phones = users.map(u => u.phone).filter(Boolean);
+  const dupPhones = phones.filter((p, i) => phones.indexOf(p) !== i);
+  if (dupPhones.length > 0) alerts.push({ type:'red', msg: `⚠️ ${dupPhones.length} duplicate phone numbers found — possible fake accounts` });
+
+  // Check vendors with no plan
+  const vendors = users.filter(u => u.type === 'vendor');
+  const noPlanVendors = vendors.filter(u => !u.plan || u.plan === 'Local Mini');
+  if (noPlanVendors.length > 5) alerts.push({ type:'amber', msg: `ℹ️ ${noPlanVendors.length} vendors on Local Mini — consider upsell` });
+
+  // Check for very high bookings in short time
+  const bookings = JSON.parse(localStorage.getItem('pt_bookings') || '[]');
+  const today = new Date().toDateString();
+  const todayBooks = bookings.filter(b => new Date(b.created_at).toDateString() === today);
+  if (todayBooks.length > 50) alerts.push({ type:'amber', msg: `⚠️ ${todayBooks.length} bookings today — unusually high activity` });
+
+  if (alerts.length === 0) {
+    alertBox.innerHTML = '<div style="font-size:.78rem;color:var(--green);text-align:center;padding:10px">✅ Koi suspicious activity nahi mili</div>';
+  } else {
+    alertBox.innerHTML = alerts.map(a => `
+      <div style="background:${a.type==='red'?'rgba(255,68,68,.1)':'rgba(212,160,23,.1)'};border-radius:8px;padding:10px;margin-bottom:8px;font-size:.78rem;color:${a.type==='red'?'var(--red)':'var(--gold)'}">
+        ${a.msg}
+      </div>`).join('');
+  }
+}
+
 function saveBanners() {
   const cfg = {
     haata: document.getElementById('tog-haata').checked,
@@ -1959,20 +2200,125 @@ function saveSheet() {
     .catch(()=>{ updateSheetStatus(false); toast('⚠️ Could not verify. URL saved.'); });
 }
 
+// ── LOGO & BRANDING ────────────────────────────────
+function previewLogo(input) {
+  if (!input.files?.[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('logo-preview');
+    prev.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:14px">`;
+    localStorage.setItem('pt_logo', e.target.result);
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function previewFavicon(input) {
+  if (!input.files?.[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('fav-preview');
+    prev.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:contain">`;
+    localStorage.setItem('pt_favicon', e.target.result);
+    // Apply to browser tab immediately
+    let link = document.querySelector('link[rel*=icon]') || document.createElement('link');
+    link.type = 'image/x-icon'; link.rel = 'shortcut icon'; link.href = e.target.result;
+    document.getElementsByTagName('head')[0].appendChild(link);
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function saveBranding() {
+  const branding = {
+    appName:    document.getElementById('set-appname')?.value || "The Part-Timer's",
+    appNameOr:  document.getElementById('set-appname-or')?.value || 'ଦ ପାର୍ଟ-ଟାଇମର୍ସ',
+    tagline:    document.getElementById('set-tagline')?.value || 'Empowering Rural Odisha',
+    taglineOr:  document.getElementById('set-tagline-or')?.value || 'ଗ୍ରାମୀଣ ଭାରତ ଶକ୍ତି',
+    colPrimary: document.getElementById('col-primary')?.value || '#FF6B00',
+    colSecondary: document.getElementById('col-secondary')?.value || '#1B6B3A',
+    colAccent:  document.getElementById('col-accent')?.value || '#D4A017',
+  };
+  localStorage.setItem('pt_branding', JSON.stringify(branding));
+  if (isSbReady()) {
+    const updates = [
+      { key:'app_name',   value: branding.appName },
+      { key:'app_name_or', value: branding.appNameOr },
+      { key:'tagline',    value: branding.tagline },
+      { key:'col_primary', value: branding.colPrimary },
+      { key:'col_secondary', value: branding.colSecondary },
+    ];
+    updates.forEach(u => sb.from('app_config').upsert({ key: u.key, value: u.value }).then(() => {}));
+  }
+  toast('✅ Branding saved! Changes will appear in app on next load.');
+}
+
+function resetBranding() {
+  if (!confirm('Reset all branding to default?')) return;
+  localStorage.removeItem('pt_branding');
+  localStorage.removeItem('pt_logo');
+  localStorage.removeItem('pt_favicon');
+  document.getElementById('logo-preview').innerHTML = '🌾';
+  document.getElementById('fav-preview').innerHTML = '🌾';
+  document.getElementById('col-primary').value = '#FF6B00';
+  document.getElementById('col-secondary').value = '#1B6B3A';
+  document.getElementById('col-accent').value = '#D4A017';
+  document.getElementById('set-appname').value = "The Part-Timer's";
+  document.getElementById('set-appname-or').value = 'ଦ ପାର୍ଟ-ଟାଇମର୍ସ';
+  toast('↺ Branding reset to defaults');
+}
+
 function saveAppInfo() {
-  localStorage.setItem('pt_app_name', document.getElementById('set-appname').value);
-  localStorage.setItem('pt_support_phone', document.getElementById('set-phone').value);
-  localStorage.setItem('pt_admin_email', document.getElementById('set-email').value);
-  toast('✅ App info saved!');
+  const info = {
+    appName: document.getElementById('set-appname')?.value,
+    version: document.getElementById('set-ver')?.value,
+  };
+  localStorage.setItem('pt_app_name', info.appName);
+  if (isSbReady()) sb.from('app_config').upsert({ key:'app_name', value: info.appName }).then(() => {});
+  toast('✅ App identity saved!');
+}
+
+function saveContact() {
+  const contact = {
+    phone:    document.getElementById('set-phone')?.value || '',
+    whatsapp: document.getElementById('set-whatsapp')?.value || '',
+    email:    document.getElementById('set-email')?.value || '',
+    address:  document.getElementById('set-address')?.value || '',
+  };
+  localStorage.setItem('pt_contact', JSON.stringify(contact));
+  if (isSbReady()) {
+    Object.entries(contact).forEach(([k,v]) => {
+      sb.from('app_config').upsert({ key:'contact_'+k, value: v }).then(() => {});
+    });
+  }
+  toast('✅ Contact info saved!');
+}
+
+function loadSettings() {
+  // Load logo
+  const logo = localStorage.getItem('pt_logo');
+  if (logo) document.getElementById('logo-preview').innerHTML = `<img src="${logo}" style="width:100%;height:100%;object-fit:cover;border-radius:14px">`;
+
+  // Load branding
+  const branding = JSON.parse(localStorage.getItem('pt_branding') || '{}');
+  if (branding.appName)    document.getElementById('set-appname').value = branding.appName;
+  if (branding.appNameOr)  document.getElementById('set-appname-or').value = branding.appNameOr;
+  if (branding.tagline)    document.getElementById('set-tagline').value = branding.tagline;
+  if (branding.taglineOr)  document.getElementById('set-tagline-or').value = branding.taglineOr;
+  if (branding.colPrimary) document.getElementById('col-primary').value = branding.colPrimary;
+  if (branding.colSecondary) document.getElementById('col-secondary').value = branding.colSecondary;
+  if (branding.colAccent)  document.getElementById('col-accent').value = branding.colAccent;
+
+  // Load contact
+  const contact = JSON.parse(localStorage.getItem('pt_contact') || '{}');
+  if (contact.phone)    document.getElementById('set-phone').value = contact.phone;
+  if (contact.whatsapp) document.getElementById('set-whatsapp').value = contact.whatsapp;
+  if (contact.email)    document.getElementById('set-email').value = contact.email;
+  if (contact.address)  document.getElementById('set-address').value = contact.address;
 }
 
 function loadSheetStatus() {
   const url = localStorage.getItem('pt_sheet_url')||'';
-  const connected = !!url;
-  updateSheetStatus(connected);
-  if (url) document.getElementById('set-url').value = url;
-  const sn = localStorage.getItem('pt_sheet_name')||'';
-  if (sn) document.getElementById('set-sheet').value = sn;
+  updateSheetStatus(!!url);
+  if (url && document.getElementById('set-url')) document.getElementById('set-url').value = url;
 }
 
 function updateSheetStatus(connected) {
