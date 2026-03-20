@@ -230,7 +230,8 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
 /* PROFILE */
 .prof-hero{background:linear-gradient(135deg,#FF6B00,#D4A017);padding:28px 18px 48px}
 .pav-wrap{display:flex;align-items:center;gap:14px}
-.pav{width:76px;height:76px;border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:2.3rem;box-shadow:0 8px 24px rgba(0,0,0,.2);border:3px solid rgba(255,255,255,.5)}
+.pav{width:76px;height:76px;border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:2.3rem;box-shadow:0 8px 24px rgba(0,0,0,.2);border:3px solid rgba(255,255,255,.5);overflow:hidden;position:relative}
+.pav img{width:100%;height:100%;object-fit:cover;border-radius:15px}
 .prof-info h2{color:#fff;font-size:1.25rem;font-weight:800}
 .prof-info p{color:rgba(255,255,255,.85);font-size:.82rem;margin-top:2px}
 .pbrow{display:flex;gap:7px;margin-top:7px;flex-wrap:wrap}
@@ -1074,6 +1075,18 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     <button onclick="saveProfile()" style="background:var(--saffron);color:#fff;border:none;padding:7px 16px;border-radius:9px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer">Save</button>
   </div>
   <div class="eov-body">
+    <!-- Profile Photo Upload -->
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;background:var(--saffron-p);border-radius:13px;padding:14px">
+      <div id="ep-avatar-preview" style="width:68px;height:68px;border-radius:16px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;flex-shrink:0;border:3px solid rgba(255,107,0,.2)">👤</div>
+      <div style="flex:1">
+        <div style="font-size:.82rem;font-weight:700;margin-bottom:5px">ଫଟୋ / Profile Photo</div>
+        <label style="display:inline-block;background:var(--saffron);color:#fff;padding:7px 16px;border-radius:9px;font-size:.78rem;font-weight:700;cursor:pointer">
+          📷 Photo Change Karo
+          <input type="file" id="ep-photo" accept="image/*" style="display:none" onchange="previewProfilePhoto(this)">
+        </label>
+        <div style="font-size:.68rem;color:var(--muted);margin-top:4px">JPG, PNG • Max 2MB</div>
+      </div>
+    </div>
     <div class="fg"><label>ପୂରା ନାମ <span>/ Full Name</span></label><input id="ep-name" type="text"></div>
     <div class="fg"><label>ମୋବାଇଲ <span>/ Mobile</span></label><input id="ep-phone" type="tel"></div>
     <div class="fg"><label>ଗ୍ରାମ <span>/ Village</span></label><input id="ep-village" type="text"></div>
@@ -1535,7 +1548,23 @@ function loadProfileData() {
   document.getElementById('p-name').textContent = u.name;
   document.getElementById('p-type').textContent = u.type.charAt(0).toUpperCase() + u.type.slice(1);
   document.getElementById('p-loc').textContent = '📍 ' + u.village + ', ' + u.district;
-  document.getElementById('p-plan-badge').textContent = u.plan || 'Free';
+
+  // Show avatar if available
+  const avatar = document.getElementById('p-avatar');
+  if (u.avatar_url) {
+    avatar.innerHTML = `<img src="${u.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:15px">`;
+  } else {
+    avatar.innerHTML = '👤';
+  }
+
+  // Plan badge — only show for vendor/worker/vehicle, hide for customer
+  const planBadge = document.getElementById('p-plan-badge');
+  if (u.type === 'customer') {
+    planBadge.style.display = 'none';
+  } else {
+    planBadge.style.display = '';
+    planBadge.textContent = u.plan || 'Free';
+  }
 
   document.getElementById('did-id').textContent = u.id;
   document.getElementById('did-name').textContent = u.name;
@@ -1544,8 +1573,8 @@ function loadProfileData() {
   const roleDetail = u.type === 'worker'  ? (u.skill || 'Worker') :
                      u.type === 'vendor'  ? (u.biz_type || u.biz || u.shop || 'Vendor') :
                      u.type === 'vehicle' ? (u.vehicle_type || u.vtype || 'Vehicle Owner') :
-                     'Customer';
-  document.getElementById('did-role').textContent = u.type.charAt(0).toUpperCase() + u.type.slice(1) + ' • ' + roleDetail;
+                     null;
+  document.getElementById('did-role').textContent = u.type.charAt(0).toUpperCase() + u.type.slice(1) + (roleDetail ? ' • ' + roleDetail : '');
   document.getElementById('did-loc').textContent = '📍 ' + u.village + ', ' + u.district + ', Odisha';
 
   document.getElementById('stat-jobs').textContent = u.jobs || '0';
@@ -1598,6 +1627,8 @@ function loadProfileData() {
 
 async function saveProfile() {
   if (!currentUser) return;
+  showToast('⏳ Saving...');
+
   currentUser.name     = document.getElementById('ep-name').value.trim() || currentUser.name;
   currentUser.phone    = document.getElementById('ep-phone').value.trim() || currentUser.phone;
   currentUser.village  = document.getElementById('ep-village').value.trim() || currentUser.village;
@@ -1606,6 +1637,26 @@ async function saveProfile() {
   currentUser.rate     = document.getElementById('ep-rate').value;
   currentUser.shop     = document.getElementById('ep-shop').value;
   currentUser.bio      = document.getElementById('ep-bio').value;
+
+  // Handle photo upload
+  const photoInput = document.getElementById('ep-photo');
+  if (photoInput?.files?.[0] && isSupabaseReady()) {
+    try {
+      const file = photoInput.files[0];
+      const ext = file.name.split('.').pop();
+      const path = `avatars/${currentUser.id}.${ext}`;
+      const { error } = await sb.storage.from('avatars').upload(path, file, { upsert: true });
+      if (!error) {
+        const { data: urlData } = sb.storage.from('avatars').getPublicUrl(path);
+        currentUser.avatar_url = urlData.publicUrl;
+      }
+    } catch(e) { console.warn('Photo upload failed:', e); }
+  } else if (photoInput?.files?.[0]) {
+    // Offline fallback — store as base64
+    const reader = new FileReader();
+    reader.onload = e => { currentUser.avatar_url = e.target.result; lsSet('pt_user', currentUser); updateAvatarDisplay(); };
+    reader.readAsDataURL(photoInput.files[0]);
+  }
 
   lsSet('pt_user', currentUser);
   let allUsers = lsGet('pt_all_users') || [];
@@ -1619,19 +1670,53 @@ async function saveProfile() {
       name: currentUser.name, phone: currentUser.phone,
       village: currentUser.village, district: currentUser.district,
       skill: currentUser.skill, rate: currentUser.rate,
-      shop: currentUser.shop, bio: currentUser.bio
+      shop: currentUser.shop, bio: currentUser.bio,
+      avatar_url: currentUser.avatar_url || null
     });
   }
 
   qrGenerated = false;
   document.getElementById('qrcode').innerHTML = '';
   loadProfileData();
+  updateAvatarDisplay();
   closeEditProfile();
   showToast('✅ Profile updated!');
 }
 
-function openEditProfile() { document.getElementById('eov-profile').classList.add('on'); }
+function updateAvatarDisplay() {
+  // Update the avatar in the profile hero
+  const avatar = document.getElementById('p-avatar');
+  if (!avatar) return;
+  if (currentUser?.avatar_url) {
+    avatar.innerHTML = `<img src="${currentUser.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:15px">`;
+  } else {
+    avatar.innerHTML = '👤';
+  }
+}
+
+function openEditProfile() {
+  document.getElementById('eov-profile').classList.add('on');
+  // Load current avatar into edit preview
+  const avatar = document.getElementById('p-avatar');
+  const preview = document.getElementById('ep-avatar-preview');
+  if (currentUser?.avatar_url) {
+    preview.innerHTML = `<img src="${currentUser.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:13px">`;
+  } else {
+    preview.innerHTML = '👤';
+  }
+}
 function closeEditProfile() { document.getElementById('eov-profile').classList.remove('on'); }
+
+function previewProfilePhoto(input) {
+  if (!input.files || !input.files[0]) return;
+  if (input.files[0].size > 2 * 1024 * 1024) { showToast('⚠️ Photo 2MB se bada hai'); input.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const preview = document.getElementById('ep-avatar-preview');
+    preview.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:13px">`;
+  };
+  reader.readAsDataURL(input.files[0]);
+}
 
 // ============================================================
 // BOOKING
