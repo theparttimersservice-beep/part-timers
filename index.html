@@ -1340,7 +1340,24 @@ async function doRegister() {
     // Check if phone already exists
     const { data: existing } = await sb.from('users').select('id').eq('phone', phone).single();
     if (existing) { showToast('❌ Mobile number already registered'); return; }
-    await sbInsert('users', user);
+
+    // Only send columns that exist in Supabase schema
+    const dbUser = {
+      id: uid, name, phone, district: dist, village,
+      type: selectedUserType, pass,
+      skill: user.skill, rate: user.rate, exp: user.exp,
+      shop: user.shop, biz_type: user.biz_type,
+      vehicle_type: user.vehicle_type, vehicle_num: user.vehicle_num, vehicle_rate: user.vehicle_rate,
+      plan: 'Local Mini', rating: 4.8, jobs: 0, bio: '',
+      status: 'active', available: true, featured: false
+    };
+    const { error: insertError } = await sb.from('users').insert([dbUser]);
+    if (insertError) {
+      console.error('Register failed:', insertError.message);
+      showToast('⚠️ Save to cloud failed — saved locally only');
+    } else {
+      showToast('✅ Registration successful!');
+    }
   }
 
   // Always keep local copy for offline
@@ -1445,8 +1462,9 @@ function startRealtimeListener() {
 async function sbInsert(table, data) {
   try {
     const { error } = await sb.from(table).insert([data]);
-    if (error) console.error('Insert error:', table, error.message);
-  } catch(e) { console.error('sbInsert failed:', e); }
+    if (error) { console.error('Insert error ['+table+']:', error.message); return false; }
+    return true;
+  } catch(e) { console.error('sbInsert failed:', e); return false; }
 }
 
 async function sbUpdate(table, id, data) {
@@ -1469,10 +1487,6 @@ async function sbSelect(table, filters = {}) {
 // Keep localStorage as offline fallback
 function lsGet(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch{ return null; } }
 function lsSet(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch{} }
-
-function isSupabaseReady() {
-  return SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
-}
 
 // ============================================================
 // NAVIGATION
