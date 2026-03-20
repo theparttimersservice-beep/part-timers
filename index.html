@@ -372,7 +372,12 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     <!-- LOGIN PANEL -->
     <div id="auth-login-panel" style="background:#fff;border-radius:20px;padding:22px;box-shadow:0 16px 48px rgba(0,0,0,.2)">
       <div class="fg"><label>📱 ମୋବାଇଲ <span>/ Mobile Number</span></label><input id="l-phone" type="tel" placeholder="10-digit mobile" maxlength="10"></div>
-      <div class="fg"><label>🔒 ପାସୱାର୍ଡ <span>/ Password</span></label><input id="l-pass" type="password" placeholder="Your password"></div>
+      <div class="fg"><label>🔒 ପାସୱାର୍ଡ <span>/ Password</span></label>
+        <div style="position:relative">
+          <input id="l-pass" type="password" placeholder="Your password" style="padding-right:44px;width:100%">
+          <button type="button" onclick="togglePass('l-pass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--muted);padding:0">👁</button>
+        </div>
+      </div>
       <button class="btn btn-p" onclick="doLogin()" style="margin-bottom:10px">🔑 ଲଗ ଇନ୍ | Login</button>
       <button class="btn" onclick="demoLogin()" style="background:var(--green-p);color:var(--green)">🎯 Demo Login</button>
       <p style="text-align:center;margin-top:12px;font-size:.8rem;color:var(--muted)">ନୂତନ ଉପଯୋଗକର୍ତ୍ତା? <span onclick="switchAuthTab('register')" style="color:var(--saffron);font-weight:700;cursor:pointer">ଯୋଗ ଦିଅନ୍ତୁ →</span></p>
@@ -416,7 +421,12 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
           <div class="fg"><label>ଯାନ ନମ୍ବର <span>/ Vehicle Number</span></label><input id="r-vnum" type="text" placeholder="OD-XX-XXXX"></div>
           <div class="fg"><label>ଭଡ଼ା <span>/ Rental Rate</span></label><input id="r-vrate" type="text" placeholder="e.g. ₹800/day or ₹40/km"></div>
         </div>
-        <div class="fg"><label>ପାସୱାର୍ଡ <span>/ Password</span></label><input id="r-pass" type="password" placeholder="Create password"></div>
+        <div class="fg"><label>ପାସୱାର୍ଡ <span>/ Password</span></label>
+          <div style="position:relative">
+            <input id="r-pass" type="password" placeholder="Create password (min 6 chars)" style="padding-right:44px;width:100%">
+            <button type="button" onclick="togglePass('r-pass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--muted);padding:0">👁</button>
+          </div>
+        </div>
         <button class="btn btn-p" onclick="doRegister()">✅ ଯୋଗ ଦିଅନ୍ତୁ | Register</button>
         <p style="text-align:center;margin-top:10px;font-size:.8rem;color:var(--muted)">ଆଗରୁ ଆଛନ୍ତି? <span onclick="switchAuthTab('login')" style="color:var(--saffron);font-weight:700;cursor:pointer">Login →</span></p>
       </div>
@@ -1432,6 +1442,23 @@ function showPg(id) {
   if (id === 'pg-login')    { document.getElementById('pg-welcome').classList.add('on'); switchAuthTab('login'); }
 }
 
+function togglePass(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (!inp) return;
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+
+async function resubmitBooking(bookingId) {
+  let bookings = lsGet('pt_bookings') || [];
+  const b = bookings.find(x => x.id === bookingId);
+  if (b) { b.status = 'pending'; b.reject_count = 0; }
+  lsSet('pt_bookings', bookings);
+  if (isSupabaseReady()) await sbUpdate('bookings', bookingId, { status: 'pending', reject_count: 0 });
+  showToast('🔄 Booking resubmit ho gayi! Naya worker dhundha ja raha hai...');
+  loadOrders();
+}
+
 function switchAuthTab(tab) {
   const loginPanel = document.getElementById('auth-login-panel');
   const regPanel   = document.getElementById('auth-reg-panel');
@@ -1829,24 +1856,37 @@ async function saveProfile() {
   // Addon roles from toggles
   // (already updated in currentUser.addon_roles by toggleAddonRole)
 
-  // Handle photo upload
+  // Handle photo upload — base64 always saved locally, Supabase if available
   const photoInput = document.getElementById('ep-photo');
-  if (photoInput?.files?.[0] && isSupabaseReady()) {
-    try {
-      const file = photoInput.files[0];
-      const ext = file.name.split('.').pop();
-      const path = `avatars/${currentUser.id}.${ext}`;
-      const { error } = await sb.storage.from('avatars').upload(path, file, { upsert: true });
-      if (!error) {
-        const { data: urlData } = sb.storage.from('avatars').getPublicUrl(path);
-        currentUser.avatar_url = urlData.publicUrl;
+  if (photoInput?.files?.[0]) {
+    const file = photoInput.files[0];
+    if (file.size > 8 * 1024 * 1024) {
+      showToast('⚠️ Photo 8MB se bada hai');
+    } else {
+      // Always save base64 locally first (reliable)
+      await new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          currentUser.avatar_url = e.target.result;
+          lsSet('pt_user', currentUser);
+          updateAvatarDisplay();
+          resolve();
+        };
+        reader.readAsDataURL(file);
+      });
+      // Try Supabase Storage upload (optional — works if bucket exists)
+      if (isSupabaseReady()) {
+        try {
+          const ext = file.name.split('.').pop() || 'jpg';
+          const path = `avatars/${currentUser.id}.${ext}`;
+          const { error } = await sb.storage.from('avatars').upload(path, file, { upsert: true });
+          if (!error) {
+            const { data: urlData } = sb.storage.from('avatars').getPublicUrl(path);
+            if (urlData?.publicUrl) currentUser.avatar_url = urlData.publicUrl;
+          }
+        } catch(e) { /* Storage not configured — base64 already saved */ }
       }
-    } catch(e) { console.warn('Photo upload failed:', e); }
-  } else if (photoInput?.files?.[0]) {
-    // Offline fallback — store as base64
-    const reader = new FileReader();
-    reader.onload = e => { currentUser.avatar_url = e.target.result; lsSet('pt_user', currentUser); updateAvatarDisplay(); };
-    reader.readAsDataURL(photoInput.files[0]);
+    }
   }
 
   lsSet('pt_user', currentUser);
@@ -1909,7 +1949,7 @@ function closeEditProfile() { document.getElementById('eov-profile').classList.r
 
 function previewProfilePhoto(input) {
   if (!input.files || !input.files[0]) return;
-  if (input.files[0].size > 2 * 1024 * 1024) { showToast('⚠️ Photo 2MB se bada hai'); input.value = ''; return; }
+  if (input.files[0].size > 8 * 1024 * 1024) { showToast('⚠️ Photo 8MB se bada hai — compress karke try karo'); input.value = ''; return; }
   const reader = new FileReader();
   reader.onload = e => {
     const preview = document.getElementById('ep-avatar-preview');
@@ -1935,38 +1975,7 @@ function openBook(name, icon, desc, price, rating, loc) {
   openModal('modal-book');
 }
 
-async function confirmBook() {
-  const date = document.getElementById('bk-date').value;
-  const loc = document.getElementById('bk-loc').value.trim();
-  if (!date || !loc) { showToast('⚠️ Fill date & location'); return; }
-
-  const booking = {
-    id: 'BK-' + Date.now().toString().slice(-6),
-    user_id: currentUser?.id, user_name: currentUser?.name,
-    service: document.getElementById('bk-name').textContent,
-    description: document.getElementById('bk-desc').textContent,
-    price: document.getElementById('bk-price').textContent,
-    date, loc, note: document.getElementById('bk-note').value,
-    status: 'pending'
-  };
-
-  if (isSupabaseReady()) { await sbInsert('bookings', booking); }
-
-  // Local fallback copy
-  let bookings = lsGet('pt_bookings') || [];
-  bookings.unshift({ ...booking, type:'booking', createdAt: new Date().toISOString() });
-  lsSet('pt_bookings', bookings);
-
-  if (currentUser) {
-    currentUser.jobs = (parseInt(currentUser.jobs)||0)+1;
-    lsSet('pt_user', currentUser);
-    if (isSupabaseReady()) await sbUpdate('users', currentUser.id, { jobs: currentUser.jobs });
-  }
-
-  closeModal('modal-book');
-  showToast('✅ Booking confirmed!');
-  loadOrders();
-}
+// confirmBook moved to SMART BOOKING section below
 
 // ============================================================
 // ORDERS
@@ -2169,13 +2178,14 @@ async function loadOrders() {
   const ORDER_STEPS   = ['Placed','Confirmed','In Progress','Done'];
   const stepIndex = { pending:0, confirmed:1, 'in progress':2, done:3 };
 
-  const statusClass = s => ({ confirmed:'st-confirmed', done:'st-done', cancelled:'st-cancelled', 'in progress':'st-progress' }[s] || 'st-pending');
-  const statusLabel = s => ({ pending:'⏳ Pending', confirmed:'✅ Confirmed', done:'🎉 Done', cancelled:'❌ Cancelled', 'in progress':'🔄 In Progress' }[s] || s || '⏳ Pending');
+  const statusClass = s => ({ confirmed:'st-confirmed', done:'st-done', cancelled:'st-cancelled', 'in progress':'st-progress', needs_resubmit:'st-cancelled' }[s] || 'st-pending');
+  const statusLabel = s => ({ pending:'⏳ Pending', confirmed:'✅ Confirmed', done:'🎉 Done', cancelled:'❌ Cancelled', 'in progress':'🔄 In Progress', needs_resubmit:'⚠️ Needs Resubmit' }[s] || s || '⏳ Pending');
 
   el.innerHTML = all.map(o => {
     const steps = o.type==='booking' ? BOOKING_STEPS : ORDER_STEPS;
     const activeIdx = stepIndex[o.status] ?? 0;
-    const pipeline = o.status !== 'cancelled' ? `
+    const isNeedsResubmit = o.status === 'needs_resubmit';
+    const pipeline = (o.status !== 'cancelled' && !isNeedsResubmit) ? `
       <div class="status-pipeline">
         ${steps.map((s,i) => `
           <div class="sp-step">
@@ -2183,13 +2193,26 @@ async function loadOrders() {
             <div class="sp-label ${i<activeIdx?'done':i===activeIdx?'active':''}">${s}</div>
           </div>${i<steps.length-1?`<div class="sp-line ${i<activeIdx?'done':''}"></div>`:''}`).join('')}
       </div>` : '';
+    const resubmitBtn = isNeedsResubmit ? `
+      <div style="background:#FFF4EC;border:1px solid var(--saffron);border-radius:10px;padding:10px;margin-top:8px">
+        <div style="font-size:.78rem;color:var(--saffron);font-weight:700;margin-bottom:6px">⚠️ 3 workers ne reject kiya — Dobara try karo</div>
+        <button onclick="resubmitBooking('${o.id}')" style="background:var(--saffron);color:#fff;border:none;padding:7px 16px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">🔄 Re-submit Booking</button>
+      </div>` : '';
+    const rateBtn = o.status === 'done' ? `
+      <button onclick="openRatingModal('${o.id}','','Service Provider','worker','customer')"
+        style="margin-top:8px;background:var(--gold);color:#fff;border:none;padding:6px 14px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">⭐ Rate Service</button>` : '';
+    const payBtn = o.status === 'confirmed' && o.type === 'booking' ? `
+      <button onclick="openPaymentModal({name:'${o.item}',upi_id:'',cash_accept:'both'})"
+        style="margin-top:8px;margin-left:6px;background:var(--green);color:#fff;border:none;padding:6px 14px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">💳 Payment Info</button>` : '';
     return `<div class="order-item">
       <div class="order-hd">
         <h4>${o.icon} ${o.item}</h4>
         <span class="status-chip ${statusClass(o.status)}">${statusLabel(o.status)}</span>
       </div>
       ${pipeline}
+      ${resubmitBtn}
       <div class="order-det" style="margin-top:6px">📅 ${o.date} • 💰 ${o.total}${o.qty?' • Qty: '+o.qty:''}${o.loc?' • 📍 '+o.loc:''}</div>
+      <div>${rateBtn}${payBtn}</div>
     </div>`;
   }).join('');
 }
