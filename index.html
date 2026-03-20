@@ -344,6 +344,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
 
 <!-- LOADER -->
 <div id="loader">
+  <div id="loader-logo" style="width:88px;height:88px;background:linear-gradient(135deg,#FF6B00,#D4A017);border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;margin-bottom:18px;overflow:hidden">🌾</div>
   <h1>🌾 ଦ ପାର୍ଟ-ଟାଇମର୍ସ</h1>
   <p>Empowering Rural Odisha • ଗ୍ରାମୀଣ ଓଡ଼ିଶା</p>
   <div class="lbar"><div class="lfill"></div></div>
@@ -360,7 +361,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   <div style="max-width:400px;width:100%;margin:auto;padding:10px 14px">
     <!-- Logo -->
     <div style="text-align:center;margin-bottom:20px">
-      <div style="width:72px;height:72px;background:linear-gradient(135deg,#FF6B00,#D4A017);border-radius:20px;display:inline-flex;align-items:center;justify-content:center;font-size:2.2rem;margin-bottom:10px;box-shadow:0 10px 30px rgba(255,107,0,.4)">🌾</div>
+      <div id="welcome-logo" style="width:72px;height:72px;background:linear-gradient(135deg,#FF6B00,#D4A017);border-radius:20px;display:inline-flex;align-items:center;justify-content:center;font-size:2.2rem;margin-bottom:10px;box-shadow:0 10px 30px rgba(255,107,0,.4);overflow:hidden">🌾</div>
       <h1 style="font-family:'Tiro Oriya',serif;font-size:1.7rem;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.2)">ଦ ପାର୍ଟ-ଟାଇମର୍ସ</h1>
       <p style="color:rgba(255,255,255,.8);margin-top:3px;font-size:.78rem">Empowering Rural Odisha • ଗ୍ରାମୀଣ ଓଡ଼ିଶା</p>
     </div>
@@ -481,12 +482,13 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
 
-  <!-- Sunday Haata -->
-  <div class="hbanner">
-    <div class="live-dot">🔴 LIVE NOW</div>
-    <h3>🛍️ ରବିବାର ହଟ | Sunday Local Haata</h3>
-    <p>ସ୍ଥାନୀୟ ବିକ୍ରେତାଙ୍କ ଠାରୁ ସିଧା ଖରିଦ | Buy directly from local vendors near you</p>
-    <button onclick="goSvc('buysell')" style="margin-top:11px;background:#fff;color:var(--green);border:none;border-radius:8px;padding:8px 18px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.82rem;cursor:pointer">ଦେଖନ୍ତୁ | Explore →</button>
+  <!-- Sunday Haata — auto show/hide based on day -->
+  <div id="haata-banner" class="hbanner" style="display:none">
+    <div class="live-dot" id="haata-live-badge">🔴 LIVE NOW</div>
+    <h3 id="haata-title">🛍️ ରବିବାର ହଟ | Sunday Local Haata</h3>
+    <p id="haata-sub">ସ୍ଥାନୀୟ ବିକ୍ରେତାଙ୍କ ଠାରୁ ସିଧା ଖରିଦ | Buy directly from local vendors near you</p>
+    <div id="haata-countdown" style="display:none;margin-top:6px;font-size:.75rem;color:rgba(255,255,255,.9);font-weight:700"></div>
+    <button onclick="goSvc('buysell')" id="haata-btn" style="margin-top:11px;background:#fff;color:var(--green);border:none;border-radius:8px;padding:8px 18px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.82rem;cursor:pointer">ଦେଖନ୍ତୁ | Explore →</button>
   </div>
 
   <!-- Nearby Workers -->
@@ -1322,21 +1324,18 @@ window.addEventListener('load', () => {
 // PAGE CONTENT — reads admin edits and applies to DOM
 // ============================================================
 function applyPageContent() {
-  // Apply branding from admin settings
-  const branding = JSON.parse(localStorage.getItem('pt_branding') || '{}');
-  if (branding.colPrimary) document.documentElement.style.setProperty('--saffron', branding.colPrimary);
-  if (branding.colSecondary) document.documentElement.style.setProperty('--green', branding.colSecondary);
-  if (branding.colAccent) document.documentElement.style.setProperty('--gold', branding.colAccent);
-
-  // Apply logo to loader and profile avatars
+  // ── Apply Logo everywhere from admin settings
   const logo = localStorage.getItem('pt_logo');
-  if (logo) {
-    const loaderIcon = document.querySelector('#loader h1');
-    // Logo in splash is text-based (Odia), keep it
-  }
+  applyLogoEverywhere(logo);
 
-  // Apply app name if changed
-  if (branding.appName) document.title = branding.appName + ' | Admin';
+  // ── Apply branding colors
+  const branding = JSON.parse(localStorage.getItem('pt_branding') || '{}');
+  if (branding.colPrimary)   document.documentElement.style.setProperty('--saffron', branding.colPrimary);
+  if (branding.colSecondary) document.documentElement.style.setProperty('--green',   branding.colSecondary);
+  if (branding.colAccent)    document.documentElement.style.setProperty('--gold',     branding.colAccent);
+
+  // ── Apply app name if changed
+  if (branding.appName) document.title = branding.appName;
 
   const data = JSON.parse(localStorage.getItem('pt_page_content') || '{}');
   if (!Object.keys(data).length) return;
@@ -1533,15 +1532,21 @@ async function doRegister() {
     const { data: existing } = await sb.from('users').select('id').eq('phone', phone).single();
     if (existing) { showToast('❌ Mobile number already registered'); return; }
 
-    // Only send columns that exist in Supabase schema
+    // Only send columns relevant to user type — prevent cross-field contamination
     const dbUser = {
       id: uid, name, phone, district: dist, village,
       type: selectedUserType, pass,
-      skill: user.skill, rate: user.rate, exp: user.exp,
-      shop: user.shop, biz_type: user.biz_type,
-      vehicle_type: user.vehicle_type, vehicle_num: user.vehicle_num, vehicle_rate: user.vehicle_rate,
       plan: 'Local Mini', rating: 4.8, jobs: 0, bio: '',
-      status: 'active', available: true, featured: false
+      status: 'active', available: true, featured: false,
+      // Type-specific fields only
+      skill:        selectedUserType === 'worker'  ? user.skill : null,
+      rate:         selectedUserType === 'worker'  ? user.rate  : null,
+      exp:          selectedUserType === 'worker'  ? user.exp   : null,
+      shop:         selectedUserType === 'vendor'  ? user.shop  : null,
+      biz_type:     selectedUserType === 'vendor'  ? user.biz_type : null,
+      vehicle_type: selectedUserType === 'vehicle' ? user.vehicle_type : null,
+      vehicle_num:  selectedUserType === 'vehicle' ? user.vehicle_num  : null,
+      vehicle_rate: selectedUserType === 'vehicle' ? user.vehicle_rate : null,
     };
     const { error: insertError } = await sb.from('users').insert([dbUser]);
     if (insertError) {
@@ -1714,11 +1719,123 @@ function backSvc(svc) { goSvc(svc); }
 // ============================================================
 // HOME DATA
 // ============================================================
+// ============================================================
+// LOGO — apply admin uploaded logo to all locations
+// ============================================================
+function applyLogoEverywhere(logoSrc) {
+  if (!logoSrc) return;
+  const imgTag = `<img src="${logoSrc}" style="width:100%;height:100%;object-fit:contain;border-radius:inherit">`;
+
+  // 1. Splash/Loader screen
+  const loaderLogo = document.getElementById('loader-logo');
+  if (loaderLogo) loaderLogo.innerHTML = imgTag;
+
+  // 2. Welcome / Login screen
+  const welcomeLogo = document.getElementById('welcome-logo');
+  if (welcomeLogo) welcomeLogo.innerHTML = imgTag;
+
+  // 3. Profile Digital ID card — top icon (above QR)
+  const qrArea = document.getElementById('qrcode');
+  const didLogo = document.getElementById('did-logo-img');
+  if (!didLogo && qrArea) {
+    // Insert logo above QR in Digital ID
+    const logoEl = document.createElement('img');
+    logoEl.id = 'did-logo-img';
+    logoEl.src = logoSrc;
+    logoEl.style.cssText = 'width:36px;height:36px;object-fit:contain;border-radius:8px;margin-bottom:4px;display:block';
+    qrArea.parentNode.insertBefore(logoEl, qrArea);
+  } else if (didLogo) {
+    didLogo.src = logoSrc;
+  }
+
+  // 4. Booking modal icon — replace default 🌾 if no service icon
+  const bkIcon = document.getElementById('bk-icon');
+  if (bkIcon && bkIcon.textContent === '🌾') {
+    bkIcon.innerHTML = `<img src="${logoSrc}" style="width:2rem;height:2rem;object-fit:contain;border-radius:6px">`;
+  }
+
+  // 5. Browser favicon
+  let link = document.querySelector('link[rel*="icon"]');
+  const favicon = localStorage.getItem('pt_favicon') || logoSrc;
+  if (favicon) {
+    if (!link) { link = document.createElement('link'); link.rel = 'shortcut icon'; document.head.appendChild(link); }
+    link.href = favicon;
+  }
+}
+
+
+function initHaataBanner() {
+  const banner = document.getElementById('haata-banner');
+  if (!banner) return;
+
+  // Admin can disable haata toggle
+  const cfg = JSON.parse(localStorage.getItem('pt_banner_cfg') || '{}');
+  if (cfg.haata === false) { banner.style.display = 'none'; return; }
+
+  const now = new Date();
+  const day = now.getDay(); // 0 = Sunday
+  const hour = now.getHours();
+  const isSunday = day === 0;
+
+  if (isSunday) {
+    // Sunday — show LIVE banner from 6 AM to 10 PM
+    if (hour >= 6 && hour < 22) {
+      banner.style.display = '';
+      document.getElementById('haata-live-badge').textContent = '🔴 LIVE NOW';
+      document.getElementById('haata-live-badge').style.background = '#FF4444';
+      document.getElementById('haata-countdown').style.display = 'none';
+    } else if (hour < 6) {
+      // Sunday but too early — show "Starting soon"
+      banner.style.display = '';
+      document.getElementById('haata-live-badge').textContent = '⏰ Starts at 6 AM';
+      document.getElementById('haata-live-badge').style.background = '#D4A017';
+      document.getElementById('haata-countdown').style.display = '';
+      document.getElementById('haata-countdown').textContent = 'Haata shuru hone mein: ' + (6 - hour) + ' hours';
+    } else {
+      // Sunday evening after 10 PM — haata over
+      banner.style.display = '';
+      document.getElementById('haata-live-badge').textContent = '✅ Haata Ended';
+      document.getElementById('haata-live-badge').style.background = '#888';
+      document.getElementById('haata-countdown').style.display = '';
+      document.getElementById('haata-countdown').textContent = 'Next Sunday Haata coming next week!';
+    }
+  } else {
+    // Not Sunday — show countdown to next Sunday
+    banner.style.display = '';
+    const daysUntilSunday = (7 - day) % 7 || 7;
+    const nextSunday = new Date(now);
+    nextSunday.setDate(now.getDate() + daysUntilSunday);
+    nextSunday.setHours(6, 0, 0, 0);
+    const msLeft = nextSunday - now;
+    const hoursLeft = Math.floor(msLeft / 3600000);
+    const daysLeft = Math.floor(hoursLeft / 24);
+    const hrsRem = hoursLeft % 24;
+
+    document.getElementById('haata-live-badge').textContent = `📅 Next Sunday`;
+    document.getElementById('haata-live-badge').style.background = '#1B6B3A';
+    document.getElementById('haata-live-badge').style.animation = 'none'; // no blink on non-Sunday
+    document.getElementById('haata-title').textContent = '🛍️ ରବିବାର ହଟ | Coming This Sunday';
+    document.getElementById('haata-countdown').style.display = '';
+    document.getElementById('haata-countdown').textContent =
+      `⏳ ${daysLeft > 0 ? daysLeft + ' days ' : ''}${hrsRem} hours to go — Every Sunday 6 AM–10 PM`;
+    document.getElementById('haata-btn').textContent = 'Explore Vendors →';
+  }
+
+  // Also update Buy/Sell haata tab if visible
+  const haataInBuySell = document.querySelector('#bs-haata .live-dot');
+  if (haataInBuySell) {
+    haataInBuySell.textContent = isSunday ? '🔴 LIVE' : '📅 Next Sunday';
+    haataInBuySell.style.background = isSunday ? '#FF4444' : '#1B6B3A';
+  }
+}
+
+
 async function loadHomeData() {
   if (!currentUser) return;
   document.getElementById('h-nm').textContent = currentUser.name || 'User';
   document.getElementById('h-loc').textContent = currentUser.district + ', Odisha';
   document.getElementById('h-gr').textContent = currentLang === 'or' ? 'ନମସ୍କାର 🙏' : 'Welcome 🙏';
+  initHaataBanner(); // Show/hide Sunday Haata based on day
 
   let workers = [];
   if (isSupabaseReady()) {
@@ -1799,11 +1916,14 @@ function loadProfileData() {
   tags.forEach(t => { const span = document.createElement('span'); span.className = 'dtag'; span.textContent = t; sk.appendChild(span); });
 
   // Vendor plan section
-  if (u.type === 'vendor' || u.type === 'worker') {
+  if (u.type === 'vendor') {
+    // Only vendors see plan — workers are FREE, no plan
     document.getElementById('vendor-plan-section').classList.remove('hidden');
     document.getElementById('plan-name-display').textContent = u.plan || 'Local Mini';
     const pd = PLANS[u.plan] || PLANS['Local Mini'];
     document.getElementById('plan-detail-display').textContent = pd.price + ' • ' + pd.detail;
+  } else {
+    document.getElementById('vendor-plan-section').classList.add('hidden');
   }
 
   // QR Code — generate once
