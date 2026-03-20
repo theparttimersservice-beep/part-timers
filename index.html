@@ -881,13 +881,15 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     <div class="mi" onclick="openEditProfile()"><div class="mic">✏️</div><div class="mit"><h4>Edit Profile</h4><p>Update your info & skills</p></div><div class="mia">›</div></div>
     <div class="mi" onclick="goTab('orders')"><div class="mic">📋</div><div class="mit"><h4>My Bookings & Orders</h4><p>View all your activity</p></div><div class="mia">›</div></div>
     <div class="mi" onclick="openPlanModal()"><div class="mic">💎</div><div class="mit"><h4>Upgrade Plan</h4><p>Get more visibility & features</p></div><div class="mia">›</div></div>
+    <div class="mi" id="mi-post-listing" style="display:none" onclick="openVendorModal()"><div class="mic">➕</div><div class="mit"><h4>Post a Listing | ଲିଷ୍ଟିଂ ଯୋଡ଼ନ୍ତୁ</h4><p id="mi-listing-sub">Post items to sell or rent</p></div><div class="mia">›</div></div>
+    <div class="mi" id="mi-my-listings" style="display:none" onclick="goSvc('buysell')"><div class="mic">📦</div><div class="mit"><h4>My Listings | ମୋ ଲିଷ୍ଟିଂ</h4><p id="mi-mylist-sub">View & manage your listings</p></div><div class="mia">›</div></div>
   </div>
   <div class="mg">
     <div class="mg-title">Settings</div>
     <div class="mi" onclick="toggleLang()"><div class="mic">🌐</div><div class="mit"><h4>Language / ଭାଷା</h4><p id="lang-status">Odia (Primary)</p></div><div class="mia">›</div></div>
     <div class="mi" onclick="shareProfile()"><div class="mic">📤</div><div class="mit"><h4>Share Digital ID</h4><p>Share your work profile</p></div><div class="mia">›</div></div>
     <div class="mi" onclick="confirmLogout()" style="border:2px solid #FFE8E8"><div class="mic">🚪</div><div class="mit"><h4 style="color:#FF4444">Logout</h4><p>Sign out of your account</p></div><div class="mia">›</div></div>
-    <div class="mi" onclick="openModal('modal-tnc')"><div class="mic">📋</div><div class="mit"><h4>Terms & Conditions</h4><p>Indian law ke anusar niyam</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="openModal('modal-tnc')"><div class="mic">📋</div><div class="mit"><h4>Terms & Conditions</h4><p>As per Indian law | ଭାରତୀୟ ଆଇନ ଅନୁସାରେ</p></div><div class="mia">›</div></div>
   </div>
   <div style="height:16px"></div>
 </div><!-- /profile -->
@@ -1188,7 +1190,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
 
       <div style="border-radius:10px;padding:12px;margin-bottom:12px;border:1px solid var(--border)">
         <div style="font-weight:800;font-size:.85rem;margin-bottom:4px">8. Governing Law</div>
-        <p>Yeh terms Indian law ke anusar govern hoti hain — specifically:<br>
+        <p>These terms are governed by Indian law — specifically:<br>
         • Information Technology Act, 2000<br>
         • Consumer Protection Act, 2019<br>
         • MSME Development Act, 2006<br>
@@ -1409,7 +1411,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     <!-- ADD-ON ROLES SECTION -->
     <div style="background:#E8F4FD;border-radius:12px;padding:14px;margin-bottom:12px">
       <div style="font-size:.82rem;font-weight:800;color:var(--sky);margin-bottom:8px">➕ Add-on Roles <span style="font-weight:400;font-size:.72rem;color:var(--muted)">/ ଅତିରିକ୍ତ ଭୂମିକା</span></div>
-      <div style="font-size:.75rem;color:var(--muted);margin-bottom:10px">Primary role ke alawa aur kya karte ho?</div>
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:10px">What else do you do? | ଆପଣ ଆଉ କ'ଣ କରନ୍ତି?</div>
       <div id="addon-roles-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:7px"></div>
     </div>
     <div class="fg"><label>ବ୍ୟକ୍ତିଗତ ବିବରଣ <span>/ Bio (optional)</span></label><textarea id="ep-bio" placeholder="Tell something about yourself..."></textarea></div>
@@ -2108,6 +2110,19 @@ function loadProfileData() {
   document.getElementById('p-name').textContent = u.name;
   document.getElementById('p-type').textContent = u.type.charAt(0).toUpperCase() + u.type.slice(1);
   document.getElementById('p-loc').textContent = '📍 ' + u.village + ', ' + u.district;
+
+  // Show vendor-specific menu items
+  const isVendor = u.type === 'vendor' || (u.addon_roles||[]).includes('vendor');
+  const postListingBtn = document.getElementById('mi-post-listing');
+  const myListingsBtn  = document.getElementById('mi-my-listings');
+  if (postListingBtn) postListingBtn.style.display = isVendor ? '' : 'none';
+  if (myListingsBtn)  myListingsBtn.style.display  = isVendor ? '' : 'none';
+  if (isVendor) {
+    const cfg = getPlansConfig();
+    const plan = cfg[u.plan] || cfg['Local Mini'];
+    const sub = document.getElementById('mi-listing-sub');
+    if (sub) sub.textContent = `Max ${plan.items} items • ${plan.km >= 999 ? 'Full Odisha' : plan.km + 'km reach'}`;
+  }
 
   // Show avatar if available
   const avatar = document.getElementById('p-avatar');
@@ -2950,10 +2965,10 @@ function copyUPI() {
 // DUAL ROLE SYSTEM
 // ============================================================
 const ALL_ROLES = [
-  { id:'worker',   label:'👷 Worker/Helper',    desc:'Kaam karta/karti hoon' },
+  { id:'worker',   label:'👷 Worker/Helper',    desc:'I provide labour services' },
   { id:'vendor',   label:'🏪 Vendor/Seller',    desc:'Saman bechta/bechti hoon' },
-  { id:'vehicle',  label:'🚜 Vehicle Owner',    desc:'Gaadi/tractor hai' },
-  { id:'customer', label:'👤 Customer',         desc:'Service leta/leti hoon' },
+  { id:'vehicle',  label:'🚜 Vehicle Owner',    desc:'I own a vehicle/tractor' },
+  { id:'customer', label:'👤 Customer',         desc:'I book services' },
 ];
 
 function renderAddonRoles() {
@@ -3498,79 +3513,71 @@ function searchVehicles() { showToast('🔍 Searching vehicles near you...'); }
 // ============================================================
 function toggleLang() {
   currentLang = currentLang === 'or' ? 'en' : 'or';
-  const t = TRANSLATIONS[currentLang];
   const isOdia = currentLang === 'or';
+  lsSet('pt_lang', currentLang);
 
-  // All lang toggle buttons
-  ['alb','lang-btn'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = isOdia ? 'Switch to English' : 'ଓଡ଼ିଆ ଭାଷା';
+  // 1. Toggle buttons
+  document.querySelectorAll('#lang-btn, #alb').forEach(el => {
+    el.textContent = isOdia ? 'Switch to English' : 'ଓଡ଼ିଆ ଭାଷା';
   });
 
-  // Language status in profile
+  // 2. Language status in profile
   const ls = document.getElementById('lang-status');
   if (ls) ls.textContent = isOdia ? 'Odia (Primary)' : 'English Mode';
 
-  // Search box
-  ['srch'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.placeholder = t.search;
+  // 3. Search placeholder
+  document.querySelectorAll('#srch').forEach(el => {
+    el.placeholder = isOdia ? 'ସେବା ଖୋଜନ୍ତୁ | Search...' : 'Search services...';
   });
 
-  // Greeting
+  // 4. Greeting
   const hgr = document.getElementById('h-gr');
-  if (hgr) hgr.textContent = t.greeting;
+  if (hgr) hgr.textContent = isOdia ? 'ନମସ୍କାର 🙏' : 'Welcome 🙏';
 
-  // Nav bar labels
-  const navMap = {
-    'nav-home':    isOdia ? 'ହୋମ'        : 'Home',
-    'nav-orders':  isOdia ? 'ଅର୍ଡ଼ର'     : 'Orders',
-    'nav-notif':   isOdia ? 'ସୂଚନା'      : 'Alerts',
-    'nav-profile': isOdia ? 'ପ୍ରୋଫାଇଲ' : 'Profile',
+  // 5. Nav bar labels
+  const navLabels = {
+    'nav-home':    ['.lb', isOdia ? 'ହୋମ'        : 'Home'],
+    'nav-orders':  ['.lb', isOdia ? 'ଅର୍ଡ଼ର'     : 'Orders'],
+    'nav-notif':   ['.lb', isOdia ? 'ସୂଚନା'      : 'Alerts'],
+    'nav-profile': ['.lb', isOdia ? 'ପ୍ରୋଫାଇଲ' : 'Profile'],
   };
-  Object.entries(navMap).forEach(([id, text]) => {
-    const el = document.querySelector('#' + id + ' .lb');
+  Object.entries(navLabels).forEach(([id, [sel, text]]) => {
+    const el = document.querySelector('#' + id + ' ' + sel);
     if (el) el.textContent = text;
   });
 
-  // Book/Order buttons across service pages
-  document.querySelectorAll('.bb').forEach(btn => {
-    if (btn.textContent.includes('Book') || btn.textContent.includes('ବୁକ')) {
-      btn.textContent = isOdia ? '📅 ବୁକ' : '📅 Book Now';
-    }
-  });
-
-  // Home section titles
-  const secTitleMap = {
-    'ନିକଟ କର୍ମୀ': isOdia ? 'ନିକଟ କର୍ମୀ' : 'Nearby Workers',
-    'ସେବା ବର୍ଗ':  isOdia ? 'ସେବା ବର୍ଗ'  : 'Service Categories',
-    'ଜୋରଦାର ଅଫର': isOdia ? 'ଜୋରଦାର ଅଫର': 'Hot Deals',
-  };
-
-  // Category names in home
-  if (!isOdia) {
-    document.querySelectorAll('.cn').forEach(el => {
-      const orText = el.textContent;
-      const map = {
-        'Crop Farming':'Crop Farming','Fish & Aqua':'Fish & Aqua','Poultry':'Poultry',
-        'Buy/Sell/Rent':'Buy/Sell/Rent','Transport':'Transport','Food Order':'Food Order',
-        'Home Services':'Home Services','Photo/Video':'Photo/Video','Tent & Events':'Tent & Events',
-        'Pandit':'Pandit','Doctor':'Doctor','Tuition':'Tuition'
-      };
+  // 6. Profile menu labels
+  const profileMenuMap = [
+    ['Edit Profile',        'ପ୍ରୋଫାଇଲ ସଂପାଦନ | Edit Profile'],
+    ['My Bookings & Orders','ମୋ ବୁକିଂ | My Bookings & Orders'],
+    ['Upgrade Plan',        'ଯୋଜନା ଅପଗ୍ରେଡ | Upgrade Plan'],
+    ['Share Digital ID',    'ଡିଜିଟଲ ଆଇଡ ଶେୟାର | Share Digital ID'],
+    ['Terms & Conditions',  'ନିୟମ ଓ ସର୍ତ | Terms & Conditions'],
+  ];
+  // Swap between Odia-first and English-first
+  document.querySelectorAll('.mit h4').forEach(h4 => {
+    const txt = h4.textContent;
+    profileMenuMap.forEach(([en, or]) => {
+      if (isOdia && txt === en) h4.textContent = or;
+      else if (!isOdia && txt === or) h4.textContent = en;
     });
-  }
-
-  // Profile menu items
-  const profileLang = {
-    'ep-save': isOdia ? '✅ ସେଭ | Save Changes' : '✅ Save Changes',
-  };
-  Object.entries(profileLang).forEach(([id, text]) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text;
   });
 
-  lsSet('pt_lang', currentLang);
-  showToast(isOdia ? 'ଓଡ଼ିଆ ଭାଷା ସକ୍ରିୟ' : 'English mode active');
+  // 7. Page section titles visible on screen
+  const secMap = {
+    'ସେବା ବର୍ଗ':   isOdia ? 'ସେବା ବର୍ଗ'   : 'Service Categories',
+    'Service Categories': isOdia ? 'ସେବା ବର୍ଗ' : 'Service Categories',
+    'ନିକଣ କର୍ମୀ':  isOdia ? 'ନିକଟ କର୍ମୀ'  : 'Nearby Workers',
+    'Nearby Workers':    isOdia ? 'ନିକଟ କର୍ମୀ' : 'Nearby Workers',
+    'ଜୋରଦାର ଅଫର': isOdia ? 'ଜୋରଦାର ଅଫର' : 'Hot Deals Near You',
+    'Hot Deals Near You': isOdia ? 'ଜୋରଦାର ଅଫର' : 'Hot Deals Near You',
+  };
+  document.querySelectorAll('.sec-t').forEach(el => {
+    const key = el.childNodes[0]?.textContent?.trim();
+    if (secMap[key]) el.childNodes[0].textContent = secMap[key];
+  });
+
+  showToast(isOdia ? '🌐 ଓଡ଼ିଆ ଭାଷା ସକ୍ରିୟ' : '🌐 English mode active');
 }
 
 // ============================================================
