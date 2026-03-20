@@ -559,6 +559,10 @@ tr:hover td{background:rgba(255,255,255,.02)}
 let ADMIN_USER = localStorage.getItem('pt_admin_user') || 'admin';
 let ADMIN_PASS = localStorage.getItem('pt_admin_pass') || 'admin@parttimers123';
 
+// Pre-configured Supabase — already set
+if (!localStorage.getItem('pt_sb_url')) localStorage.setItem('pt_sb_url', 'https://mqodfbrqdsmotpyjwxtp.supabase.co');
+if (!localStorage.getItem('pt_sb_key')) localStorage.setItem('pt_sb_key', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xb2RmYnJxZHNtb3RweWp3eHRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NzAxNTAsImV4cCI6MjA4OTU0NjE1MH0.yPzs4VF-800xOkKmYzWRgkNlKbM9QnzH2GDMtOhl6cY');
+
 // ============================================================
 // SUPABASE INIT
 // ============================================================
