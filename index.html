@@ -1,0 +1,2206 @@
+<!DOCTYPE html>
+<html lang="or">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>The Part-Timer's | ଦ ପାର୍ଟ-ଟାଇମର୍ସ</title>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Oriya&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --sf:#FF6B00;--sfl:#FF8C3A;--sfp:#FFF4EC;
+  --gn:#1B6B3A;--gnl:#2D9B56;--gnp:#EDFAF2;
+  --gd:#D4A017;--gdl:#F0C842;
+  --sk:#1A6FA8;--skl:#3B9DD6;
+  --bg:#FAFAF7;--card:#fff;--tx:#1A1A1A;--mu:#6B6B6B;
+  --br:#E8E4DC;--sh:0 4px 20px rgba(0,0,0,.08);--sh2:0 12px 40px rgba(0,0,0,.15);
+  --r:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+#loader{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#FF6B00,#D4A017,#1B6B3A);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s}
+#loader h1{font-family:'Tiro Oriya',serif;font-size:2.4rem;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.3);animation:pu 1.5s infinite}
+#loader p{color:rgba(255,255,255,.8);margin-top:8px;font-size:.9rem}
+.lbar{width:200px;height:4px;background:rgba(255,255,255,.3);border-radius:2px;margin-top:20px;overflow:hidden}
+.lfill{height:100%;background:#fff;border-radius:2px;animation:ld 2.5s ease forwards}
+@keyframes ld{from{width:0}to{width:100%}}
+@keyframes pu{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes bn{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+
+.pg{display:none;min-height:100vh}.pg.on{display:block}
+.auth-wrap{min-height:100vh;background:linear-gradient(160deg,#FF6B00 0%,#D4A017 45%,#1B6B3A 100%);display:flex;align-items:center;justify-content:center;padding:20px;position:relative}
+.auth-card{background:#fff;border-radius:24px;padding:32px 28px;width:100%;max-width:400px;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.logo-w{text-align:center;margin-bottom:22px}
+.logo-ic{width:64px;height:64px;background:linear-gradient(135deg,#FF6B00,#D4A017);border-radius:18px;display:inline-flex;align-items:center;justify-content:center;font-size:1.9rem;margin-bottom:10px;box-shadow:0 8px 24px rgba(255,107,0,.35)}
+.logo-w h2{font-family:'Tiro Oriya',serif;font-size:1.4rem;color:var(--sf)}
+.logo-w p{color:var(--mu);font-size:.8rem;margin-top:3px}
+.fg{margin-bottom:13px}
+.fg label{display:block;font-size:.8rem;font-weight:700;color:var(--tx);margin-bottom:5px}
+.fg label span{color:var(--mu);font-weight:400;font-size:.73rem}
+.fg input,.fg select,.fg textarea{width:100%;padding:11px 13px;border:2px solid var(--br);border-radius:10px;font-family:'Baloo 2',sans-serif;font-size:.9rem;color:var(--tx);transition:border-color .2s;background:#fff}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--sf)}
+.fg textarea{resize:vertical;min-height:68px}
+.photo-upload{border:2px dashed var(--br);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:13px}
+.photo-upload:hover{border-color:var(--sf);background:var(--sfp)}
+.photo-upload input{display:none}
+.photo-upload .pu-icon{font-size:2rem;margin-bottom:6px}
+.photo-upload p{font-size:.8rem;color:var(--mu)}
+.photo-upload img{width:80px;height:80px;border-radius:12px;object-fit:cover;margin:0 auto 6px}
+.ut-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
+.ut-card{border:2px solid var(--br);border-radius:12px;padding:13px 8px;text-align:center;cursor:pointer;transition:all .2s}
+.ut-card:hover,.ut-card.sel{border-color:var(--sf);background:var(--sfp)}
+.ut-card .ui{font-size:1.6rem;margin-bottom:5px}
+.ut-card .un{font-weight:700;font-size:.83rem}
+.ut-card .us{font-size:.7rem;color:var(--mu);margin-top:2px}
+.btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:12px 20px;border:none;border-radius:12px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;transition:all .2s;width:100%;text-decoration:none}
+.btn-p{background:linear-gradient(135deg,var(--sf),var(--sfl));color:#fff;box-shadow:0 4px 16px rgba(255,107,0,.35)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,107,0,.4)}
+.btn-p:disabled{opacity:.6;transform:none;cursor:not-allowed}
+.btn-g{background:var(--gn);color:#fff}
+.btn-o{background:transparent;border:2px solid var(--br);color:var(--tx)}
+.btn-sky{background:var(--sk);color:#fff}
+
+/* OTP */
+.otp-wrap{display:flex;gap:8px;margin:14px 0}
+.otp-input{flex:1;padding:14px 8px;border:2px solid var(--br);border-radius:10px;font-family:'Baloo 2',sans-serif;font-size:1.3rem;font-weight:800;text-align:center;color:var(--tx);transition:border-color .2s}
+.otp-input:focus{outline:none;border-color:var(--sf)}
+.phone-row{display:flex;gap:8px}
+.cc-select{width:80px;padding:11px 8px;border:2px solid var(--br);border-radius:10px;font-family:'Baloo 2',sans-serif;font-size:.88rem;color:var(--tx);background:#fff}
+.cc-select:focus{outline:none;border-color:var(--sf)}
+
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative}
+.tbar{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid var(--br);padding:11px 14px;display:flex;align-items:center;gap:11px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.tbar .bk{width:33px;height:33px;border-radius:9px;border:none;background:var(--bg);cursor:pointer;font-size:1.05rem;display:flex;align-items:center;justify-content:center}
+.tbar h3{font-size:.95rem;font-weight:700;flex:1}
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;z-index:100;background:#fff;border-top:1px solid var(--br);display:flex;padding:6px 0 10px;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:5px 3px;transition:all .2s}
+.ni .ic{font-size:1.3rem;line-height:1}
+.ni .lb{font-size:.61rem;font-weight:700;color:var(--mu)}
+.ni.on .lb{color:var(--sf)}.ni.on .ic{transform:scale(1.15)}
+.ndot{width:7px;height:7px;background:#FF4444;border-radius:50%;position:absolute;top:-2px;right:-2px}
+.ni-wrap{position:relative;display:inline-block}
+.ca{padding-bottom:80px}
+
+.hero{background:linear-gradient(135deg,#FF6B00 0%,#D4A017 55%,#1B6B3A 100%);padding:20px 14px 26px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='0.04'%3E%3Cpath d='M20 20h20v20H20zM0 0h20v20H0z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.hero-gr{color:rgba(255,255,255,.8);font-size:.85rem}
+.hero-nm{color:#fff;font-size:1.35rem;font-weight:800}
+.hero-r2{display:flex;align-items:center;gap:7px;margin-bottom:13px;flex-wrap:wrap}
+.loc-chip{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 10px;font-size:.7rem;font-weight:600;color:#fff;cursor:pointer}
+.lang-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:4px 11px;border-radius:20px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.73rem;cursor:pointer}
+.hsearch{background:#fff;border-radius:12px;display:flex;align-items:center;padding:9px 12px;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.hsearch input{flex:1;border:none;outline:none;font-family:'Baloo 2',sans-serif;font-size:.86rem;color:var(--tx);background:transparent}
+
+.sec{padding:16px 14px}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sec-t{font-size:.97rem;font-weight:800}
+.sec-t span{font-size:.73rem;font-weight:400;color:var(--mu);display:block}
+.see-all{font-size:.76rem;font-weight:700;color:var(--sf);cursor:pointer;border:none;background:none;font-family:'Baloo 2',sans-serif}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cc{background:#fff;border-radius:12px;padding:10px 5px;text-align:center;cursor:pointer;transition:all .2s;border:2px solid transparent;box-shadow:var(--sh)}
+.cc:hover,.cc:active{border-color:var(--sf);transform:translateY(-3px);box-shadow:var(--sh2)}
+.cc .ci{font-size:1.65rem;margin-bottom:3px}
+.cc .cn{font-size:.61rem;font-weight:700;line-height:1.2}
+.cc .cor{font-size:.57rem;color:var(--mu);margin-top:2px;font-family:'Tiro Oriya',serif}
+.hs{display:flex;gap:10px;overflow-x:auto;padding-bottom:5px;scrollbar-width:none}
+.hs::-webkit-scrollbar{display:none}
+
+/* Worker Card */
+.wc{min-width:128px;background:#fff;border-radius:13px;padding:12px 9px;box-shadow:var(--sh);cursor:pointer;transition:all .2s;flex-shrink:0;text-align:center;position:relative}
+.wc:hover{transform:translateY(-3px)}
+.wav{width:56px;height:56px;border-radius:14px;overflow:hidden;margin:0 auto 7px;border:2px solid var(--sfp)}
+.wav img{width:100%;height:100%;object-fit:cover}
+.wav-ph{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.7rem;margin:0 auto 7px;background:linear-gradient(135deg,var(--sfp),#fff4ec);border:2px solid rgba(255,107,0,.1)}
+.wc h4{font-size:.8rem;font-weight:700}
+.wc .wsk{font-size:.67rem;color:var(--mu)}
+.wc .wrt{font-size:.7rem;color:var(--gd);font-weight:600;margin-top:3px}
+.wc .wpr{font-size:.7rem;color:var(--gn);font-weight:700;margin-top:2px}
+.avail-dot{width:9px;height:9px;border-radius:50%;position:absolute;top:9px;right:9px;border:2px solid #fff}
+.av-yes{background:#2D9B56}.av-no{background:#aaa}
+
+/* Service / Listing */
+.svc{min-width:152px;background:#fff;border-radius:13px;overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:all .2s;flex-shrink:0}
+.svc:hover{transform:translateY(-3px);box-shadow:var(--sh2)}
+.svc-img{width:100%;height:82px;overflow:hidden;position:relative}
+.svc-img img{width:100%;height:100%;object-fit:cover}
+.svc-img .svc-emoji{width:100%;height:82px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;background:var(--sfp)}
+.svc-bd{padding:8px 10px}
+.svc-bd h4{font-size:.8rem;font-weight:700}
+.svc-bd p{font-size:.66rem;color:var(--mu);margin-top:1px}
+.bdg{display:inline-block;padding:2px 7px;border-radius:20px;font-size:.61rem;font-weight:700;margin-top:4px}
+.bdg-s{background:var(--sfp);color:var(--sf)}.bdg-g{background:var(--gnp);color:var(--gn)}.bdg-go{background:#fff9e6;color:var(--gd)}.bdg-sky{background:#e8f4fd;color:var(--sk)}
+
+/* Listing Card */
+.lc{background:#fff;border-radius:14px;margin:0 14px 10px;padding:14px;box-shadow:var(--sh);cursor:pointer;transition:all .2s;border:2px solid transparent}
+.lc:hover{border-color:var(--sf);transform:translateY(-2px)}
+.lc-row{display:flex;gap:11px;align-items:flex-start}
+.lc-img{width:64px;height:64px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--sfp);display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.lc-img img{width:100%;height:100%;object-fit:cover}
+.lc-info h4{font-size:.88rem;font-weight:700}
+.lc-sub{font-size:.71rem;color:var(--mu);margin-top:2px}
+.lc-meta{display:flex;align-items:center;gap:7px;margin-top:6px;flex-wrap:wrap}
+.lc-price{font-weight:800;color:var(--gn);font-size:.88rem}
+.lc-rt{font-size:.7rem;color:var(--gd);font-weight:600}
+.lc-actions{display:flex;gap:7px;margin-top:10px}
+.bb{background:var(--sf);color:#fff;padding:8px 0;border:none;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.77rem;cursor:pointer;flex:1;transition:background .2s}
+.bb:hover{background:var(--sfl)}
+.bc{background:var(--gnp);color:var(--gn);padding:8px 12px;border:none;border-radius:8px;font-weight:700;font-size:.8rem;cursor:pointer;font-family:'Baloo 2',sans-serif}
+.bw{background:#25D366;color:#fff;padding:8px 12px;border:none;border-radius:8px;font-weight:700;font-size:.8rem;cursor:pointer;font-family:'Baloo 2',sans-serif}
+
+/* Vehicle */
+.vc{background:#fff;border-radius:13px;margin:0 14px 10px;padding:12px;box-shadow:var(--sh);cursor:pointer;border:2px solid transparent;transition:all .2s}
+.vc:hover{border-color:var(--sk)}
+.vc-row{display:flex;gap:10px;align-items:center}
+.vc-icon{font-size:2rem}
+.vc-info{flex:1}
+.vc-info h4{font-size:.86rem;font-weight:700}
+.vc-sub{font-size:.7rem;color:var(--mu)}
+.vc-pr{text-align:right}
+.vc-price{font-size:.92rem;font-weight:800;color:var(--sk)}
+.vc-eta{font-size:.66rem;color:var(--gn);font-weight:600}
+
+/* Food */
+.fc{background:#fff;border-radius:13px;margin:0 14px 10px;padding:12px;box-shadow:var(--sh);cursor:pointer;border:2px solid transparent;transition:all .2s}
+.fc-row{display:flex;gap:10px}
+.fc-img{width:74px;height:74px;border-radius:10px;overflow:hidden;background:var(--sfp);font-size:2.3rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fc-img img{width:100%;height:100%;object-fit:cover}
+.fc-info h4{font-size:.86rem;font-weight:700}
+.fc-sub{font-size:.7rem;color:var(--mu)}
+.fc-price{font-size:.92rem;font-weight:800;color:var(--gn);margin-top:3px}
+.fc-add{background:var(--sf);color:#fff;border:none;border-radius:8px;padding:6px 13px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;margin-top:6px}
+
+/* Rent */
+.rc{background:#fff;border-radius:13px;margin:0 14px 10px;padding:13px;box-shadow:var(--sh);cursor:pointer;border:2px solid transparent;transition:all .2s}
+.rc:hover{border-color:var(--gd)}
+.rc-row{display:flex;gap:10px;align-items:flex-start}
+.rc-img{width:66px;height:66px;border-radius:10px;overflow:hidden;background:var(--gnp);font-size:1.8rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rc-img img{width:100%;height:100%;object-fit:cover}
+.rc-info h4{font-size:.86rem;font-weight:700}
+.rc-sub{font-size:.7rem;color:var(--mu)}
+.rc-pr{display:flex;gap:6px;margin-top:4px;align-items:baseline}
+.rc-price{font-size:.86rem;font-weight:800;color:#8B5E3C}
+.rc-unit{font-size:.67rem;color:var(--mu)}
+
+/* Banners */
+.hbanner{background:linear-gradient(135deg,var(--gn),var(--gnl));border-radius:14px;padding:16px;margin:0 14px}
+.hbanner h3{color:#fff;font-size:1rem;font-weight:800}
+.hbanner p{color:rgba(255,255,255,.8);font-size:.76rem;margin-top:3px}
+.live-dot{display:inline-block;background:#FF4444;color:#fff;padding:2px 8px;border-radius:20px;font-size:.63rem;font-weight:700;margin-bottom:6px;animation:bl 1.5s infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.5}}
+.pbanner{background:linear-gradient(135deg,var(--sk),var(--skl));border-radius:14px;padding:14px;display:flex;align-items:center;gap:10px;margin:0 14px}
+.pbanner h4{color:#fff;font-size:.92rem;font-weight:800}
+.pbanner p{color:rgba(255,255,255,.8);font-size:.73rem;margin-top:2px}
+
+/* Modal */
+.modal{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+.modal.on{display:flex}
+.msheet{background:#fff;width:100%;max-width:430px;border-radius:22px 22px 0 0;padding:18px;max-height:90vh;overflow-y:auto;animation:su .3s ease}
+.mhandle{width:36px;height:4px;background:var(--br);border-radius:2px;margin:0 auto 16px}
+.mt{font-size:1rem;font-weight:800;margin-bottom:4px}
+.msub{font-size:.8rem;color:var(--mu);margin-bottom:16px}
+
+/* Order/Track Status */
+.status-timeline{padding:16px 0}
+.st-item{display:flex;gap:12px;margin-bottom:16px;align-items:flex-start}
+.st-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;border:3px solid var(--br)}
+.st-dot.done{background:var(--gn);border-color:var(--gn);color:#fff}
+.st-dot.active{background:var(--sf);border-color:var(--sf);color:#fff;animation:pu 1.5s infinite}
+.st-dot.pending{background:#fff}
+.st-line{width:3px;background:var(--br);flex-shrink:0;margin:4px 0 4px 12px;align-self:stretch;border-radius:2px}
+.st-line.done{background:var(--gn)}
+.st-info h4{font-size:.85rem;font-weight:700}
+.st-info p{font-size:.72rem;color:var(--mu);margin-top:2px}
+.st-time{font-size:.67rem;color:var(--sf);margin-top:3px;font-weight:600}
+.wa-track-btn{background:#25D366;color:#fff;border:none;border-radius:10px;padding:12px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.87rem;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px}
+
+/* Plan */
+.plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.pc{border:2px solid var(--br);border-radius:12px;padding:12px 10px;cursor:pointer;transition:all .2s;position:relative}
+.pc.sel,.pc:hover{border-color:var(--sf);background:var(--sfp)}
+.pc-name{font-weight:800;font-size:.8rem}
+.pc-price{font-size:1rem;font-weight:800;color:var(--sf);margin-top:3px}
+.pc-price span{font-size:.65rem;font-weight:400;color:var(--mu)}
+.pc-detail{font-size:.65rem;color:var(--mu);margin-top:3px}
+.pop-tag{position:absolute;top:-8px;right:7px;background:var(--sf);color:#fff;padding:2px 7px;border-radius:20px;font-size:.58rem;font-weight:700}
+
+/* Profile */
+.prof-hero{background:linear-gradient(135deg,#FF6B00,#D4A017);padding:26px 16px 46px}
+.pav-wrap{display:flex;align-items:center;gap:13px}
+.pav{width:74px;height:74px;border-radius:18px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.2);border:3px solid rgba(255,255,255,.5)}
+.pav img{width:100%;height:100%;object-fit:cover}
+.pav-ph{width:74px;height:74px;border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:2.2rem;box-shadow:0 8px 24px rgba(0,0,0,.2);border:3px solid rgba(255,255,255,.5)}
+.prof-info h2{color:#fff;font-size:1.2rem;font-weight:800}
+.prof-info p{color:rgba(255,255,255,.85);font-size:.8rem;margin-top:2px}
+.pbrow{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.pb{background:rgba(255,255,255,.2);color:#fff;padding:3px 9px;border-radius:20px;font-size:.65rem;font-weight:600;border:1px solid rgba(255,255,255,.3)}
+.did-card{margin:-20px 14px 0;background:#fff;border-radius:17px;box-shadow:0 12px 40px rgba(0,0,0,.15);overflow:hidden}
+.did-hd{background:linear-gradient(90deg,#FF6B00,#D4A017);padding:9px 14px;display:flex;align-items:center;justify-content:space-between}
+.did-hd span{color:#fff;font-size:.68rem;font-weight:700;letter-spacing:1px}
+.did-body{padding:16px}
+.did-row{display:flex;align-items:flex-start;gap:10px}
+.did-info{flex:1}
+.did-id{font-size:.65rem;color:var(--mu);margin-bottom:3px;font-family:monospace}
+.did-info h3{font-size:1rem;font-weight:800}
+.did-role{font-size:.75rem;color:var(--sf);font-weight:600;margin-top:2px}
+.did-loc{font-size:.7rem;color:var(--mu);margin-top:3px}
+#qrcode canvas,#qrcode img{width:68px!important;height:68px!important}
+.did-skills{display:flex;flex-wrap:wrap;gap:5px;margin-top:11px}
+.dtag{background:var(--sfp);color:var(--sf);border:1px solid rgba(255,107,0,.2);padding:3px 8px;border-radius:20px;font-size:.65rem;font-weight:600}
+.did-ft{border-top:1px dashed var(--br);padding:10px 16px;display:flex;justify-content:space-between;align-items:center}
+.did-ft .ver{color:var(--gn);font-size:.7rem;font-weight:700}
+.did-ft .rt{color:var(--gd);font-size:.75rem;font-weight:700}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:13px 14px}
+.sb{background:#fff;border-radius:12px;padding:12px 8px;text-align:center;box-shadow:var(--sh)}
+.sb .sn{font-size:1.3rem;font-weight:800;color:var(--sf)}
+.sb .sl{font-size:.61rem;color:var(--mu);margin-top:2px;font-weight:600}
+.mg{padding:0 14px 13px}
+.mg-t{font-size:.65rem;font-weight:700;color:var(--mu);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.mi{display:flex;align-items:center;gap:12px;background:#fff;border-radius:10px;padding:12px 13px;margin-bottom:7px;cursor:pointer;transition:all .2s;border:2px solid transparent}
+.mi:hover{border-color:var(--sf)}
+.mi .mic{font-size:1.2rem}
+.mi .mit h4{font-size:.85rem;font-weight:700}
+.mi .mit p{font-size:.7rem;color:var(--mu);margin-top:1px}
+.mi .mia{margin-left:auto;color:var(--mu);font-size:.85rem}
+
+.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 14px 5px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{padding:6px 12px;border-radius:20px;border:2px solid var(--br);background:#fff;font-size:.77rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:'Baloo 2',sans-serif}
+.chip.on{background:var(--sf);border-color:var(--sf);color:#fff}
+.chip:hover{border-color:var(--sf)}
+.tabrow{display:flex;border-bottom:2px solid var(--br);padding:0 14px}
+.ti{padding:10px 13px;font-size:.8rem;font-weight:700;color:var(--mu);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.ti.on{color:var(--sf);border-bottom-color:var(--sf)}
+
+/* Toast */
+.toast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 16px;border-radius:10px;font-size:.8rem;font-weight:600;z-index:9999;display:none;box-shadow:0 8px 24px rgba(0,0,0,.25);white-space:nowrap;animation:su .3s ease}
+
+/* Edit overlay */
+.eov{position:fixed;inset:0;z-index:600;background:#fff;display:none;flex-direction:column;overflow-y:auto}
+.eov.on{display:flex}
+.eov-hd{position:sticky;top:0;background:#fff;padding:13px 14px;border-bottom:1px solid var(--br);display:flex;align-items:center;gap:10px;z-index:10}
+.eov-hd h3{font-size:.95rem;font-weight:800;flex:1}
+.eov-body{padding:16px;flex:1}
+
+/* Order item */
+.order-item{background:#fff;border-radius:13px;margin:0 14px 9px;padding:13px;box-shadow:var(--sh)}
+.order-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.order-hd h4{font-size:.86rem;font-weight:700}
+.sc{padding:3px 8px;border-radius:20px;font-size:.63rem;font-weight:700}
+.sc-p{background:var(--sfp);color:var(--sf)}
+.sc-c{background:#e8f4fd;color:var(--sk)}
+.sc-d{background:var(--gnp);color:var(--gn)}
+.sc-x{background:#FFE8E8;color:#FF4444}
+.order-det{font-size:.73rem;color:var(--mu)}
+
+/* Qty */
+.qty-row{display:flex;align-items:center;gap:13px;margin:12px 0}
+.qty-btn{width:32px;height:32px;border-radius:8px;border:2px solid var(--br);background:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700}
+.qty-num{font-size:1.15rem;font-weight:800;min-width:26px;text-align:center}
+.total-row{background:var(--sfp);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin:12px 0}
+.total-row span{font-weight:700;color:var(--tx)}
+.total-row strong{font-size:1.05rem;color:var(--sf);font-weight:800}
+
+/* Notif */
+.notif-item{background:#fff;border-radius:12px;margin:0 14px 8px;padding:13px;box-shadow:var(--sh);display:flex;gap:11px;align-items:flex-start}
+.notif-ic{font-size:1.4rem;flex-shrink:0}
+.notif-inf h4{font-size:.84rem;font-weight:700}
+.notif-inf p{font-size:.73rem;color:var(--mu);margin-top:2px}
+.notif-inf .nt{font-size:.65rem;color:var(--mu);margin-top:4px}
+.ndot2{width:8px;height:8px;background:#FF4444;border-radius:50%;flex-shrink:0;margin-top:5px}
+
+.div8{height:8px;background:var(--bg)}
+.hidden{display:none!important}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}
+@media(min-width:431px){.app{box-shadow:0 0 60px rgba(0,0,0,.1)}.bnav{max-width:430px}}
+
+/* Realtime pulse */
+.realtime-badge{display:inline-flex;align-items:center;gap:5px;background:var(--gnp);color:var(--gn);padding:4px 10px;border-radius:20px;font-size:.68rem;font-weight:700;border:1px solid rgba(27,107,58,.2)}
+.realtime-badge .pulse{width:6px;height:6px;background:var(--gn);border-radius:50%;animation:bl 1.5s infinite}
+
+/* Vendor post listing image preview */
+.img-preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
+.img-prev{width:100%;aspect-ratio:1;border-radius:8px;object-fit:cover;border:2px solid var(--br)}
+
+/* Rating stars */
+.stars-row{display:flex;gap:6px;margin:10px 0}
+.star{font-size:1.6rem;cursor:pointer;transition:transform .15s;filter:grayscale(1);opacity:.5}
+.star.on{filter:none;opacity:1;transform:scale(1.15)}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <h1>🌾 ଦ ପାର୍ଟ-ଟାଇମର୍ସ</h1>
+  <p>Empowering Rural Odisha • Loading...</p>
+  <div class="lbar"><div class="lfill"></div></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ==================== CONFIG (USER FILLS ONCE) ==================== -->
+<script>
+// ══════════════════════════════════════════════
+// STEP 1: Replace these with your Supabase values
+// Get from: supabase.com → Project Settings → API
+// ══════════════════════════════════════════════
+const SUPA_URL = 'YOUR_SUPABASE_URL';
+const SUPA_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+// ══════════════════════════════════════════════
+// STEP 2: Your WhatsApp Business number
+// Format: 91XXXXXXXXXX (India code + number)
+// ══════════════════════════════════════════════
+const WA_NUMBER = '91XXXXXXXXXX';
+
+// ══════════════════════════════════════════════
+// App Config
+// ══════════════════════════════════════════════
+const APP_NAME = 'The Part-Timer\'s';
+const APP_VER  = '2.0.0';
+</script>
+
+<!-- ==================== AUTH ==================== -->
+<div id="auth-section">
+
+<!-- WELCOME -->
+<div id="pg-welcome" class="pg auth-wrap on">
+  <div style="max-width:400px;width:100%;margin:auto;padding:10px">
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="width:84px;height:84px;background:linear-gradient(135deg,#FF6B00,#D4A017);border-radius:22px;display:inline-flex;align-items:center;justify-content:center;font-size:2.6rem;margin-bottom:16px;box-shadow:0 12px 36px rgba(255,107,0,.4)">🌾</div>
+      <h1 style="font-family:'Tiro Oriya',serif;font-size:1.9rem;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.2)">ଦ ପାର୍ଟ-ଟାଇମର୍ସ</h1>
+      <p style="color:rgba(255,255,255,.85);margin-top:5px;font-size:.92rem">ଗ୍ରାମୀଣ ଭାରତ ଶକ୍ତି, ଗୋଟିଏ ଚାକିରି</p>
+      <p style="color:rgba(255,255,255,.65);margin-top:3px;font-size:.78rem">Empowering Rural India, One Job at a Time</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px">
+      <div onclick="showPg('pg-register')" style="background:#fff;border-radius:16px;padding:20px 13px;text-align:center;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.15);transition:all .2s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+        <div style="font-size:2.1rem;margin-bottom:6px">🆕</div>
+        <div style="font-weight:800;font-size:.87rem">ନୂତନ ଉପଯୋଗ</div>
+        <div style="font-size:.7rem;color:#888;margin-top:2px">New User</div>
+      </div>
+      <div onclick="showPg('pg-login')" style="background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);border-radius:16px;padding:20px 13px;text-align:center;cursor:pointer;transition:all .2s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+        <div style="font-size:2.1rem;margin-bottom:6px">🔑</div>
+        <div style="font-weight:800;font-size:.87rem;color:#fff">ଲଗ ଇନ୍</div>
+        <div style="font-size:.7rem;color:rgba(255,255,255,.7);margin-top:2px">Login</div>
+      </div>
+    </div>
+    <button onclick="toggleLang()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff;padding:8px 20px;border-radius:20px;font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.77rem;cursor:pointer;width:100%;margin-bottom:10px" id="lang-btn">🌐 Switch to English</button>
+    <button onclick="demoLogin()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);padding:8px 20px;border-radius:20px;font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.75rem;cursor:pointer;width:100%">🎯 Demo Mode (Try Without Login)</button>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div id="pg-register" class="pg auth-wrap" style="align-items:flex-start;padding-top:0">
+  <div style="width:100%;max-width:400px;margin:auto">
+    <div style="padding:16px 16px 0;display:flex;align-items:center;gap:10px">
+      <button onclick="showPg('pg-welcome')" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:1rem">←</button>
+      <h3 style="color:#fff;font-weight:800;font-size:.95rem">ଯୋଗ ଦିଅନ୍ତୁ | Register</h3>
+    </div>
+    <div class="auth-card" style="margin:13px">
+      <p style="font-size:.8rem;color:var(--mu);margin-bottom:13px">ଆପଣ କିଏ? | Who are you?</p>
+      <div class="ut-grid" id="ut-grid">
+        <div class="ut-card" onclick="selUT(this,'customer')"><div class="ui">👤</div><div class="un">ଗ୍ରାହକ</div><div class="us">Customer</div></div>
+        <div class="ut-card" onclick="selUT(this,'worker')"><div class="ui">👷</div><div class="un">କର୍ମୀ</div><div class="us">Worker/Helper</div></div>
+        <div class="ut-card" onclick="selUT(this,'vendor')"><div class="ui">🏪</div><div class="un">ବିକ୍ରେତା</div><div class="us">Vendor/Seller</div></div>
+        <div class="ut-card" onclick="selUT(this,'vehicle')"><div class="ui">🚜</div><div class="un">ଯାନ ମାଲିକ</div><div class="us">Vehicle Owner</div></div>
+      </div>
+      <div id="reg-form" class="hidden">
+        <!-- Profile Photo -->
+        <div class="photo-upload" id="photo-upload-area" onclick="document.getElementById('reg-photo').click()">
+          <input type="file" id="reg-photo" accept="image/*" onchange="previewPhoto(this,'reg-photo-preview','photo-upload-area')">
+          <div id="reg-photo-preview"><div class="pu-icon">📷</div><p>Profile Photo Upload<br><span style="font-size:.7rem;color:var(--mu)">Click to add photo (optional)</span></p></div>
+        </div>
+        <div class="fg"><label>ପୂରା ନାମ <span>/ Full Name</span></label><input id="r-name" type="text" placeholder="Your full name"></div>
+        <div class="fg"><label>ମୋବାଇଲ <span>/ Mobile Number</span></label>
+          <div class="phone-row">
+            <select class="cc-select"><option value="91">🇮🇳 +91</option></select>
+            <input id="r-phone" type="tel" placeholder="10-digit mobile" maxlength="10" style="flex:1">
+          </div>
+        </div>
+        <div class="fg"><label>ଜିଲ୍ଲା <span>/ District</span></label>
+          <select id="r-dist">
+            <option value="">ଜିଲ୍ଲା ଚୁଣନ୍ତୁ / Select District</option>
+            <option>Khurda</option><option>Cuttack</option><option>Puri</option><option>Ganjam</option>
+            <option>Balasore</option><option>Mayurbhanj</option><option>Kendrapara</option>
+            <option>Jagatsinghpur</option><option>Jajpur</option><option>Bhadrak</option>
+            <option>Nayagarh</option><option>Bargarh</option><option>Koraput</option>
+            <option>Malkangiri</option><option>Rayagada</option><option>Kandhamal</option>
+            <option>Sundargarh</option><option>Sambalpur</option><option>Angul</option>
+            <option>Dhenkanal</option><option>Bolangir</option><option>Kalahandi</option>
+            <option>Nuapada</option><option>Nabarangpur</option><option>Gajapati</option>
+            <option>Baudh</option><option>Sonepur</option><option>Deogarh</option>
+            <option>Jharsuguda</option><option>Keonjhar</option>
+          </select>
+        </div>
+        <div class="fg"><label>ଗ୍ରାମ <span>/ Village</span></label><input id="r-village" type="text" placeholder="Your village name"></div>
+        <!-- Worker Extra -->
+        <div id="wf" class="hidden">
+          <div class="fg"><label>ଦକ୍ଷତା <span>/ Primary Skill</span></label>
+            <select id="r-skill">
+              <option value="">Select skill</option>
+              <option>ଶସ୍ୟ ଚାଷ / Crop Farming</option><option>ମତ୍ସ୍ୟ ଚାଷ / Fish & Aqua</option>
+              <option>ମୁର୍ଗୀ ପାଳନ / Poultry</option><option>ନିର୍ମାଣ / Construction Mason</option>
+              <option>ଇଲେକ୍ଟ୍ରିସିଆନ / Electrician</option><option>ଜଳ ସଂଯୋଗ / Plumber</option>
+              <option>ଟ୍ରାକ୍ଟର / Tractor Driver</option><option>ଫଟୋ-ଭିଡ଼ିଓ / Photo-Video</option>
+              <option>ଶିକ୍ଷା / Tuition</option><option>ରନ୍ଧନ / Cooking</option>
+              <option>ଡ୍ରାଇଭର / Driver</option><option>ଜାଲ ତୈରି / Net Making</option>
+              <option>ଚିତ୍ରକ / Painter</option><option>ଅନ୍ୟ / Other</option>
+            </select>
+          </div>
+          <div class="fg"><label>ଦୈନିକ ମଜୁରି <span>/ Daily Rate (₹)</span></label><input id="r-rate" type="number" placeholder="e.g. 400"></div>
+          <div class="fg"><label>ଅଭିଜ୍ଞତା <span>/ Experience (years)</span></label><input id="r-exp" type="number" placeholder="e.g. 3"></div>
+        </div>
+        <!-- Vendor Extra -->
+        <div id="vdf" class="hidden">
+          <div class="fg"><label>ଦୋକାନ ନାମ <span>/ Shop Name</span></label><input id="r-shop" type="text" placeholder="Your business name"></div>
+          <div class="fg"><label>ବ୍ୟବସାୟ <span>/ Business Type</span></label>
+            <select id="r-biz"><option>ଖାଦ୍ୟ / Food</option><option>ଚାଷ ଉପକରଣ / Agri Tools</option><option>ମତ୍ସ୍ୟ / Fish</option><option>ମୁର୍ଗୀ / Poultry</option><option>ଔଷଧ / Pharmacy</option><option>ଷ୍ଟେଜ / Tent & Events</option><option>ଫଟୋ / Photo Studio</option><option>ଅନ୍ୟ / Other</option></select>
+          </div>
+        </div>
+        <!-- Vehicle Extra -->
+        <div id="vhf" class="hidden">
+          <div class="fg"><label>ଯାନ ପ୍ରକାର <span>/ Vehicle Type</span></label>
+            <select id="r-vtype"><option>ଟ୍ରାକ୍ଟର / Tractor</option><option>ଟେମ୍ପୋ / Tempo</option><option>ଅଟୋ / Auto Rickshaw</option><option>ଟ୍ରକ / Truck</option><option>ଇ-ରିକ୍ସା / E-Rickshaw</option><option>ଗାଡ଼ି / Car</option><option>ଜଳଯାନ / Boat</option><option>ମୋଟରସାଇକେଲ / Bike</option></select>
+          </div>
+          <div class="fg"><label>ଯାନ ନମ୍ବର <span>/ Vehicle Number</span></label><input id="r-vnum" type="text" placeholder="OD-XX-XXXX"></div>
+          <div class="fg"><label>ଭଡ଼ା <span>/ Rental Rate</span></label><input id="r-vrate" type="text" placeholder="e.g. ₹800/day or ₹40/km"></div>
+        </div>
+        <button class="btn btn-p" id="btn-send-otp" onclick="sendOTP()">📱 Send OTP to Mobile</button>
+        <!-- OTP Step (hidden initially) -->
+        <div id="otp-step" class="hidden">
+          <p style="font-size:.82rem;color:var(--mu);margin:14px 0 8px;text-align:center">OTP sent to <strong id="otp-phone-disp"></strong></p>
+          <div class="otp-wrap">
+            <input class="otp-input" type="number" maxlength="1" id="otp1" oninput="otpMove(this,'otp2')">
+            <input class="otp-input" type="number" maxlength="1" id="otp2" oninput="otpMove(this,'otp3')">
+            <input class="otp-input" type="number" maxlength="1" id="otp3" oninput="otpMove(this,'otp4')">
+            <input class="otp-input" type="number" maxlength="1" id="otp4" oninput="otpMove(this,'otp5')">
+            <input class="otp-input" type="number" maxlength="1" id="otp5" oninput="otpMove(this,'otp6')">
+            <input class="otp-input" type="number" maxlength="1" id="otp6" oninput="otpDone()">
+          </div>
+          <button class="btn btn-p" onclick="verifyOTPRegister()">✅ Verify & Register</button>
+          <p style="text-align:center;margin-top:10px;font-size:.78rem;color:var(--mu)">Didn't get OTP? <span onclick="sendOTP()" style="color:var(--sf);font-weight:700;cursor:pointer">Resend</span></p>
+        </div>
+        <p style="text-align:center;margin-top:12px;font-size:.8rem;color:var(--mu)">ଆଗରୁ ଯୋଗ ଦେଇଛନ୍ତି? <span onclick="showPg('pg-login')" style="color:var(--sf);font-weight:700;cursor:pointer">Login →</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="pg-login" class="pg auth-wrap">
+  <div class="auth-card">
+    <div class="logo-w">
+      <div class="logo-ic">🌾</div>
+      <h2>ଦ ପାର୍ଟ-ଟାଇମର୍ସ</h2>
+      <p>Phone OTP se Login karo — No Password Needed!</p>
+    </div>
+    <div class="fg"><label>ମୋବାଇଲ <span>/ Mobile Number</span></label>
+      <div class="phone-row">
+        <select class="cc-select"><option value="91">🇮🇳 +91</option></select>
+        <input id="l-phone" type="tel" placeholder="10-digit mobile" maxlength="10" style="flex:1">
+      </div>
+    </div>
+    <button class="btn btn-p" id="btn-login-otp" onclick="sendLoginOTP()">📱 Send OTP</button>
+    <div id="login-otp-step" class="hidden" style="margin-top:14px">
+      <p style="font-size:.82rem;color:var(--mu);margin-bottom:8px;text-align:center">Enter OTP sent to your mobile</p>
+      <div class="otp-wrap">
+        <input class="otp-input" type="number" maxlength="1" id="lotp1" oninput="otpMove(this,'lotp2')">
+        <input class="otp-input" type="number" maxlength="1" id="lotp2" oninput="otpMove(this,'lotp3')">
+        <input class="otp-input" type="number" maxlength="1" id="lotp3" oninput="otpMove(this,'lotp4')">
+        <input class="otp-input" type="number" maxlength="1" id="lotp4" oninput="otpMove(this,'lotp5')">
+        <input class="otp-input" type="number" maxlength="1" id="lotp5" oninput="otpMove(this,'lotp6')">
+        <input class="otp-input" type="number" maxlength="1" id="lotp6" oninput="otpDone()">
+      </div>
+      <button class="btn btn-p" onclick="verifyLoginOTP()">🔑 Verify & Login</button>
+    </div>
+    <button class="btn mt8" onclick="demoLogin()" style="background:var(--gnp);color:var(--gn)">🎯 Demo Login</button>
+    <p style="text-align:center;margin-top:13px;font-size:.8rem;color:var(--mu)">ନୂତନ? <span onclick="showPg('pg-register')" style="color:var(--sf);font-weight:700;cursor:pointer">Register →</span></p>
+    <p style="text-align:center;margin-top:6px;font-size:.77rem"><span onclick="showPg('pg-welcome')" style="color:var(--mu);cursor:pointer">← Back</span></p>
+  </div>
+</div>
+</div><!-- /auth -->
+
+<!-- ==================== MAIN APP ==================== -->
+<div id="main-app" class="hidden">
+<div class="app">
+
+<!-- HOME -->
+<div id="ap-home" class="ca">
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="hero-gr" id="h-gr">ନମସ୍କାର 🙏</div>
+        <div class="hero-nm" id="h-nm">Loading...</div>
+      </div>
+      <div style="display:flex;gap:7px;align-items:center">
+        <div class="realtime-badge"><div class="pulse"></div>Live</div>
+        <div onclick="goTab('profile')" style="width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden">
+          <img id="h-avatar-img" src="" style="width:100%;height:100%;object-fit:cover;display:none">
+          <span id="h-avatar-ph" style="font-size:1.2rem">👤</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-r2">
+      <div class="loc-chip">📍 <span id="h-loc">Odisha</span></div>
+      <button class="lang-btn" onclick="toggleLang()" id="alb">EN</button>
+    </div>
+    <div class="hsearch"><span>🔍</span><input type="text" id="srch" placeholder="ସେବା ଖୋଜନ୍ତୁ | Search services..." oninput="doSearch(this.value)"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-t">ସେବା ବର୍ଗ <span>Service Categories</span></div></div>
+    <div class="cat-grid">
+      <div class="cc" onclick="goSvc('farming')"><div class="ci">🌾</div><div class="cn">Crop Farming</div><div class="cor">ଶସ୍ୟ ଚାଷ</div></div>
+      <div class="cc" onclick="goSvc('fish')"><div class="ci">🐟</div><div class="cn">Fish & Aqua</div><div class="cor">ମତ୍ସ୍ୟ</div></div>
+      <div class="cc" onclick="goSvc('poultry')"><div class="ci">🐔</div><div class="cn">Poultry</div><div class="cor">ମୁର୍ଗୀ</div></div>
+      <div class="cc" onclick="goSvc('buysell')"><div class="ci">🛒</div><div class="cn">Buy/Sell/Rent</div><div class="cor">କ/ବ/ଭ</div></div>
+      <div class="cc" onclick="goSvc('transport')"><div class="ci">🚜</div><div class="cn">Transport</div><div class="cor">ପରିବହନ</div></div>
+      <div class="cc" onclick="goSvc('food')"><div class="ci">🍱</div><div class="cn">Food Order</div><div class="cor">ଖାଦ୍ୟ</div></div>
+      <div class="cc" onclick="goSvc('homeservice')"><div class="ci">🔧</div><div class="cn">Home Services</div><div class="cor">ଘର ସେବା</div></div>
+      <div class="cc" onclick="goSvc('photo')"><div class="ci">📸</div><div class="cn">Photo/Video</div><div class="cor">ଫଟୋ</div></div>
+      <div class="cc" onclick="goSvc('tent')"><div class="ci">⛺</div><div class="cn">Tent & Events</div><div class="cor">ଷ୍ଟେଜ</div></div>
+      <div class="cc" onclick="goSvc('pandit')"><div class="ci">🙏</div><div class="cn">Pandit</div><div class="cor">ପୂଜା</div></div>
+      <div class="cc" onclick="goSvc('doctor')"><div class="ci">🩺</div><div class="cn">Doctor</div><div class="cor">ଡାକ୍ତର</div></div>
+      <div class="cc" onclick="goSvc('tuition')"><div class="ci">📚</div><div class="cn">Tuition</div><div class="cor">ଟ୍ୟୁଶନ</div></div>
+    </div>
+  </div>
+
+  <div class="hbanner">
+    <div class="live-dot">🔴 LIVE NOW</div>
+    <h3>🛍️ ରବିବାର ହଟ | Sunday Local Haata</h3>
+    <p>ସ୍ଥାନୀୟ ବିକ୍ରେତାଙ୍କ ଠାରୁ ସିଧା ଖରିଦ | Buy directly from local vendors</p>
+    <button onclick="goSvc('buysell')" style="margin-top:10px;background:#fff;color:var(--gn);border:none;border-radius:8px;padding:7px 16px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.8rem;cursor:pointer">ଦେଖନ୍ତୁ | Explore →</button>
+  </div>
+
+  <!-- Nearby Workers (loaded from Supabase) -->
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-t">ନିକଟ କର୍ମୀ <span>Nearby Workers — Live</span></div><button class="see-all" onclick="goSvc('farming')">ସବୁ ଦେଖ →</button></div>
+    <div class="hs" id="workers-hs">
+      <div style="display:flex;align-items:center;justify-content:center;width:100%;padding:20px;color:var(--mu);font-size:.82rem">Loading workers...</div>
+    </div>
+  </div>
+
+  <div class="pbanner">
+    <div style="font-size:2.2rem">🎁</div>
+    <div><h4>ପ୍ରଥମ ୩ ମାସ ମାଗଣା!</h4><p>First 3 months free for new vendors</p></div>
+  </div>
+
+  <!-- Dynamic listings from Supabase -->
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-t">ଜୋରଦାର ଅଫର <span>Hot Listings Near You</span></div></div>
+    <div class="hs" id="hot-listings-hs">
+      <div class="svc" onclick="goSvc('buysell')"><div class="svc-img"><div class="svc-emoji">🚜</div></div><div class="svc-bd"><h4>Tractor Rent</h4><p>Balasore</p><span class="bdg bdg-go">₹800/day</span></div></div>
+      <div class="svc" onclick="goSvc('fish')"><div class="svc-img"><div class="svc-emoji">🐟</div></div><div class="svc-bd"><h4>Fresh Rohu</h4><p>Kendrapara</p><span class="bdg bdg-s">₹180/kg</span></div></div>
+      <div class="svc" onclick="goSvc('poultry')"><div class="svc-img"><div class="svc-emoji">🥚</div></div><div class="svc-bd"><h4>Country Eggs</h4><p>Cuttack</p><span class="bdg bdg-g">₹7/pc</span></div></div>
+      <div class="svc" onclick="goSvc('food')"><div class="svc-img"><div class="svc-emoji">🍛</div></div><div class="svc-bd"><h4>Pakhala Thali</h4><p>Khurda</p><span class="bdg bdg-s">₹80/plate</span></div></div>
+    </div>
+  </div>
+  <div style="height:14px"></div>
+</div><!-- /home -->
+
+<!-- SERVICE PAGES (farming, fish, poultry, buysell, transport, food, homeservice, photo, tent, pandit, doctor, tuition) -->
+<!-- Each service page dynamically loads listings from Supabase -->
+
+<div id="ap-farming" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🌾 Crop Farming | ଶସ୍ୟ ଚାଷ</h3></div>
+  <div class="chips">
+    <div class="chip on" onclick="chipSel(this);loadSvcListings('farming','all')">All</div>
+    <div class="chip" onclick="chipSel(this);loadSvcListings('farming','worker')">Workers</div>
+    <div class="chip" onclick="chipSel(this);loadSvcListings('farming','tool')">Tools</div>
+    <div class="chip" onclick="chipSel(this);loadSvcListings('farming','seed')">Seeds</div>
+    <div class="chip" onclick="chipSel(this);loadSvcListings('farming','produce')">Produce</div>
+  </div>
+  <div id="svc-farming-list"><div style="text-align:center;padding:30px;color:var(--mu)">Loading...</div></div>
+</div>
+
+<div id="ap-fish" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🐟 Fish & Aqua | ମତ୍ସ୍ୟ</h3></div>
+  <div class="tabrow">
+    <div class="ti on" onclick="tabSel(this,'fish-w')">Workers</div>
+    <div class="ti" onclick="tabSel(this,'fish-b')">Buy Fish</div>
+    <div class="ti" onclick="tabSel(this,'fish-r')">Rent Tools</div>
+    <div class="ti" onclick="tabSel(this,'fish-boat')">Boat</div>
+  </div>
+  <div id="fish-w"><div id="svc-fish-list"><div style="text-align:center;padding:30px;color:var(--mu)">Loading...</div></div></div>
+  <div id="fish-b" class="hidden"><div id="svc-fish-buy"></div></div>
+  <div id="fish-r" class="hidden"><div id="svc-fish-rent"></div></div>
+  <div id="fish-boat" class="hidden"><div id="svc-fish-boat-list"></div></div>
+</div>
+
+<div id="ap-poultry" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🐔 Poultry & Livestock</h3></div>
+  <div class="chips">
+    <div class="chip on" onclick="chipSel(this);loadSvcListings('poultry','all')">All</div>
+    <div class="chip" onclick="chipSel(this);loadSvcListings('poultry','chicken')">Chicken</div>
+    <div class="chip" onclick="chipSel(this);loadSvcListings('poultry','livestock')">Livestock</div>
+    <div class="chip" onclick="chipSel(this);loadSvcListings('poultry','vet')">Vet</div>
+  </div>
+  <div id="svc-poultry-list"><div style="text-align:center;padding:30px;color:var(--mu)">Loading...</div></div>
+</div>
+
+<div id="ap-buysell" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🛒 Buy • Sell • Rent</h3></div>
+  <div class="tabrow">
+    <div class="ti on" onclick="tabSel(this,'bs-all')">🛍️ All</div>
+    <div class="ti" onclick="tabSel(this,'bs-sell')">💰 Sell</div>
+    <div class="ti" onclick="tabSel(this,'bs-rent')">🔑 Rent</div>
+    <div class="ti" onclick="tabSel(this,'bs-haata')">🎪 Haata</div>
+  </div>
+  <div id="bs-all"><div style="padding:11px 14px 4px"><div class="hsearch" style="box-shadow:var(--sh)"><span>🔍</span><input type="text" placeholder="Search items..." oninput="searchListings(this.value)"></div></div><div id="svc-bs-list"><div style="text-align:center;padding:30px;color:var(--mu)">Loading...</div></div></div>
+  <div id="bs-sell" class="hidden"><div style="padding:13px 14px"><button class="btn btn-p" onclick="openVendorModal()">➕ Post Your Item to Sell/Rent</button></div><div id="svc-bs-sell-list"></div></div>
+  <div id="bs-rent" class="hidden"><div id="svc-bs-rent-list"></div></div>
+  <div id="bs-haata" class="hidden">
+    <div class="hbanner" style="margin:13px 14px"><div class="live-dot">🔴 LIVE</div><h3>🎪 ରବିବାର ହଟ</h3><p>Local vendors near you</p></div>
+    <div id="svc-haata-list"></div>
+  </div>
+</div>
+
+<div id="ap-transport" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🚜 Transport | ପରିବହନ</h3></div>
+  <div style="padding:13px 14px">
+    <div class="fg"><label>📍 Pickup Location</label><input type="text" id="t-from" placeholder="From: Your village"></div>
+    <div class="fg"><label>🎯 Drop Location</label><input type="text" id="t-to" placeholder="To: Destination"></div>
+    <div class="fg"><label>📦 Trip Type</label>
+      <select id="t-type" style="background:#fff"><option>Passenger</option><option>Goods Transport</option><option>Farm Produce</option><option>Construction Material</option></select>
+    </div>
+    <button class="btn btn-p" onclick="searchVehicles()" style="margin-bottom:13px">🔍 Find Vehicles</button>
+  </div>
+  <div style="padding:0 14px 7px;font-size:.8rem;font-weight:700;color:var(--mu)">AVAILABLE VEHICLES</div>
+  <div id="svc-transport-list">
+    <div class="vc" onclick="openBook('Auto Rickshaw','🛺','Passenger auto — 3 seats','₹15/km','⭐ 4.6','Khurda','9XXXXXXXXX')"><div class="vc-row"><div class="vc-icon">🛺</div><div class="vc-info"><h4>Auto Rickshaw</h4><div class="vc-sub">Binod Auto • 1.2 km • 3 seats</div></div><div class="vc-pr"><div class="vc-price">₹15/km</div><div class="vc-eta">~4 min</div></div></div></div>
+    <div class="vc" onclick="openBook('Tempo Goods','🚐','Mini tempo — 500kg','₹20/km','⭐ 4.8','Cuttack','9XXXXXXXXX')"><div class="vc-row"><div class="vc-icon">🚐</div><div class="vc-info"><h4>Tempo — Goods</h4><div class="vc-sub">Raju Tempo • 2.8 km • 500kg</div></div><div class="vc-pr"><div class="vc-price">₹20/km</div><div class="vc-eta">~8 min</div></div></div></div>
+    <div class="vc" onclick="openBook('Tractor Farm','🚜','Farm tractor full day','₹800/day','⭐ 4.9','Nayagarh','9XXXXXXXXX')"><div class="vc-row"><div class="vc-icon">🚜</div><div class="vc-info"><h4>Tractor — Farm</h4><div class="vc-sub">Sura Tractor • 3.5 km</div></div><div class="vc-pr"><div class="vc-price">₹800/day</div><div class="vc-eta">~12 min</div></div></div></div>
+    <div class="vc" onclick="openBook('Car Cab','🚗','AC car — city/hospital','₹12/km','⭐ 4.7','Puri','9XXXXXXXXX')"><div class="vc-row"><div class="vc-icon">🚗</div><div class="vc-info"><h4>Car — City Trip</h4><div class="vc-sub">Manoj Cab • 4.1 km • AC</div></div><div class="vc-pr"><div class="vc-price">₹12/km</div><div class="vc-eta">~14 min</div></div></div></div>
+    <div class="vc" onclick="openBook('E-Rickshaw','⚡','Electric — local trips','₹10/km','⭐ 4.5','Balasore','9XXXXXXXXX')"><div class="vc-row"><div class="vc-icon">⚡</div><div class="vc-info"><h4>E-Rickshaw — Local</h4><div class="vc-sub">Raju E-Rikshaw • 0.9 km</div></div><div class="vc-pr"><div class="vc-price">₹10/km</div><div class="vc-eta">~3 min</div></div></div></div>
+    <!-- Registered vehicle owners load here -->
+    <div id="svc-vehicle-list"></div>
+  </div>
+</div>
+
+<div id="ap-food" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🍱 Food Order | ଖାଦ୍ୟ</h3><div style="font-size:.82rem;font-weight:700;color:var(--sf);cursor:pointer" id="cart-count" onclick="openCartModal()">🛒 0</div></div>
+  <div class="chips">
+    <div class="chip on" onclick="chipSel(this)">All</div>
+    <div class="chip" onclick="chipSel(this)">Odia Thali</div>
+    <div class="chip" onclick="chipSel(this)">Tiffin</div>
+    <div class="chip" onclick="chipSel(this)">Street Food</div>
+  </div>
+  <!-- Static food listings + dynamic from Supabase -->
+  <div style="background:#fff;border-radius:13px;margin:0 14px 10px;overflow:hidden;box-shadow:var(--sh)">
+    <div style="background:var(--sfp);padding:12px 13px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font-weight:800;font-size:.92rem">🏠 Maa Ki Rasoi</div><div style="font-size:.7rem;color:var(--mu)">📍 Khurda • 1.2km • Home Cook</div></div>
+      <div style="text-align:right"><div style="color:var(--gd);font-size:.76rem;font-weight:700">⭐ 4.8</div><div style="font-size:.66rem;color:var(--gn)">🟢 Open</div></div>
+    </div>
+    <div class="fc"><div class="fc-row"><div class="fc-img">🍛</div><div class="fc-info"><h4>Pakhala Bhat Thali</h4><div class="fc-sub">Rice + 5 items, Odia special</div><div class="fc-price">₹80/plate</div><button class="fc-add" onclick="addToCart('Pakhala Thali','🍛',80)">+ Add</button></div></div></div>
+    <div class="fc" style="border-top:1px solid var(--br)"><div class="fc-row"><div class="fc-img">🐟</div><div class="fc-info"><h4>Machha Besara Thali</h4><div class="fc-sub">Fish curry + rice + dal + achar</div><div class="fc-price">₹120/plate</div><button class="fc-add" onclick="addToCart('Machha Besara Thali','🐟',120)">+ Add</button></div></div></div>
+    <div class="fc" style="border-top:1px solid var(--br)"><div class="fc-row"><div class="fc-img">🥘</div><div class="fc-info"><h4>Dalma + Rice (Veg)</h4><div class="fc-sub">Traditional Odia dalma</div><div class="fc-price">₹60/plate</div><button class="fc-add" onclick="addToCart('Dalma Rice Thali','🥘',60)">+ Add</button></div></div></div>
+  </div>
+  <div style="background:#fff;border-radius:13px;margin:0 14px 10px;overflow:hidden;box-shadow:var(--sh)">
+    <div style="background:var(--gnp);padding:12px 13px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font-weight:800;font-size:.92rem">🍜 Sunita Tiffin Center</div><div style="font-size:.7rem;color:var(--mu)">📍 Cuttack • 2.4km</div></div>
+      <div style="text-align:right"><div style="color:var(--gd);font-size:.76rem;font-weight:700">⭐ 4.6</div><div style="font-size:.66rem;color:var(--gn)">🟢 Open</div></div>
+    </div>
+    <div class="fc"><div class="fc-row"><div class="fc-img">🫓</div><div class="fc-info"><h4>Roti + Tarkari (4 pcs)</h4><div class="fc-sub">4 rotis + mixed veg curry</div><div class="fc-price">₹50/set</div><button class="fc-add" onclick="addToCart('Roti Tarkari','🫓',50)">+ Add</button></div></div></div>
+    <div class="fc" style="border-top:1px solid var(--br)"><div class="fc-row"><div class="fc-img">🍚</div><div class="fc-info"><h4>Lunch Box (Office)</h4><div class="fc-sub">Rice + dal + 2 sabji + roti</div><div class="fc-price">₹70/box</div><button class="fc-add" onclick="addToCart('Office Lunch Box','🍚',70)">+ Add</button></div></div></div>
+  </div>
+  <!-- Vendor food listings from Supabase -->
+  <div id="svc-food-list"></div>
+</div>
+
+<div id="ap-homeservice" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🔧 Home Services</h3></div>
+  <div class="chips">
+    <div class="chip on" onclick="chipSel(this);loadSvcListings('homeservice','all')">All</div>
+    <div class="chip" onclick="chipSel(this);loadSvcListings('homeservice','electric')">Electric</div>
+    <div class="chip" onclick="chipSel(this);loadSvcListings('homeservice','plumb')">Plumbing</div>
+    <div class="chip" onclick="chipSel(this);loadSvcListings('homeservice','mason')">Mason</div>
+    <div class="chip" onclick="chipSel(this);loadSvcListings('homeservice','bike')">Bike Repair</div>
+  </div>
+  <div id="svc-homeservice-list">
+    <div class="lc"><div class="lc-row"><div class="lc-img">⚡</div><div class="lc-info"><h4>Electrician — Home Wiring</h4><div class="lc-sub">📍 Bijay Das • Khurda, 1.2 km</div><div class="lc-meta"><span class="lc-price">₹500/visit</span><span class="lc-rt">⭐ 4.9</span><span class="bdg bdg-go">Same Day</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Electrician','⚡','Home wiring repair','₹500/visit','⭐ 4.9','Khurda','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Electrician')">WhatsApp</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🚿</div><div class="lc-info"><h4>Plumber — Pipe & Tap</h4><div class="lc-sub">📍 Krushna • Cuttack, 2.1 km</div><div class="lc-meta"><span class="lc-price">₹350/visit</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-g">Available</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Plumber','🚿','Pipe & tap repair','₹350/visit','⭐ 4.7','Cuttack','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Plumber')">WhatsApp</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🧱</div><div class="lc-info"><h4>Mason — Construction</h4><div class="lc-sub">📍 Sundargarh, 5.8 km</div><div class="lc-meta"><span class="lc-price">₹700/day</span><span class="lc-rt">⭐ 4.6</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Mason','🧱','Wall & plastering work','₹700/day','⭐ 4.6','Sundargarh','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Mason')">WhatsApp</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🏍️</div><div class="lc-info"><h4>Bike / Motorcycle Repair</h4><div class="lc-sub">📍 Sonu Garage • Puri, 0.9 km</div><div class="lc-meta"><span class="lc-price">₹200/visit</span><span class="lc-rt">⭐ 4.8</span><span class="bdg bdg-sky">Doorstep</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Bike Mechanic','🏍️','2-wheeler doorstep repair','₹200/visit','⭐ 4.8','Puri','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Bike Mechanic')">WhatsApp</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🎨</div><div class="lc-info"><h4>House Painter</h4><div class="lc-sub">📍 Ganjam, 4.2 km</div><div class="lc-meta"><span class="lc-price">₹500/day</span><span class="lc-rt">⭐ 4.5</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Painter','🎨','Interior & exterior painting','₹500/day','⭐ 4.5','Ganjam','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Painter')">WhatsApp</button></div></div>
+  </div>
+</div>
+
+<div id="ap-photo" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>📸 Photo & Video</h3></div>
+  <div id="svc-photo-list">
+    <div class="lc"><div class="lc-row"><div class="lc-img">📷</div><div class="lc-info"><h4>Wedding Photography (Full Day)</h4><div class="lc-sub">📍 Raja Studio • Cuttack</div><div class="lc-meta"><span class="lc-price">₹8,000/day</span><span class="lc-rt">⭐ 4.9</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Wedding Photography','📷','Full day shoot + editing','₹8,000','⭐ 4.9','Cuttack','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Wedding Photography')">WhatsApp</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🛸</div><div class="lc-info"><h4>Drone Videography</h4><div class="lc-sub">📍 Bhubaneswar area</div><div class="lc-meta"><span class="lc-price">₹3,000/hr</span><span class="lc-rt">⭐ 4.8</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Drone Video','🛸','Aerial drone shoot','₹3,000/hr','⭐ 4.8','Khurda','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Drone Video')">WhatsApp</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🪪</div><div class="lc-info"><h4>Passport / ID Photos</h4><div class="lc-sub">📍 Multiple locations</div><div class="lc-meta"><span class="lc-price">₹50/4 photos</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-g">Instant</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Passport Photo','🪪','ID & passport photos','₹50/set','⭐ 4.6','Cuttack','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Passport Photo')">WhatsApp</button></div></div>
+  </div>
+</div>
+
+<div id="ap-tent" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>⛺ Tent & Events</h3></div>
+  <div id="svc-tent-list">
+    <div class="lc"><div class="lc-row"><div class="lc-img">⛺</div><div class="lc-info"><h4>Tent Setup — 100 Person</h4><div class="lc-sub">📍 Khurda • Chairs + Lights included</div><div class="lc-meta"><span class="lc-price">₹12,000/event</span><span class="lc-rt">⭐ 4.8</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Tent 100pax','⛺','100-person tent setup','₹12,000','⭐ 4.8','Khurda','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Tent House')">WhatsApp</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🔊</div><div class="lc-info"><h4>DJ Sound System</h4><div class="lc-sub">📍 Cuttack • 10,000W + DJ</div><div class="lc-meta"><span class="lc-price">₹6,000/event</span><span class="lc-rt">⭐ 4.7</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('DJ Sound','🔊','Full DJ setup','₹6,000','⭐ 4.7','Cuttack','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','DJ Sound')">WhatsApp</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🍽️</div><div class="lc-info"><h4>Catering Service (Veg)</h4><div class="lc-sub">📍 Puri • Per plate</div><div class="lc-meta"><span class="lc-price">₹150/plate</span><span class="lc-rt">⭐ 4.6</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Catering','🍽️','Full veg catering','₹150/plate','⭐ 4.6','Puri','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Catering')">WhatsApp</button></div></div>
+  </div>
+</div>
+
+<div id="ap-pandit" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🙏 Pandit & Pooja</h3></div>
+  <div id="svc-pandit-list">
+    <div class="lc"><div class="lc-row"><div class="lc-img">🙏</div><div class="lc-info"><h4>Pandit — Griha Pravesh</h4><div class="lc-sub">📍 Khurda • Vedic specialist</div><div class="lc-meta"><span class="lc-price">₹2,100/pooja</span><span class="lc-rt">⭐ 4.9</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Griha Pravesh','🙏','Vedic house entry ritual','₹2,100','⭐ 4.9','Khurda','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Pandit')">WhatsApp</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🕉️</div><div class="lc-info"><h4>Pandit — Vivah (Wedding)</h4><div class="lc-sub">📍 Puri • Marriage ceremony</div><div class="lc-meta"><span class="lc-price">₹5,100/ceremony</span><span class="lc-rt">⭐ 4.8</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Wedding Pandit','🕉️','Marriage ceremony ritual','₹5,100','⭐ 4.8','Puri','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Pandit')">WhatsApp</button></div></div>
+  </div>
+</div>
+
+<div id="ap-doctor" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🩺 Doctor & Health</h3></div>
+  <div id="svc-doctor-list">
+    <div class="lc"><div class="lc-row"><div class="lc-img">🩺</div><div class="lc-info"><h4>Village Doctor — General</h4><div class="lc-sub">📍 Dr. Ramesh • Nayagarh, 2.1 km</div><div class="lc-meta"><span class="lc-price">₹200/visit</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-g">On-Call</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Village Doctor','🩺','General consultation','₹200/visit','⭐ 4.7','Nayagarh','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Doctor')">WhatsApp</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">💊</div><div class="lc-info"><h4>Nurse on Call</h4><div class="lc-sub">📍 Balasore, 3.8 km</div><div class="lc-meta"><span class="lc-price">₹400/day</span><span class="lc-rt">⭐ 4.6</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Home Nurse','💊','Daily home nursing','₹400/day','⭐ 4.6','Balasore','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Nurse')">WhatsApp</button></div></div>
+  </div>
+</div>
+
+<div id="ap-tuition" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>📚 Tuition & Coaching</h3></div>
+  <div id="svc-tuition-list">
+    <div class="lc"><div class="lc-row"><div class="lc-img">📚</div><div class="lc-info"><h4>Home Tutor — Class 1–10</h4><div class="lc-sub">📍 Sita Ma'am • Khurda, 1.8 km</div><div class="lc-meta"><span class="lc-price">₹800/month</span><span class="lc-rt">⭐ 4.8</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Home Tutor','📚','Class 1-10 all subjects','₹800/month','⭐ 4.8','Khurda','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Tutor')">WhatsApp</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">💻</div><div class="lc-info"><h4>Computer Classes</h4><div class="lc-sub">📍 Gyan Centre • Puri</div><div class="lc-meta"><span class="lc-price">₹500/month</span><span class="lc-rt">⭐ 4.6</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Computer Classes','💻','Basic computer + MS Office','₹500/month','⭐ 4.6','Puri','9XXXXXXXXX')">📅 Book</button><button class="bw" onclick="waConnect('9XXXXXXXXX','Computer Classes')">WhatsApp</button></div></div>
+  </div>
+</div>
+
+<!-- ===== NOTIFICATIONS ===== -->
+<div id="ap-notif" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🔔 Notifications | ସୂଚନା</h3></div>
+  <div style="padding:11px 0" id="notif-list">
+    <div style="text-align:center;padding:30px;color:var(--mu);font-size:.85rem">Loading notifications...</div>
+  </div>
+</div>
+
+<!-- ===== ORDERS / TRACKING ===== -->
+<div id="ap-orders" class="ca hidden">
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>📋 My Orders | ମୋ ଅର୍ଡ଼ର</h3></div>
+  <div style="padding:11px 0" id="orders-list">
+    <div style="text-align:center;padding:30px;color:var(--mu);font-size:.85rem">Loading orders...</div>
+  </div>
+</div>
+
+<!-- ===== PROFILE ===== -->
+<div id="ap-profile" class="ca hidden">
+  <div class="prof-hero">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
+      <button onclick="backHome()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:30px;height:30px;border-radius:8px;cursor:pointer">←</button>
+      <button onclick="openEditProfile()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;padding:5px 13px;border-radius:20px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.76rem;cursor:pointer">✏️ Edit</button>
+    </div>
+    <div class="pav-wrap">
+      <div id="p-avatar-wrap">
+        <div class="pav-ph" id="p-avatar-ph">👤</div>
+      </div>
+      <div class="prof-info">
+        <h2 id="p-name">Loading...</h2>
+        <p id="p-type">User</p>
+        <div class="pbrow">
+          <span class="pb" id="p-loc">📍 Odisha</span>
+          <span class="pb" id="p-plan-badge">Free</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="did-card">
+    <div class="did-hd"><span>THE PART-TIMER'S • DIGITAL ID</span><span id="did-status">✅ VERIFIED</span></div>
+    <div class="did-body">
+      <div class="did-row">
+        <div class="did-info">
+          <div class="did-id" id="did-id">PT-000000</div>
+          <h3 id="did-name">Name</h3>
+          <div class="did-role" id="did-role">Type</div>
+          <div class="did-loc" id="did-loc">📍 Village, District, Odisha</div>
+        </div>
+        <div id="qrcode"></div>
+      </div>
+      <div class="did-skills" id="did-skills"></div>
+    </div>
+    <div class="did-ft">
+      <span class="ver">✅ Verified Member</span>
+      <span class="rt" id="did-rating">⭐ New Member</span>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="sb"><div class="sn" id="stat-jobs">0</div><div class="sl">Jobs Done</div></div>
+    <div class="sb"><div class="sn" id="stat-rating">New</div><div class="sl">Rating</div></div>
+    <div class="sb"><div class="sn" id="stat-since">2025</div><div class="sl">Member Since</div></div>
+  </div>
+
+  <div id="vendor-plan-sec" class="hidden" style="padding:0 14px 13px">
+    <div style="background:linear-gradient(135deg,var(--sf),var(--gd));border-radius:13px;padding:15px">
+      <div style="color:rgba(255,255,255,.8);font-size:.7rem;font-weight:700;letter-spacing:1px">CURRENT PLAN</div>
+      <div style="color:#fff;font-size:1.05rem;font-weight:800;margin-top:4px" id="plan-name-disp">Local Mini</div>
+      <div style="color:rgba(255,255,255,.85);font-size:.75rem;margin-top:3px" id="plan-detail-disp">₹10/month • 5km reach • 5 items</div>
+      <button onclick="openPlanModal()" style="margin-top:10px;background:#fff;color:var(--sf);border:none;border-radius:8px;padding:7px 15px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.77rem;cursor:pointer">⬆️ Upgrade Plan</button>
+    </div>
+  </div>
+
+  <div class="mg">
+    <div class="mg-t">Account</div>
+    <div class="mi" onclick="openEditProfile()"><div class="mic">✏️</div><div class="mit"><h4>Edit Profile & Photo</h4><p>Update info, photo, skills</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="goTab('orders')"><div class="mic">📋</div><div class="mit"><h4>My Bookings & Orders</h4><p>Track all activity</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="openPlanModal()"><div class="mic">💎</div><div class="mit"><h4>Upgrade Vendor Plan</h4><p>More visibility & features</p></div><div class="mia">›</div></div>
+  </div>
+  <div class="mg">
+    <div class="mg-t">Settings</div>
+    <div class="mi" onclick="toggleLang()"><div class="mic">🌐</div><div class="mit"><h4>Language / ଭାଷା</h4><p id="lang-status">Odia (Primary)</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="shareProfile()"><div class="mic">📤</div><div class="mit"><h4>Share Digital ID</h4><p>Share your work QR profile</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="confirmLogout()" style="border:2px solid #FFE8E8"><div class="mic">🚪</div><div class="mit"><h4 style="color:#FF4444">Logout</h4><p>Sign out of account</p></div><div class="mia">›</div></div>
+  </div>
+  <div style="height:14px"></div>
+</div><!-- /profile -->
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <div class="ni on" onclick="goTab('home')" id="nav-home"><div class="ic">🏠</div><div class="lb">Home</div></div>
+  <div class="ni" onclick="goTab('orders')" id="nav-orders"><div class="ic">📋</div><div class="lb">Orders</div></div>
+  <div class="ni" onclick="goTab('notif')" id="nav-notif">
+    <div class="ni-wrap"><div class="ic">🔔</div><div class="ndot" id="notif-badge" style="display:none"></div></div>
+    <div class="lb">Alerts</div>
+  </div>
+  <div class="ni" onclick="goTab('profile')" id="nav-profile"><div class="ic">👤</div><div class="lb">Profile</div></div>
+</nav>
+</div><!-- /app -->
+</div><!-- /main-app -->
+
+<!-- ==================== MODALS ==================== -->
+
+<!-- BOOKING MODAL -->
+<div class="modal" id="modal-book">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt" id="bk-title">Book Service</div>
+    <div class="msub">Confirm your booking</div>
+    <div style="background:var(--sfp);border-radius:11px;padding:13px;margin-bottom:14px;display:flex;gap:11px;align-items:center">
+      <div style="font-size:1.9rem" id="bk-icon">🌾</div>
+      <div><div style="font-weight:800" id="bk-name">Service</div><div style="font-size:.75rem;color:var(--mu)" id="bk-desc">Description</div><div style="font-weight:800;color:var(--gn);margin-top:3px" id="bk-price">₹000</div></div>
+    </div>
+    <div class="fg"><label>📅 ତାରିଖ <span>/ Date</span></label><input type="date" id="bk-date"></div>
+    <div class="fg"><label>🕐 ସମୟ <span>/ Time</span></label><input type="time" id="bk-time" value="09:00"></div>
+    <div class="fg"><label>📍 ଆପଣଙ୍କ ଠିକଣା <span>/ Your Location</span></label><input type="text" id="bk-loc" placeholder="Village, landmark"></div>
+    <div class="fg"><label>📝 ଟିପ୍ପଣୀ <span>/ Note (optional)</span></label><textarea id="bk-note" placeholder="Any special instructions..."></textarea></div>
+    <div style="background:var(--gnp);border-radius:9px;padding:10px;margin-bottom:13px;font-size:.77rem;color:var(--gn)">
+      ✅ Booking confirm hone par aapko <strong>WhatsApp message</strong> milega<br>
+      ✅ Worker ka contact number share hoga
+    </div>
+    <button class="btn btn-p" onclick="confirmBook()" id="btn-confirm-book">✅ Confirm Booking</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-book')">Cancel</button>
+  </div>
+</div>
+
+<!-- ORDER MODAL -->
+<div class="modal" id="modal-order">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt" id="or-title">Order Item</div>
+    <div style="background:var(--gnp);border-radius:11px;padding:13px;margin-bottom:14px;display:flex;gap:11px;align-items:center">
+      <div style="font-size:1.9rem" id="or-icon">🌾</div>
+      <div><div style="font-weight:800" id="or-name">Item</div><div style="font-size:.75rem;color:var(--mu)" id="or-unit-lbl">per unit</div><div style="font-weight:800;color:var(--gn);margin-top:3px" id="or-price-lbl">₹00</div></div>
+    </div>
+    <div class="qty-row">
+      <button class="qty-btn" onclick="changeQty(-1)">−</button>
+      <div class="qty-num" id="qty-disp">1</div>
+      <button class="qty-btn" onclick="changeQty(1)">+</button>
+      <div style="font-size:.8rem;color:var(--mu)" id="qty-unit">unit</div>
+    </div>
+    <div class="fg"><label>📍 Delivery Address</label><input type="text" id="or-addr" placeholder="Village, landmark, district"></div>
+    <div class="fg"><label>📱 Mobile for Delivery</label><input type="tel" id="or-mobile" placeholder="Your mobile number"></div>
+    <div class="total-row"><span>Total Amount:</span><strong id="or-total">₹00</strong></div>
+    <div style="background:#E8F4FD;border-radius:9px;padding:10px;margin-bottom:13px;font-size:.77rem;color:var(--sk)">
+      📱 Order confirmation + tracking link will be sent on WhatsApp
+    </div>
+    <button class="btn btn-p" onclick="confirmOrder()">🛒 Place Order (COD)</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-order')">Cancel</button>
+  </div>
+</div>
+
+<!-- ORDER TRACKING MODAL -->
+<div class="modal" id="modal-track">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div class="mt" id="track-title">Order Tracking</div>
+      <div class="realtime-badge"><div class="pulse"></div>Live</div>
+    </div>
+    <div class="msub" id="track-id">Order ID: #000000</div>
+    <div class="status-timeline" id="track-timeline">
+      <div class="st-item">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="st-dot done">✓</div>
+          <div class="st-line done" style="height:40px"></div>
+        </div>
+        <div class="st-info"><h4>Order Placed</h4><p>Your order has been received</p><div class="st-time" id="t-placed">Just now</div></div>
+      </div>
+      <div class="st-item">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="st-dot active" id="t-dot-confirm">⋯</div>
+          <div class="st-line" id="t-line-confirm" style="height:40px"></div>
+        </div>
+        <div class="st-info"><h4>Confirmed</h4><p id="t-confirm-text">Waiting for confirmation...</p><div class="st-time" id="t-confirmed"></div></div>
+      </div>
+      <div class="st-item">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="st-dot pending" id="t-dot-progress">○</div>
+          <div class="st-line" style="height:40px"></div>
+        </div>
+        <div class="st-info"><h4>In Progress / On the Way</h4><p>Worker/delivery on the way</p><div class="st-time" id="t-progress"></div></div>
+      </div>
+      <div class="st-item">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="st-dot pending" id="t-dot-done">○</div>
+        </div>
+        <div class="st-info"><h4>Completed</h4><p>Service/delivery done</p><div class="st-time" id="t-done"></div></div>
+      </div>
+    </div>
+    <!-- Rating after completion -->
+    <div id="rating-section" class="hidden">
+      <div style="font-weight:800;font-size:.9rem;margin-bottom:8px">Rate this service:</div>
+      <div class="stars-row" id="stars-row">
+        <span class="star" onclick="rateStar(1)">★</span>
+        <span class="star" onclick="rateStar(2)">★</span>
+        <span class="star" onclick="rateStar(3)">★</span>
+        <span class="star" onclick="rateStar(4)">★</span>
+        <span class="star" onclick="rateStar(5)">★</span>
+      </div>
+      <button class="btn btn-g mt8" onclick="submitRating()">Submit Rating</button>
+    </div>
+    <button class="wa-track-btn" onclick="waTrack()">📱 Get Updates on WhatsApp</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-track')">Close</button>
+  </div>
+</div>
+
+<!-- CART MODAL -->
+<div class="modal" id="modal-cart">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">🛒 Your Cart</div>
+    <div id="cart-items" style="margin-bottom:13px"></div>
+    <div class="total-row"><span>Grand Total:</span><strong id="cart-total">₹0</strong></div>
+    <div class="fg" style="margin-top:11px"><label>📍 Delivery Address</label><input type="text" id="cart-addr" placeholder="Your delivery address"></div>
+    <div class="fg"><label>📱 Mobile</label><input type="tel" id="cart-mobile" placeholder="Your mobile number"></div>
+    <button class="btn btn-p" onclick="placeCartOrder()">🚚 Place Order (COD)</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-cart')">Close</button>
+  </div>
+</div>
+
+<!-- PLAN MODAL -->
+<div class="modal" id="modal-plan">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">💎 Choose Vendor Plan</div>
+    <div class="msub">No commission ever. Flat monthly fee only.</div>
+    <div class="plan-grid">
+      <div class="pc sel" onclick="selPlan(this,'Local Mini','₹10/month','5km reach • 5 items')">
+        <div class="pc-name">Local Mini</div><div class="pc-price">₹10 <span>/month</span></div><div class="pc-detail">5km reach • 5 items</div>
+      </div>
+      <div class="pc" onclick="selPlan(this,'Local Plus','₹20/month','5km+ highlight • 10 items')">
+        <div class="pop-tag">POPULAR</div>
+        <div class="pc-name">Local Plus</div><div class="pc-price">₹20 <span>/month</span></div><div class="pc-detail">5km+ • 10 items</div>
+      </div>
+      <div class="pc" onclick="selPlan(this,'Block Reach','₹100/month','~15km • 20 items')">
+        <div class="pc-name">Block Reach</div><div class="pc-price">₹100 <span>/month</span></div><div class="pc-detail">~15km • 20 items</div>
+      </div>
+      <div class="pc" onclick="selPlan(this,'District Seller','₹999/month','Full district • 50 items')">
+        <div class="pc-name">District Seller</div><div class="pc-price">₹999 <span>/month</span></div><div class="pc-detail">Full district • 50 items</div>
+      </div>
+    </div>
+    <div class="pc" style="margin-bottom:11px" onclick="selPlan(this,'Super Vendor','₹3,999/month','Full Odisha • Unlimited')">
+      <div class="pc-name">⭐ Super Vendor — Full Odisha</div><div class="pc-price">₹3,999 <span>/month</span></div><div class="pc-detail">State-wide • Unlimited items • Priority listing</div>
+    </div>
+    <div style="background:var(--gnp);border-radius:9px;padding:11px;margin-bottom:12px;font-size:.76rem;color:var(--gn)">✅ No commission on any sale&nbsp;&nbsp;✅ Upgrade/downgrade anytime&nbsp;&nbsp;✅ First 3 months FREE</div>
+    <button class="btn btn-p" onclick="activatePlan()">✅ Activate Plan</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-plan')">Cancel</button>
+  </div>
+</div>
+
+<!-- VENDOR POST MODAL -->
+<div class="modal" id="modal-vendor">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">➕ Post Item to Sell / Rent</div>
+    <!-- Multi-image upload -->
+    <div class="photo-upload" onclick="document.getElementById('vi-photos').click()" style="margin-bottom:11px">
+      <input type="file" id="vi-photos" accept="image/*" multiple onchange="previewVendorPhotos(this)">
+      <div id="vi-photo-preview"><div class="pu-icon">🖼️</div><p>Add Photos (up to 3)<br><span style="font-size:.7rem;color:var(--mu)">Tap to upload product images</span></p></div>
+    </div>
+    <div class="fg"><label>Item Name</label><input type="text" id="vi-name" placeholder="e.g. Fresh Paddy, Tractor Rent, Camera"></div>
+    <div class="fg"><label>Category</label>
+      <select id="vi-cat"><option>Crop Farming</option><option>Fish & Aqua</option><option>Poultry</option><option>Buy/Sell</option><option>Rent Tool</option><option>Food</option><option>Home Service</option><option>Other</option></select>
+    </div>
+    <div class="fg"><label>Price</label><input type="text" id="vi-price" placeholder="e.g. ₹40/kg or ₹800/day"></div>
+    <div class="fg"><label>Type</label>
+      <select id="vi-type"><option>For Sale</option><option>For Rent</option><option>Service</option></select>
+    </div>
+    <div class="fg"><label>Description</label><textarea id="vi-desc" placeholder="Describe your item or service..."></textarea></div>
+    <div class="fg"><label>Your Mobile (for buyers to contact)</label><input type="tel" id="vi-mobile" placeholder="10-digit mobile"></div>
+    <button class="btn btn-p" onclick="postVendorItem()">📤 Post Listing</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-vendor')">Cancel</button>
+  </div>
+</div>
+
+<!-- EDIT PROFILE OVERLAY -->
+<div class="eov" id="eov-profile">
+  <div class="eov-hd">
+    <button onclick="closeEditProfile()" style="background:var(--bg);border:none;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:1rem">←</button>
+    <h3>✏️ Edit Profile</h3>
+    <button onclick="saveProfile()" style="background:var(--sf);color:#fff;border:none;padding:6px 14px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">Save</button>
+  </div>
+  <div class="eov-body">
+    <!-- Profile photo change -->
+    <div class="photo-upload" onclick="document.getElementById('ep-photo').click()" style="margin-bottom:14px">
+      <input type="file" id="ep-photo" accept="image/*" onchange="previewPhoto(this,'ep-photo-preview','ep-photo-area')" id="ep-photo-area">
+      <div id="ep-photo-preview"><div class="pu-icon">📷</div><p>Change Profile Photo</p></div>
+    </div>
+    <div class="fg"><label>ପୂରା ନାମ <span>/ Full Name</span></label><input id="ep-name" type="text"></div>
+    <div class="fg"><label>ଗ୍ରାମ <span>/ Village</span></label><input id="ep-village" type="text"></div>
+    <div class="fg"><label>ଜିଲ୍ଲା <span>/ District</span></label>
+      <select id="ep-dist">
+        <option>Khurda</option><option>Cuttack</option><option>Puri</option><option>Ganjam</option>
+        <option>Balasore</option><option>Mayurbhanj</option><option>Kendrapara</option><option>Jajpur</option>
+        <option>Bhadrak</option><option>Nayagarh</option><option>Bargarh</option><option>Koraput</option>
+        <option>Sundargarh</option><option>Sambalpur</option><option>Rayagada</option>
+      </select>
+    </div>
+    <div id="ep-worker-extra">
+      <div class="fg"><label>ଦକ୍ଷତା <span>/ Skill</span></label><input id="ep-skill" type="text"></div>
+      <div class="fg"><label>ଦୈନିକ ମଜୁରି <span>/ Daily Rate ₹</span></label><input id="ep-rate" type="number"></div>
+    </div>
+    <div id="ep-vendor-extra">
+      <div class="fg"><label>ଦୋକାନ ନାମ <span>/ Shop Name</span></label><input id="ep-shop" type="text"></div>
+    </div>
+    <div class="fg"><label>ବ୍ୟକ୍ତିଗତ ବିବରଣ <span>/ Bio</span></label><textarea id="ep-bio" placeholder="Tell something about yourself..."></textarea></div>
+    <button class="btn btn-p" onclick="saveProfile()">✅ Save Changes</button>
+  </div>
+</div>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+// ══════════════════════════════════════
+// SUPABASE INIT
+// ══════════════════════════════════════
+let _db = null;
+let supabaseReady = false;
+
+function initSupabase() {
+  if (SUPA_URL === 'YOUR_SUPABASE_URL' || SUPA_KEY === 'YOUR_SUPABASE_ANON_KEY') {
+    console.warn('Supabase not configured — using localStorage fallback');
+    supabaseReady = false;
+    return;
+  }
+  try {
+    const { createClient } = window.supabase;
+    _db = createClient(SUPA_URL, SUPA_KEY);
+    supabaseReady = true;
+    console.log('✅ Supabase connected');
+    setupRealtimeSubscriptions();
+  } catch(e) {
+    console.error('Supabase init failed:', e);
+    supabaseReady = false;
+  }
+}
+
+// ══════════════════════════════════════
+// REALTIME SUBSCRIPTIONS
+// ══════════════════════════════════════
+function setupRealtimeSubscriptions() {
+  if (!supabaseReady || !currentUser) return;
+  // Listen for booking status updates
+  _db.channel('bookings-' + currentUser.id)
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'bookings', filter: 'user_id=eq.' + currentUser.id },
+      payload => {
+        showToast('📋 Booking updated: ' + payload.new.status);
+        addNotification('📋 Booking Status', 'Your booking is now: ' + payload.new.status, new Date().toISOString());
+        loadOrders();
+        updateTrackingModal(payload.new);
+      })
+    .subscribe();
+  // Listen for order updates
+  _db.channel('orders-' + currentUser.id)
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'orders', filter: 'user_id=eq.' + currentUser.id },
+      payload => {
+        showToast('🛒 Order updated: ' + payload.new.status);
+        addNotification('🛒 Order Status', 'Order status: ' + payload.new.status, new Date().toISOString());
+        loadOrders();
+        updateTrackingModal(payload.new);
+      })
+    .subscribe();
+}
+
+// ══════════════════════════════════════
+// DB HELPERS — Supabase OR localStorage
+// ══════════════════════════════════════
+async function dbInsert(table, data) {
+  if (supabaseReady) {
+    const { data: res, error } = await _db.from(table).insert([data]).select().single();
+    if (error) { console.error(error); return null; }
+    return res;
+  } else {
+    const all = JSON.parse(localStorage.getItem('pt_' + table) || '[]');
+    all.unshift(data);
+    localStorage.setItem('pt_' + table, JSON.stringify(all));
+    return data;
+  }
+}
+
+async function dbGetAll(table, filters = {}) {
+  if (supabaseReady) {
+    let q = _db.from(table).select('*').order('created_at', { ascending: false });
+    for (const [k, v] of Object.entries(filters)) q = q.eq(k, v);
+    const { data, error } = await q;
+    if (error) return [];
+    return data || [];
+  } else {
+    let all = JSON.parse(localStorage.getItem('pt_' + table) || '[]');
+    for (const [k, v] of Object.entries(filters)) all = all.filter(r => r[k] === v);
+    return all;
+  }
+}
+
+async function dbUpdate(table, id, data) {
+  if (supabaseReady) {
+    const { error } = await _db.from(table).update(data).eq('id', id);
+    return !error;
+  } else {
+    let all = JSON.parse(localStorage.getItem('pt_' + table) || '[]');
+    const idx = all.findIndex(r => r.id === id);
+    if (idx >= 0) all[idx] = { ...all[idx], ...data };
+    localStorage.setItem('pt_' + table, JSON.stringify(all));
+    return true;
+  }
+}
+
+async function uploadPhoto(file, path) {
+  if (!supabaseReady || !file) return null;
+  const ext = file.name.split('.').pop();
+  const fileName = path + '_' + Date.now() + '.' + ext;
+  const { data, error } = await _db.storage.from('parttimers').upload(fileName, file, { upsert: true });
+  if (error) { console.error('Upload error:', error); return null; }
+  const { data: url } = _db.storage.from('parttimers').getPublicUrl(fileName);
+  return url.publicUrl;
+}
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let currentUser = null;
+let currentLang = 'or';
+let cart = [];
+let orderPrice = 0, orderQty = 1, orderUnit = '';
+let currentOrderItem = null;
+let selectedUserType = '';
+let selectedPlanName = 'Local Mini';
+let qrGenerated = false;
+let currentBooking = null;
+let currentRating = 0;
+let otpSent = false;
+let storedOTP = '';
+let regPhotoFile = null;
+let vendorPhotoFiles = [];
+let editPhotoFile = null;
+
+const PLANS = {
+  'Local Mini':      { price:'₹10/month',    detail:'5km reach • 5 items' },
+  'Local Plus':      { price:'₹20/month',    detail:'5km+ highlight • 10 items' },
+  'Block Reach':     { price:'₹100/month',   detail:'~15km reach • 20 items' },
+  'District Seller': { price:'₹999/month',   detail:'Full district • 50 items' },
+  'Super Vendor':    { price:'₹3,999/month', detail:'Full Odisha • Unlimited' }
+};
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+window.addEventListener('load', () => {
+  initSupabase();
+  setTimeout(() => {
+    document.getElementById('loader').style.opacity = '0';
+    setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+    const saved = localStorage.getItem('pt_user');
+    if (saved) {
+      currentUser = JSON.parse(saved);
+      launchApp();
+    }
+  }, 2400);
+  const today = new Date().toISOString().split('T')[0];
+  const bkDate = document.getElementById('bk-date');
+  if (bkDate) bkDate.value = today;
+});
+
+// ══════════════════════════════════════
+// AUTH — OTP FLOW
+// ══════════════════════════════════════
+function showPg(id) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+function selUT(el, type) {
+  document.querySelectorAll('.ut-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedUserType = type;
+  document.getElementById('reg-form').classList.remove('hidden');
+  ['wf','vdf','vhf'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  if (type === 'worker')  document.getElementById('wf').classList.remove('hidden');
+  if (type === 'vendor')  document.getElementById('vdf').classList.remove('hidden');
+  if (type === 'vehicle') document.getElementById('vhf').classList.remove('hidden');
+}
+
+async function sendOTP() {
+  const name  = document.getElementById('r-name').value.trim();
+  const phone = document.getElementById('r-phone').value.trim();
+  if (!name || !selectedUserType) { showToast('⚠️ Please fill name and select type'); return; }
+  if (phone.length !== 10) { showToast('⚠️ Enter valid 10-digit mobile number'); return; }
+
+  const btn = document.getElementById('btn-send-otp');
+  btn.disabled = true; btn.textContent = 'Sending OTP...';
+
+  if (supabaseReady) {
+    const { error } = await _db.auth.signInWithOtp({ phone: '+91' + phone });
+    if (error) { showToast('❌ OTP failed: ' + error.message); btn.disabled=false; btn.textContent='📱 Send OTP'; return; }
+  } else {
+    // Demo OTP for testing
+    storedOTP = '123456';
+    console.log('Demo OTP: 123456');
+    showToast('📱 Demo OTP: 123456 (Console mein dekho)');
+  }
+
+  document.getElementById('otp-phone-disp').textContent = '+91 ' + phone;
+  document.getElementById('otp-step').classList.remove('hidden');
+  btn.textContent = '✅ OTP Sent';
+  otpSent = true;
+}
+
+async function verifyOTPRegister() {
+  const phone = document.getElementById('r-phone').value.trim();
+  const otp = ['otp1','otp2','otp3','otp4','otp5','otp6'].map(id => document.getElementById(id).value).join('');
+  if (otp.length !== 6) { showToast('⚠️ Enter full 6-digit OTP'); return; }
+
+  if (supabaseReady) {
+    const { data, error } = await _db.auth.verifyOtp({ phone: '+91'+phone, token: otp, type: 'sms' });
+    if (error) { showToast('❌ Wrong OTP. Try again.'); return; }
+  } else {
+    if (otp !== storedOTP && otp !== '123456') { showToast('❌ Wrong OTP'); return; }
+  }
+
+  // Upload profile photo if selected
+  let photoUrl = null;
+  if (regPhotoFile && supabaseReady) {
+    showToast('📷 Uploading photo...');
+    photoUrl = await uploadPhoto(regPhotoFile, 'profiles/' + phone);
+  }
+
+  const uid = 'PT-' + Date.now().toString().slice(-6);
+  const user = {
+    id: uid, name: document.getElementById('r-name').value.trim(),
+    phone, district: document.getElementById('r-dist').value,
+    village: document.getElementById('r-village').value.trim(),
+    type: selectedUserType, photo_url: photoUrl,
+    skill: document.getElementById('r-skill')?.value || '',
+    rate: document.getElementById('r-rate')?.value || '',
+    exp: document.getElementById('r-exp')?.value || '',
+    shop: document.getElementById('r-shop')?.value || '',
+    biz: document.getElementById('r-biz')?.value || '',
+    vtype: document.getElementById('r-vtype')?.value || '',
+    vnum: document.getElementById('r-vnum')?.value || '',
+    vrate: document.getElementById('r-vrate')?.value || '',
+    plan: 'Local Mini', rating: null, jobs: 0, bio: '', status: 'active',
+    created_at: new Date().toISOString()
+  };
+
+  // Save to Supabase + localStorage
+  await dbInsert('users', user);
+  localStorage.setItem('pt_user', JSON.stringify(user));
+
+  // Send WhatsApp welcome message
+  sendWhatsApp(phone, `🌾 *The Part-Timer's mein aapka swagat hai!*\n\nNamaste ${user.name} 🙏\n\nAapka registration safal ho gaya!\nID: ${uid}\nType: ${user.type.toUpperCase()}\n\nApp: https://theparttimers.github.io\n\n*Empowering Rural Odisha* 🌾`);
+
+  currentUser = user;
+  showToast('✅ Registration successful!');
+  setTimeout(launchApp, 800);
+}
+
+async function sendLoginOTP() {
+  const phone = document.getElementById('l-phone').value.trim();
+  if (phone.length !== 10) { showToast('⚠️ Enter valid 10-digit mobile'); return; }
+
+  const btn = document.getElementById('btn-login-otp');
+  btn.disabled = true; btn.textContent = 'Sending...';
+
+  if (supabaseReady) {
+    const { error } = await _db.auth.signInWithOtp({ phone: '+91' + phone });
+    if (error) { showToast('❌ ' + error.message); btn.disabled=false; btn.textContent='📱 Send OTP'; return; }
+  } else {
+    storedOTP = '123456';
+    showToast('📱 Demo OTP: 123456');
+  }
+
+  document.getElementById('login-otp-step').classList.remove('hidden');
+  btn.textContent = '✅ OTP Sent';
+}
+
+async function verifyLoginOTP() {
+  const phone = document.getElementById('l-phone').value.trim();
+  const otp = ['lotp1','lotp2','lotp3','lotp4','lotp5','lotp6'].map(id => document.getElementById(id).value).join('');
+
+  if (supabaseReady) {
+    const { error } = await _db.auth.verifyOtp({ phone: '+91'+phone, token: otp, type: 'sms' });
+    if (error) { showToast('❌ Wrong OTP'); return; }
+  } else {
+    if (otp !== '123456') { showToast('❌ Wrong OTP. Use: 123456'); return; }
+  }
+
+  // Find user
+  const users = await dbGetAll('users', { phone });
+  if (users.length === 0) {
+    showToast('❌ No account found. Please register first.'); return;
+  }
+  const user = users[0];
+  if (user.status === 'blocked') { showToast('🚫 Account blocked. Contact admin.'); return; }
+
+  localStorage.setItem('pt_user', JSON.stringify(user));
+  currentUser = user;
+  showToast('✅ Welcome back, ' + user.name + '!');
+  setTimeout(launchApp, 700);
+}
+
+function demoLogin() {
+  const demo = {
+    id:'PT-DEMO01', name:'Ramesh Sahoo', phone:'9876543210',
+    district:'Khurda', village:'Balianta', type:'worker',
+    skill:'ଶସ୍ୟ ଚାଷ / Crop Farming', rate:'350', exp:'5',
+    plan:'Local Plus', rating:'4.8', jobs:42, bio:'Experienced crop farmer, 5 years.',
+    photo_url: null, created_at: new Date().toISOString(), status:'active'
+  };
+  localStorage.setItem('pt_user', JSON.stringify(demo));
+  currentUser = demo;
+  showToast('🎯 Demo mode! Explore all features.');
+  setTimeout(launchApp, 700);
+}
+
+function launchApp() {
+  document.getElementById('auth-section').classList.add('hidden');
+  document.getElementById('main-app').classList.remove('hidden');
+  loadHomeData();
+  loadProfileData();
+  goTab('home');
+  setupRealtimeSubscriptions();
+  loadNotifications();
+}
+
+// ══════════════════════════════════════
+// OTP UI HELPERS
+// ══════════════════════════════════════
+function otpMove(el, nextId) {
+  el.value = el.value.slice(-1);
+  if (el.value) document.getElementById(nextId)?.focus();
+}
+function otpDone() { /* last box filled */ }
+
+// ══════════════════════════════════════
+// PHOTO HELPERS
+// ══════════════════════════════════════
+function previewPhoto(input, previewId, areaId) {
+  const file = input.files[0];
+  if (!file) return;
+  if (input.id === 'reg-photo') regPhotoFile = file;
+  if (input.id === 'ep-photo') editPhotoFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById(previewId);
+    prev.innerHTML = `<img src="${e.target.result}" style="width:80px;height:80px;border-radius:12px;object-fit:cover">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function previewVendorPhotos(input) {
+  vendorPhotoFiles = Array.from(input.files).slice(0, 3);
+  const prev = document.getElementById('vi-photo-preview');
+  prev.innerHTML = '<div class="img-preview-grid">' +
+    vendorPhotoFiles.map(f => {
+      const url = URL.createObjectURL(f);
+      return `<img src="${url}" class="img-prev">`;
+    }).join('') + '</div>';
+}
+
+// ══════════════════════════════════════
+// HOME DATA
+// ══════════════════════════════════════
+async function loadHomeData() {
+  if (!currentUser) return;
+  document.getElementById('h-nm').textContent = currentUser.name;
+  document.getElementById('h-loc').textContent = currentUser.district + ', Odisha';
+
+  // Load worker avatar
+  if (currentUser.photo_url) {
+    document.getElementById('h-avatar-img').src = currentUser.photo_url;
+    document.getElementById('h-avatar-img').style.display = 'block';
+    document.getElementById('h-avatar-ph').style.display = 'none';
+  }
+
+  // Load nearby workers from Supabase
+  const workers = await dbGetAll('users', { type: 'worker' });
+  const hs = document.getElementById('workers-hs');
+  hs.innerHTML = '';
+  const filtered = workers.filter(w => w.id !== currentUser.id).slice(0, 8);
+
+  if (filtered.length === 0) {
+    // Show sample workers if no real data yet
+    const samples = [
+      {name:'Ramesh Sahoo',skill:'Crop Farming',rate:'350',rating:'4.8',photo_url:null},
+      {name:'Suna Nayak',skill:'Fish Harvest',rate:'300',rating:'4.6',photo_url:null},
+      {name:'Bijay Das',skill:'Electrician',rate:'500',rating:'4.9',photo_url:null},
+    ];
+    samples.forEach(w => hs.appendChild(makeWorkerCard(w)));
+  } else {
+    filtered.forEach(w => hs.appendChild(makeWorkerCard(w)));
+  }
+}
+
+function makeWorkerCard(w) {
+  const div = document.createElement('div');
+  div.className = 'wc';
+  div.onclick = () => openBook(w.name, '👷', w.skill || 'Worker', '₹'+(w.rate||'300')+'/day', '⭐ '+(w.rating||'New'), w.district||'Odisha', w.phone||'');
+  const imgHtml = w.photo_url
+    ? `<div class="wav"><img src="${w.photo_url}" alt="${w.name}"></div>`
+    : `<div class="wav-ph">👷</div>`;
+  div.innerHTML = `
+    ${imgHtml}
+    <div class="avail-dot av-yes"></div>
+    <h4>${w.name}</h4>
+    <div class="wsk">${w.skill||'Worker'}</div>
+    <div class="wrt">⭐ ${w.rating||'New'}</div>
+    <div class="wpr">₹${w.rate||'300'}/day</div>`;
+  return div;
+}
+
+// ══════════════════════════════════════
+// SERVICE LISTINGS — Dynamic from Supabase
+// ══════════════════════════════════════
+async function loadSvcListings(category, filter) {
+  const listId = 'svc-' + category + '-list';
+  const el = document.getElementById(listId);
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--mu)">Loading...</div>';
+
+  let listings = await dbGetAll('listings', { category, status: 'approved' });
+  if (filter && filter !== 'all') listings = listings.filter(l => l.sub_category === filter);
+
+  // Also add workers for this category
+  if (filter === 'worker' || filter === 'all') {
+    const workers = await dbGetAll('users', { type:'worker' });
+    const catWorkers = workers.filter(w => (w.skill||'').toLowerCase().includes(category.toLowerCase()));
+    catWorkers.forEach(w => {
+      const listing = {
+        id: w.id, name: w.name + ' — ' + (w.skill||'Worker'),
+        sub: '📍 ' + (w.village||'') + ', ' + (w.district||''),
+        price: '₹'+(w.rate||'300')+'/day', rating: w.rating||'New',
+        icon: '👷', badge: 'Worker', badge_class: 'bdg-g',
+        available: true, phone: w.phone, photo_url: w.photo_url
+      };
+      listings.unshift(listing);
+    });
+  }
+
+  if (listings.length === 0) {
+    el.innerHTML = '<div style="text-align:center;padding:30px"><div style="font-size:2rem;margin-bottom:10px">📭</div><p style="color:var(--mu);font-size:.85rem">No listings yet in this category.<br>Be the first to post!</p><button onclick="openVendorModal()" class="btn btn-p" style="margin-top:14px;width:auto;padding:10px 20px">➕ Post Listing</button></div>';
+    return;
+  }
+
+  el.innerHTML = listings.map(l => makeListing(l)).join('');
+}
+
+function makeListing(l) {
+  const imgHtml = l.photo_url
+    ? `<div class="lc-img"><img src="${l.photo_url}" alt="${l.name}"></div>`
+    : `<div class="lc-img">${l.icon||'📦'}</div>`;
+  return `
+  <div class="lc" onclick="openBook('${(l.name||'').replace(/'/g,"\\'")}','${l.icon||'📦'}','${(l.sub||'').replace(/'/g,"\\'")}','${l.price||''}','⭐ ${l.rating||"New"}','${l.district||''}','${l.phone||''}')">
+    <div class="lc-row">
+      ${imgHtml}
+      <div class="lc-info">
+        <h4>${l.name}</h4>
+        <div class="lc-sub">${l.sub||''}</div>
+        <div class="lc-meta">
+          <span class="lc-price">${l.price||''}</span>
+          ${l.rating ? `<span class="lc-rt">⭐ ${l.rating}</span>` : ''}
+          ${l.badge ? `<span class="bdg ${l.badge_class||'bdg-g'}">${l.badge}</span>` : ''}
+        </div>
+      </div>
+    </div>
+    <div class="lc-actions">
+      <button class="bb" onclick="event.stopPropagation();openBook('${(l.name||'').replace(/'/g,"\\'")}','${l.icon||'📦'}','${(l.sub||'').replace(/'/g,"\\'")}','${l.price||''}','⭐ ${l.rating||"New"}','${l.district||''}','${l.phone||''}')">📅 Book / Order</button>
+      ${l.phone ? `<button class="bw" onclick="event.stopPropagation();waConnect('${l.phone}','${(l.name||'').replace(/'/g,"\\'")}')">WhatsApp</button>` : ''}
+    </div>
+  </div>`;
+}
+
+async function goSvc(svc) {
+  const all = ['home','orders','notif','profile','farming','fish','poultry','buysell','transport','food','homeservice','photo','tent','pandit','doctor','tuition'];
+  all.forEach(s => document.getElementById('ap-'+s)?.classList.add('hidden'));
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
+  document.getElementById('ap-'+svc)?.classList.remove('hidden');
+
+  // Load dynamic data
+  if (['farming','poultry','homeservice'].includes(svc)) {
+    await loadSvcListings(svc, 'all');
+  }
+  if (svc === 'fish') {
+    await loadSvcListings('fish', 'all');
+    showTab('fish-w');
+  }
+  if (svc === 'buysell') {
+    await loadSvcListings('buysell', 'all');
+    showTab('bs-all');
+  }
+}
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function goTab(tab) {
+  const all = ['home','orders','notif','profile','farming','fish','poultry','buysell','transport','food','homeservice','photo','tent','pandit','doctor','tuition'];
+  all.forEach(t => document.getElementById('ap-'+t)?.classList.add('hidden'));
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
+  document.getElementById('ap-'+tab)?.classList.remove('hidden');
+  document.getElementById('nav-'+tab)?.classList.add('on');
+  if (tab === 'orders') loadOrders();
+  if (tab === 'notif') loadNotifications();
+  if (tab === 'profile') loadProfileData();
+}
+
+function backHome() { goTab('home'); }
+
+// ══════════════════════════════════════
+// BOOKING
+// ══════════════════════════════════════
+function openBook(name, icon, desc, price, rating, loc, phone) {
+  currentBooking = { name, icon, desc, price, rating, loc, phone };
+  document.getElementById('bk-title').textContent = 'Book: ' + name;
+  document.getElementById('bk-icon').textContent = icon;
+  document.getElementById('bk-name').textContent = name;
+  document.getElementById('bk-desc').textContent = desc;
+  document.getElementById('bk-price').textContent = price + ' • ' + rating;
+  document.getElementById('bk-loc').value = currentUser ? (currentUser.village + ', ' + currentUser.district) : '';
+  openModal('modal-book');
+}
+
+async function confirmBook() {
+  const date = document.getElementById('bk-date').value;
+  const time = document.getElementById('bk-time').value;
+  const loc  = document.getElementById('bk-loc').value.trim();
+  const note = document.getElementById('bk-note').value;
+  if (!date || !loc) { showToast('⚠️ Fill date and location'); return; }
+
+  const btn = document.getElementById('btn-confirm-book');
+  btn.disabled = true; btn.textContent = 'Booking...';
+
+  const booking = {
+    id: 'BK-' + Date.now().toString().slice(-6),
+    user_id: currentUser?.id, user_name: currentUser?.name,
+    user_phone: currentUser?.phone,
+    service: currentBooking?.name, icon: currentBooking?.icon,
+    desc: currentBooking?.desc, price: currentBooking?.price,
+    date, time, location: loc, note,
+    status: 'pending', type: 'booking',
+    created_at: new Date().toISOString()
+  };
+
+  await dbInsert('bookings', booking);
+
+  // WhatsApp confirmation to customer
+  sendWhatsApp(currentUser?.phone,
+    `✅ *Booking Confirmed!*\n\n` +
+    `📋 ID: ${booking.id}\n` +
+    `🔧 Service: ${booking.service}\n` +
+    `📅 Date: ${date} at ${time}\n` +
+    `📍 Location: ${loc}\n` +
+    `💰 Price: ${booking.price}\n\n` +
+    `Track status: open app → Orders tab\n\n` +
+    `_The Part-Timer's 🌾_`
+  );
+
+  // WhatsApp alert to worker/vendor if phone available
+  if (currentBooking?.phone && currentBooking.phone !== '9XXXXXXXXX') {
+    sendWhatsApp(currentBooking.phone,
+      `🔔 *New Booking Request!*\n\n` +
+      `👤 Customer: ${currentUser?.name}\n` +
+      `📱 Phone: ${currentUser?.phone}\n` +
+      `📅 Date: ${date} at ${time}\n` +
+      `📍 Location: ${loc}\n` +
+      `📝 Note: ${note||'None'}\n\n` +
+      `Open app to Accept/Reject\n_The Part-Timer's 🌾_`
+    );
+  }
+
+  closeModal('modal-book');
+  btn.disabled = false; btn.textContent = '✅ Confirm Booking';
+  showToast('✅ Booked! WhatsApp confirmation sent.');
+  addNotification('✅ Booking Confirmed!', booking.service + ' on ' + date, new Date().toISOString());
+  loadOrders();
+  // Open tracking modal
+  setTimeout(() => openTracking(booking), 1000);
+}
+
+// ══════════════════════════════════════
+// ORDERS
+// ══════════════════════════════════════
+function openOrder(name, icon, price, unit) {
+  const p = parseInt(price.replace(/[₹,]/g,'')) || 0;
+  orderPrice = p; orderQty = 1; orderUnit = unit;
+  currentOrderItem = { name, icon, price: p, unit };
+  document.getElementById('or-title').textContent = 'Order: ' + name;
+  document.getElementById('or-icon').textContent = icon;
+  document.getElementById('or-name').textContent = name;
+  document.getElementById('or-unit-lbl').textContent = 'per ' + unit;
+  document.getElementById('or-price-lbl').textContent = price + ' / ' + unit;
+  document.getElementById('qty-unit').textContent = unit;
+  document.getElementById('qty-disp').textContent = '1';
+  document.getElementById('or-total').textContent = price;
+  document.getElementById('or-mobile').value = currentUser?.phone || '';
+  openModal('modal-order');
+}
+
+function changeQty(d) {
+  orderQty = Math.max(1, orderQty + d);
+  document.getElementById('qty-disp').textContent = orderQty;
+  document.getElementById('or-total').textContent = '₹' + (orderPrice * orderQty);
+}
+
+async function confirmOrder() {
+  const addr   = document.getElementById('or-addr').value.trim();
+  const mobile = document.getElementById('or-mobile').value.trim();
+  if (!addr) { showToast('⚠️ Enter delivery address'); return; }
+
+  const order = {
+    id: 'ORD-' + Date.now().toString().slice(-6),
+    user_id: currentUser?.id, user_name: currentUser?.name, user_phone: mobile,
+    item: currentOrderItem?.name, icon: currentOrderItem?.icon,
+    qty: orderQty + ' ' + orderUnit,
+    total: '₹' + (orderPrice * orderQty),
+    address: addr, status: 'pending', type: 'order',
+    created_at: new Date().toISOString()
+  };
+
+  await dbInsert('orders', order);
+
+  sendWhatsApp(mobile,
+    `🛒 *Order Placed!*\n\n` +
+    `📦 Item: ${order.item}\n` +
+    `🔢 Qty: ${order.qty}\n` +
+    `💰 Total: ${order.total} (COD)\n` +
+    `📍 Address: ${addr}\n` +
+    `🆔 Order ID: ${order.id}\n\n` +
+    `Track in app → Orders tab\n_The Part-Timer's 🌾_`
+  );
+
+  closeModal('modal-order');
+  showToast('✅ Order placed! Total: ₹' + (orderPrice * orderQty) + ' COD');
+  addNotification('🛒 Order Placed!', order.item + ' — ' + order.total, new Date().toISOString());
+  if (currentUser) { currentUser.jobs = (parseInt(currentUser.jobs)||0)+1; localStorage.setItem('pt_user', JSON.stringify(currentUser)); }
+  loadOrders();
+  setTimeout(() => openTracking(order), 1000);
+}
+
+// FOOD CART
+function addToCart(name, icon, price) {
+  cart.push({ name, icon, price });
+  document.getElementById('cart-count').textContent = '🛒 ' + cart.length;
+  showToast('✅ Added: ' + name);
+}
+
+function openCartModal() {
+  if (cart.length === 0) { showToast('🛒 Cart is empty'); return; }
+  const el = document.getElementById('cart-items');
+  el.innerHTML = cart.map((c,i) => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--br)">
+      <div>${c.icon} ${c.name}</div>
+      <div style="display:flex;gap:11px;align-items:center">
+        <strong>₹${c.price}</strong>
+        <button onclick="removeCart(${i})" style="background:#FFE8E8;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;color:#FF4444;font-weight:700">✕</button>
+      </div>
+    </div>`).join('');
+  const total = cart.reduce((s,c) => s+c.price, 0);
+  document.getElementById('cart-total').textContent = '₹' + total;
+  document.getElementById('cart-mobile').value = currentUser?.phone || '';
+  openModal('modal-cart');
+}
+
+function removeCart(i) { cart.splice(i,1); document.getElementById('cart-count').textContent='🛒 '+cart.length; openCartModal(); }
+
+async function placeCartOrder() {
+  const addr   = document.getElementById('cart-addr').value.trim();
+  const mobile = document.getElementById('cart-mobile').value.trim();
+  if (!addr) { showToast('⚠️ Enter delivery address'); return; }
+  const total = cart.reduce((s,c)=>s+c.price,0);
+  const order = {
+    id:'ORD-'+Date.now().toString().slice(-6),
+    user_id:currentUser?.id, user_name:currentUser?.name, user_phone:mobile,
+    item:'Food Order ('+cart.length+' items)', icon:'🍱',
+    qty:'1 order', total:'₹'+total, address:addr,
+    status:'pending', type:'order', created_at:new Date().toISOString()
+  };
+  await dbInsert('orders', order);
+  sendWhatsApp(mobile,
+    `🍱 *Food Order Placed!*\n\n` +
+    `🔢 Items: ${cart.map(c=>c.icon+' '+c.name).join(', ')}\n` +
+    `💰 Total: ₹${total} (COD)\n` +
+    `📍 Address: ${addr}\n` +
+    `🆔 Order ID: ${order.id}\n\n` +
+    `_The Part-Timer's 🌾_`
+  );
+  cart = [];
+  document.getElementById('cart-count').textContent = '🛒 0';
+  closeModal('modal-cart');
+  showToast('✅ Food order placed! ₹'+total+' COD');
+  addNotification('🍱 Food Order!', '₹'+total+' — Delivery on the way', new Date().toISOString());
+  loadOrders();
+  setTimeout(() => openTracking(order), 1000);
+}
+
+// ══════════════════════════════════════
+// ORDER TRACKING — LIVE STATUS
+// ══════════════════════════════════════
+function openTracking(order) {
+  document.getElementById('track-title').textContent = (order.type==='booking' ? '📋 Booking Tracking' : '🛒 Order Tracking');
+  document.getElementById('track-id').textContent = 'ID: ' + order.id;
+  document.getElementById('t-placed').textContent = new Date(order.created_at).toLocaleTimeString();
+  updateTrackingModal(order);
+  openModal('modal-track');
+  // Realtime updates via Supabase — handled in setupRealtimeSubscriptions
+}
+
+function updateTrackingModal(order) {
+  const s = order.status;
+  const dotC = document.getElementById('t-dot-confirm');
+  const lineC = document.getElementById('t-line-confirm');
+  const dotP  = document.getElementById('t-dot-progress');
+  const dotD  = document.getElementById('t-dot-done');
+  const confirmTxt = document.getElementById('t-confirm-text');
+
+  if (s === 'confirmed' || s === 'in_progress' || s === 'done') {
+    dotC.className='st-dot done'; dotC.textContent='✓';
+    lineC.className='st-line done';
+    document.getElementById('t-confirmed').textContent = 'Just confirmed';
+    confirmTxt.textContent = 'Confirmed by worker/vendor';
+  }
+  if (s === 'in_progress') {
+    dotP.className='st-dot active'; dotP.textContent='⋯';
+    document.getElementById('t-progress').textContent = 'Currently working...';
+  }
+  if (s === 'done') {
+    dotP.className='st-dot done'; dotP.textContent='✓';
+    dotD.className='st-dot done'; dotD.textContent='✓';
+    document.getElementById('t-done').textContent = 'Completed!';
+    document.getElementById('rating-section').classList.remove('hidden');
+  }
+}
+
+function waTrack() {
+  const msg = `📋 Status update ke liye\n\nThe Part-Timer's app open karo → Orders tab mein live tracking dekho 🌾`;
+  sendWhatsApp(currentUser?.phone, msg);
+  showToast('📱 Check WhatsApp for updates!');
+}
+
+// RATING
+function rateStar(n) {
+  currentRating = n;
+  document.querySelectorAll('.star').forEach((s,i) => s.classList.toggle('on', i < n));
+}
+async function submitRating() {
+  if (!currentRating) { showToast('⚠️ Select rating first'); return; }
+  showToast('⭐ Thank you for rating: ' + currentRating + '/5!');
+  closeModal('modal-track');
+  if (currentUser) {
+    currentUser.rating = currentRating.toFixed(1);
+    localStorage.setItem('pt_user', JSON.stringify(currentUser));
+  }
+}
+
+// ══════════════════════════════════════
+// LOAD ORDERS PAGE
+// ══════════════════════════════════════
+async function loadOrders() {
+  const el = document.getElementById('orders-list');
+  if (!el || !currentUser) return;
+  const bookings = await dbGetAll('bookings', { user_id: currentUser.id });
+  const orders   = await dbGetAll('orders',   { user_id: currentUser.id });
+  const all = [...bookings, ...orders].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+
+  if (all.length === 0) {
+    el.innerHTML = '<div style="text-align:center;padding:36px;color:var(--mu)"><div style="font-size:2.5rem;margin-bottom:10px">📭</div><p style="font-size:.87rem">No bookings yet.<br>Book a service to get started!</p></div>';
+    return;
+  }
+  el.innerHTML = all.map(o => `
+    <div class="order-item" onclick="openTracking(${JSON.stringify(o).replace(/"/g,'&quot;')})">
+      <div class="order-hd">
+        <h4>${o.icon||'📋'} ${o.item||o.service}</h4>
+        <span class="sc sc-${o.status==='confirmed'?'c':o.status==='done'?'d':o.status==='cancelled'?'x':'p'}">${o.status||'pending'}</span>
+      </div>
+      <div class="order-det">
+        📅 ${o.date||o.created_at?.slice(0,10)} ${o.time?'at '+o.time:''}<br>
+        💰 ${o.total||o.price||''} ${o.qty?'• '+o.qty:''}<br>
+        📍 ${o.location||o.address||''}
+      </div>
+      <div style="margin-top:8px;display:flex;gap:7px">
+        <button class="bb" style="font-size:.72rem" onclick="event.stopPropagation();openTracking(${JSON.stringify(o).replace(/"/g,'&quot;')})">📍 Track</button>
+        ${o.status==='pending'?`<button onclick="event.stopPropagation();cancelOrder('${o.id}','${o.type}')" style="background:#FFE8E8;color:#FF4444;border:none;border-radius:8px;padding:8px 13px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.72rem;cursor:pointer">✕ Cancel</button>`:''}
+      </div>
+    </div>`).join('');
+}
+
+async function cancelOrder(id, type) {
+  if (!confirm('Cancel this ' + type + '?')) return;
+  const table = type === 'booking' ? 'bookings' : 'orders';
+  await dbUpdate(table, id, { status: 'cancelled' });
+  showToast('✅ Cancelled successfully');
+  sendWhatsApp(currentUser?.phone, `❌ Your ${type} #${id} has been cancelled.\n_The Part-Timer's 🌾_`);
+  loadOrders();
+}
+
+// ══════════════════════════════════════
+// NOTIFICATIONS
+// ══════════════════════════════════════
+let notifications = JSON.parse(localStorage.getItem('pt_notifs')||'[]');
+
+function addNotification(title, text, time) {
+  notifications.unshift({ title, text, time, read: false });
+  localStorage.setItem('pt_notifs', JSON.stringify(notifications.slice(0,50)));
+  const unread = notifications.filter(n=>!n.read).length;
+  document.getElementById('notif-badge').style.display = unread > 0 ? 'block' : 'none';
+}
+
+function loadNotifications() {
+  const el = document.getElementById('notif-list');
+  if (!el) return;
+  const all = notifications;
+  if (all.length === 0) {
+    el.innerHTML = '<div style="text-align:center;padding:36px;color:var(--mu)"><div style="font-size:2.5rem;margin-bottom:10px">🔔</div><p style="font-size:.87rem">No notifications yet</p></div>';
+    return;
+  }
+  el.innerHTML = all.map((n,i) => `
+    <div class="notif-item" onclick="markRead(${i})" style="${!n.read?'border-left:3px solid var(--sf)':''}">
+      <div class="notif-ic">📣</div>
+      <div class="notif-inf">
+        <h4>${n.title}</h4>
+        <p>${n.text}</p>
+        <div class="nt">${new Date(n.time).toLocaleString()}</div>
+      </div>
+      ${!n.read?'<div class="ndot2"></div>':''}
+    </div>`).join('');
+  // Mark all as read
+  notifications.forEach(n => n.read = true);
+  localStorage.setItem('pt_notifs', JSON.stringify(notifications));
+  document.getElementById('notif-badge').style.display = 'none';
+}
+
+function markRead(i) { notifications[i].read = true; localStorage.setItem('pt_notifs', JSON.stringify(notifications)); }
+
+// ══════════════════════════════════════
+// VENDOR POST
+// ══════════════════════════════════════
+function openVendorModal() {
+  if (!currentUser) { showToast('⚠️ Login first'); return; }
+  openModal('modal-vendor');
+}
+
+async function postVendorItem() {
+  const name  = document.getElementById('vi-name').value.trim();
+  const price = document.getElementById('vi-price').value.trim();
+  const cat   = document.getElementById('vi-cat').value;
+  if (!name || !price) { showToast('⚠️ Fill name and price'); return; }
+
+  let photoUrls = [];
+  if (vendorPhotoFiles.length > 0 && supabaseReady) {
+    showToast('📷 Uploading photos...');
+    for (const f of vendorPhotoFiles) {
+      const url = await uploadPhoto(f, 'listings/'+currentUser.id);
+      if (url) photoUrls.push(url);
+    }
+  }
+
+  const item = {
+    id: 'ITEM-'+Date.now().toString().slice(-6),
+    vendor_id: currentUser?.id, vendor_name: currentUser?.name,
+    phone: document.getElementById('vi-mobile').value || currentUser?.phone,
+    name, category: cat.toLowerCase().replace(/\s+/g,''),
+    price, type: document.getElementById('vi-type').value,
+    desc: document.getElementById('vi-desc').value,
+    district: currentUser?.district, village: currentUser?.village,
+    photo_url: photoUrls[0] || null, photos: photoUrls,
+    status: 'pending', created_at: new Date().toISOString(),
+    icon: '📦', sub: '📍 '+currentUser?.village+', '+currentUser?.district,
+    badge: document.getElementById('vi-type').value, badge_class:'bdg-s'
+  };
+
+  await dbInsert('listings', item);
+  closeModal('modal-vendor');
+  vendorPhotoFiles = [];
+  showToast('✅ Listing posted! Admin review ho raha hai.');
+  addNotification('✅ Listing Posted!', name + ' — pending admin approval', new Date().toISOString());
+}
+
+// ══════════════════════════════════════
+// PROFILE
+// ══════════════════════════════════════
+function loadProfileData() {
+  if (!currentUser) return;
+  const u = currentUser;
+  document.getElementById('p-name').textContent = u.name;
+  document.getElementById('p-type').textContent = (u.type||'user').charAt(0).toUpperCase()+(u.type||'user').slice(1);
+  document.getElementById('p-loc').textContent  = '📍 '+(u.village||'')+', '+(u.district||'');
+  document.getElementById('p-plan-badge').textContent = u.plan||'Free';
+
+  // Avatar
+  const wrap = document.getElementById('p-avatar-wrap');
+  wrap.innerHTML = u.photo_url
+    ? `<div class="pav"><img src="${u.photo_url}" alt="${u.name}"></div>`
+    : `<div class="pav-ph">👤</div>`;
+
+  document.getElementById('did-id').textContent   = u.id||'PT-000000';
+  document.getElementById('did-name').textContent  = u.name;
+  document.getElementById('did-role').textContent  = (u.type||'').charAt(0).toUpperCase()+(u.type||'').slice(1)+' • '+(u.skill||u.biz||u.vtype||'Member');
+  document.getElementById('did-loc').textContent   = '📍 '+(u.village||'')+', '+(u.district||'')+', Odisha';
+  document.getElementById('did-rating').textContent = u.rating ? '⭐ '+u.rating+' Rating' : '⭐ New Member';
+  document.getElementById('stat-jobs').textContent  = u.jobs||'0';
+  document.getElementById('stat-rating').textContent= u.rating||'New';
+  document.getElementById('stat-since').textContent = u.created_at ? new Date(u.created_at).getFullYear() : new Date().getFullYear();
+
+  // Skills
+  const sk = document.getElementById('did-skills');
+  sk.innerHTML = '';
+  [u.skill, u.biz, u.vtype].filter(Boolean).forEach(t => {
+    const s = document.createElement('span');
+    s.className='dtag'; s.textContent=t; sk.appendChild(s);
+  });
+  if (sk.children.length===0) { const s=document.createElement('span');s.className='dtag';s.textContent=(u.type||'Member');sk.appendChild(s); }
+
+  // Vendor plan
+  if (['vendor','worker','vehicle'].includes(u.type)) {
+    document.getElementById('vendor-plan-sec').classList.remove('hidden');
+    document.getElementById('plan-name-disp').textContent  = u.plan||'Local Mini';
+    const pd = PLANS[u.plan]||PLANS['Local Mini'];
+    document.getElementById('plan-detail-disp').textContent = pd.price+' • '+pd.detail;
+  }
+
+  // Edit prefill
+  document.getElementById('ep-name').value    = u.name||'';
+  document.getElementById('ep-village').value  = u.village||'';
+  document.getElementById('ep-skill').value    = u.skill||'';
+  document.getElementById('ep-rate').value     = u.rate||'';
+  document.getElementById('ep-shop').value     = u.shop||'';
+  document.getElementById('ep-bio').value      = u.bio||'';
+  document.getElementById('ep-worker-extra').style.display = (['worker','vehicle'].includes(u.type)) ? '' : 'none';
+  document.getElementById('ep-vendor-extra').style.display = (u.type==='vendor') ? '' : 'none';
+
+  // QR
+  if (!qrGenerated) {
+    const qrEl = document.getElementById('qrcode');
+    qrEl.innerHTML = '';
+    try {
+      new QRCode(qrEl, {
+        text: 'https://theparttimers.in/profile/'+u.id+'?name='+encodeURIComponent(u.name),
+        width:68, height:68, colorDark:'#1A1A1A', colorLight:'#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+      qrGenerated = true;
+    } catch(e){}
+  }
+}
+
+async function saveProfile() {
+  if (!currentUser) return;
+  currentUser.name    = document.getElementById('ep-name').value.trim()    || currentUser.name;
+  currentUser.village = document.getElementById('ep-village').value.trim() || currentUser.village;
+  currentUser.district= document.getElementById('ep-dist').value           || currentUser.district;
+  currentUser.skill   = document.getElementById('ep-skill').value;
+  currentUser.rate    = document.getElementById('ep-rate').value;
+  currentUser.shop    = document.getElementById('ep-shop').value;
+  currentUser.bio     = document.getElementById('ep-bio').value;
+
+  // Upload new photo
+  if (editPhotoFile && supabaseReady) {
+    showToast('📷 Uploading photo...');
+    const url = await uploadPhoto(editPhotoFile, 'profiles/'+currentUser.phone);
+    if (url) currentUser.photo_url = url;
+    editPhotoFile = null;
+  }
+
+  localStorage.setItem('pt_user', JSON.stringify(currentUser));
+  await dbUpdate('users', currentUser.id, currentUser);
+  qrGenerated = false;
+  loadProfileData();
+  closeEditProfile();
+  showToast('✅ Profile updated!');
+}
+
+function openEditProfile()  { document.getElementById('eov-profile').classList.add('on'); }
+function closeEditProfile() { document.getElementById('eov-profile').classList.remove('on'); }
+
+// ══════════════════════════════════════
+// PLAN
+// ══════════════════════════════════════
+function selPlan(el, name) {
+  document.querySelectorAll('.pc').forEach(p=>p.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedPlanName = name;
+}
+
+async function activatePlan() {
+  if (!currentUser) return;
+  currentUser.plan = selectedPlanName;
+  localStorage.setItem('pt_user', JSON.stringify(currentUser));
+  await dbUpdate('users', currentUser.id, { plan: selectedPlanName });
+  closeModal('modal-plan');
+  loadProfileData();
+  showToast('✅ Plan upgraded to '+selectedPlanName+'!');
+  addNotification('💎 Plan Upgraded!', selectedPlanName+' activated', new Date().toISOString());
+}
+
+function openPlanModal() { openModal('modal-plan'); }
+
+// ══════════════════════════════════════
+// WHATSAPP
+// ══════════════════════════════════════
+function sendWhatsApp(phone, message) {
+  if (!phone || phone === '9XXXXXXXXX' || phone === '91XXXXXXXXXX') return;
+  const clean = phone.replace(/\D/g,'');
+  const num = clean.startsWith('91') ? clean : '91'+clean;
+  const url = 'https://wa.me/'+num+'?text='+encodeURIComponent(message);
+  // Open in background (doesn't interrupt user)
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  // Don't auto-click for background sends — just log
+  console.log('WhatsApp ready:', url);
+  document.body.removeChild(a);
+}
+
+function waConnect(phone, service) {
+  const msg = `Namaste! Main The Part-Timer's app se contact kar raha hoon.\n\nService chahiye: *${service}*\n\nKripya respond karein. 🙏`;
+  const clean = phone.replace(/\D/g,'');
+  const num = clean.startsWith('91') ? clean : '91'+clean;
+  window.open('https://wa.me/'+num+'?text='+encodeURIComponent(msg), '_blank');
+}
+
+// ══════════════════════════════════════
+// SEARCH
+// ══════════════════════════════════════
+function doSearch(val) {
+  if (!val.trim()) return;
+  const v = val.toLowerCase();
+  const map = {
+    'farm':'farming','paddy':'farming','crop':'farming','seed':'farming','tractor':'farming',
+    'fish':'fish','prawn':'fish','aqua':'fish','boat':'fish','jhaala':'fish',
+    'chicken':'poultry','egg':'poultry','goat':'poultry','cow':'poultry',
+    'auto':'transport','tempo':'transport','truck':'transport','cab':'transport',
+    'food':'food','thali':'food','rice':'food','lunch':'food','tiffin':'food',
+    'electric':'homeservice','plumb':'homeservice','mason':'homeservice','paint':'homeservice','bike':'homeservice',
+    'photo':'photo','camera':'photo','video':'photo','drone':'photo',
+    'tent':'tent','dj':'tent','catering':'tent',
+    'pandit':'pandit','pooja':'pandit','puja':'pandit',
+    'doctor':'doctor','health':'doctor','nurse':'doctor',
+    'tuition':'tuition','coaching':'tuition','computer':'tuition'
+  };
+  for (const [k,svc] of Object.entries(map)) {
+    if (v.includes(k)) { goSvc(svc); showToast('🔍 Showing: '+svc); return; }
+  }
+  showToast('🔍 Try: farming, fish, transport, food, doctor...');
+}
+
+async function searchListings(val) {
+  if (!val.trim()) { loadSvcListings('buysell','all'); return; }
+  const el = document.getElementById('svc-bs-list');
+  const listings = await dbGetAll('listings', { status:'approved' });
+  const filtered = listings.filter(l => (l.name||'').toLowerCase().includes(val.toLowerCase()) || (l.desc||'').toLowerCase().includes(val.toLowerCase()));
+  if (filtered.length===0) { el.innerHTML='<div style="text-align:center;padding:24px;color:var(--mu)">No results for "'+val+'"</div>'; return; }
+  el.innerHTML = filtered.map(l=>makeListing(l)).join('');
+}
+
+function searchVehicles() {
+  const from = document.getElementById('t-from').value;
+  const to   = document.getElementById('t-to').value;
+  if (!from||!to) { showToast('⚠️ Enter pickup and drop location'); return; }
+  showToast('🔍 Showing vehicles for: '+from+' → '+to);
+}
+
+// ══════════════════════════════════════
+// LANGUAGE
+// ══════════════════════════════════════
+function toggleLang() {
+  currentLang = currentLang==='or'?'en':'or';
+  const alb = document.getElementById('alb');
+  const lb  = document.getElementById('lang-btn');
+  const ls  = document.getElementById('lang-status');
+  const srch= document.getElementById('srch');
+  const hgr = document.getElementById('h-gr');
+  if (alb)  alb.textContent  = currentLang==='or'?'EN':'ଓଡ଼ିଆ';
+  if (lb)   lb.textContent   = currentLang==='or'?'Switch to English':'ଓଡ଼ିଆ ଭାଷା';
+  if (ls)   ls.textContent   = currentLang==='or'?'Odia (Primary)':'English (Secondary)';
+  if (srch) srch.placeholder = currentLang==='or'?'ସେବା ଖୋଜନ୍ତୁ | Search services...':'Search services...';
+  if (hgr)  hgr.textContent  = currentLang==='or'?'ନମସ୍କାର 🙏':'Welcome 🙏';
+  showToast(currentLang==='or'?'ଓଡ଼ିଆ ଭାଷା ସକ୍ରିୟ':'English mode active');
+}
+
+// ══════════════════════════════════════
+// CHIPS / TABS
+// ══════════════════════════════════════
+function chipSel(el) {
+  el.closest('.chips')?.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function tabSel(el, target) {
+  el.parentElement.querySelectorAll('.ti').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  showTab(target);
+}
+
+function showTab(id) {
+  const allTabs=['fish-w','fish-b','fish-r','fish-boat','bs-all','bs-sell','bs-rent','bs-haata'];
+  allTabs.forEach(t=>{ const e=document.getElementById(t);if(e)e.classList.add('hidden'); });
+  const show=document.getElementById(id);
+  if(show)show.classList.remove('hidden');
+}
+
+// ══════════════════════════════════════
+// MISC
+// ══════════════════════════════════════
+function openModal(id)  { document.getElementById(id).classList.add('on'); }
+function closeModal(id) { document.getElementById(id).classList.remove('on'); }
+document.querySelectorAll('.modal').forEach(m => m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('on'); }));
+
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.style.display='block';
+  clearTimeout(t._t); t._t=setTimeout(()=>t.style.display='none',2800);
+}
+
+function shareProfile() {
+  const url='https://theparttimers.in/profile/'+(currentUser?.id||'demo');
+  if(navigator.share){ navigator.share({title:'My Part-Timer Profile',text:currentUser?.name+' — '+currentUser?.skill,url}); }
+  else { navigator.clipboard?.writeText(url).then(()=>showToast('📋 Profile link copied!')); }
+}
+
+function confirmLogout() {
+  if(confirm('Logout karna chahte hain?')){
+    if(supabaseReady && _db) _db.auth.signOut();
+    localStorage.removeItem('pt_user');
+    currentUser=null; cart=[]; qrGenerated=false;
+    document.getElementById('main-app').classList.add('hidden');
+    document.getElementById('auth-section').classList.remove('hidden');
+    showPg('pg-welcome');
+  }
+}
+</script>
+</body>
+</html>

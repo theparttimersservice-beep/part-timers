@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — The Part-Timer's</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0F1117;--s1:#1A1D27;--s2:#22263A;--s3:#2A2F45;
+  --or:#FF6B00;--gn:#2D9B56;--rd:#FF4444;--sk:#3B9DD6;--gd:#D4A017;--pu:#8B5CF6;
+  --tx:#F1F1F1;--mt:#8B8FA8;--br:#2E3347;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Baloo 2',sans-serif}
+body{background:var(--bg);color:var(--tx);min-height:100vh}
+
+/* LOGIN */
+#login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 60% 40%,#1a1d27,#0f1117)}
+.lcard{background:var(--s1);border:1px solid var(--br);border-radius:20px;padding:40px 34px;width:100%;max-width:360px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.lcard .logo{text-align:center;margin-bottom:26px}
+.lcard .logo h2{font-size:1.3rem;font-weight:800;color:var(--or);margin-top:10px}
+.lcard .logo p{font-size:.78rem;color:var(--mt);margin-top:3px}
+.lf{margin-bottom:13px}
+.lf label{display:block;font-size:.72rem;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.lf input{width:100%;padding:11px 13px;background:var(--s2);border:1px solid var(--br);border-radius:9px;font-size:.9rem;color:var(--tx);transition:border-color .2s;font-family:'Baloo 2',sans-serif}
+.lf input:focus{outline:none;border-color:var(--or)}
+.lbtn{width:100%;padding:13px;background:linear-gradient(135deg,var(--or),#FF8C3A);color:#fff;border:none;border-radius:10px;font-weight:800;font-size:.95rem;cursor:pointer;transition:all .2s;font-family:'Baloo 2',sans-serif;margin-top:4px}
+.lbtn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,107,0,.4)}
+.linfo{text-align:center;margin-top:14px;font-size:.72rem;color:var(--mt)}
+.lerr{background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.3);color:var(--rd);padding:9px 12px;border-radius:8px;font-size:.78rem;margin-bottom:12px;display:none}
+
+/* APP LAYOUT */
+#app{display:none;min-height:100vh;flex-direction:row}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:215px;background:var(--s1);border-right:1px solid var(--br);display:flex;flex-direction:column;z-index:100;transition:width .2s}
+.sb-logo{padding:18px 16px;border-bottom:1px solid var(--br)}
+.sb-logo h2{font-size:.9rem;font-weight:800;color:var(--or)}
+.sb-logo p{font-size:.67rem;color:var(--mt);margin-top:2px}
+.sb-nav{flex:1;padding:10px 0;overflow-y:auto}
+.snlabel{padding:5px 16px;font-size:.6rem;font-weight:700;color:var(--mt);letter-spacing:1px;text-transform:uppercase;margin-top:8px}
+.sni{display:flex;align-items:center;gap:9px;padding:9px 16px;cursor:pointer;transition:all .2s;border-left:3px solid transparent;font-size:.82rem;font-weight:600;color:var(--mt);margin-bottom:1px}
+.sni:hover{background:var(--s2);color:var(--tx)}
+.sni.on{background:var(--s2);color:var(--or);border-left-color:var(--or)}
+.sni .ic{font-size:1rem;width:20px;text-align:center}
+.sb-foot{padding:12px 16px;border-top:1px solid var(--br);display:flex;align-items:center;gap:9px}
+.sb-av{width:32px;height:32px;background:var(--or);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;flex-shrink:0}
+.sb-ui h4{font-size:.78rem;font-weight:700}
+.sb-ui p{font-size:.65rem;color:var(--mt)}
+
+/* MAIN */
+.main{margin-left:215px;min-height:100vh;padding:0}
+.topbar{background:var(--s1);border-bottom:1px solid var(--br);padding:12px 22px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.tb-left h3{font-size:.95rem;font-weight:800}
+.tb-left p{font-size:.7rem;color:var(--mt);margin-top:1px}
+.tb-right{display:flex;align-items:center;gap:10px}
+.tb-status{display:flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;color:var(--gn)}
+.tb-status .dot{width:6px;height:6px;background:var(--gn);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.tbtn{background:var(--s2);border:1px solid var(--br);color:var(--tx);padding:6px 13px;border-radius:8px;font-weight:600;font-size:.75rem;cursor:pointer;transition:all .2s;font-family:'Baloo 2',sans-serif}
+.tbtn:hover{border-color:var(--or);color:var(--or)}
+.tbtn.red{color:var(--rd)}
+.tbtn.red:hover{border-color:var(--rd);background:rgba(255,68,68,.08)}
+
+.content{padding:20px 22px;padding-bottom:40px}
+
+/* PANELS */
+.panel{display:none}
+.panel.on{display:block}
+
+/* STAT CARDS */
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.scard{background:var(--s1);border:1px solid var(--br);border-radius:13px;padding:16px 14px;position:relative;overflow:hidden}
+.scard::after{content:'';position:absolute;top:-18px;right:-18px;width:60px;height:60px;border-radius:50%;opacity:.08}
+.scard.c1::after{background:var(--or)}.scard.c2::after{background:var(--gn)}.scard.c3::after{background:var(--sk)}.scard.c4::after{background:var(--gd)}
+.scard .slabel{font-size:.65rem;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px}
+.scard .snum{font-size:1.9rem;font-weight:800;line-height:1}
+.scard.c1 .snum{color:var(--or)}.scard.c2 .snum{color:var(--gn)}.scard.c3 .snum{color:var(--sk)}.scard.c4 .snum{color:var(--gd)}
+.scard .ssub{font-size:.68rem;color:var(--mt);margin-top:4px}
+.scard .sicon{position:absolute;top:12px;right:13px;font-size:1.3rem;opacity:.5}
+.sgrid2{grid-template-columns:repeat(4,1fr)}
+
+/* CHARTS */
+.cgrid{display:grid;grid-template-columns:1.5fr 1fr;gap:12px;margin-bottom:20px}
+.ccard{background:var(--s1);border:1px solid var(--br);border-radius:13px;padding:16px}
+.ccard h3{font-size:.85rem;font-weight:800;margin-bottom:13px}
+.ccard canvas{max-height:180px}
+
+/* TABLE CARD */
+.tcard{background:var(--s1);border:1px solid var(--br);border-radius:13px;overflow:hidden;margin-bottom:18px}
+.tc-hd{padding:13px 16px;border-bottom:1px solid var(--br);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.tc-hd h3{font-size:.87rem;font-weight:800}
+.tc-acts{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.srch{background:var(--s2);border:1px solid var(--br);border-radius:7px;padding:6px 11px;font-size:.78rem;color:var(--tx);width:200px;font-family:'Baloo 2',sans-serif}
+.srch:focus{outline:none;border-color:var(--or)}
+.fsel{background:var(--s2);border:1px solid var(--br);border-radius:7px;padding:6px 10px;font-size:.75rem;color:var(--tx);font-family:'Baloo 2',sans-serif}
+.fsel:focus{outline:none}
+table{width:100%;border-collapse:collapse}
+th{padding:9px 13px;text-align:left;font-size:.65rem;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.4px;background:var(--s2);border-bottom:1px solid var(--br)}
+td{padding:10px 13px;font-size:.8rem;border-bottom:1px solid var(--br);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--mt)}
+
+/* BADGES */
+.bdg{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.62rem;font-weight:700;white-space:nowrap}
+.b-active{background:rgba(45,155,86,.15);color:var(--gn);border:1px solid rgba(45,155,86,.25)}
+.b-blocked{background:rgba(255,68,68,.15);color:var(--rd);border:1px solid rgba(255,68,68,.25)}
+.b-pending{background:rgba(255,107,0,.15);color:var(--or);border:1px solid rgba(255,107,0,.25)}
+.b-confirmed{background:rgba(59,157,214,.15);color:var(--sk);border:1px solid rgba(59,157,214,.25)}
+.b-done{background:rgba(45,155,86,.15);color:var(--gn);border:1px solid rgba(45,155,86,.25)}
+.b-worker{background:rgba(212,160,23,.15);color:var(--gd)}
+.b-vendor{background:rgba(59,157,214,.15);color:var(--sk)}
+.b-customer{background:rgba(139,92,246,.15);color:var(--pu)}
+.b-vehicle{background:rgba(255,107,0,.15);color:var(--or)}
+
+/* ACTION BTNS */
+.ab{padding:4px 10px;border-radius:6px;border:none;font-weight:700;font-size:.68rem;cursor:pointer;transition:all .2s;font-family:'Baloo 2',sans-serif}
+.a-ok{background:rgba(45,155,86,.15);color:var(--gn);border:1px solid rgba(45,155,86,.25)}
+.a-ok:hover{background:var(--gn);color:#fff}
+.a-blk{background:rgba(255,68,68,.15);color:var(--rd);border:1px solid rgba(255,68,68,.25)}
+.a-blk:hover{background:var(--rd);color:#fff}
+.a-del{background:rgba(255,68,68,.08);color:var(--rd)}
+.a-del:hover{background:var(--rd);color:#fff}
+.a-view{background:rgba(59,157,214,.15);color:var(--sk)}
+.a-view:hover{background:var(--sk);color:#fff}
+.a-edit{background:rgba(212,160,23,.15);color:var(--gd)}
+.a-edit:hover{background:var(--gd);color:#fff}
+
+/* MODAL */
+.modal{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px}
+.modal.on{display:flex}
+.mbox{background:var(--s1);border:1px solid var(--br);border-radius:16px;padding:22px;width:100%;max-width:500px;max-height:85vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.mhd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.mhd h3{font-size:.97rem;font-weight:800}
+.mcls{background:var(--s2);border:none;color:var(--mt);width:28px;height:28px;border-radius:7px;cursor:pointer;font-size:.95rem}
+.mf{margin-bottom:12px}
+.mf label{display:block;font-size:.7rem;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.mf input,.mf select,.mf textarea{width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--br);border-radius:8px;font-size:.85rem;color:var(--tx);font-family:'Baloo 2',sans-serif;transition:border-color .2s}
+.mf input:focus,.mf select:focus,.mf textarea:focus{outline:none;border-color:var(--or)}
+.mf textarea{resize:vertical;min-height:65px}
+.mbtn{padding:10px 18px;border:none;border-radius:9px;font-weight:800;font-size:.85rem;cursor:pointer;font-family:'Baloo 2',sans-serif;transition:all .2s}
+.mbtn-p{background:linear-gradient(135deg,var(--or),#FF8C3A);color:#fff;width:100%}
+.mbtn-o{background:var(--s2);border:1px solid var(--br);color:var(--mt);width:100%;margin-top:8px}
+
+/* SETTINGS */
+.setgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.setcard{background:var(--s1);border:1px solid var(--br);border-radius:13px;padding:16px}
+.setcard h3{font-size:.85rem;font-weight:800;margin-bottom:13px;color:var(--tx)}
+.togrow{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--br);font-size:.8rem}
+.togrow:last-of-type{border:none}
+.tog{position:relative;display:inline-block;width:38px;height:20px}
+.tog input{opacity:0;width:0;height:0}
+.togsl{position:absolute;cursor:pointer;inset:0;background:var(--s3);border-radius:10px;transition:.3s}
+.togsl:before{content:'';position:absolute;height:14px;width:14px;left:3px;bottom:3px;background:var(--mt);border-radius:50%;transition:.3s}
+.tog input:checked+.togsl{background:var(--or)}
+.tog input:checked+.togsl:before{transform:translateX(18px);background:#fff}
+
+/* REVENUE */
+.revgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:18px}
+.revc{background:var(--s1);border:1px solid var(--br);border-radius:11px;padding:13px 10px;text-align:center}
+.revc .rp{font-size:.72rem;font-weight:700;color:var(--or);margin-bottom:3px}
+.revc .rv{font-size:1.05rem;font-weight:800}
+.revc .rl{font-size:.62rem;color:var(--mt);margin-top:2px}
+.revtotal{background:linear-gradient(135deg,var(--or),var(--gd));border-radius:13px;padding:16px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center}
+.revtotal h3{color:rgba(255,255,255,.8);font-size:.78rem;font-weight:700}
+.revtotal .rtn{font-size:1.5rem;font-weight:800;color:#fff;margin-top:4px}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--s1);border:1px solid var(--br);color:var(--tx);padding:11px 16px;border-radius:9px;font-size:.8rem;font-weight:600;z-index:9999;display:none;box-shadow:0 8px 24px rgba(0,0,0,.4);max-width:280px}
+.toast.show{display:block;animation:slidein .3s ease}
+@keyframes slidein{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.toast.success{border-color:rgba(45,155,86,.4);color:var(--gn)}
+.toast.error{border-color:rgba(255,68,68,.4);color:var(--rd)}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:36px 18px;color:var(--mt)}
+.empty .ei{font-size:2.2rem;margin-bottom:9px}
+.empty p{font-size:.82rem}
+
+/* SHEET STATUS BANNER */
+.sbanner{border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:11px;margin-bottom:16px;font-size:.8rem}
+.sbanner.connected{background:rgba(45,155,86,.1);border:1px solid rgba(45,155,86,.25);color:var(--gn)}
+.sbanner.disconnected{background:rgba(255,107,0,.1);border:1px solid rgba(255,107,0,.25);color:var(--or)}
+.sbanner .sb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sbanner.connected .sb-dot{background:var(--gn)}
+.sbanner.disconnected .sb-dot{background:var(--or)}
+.sbanner a{color:inherit;font-weight:700;cursor:pointer}
+
+/* PLAN BADGE */
+.plan-mini{font-size:.62rem;padding:2px 7px;border-radius:20px;font-weight:700;white-space:nowrap}
+.pm-free{background:rgba(139,92,246,.15);color:var(--pu)}
+.pm-local{background:rgba(255,107,0,.15);color:var(--or)}
+.pm-block{background:rgba(59,157,214,.15);color:var(--sk)}
+.pm-district{background:rgba(212,160,23,.15);color:var(--gd)}
+.pm-super{background:rgba(45,155,86,.15);color:var(--gn)}
+
+/* DETAIL GRID */
+.detgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.detrow{background:var(--s2);border-radius:8px;padding:9px 11px}
+.detrow label{font-size:.62rem;font-weight:700;color:var(--mt);text-transform:uppercase;display:block;margin-bottom:2px}
+.detrow p{font-size:.84rem;font-weight:600;color:var(--tx)}
+
+/* PAGINATION */
+.pgn{display:flex;align-items:center;gap:5px;padding:12px 16px;justify-content:center;border-top:1px solid var(--br)}
+.pgbtn{background:var(--s2);border:1px solid var(--br);color:var(--tx);width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:.8rem;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',sans-serif}
+.pgbtn.on{background:var(--or);border-color:var(--or);color:#fff}
+.pgbtn:hover:not(.on){border-color:var(--or);color:var(--or)}
+
+@media(max-width:900px){
+  .sgrid{grid-template-columns:1fr 1fr}
+  .cgrid{grid-template-columns:1fr}
+  .setgrid{grid-template-columns:1fr}
+  .sidebar{width:55px}
+  .sidebar .sb-logo p,.sidebar .snlabel,.sidebar .sni span,.sidebar .sb-ui{display:none}
+  .sidebar .sb-logo h2{font-size:.7rem}
+  .main{margin-left:55px}
+}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN -->
+<div id="login-page">
+  <div class="lcard">
+    <div class="logo">
+      <div style="font-size:2.2rem">🌾⚙️</div>
+      <h2>Admin Dashboard</h2>
+      <p>The Part-Timer's — Full Control</p>
+    </div>
+    <div class="lerr" id="lerr"></div>
+    <div class="lf"><label>Username</label><input id="a-user" type="text" placeholder="admin" autocomplete="off"></div>
+    <div class="lf"><label>Password</label><input id="a-pass" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="lbtn" onclick="doLogin()">🔐 Login</button>
+    <div class="linfo">Default: admin / admin@parttimers123<br><span style="color:var(--or);font-size:.68rem">Change in Settings after login</span></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;flex-direction:row">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-logo"><h2>🌾 Part-Timer's</h2><p>Admin v2.0</p></div>
+    <div class="sb-nav">
+      <div class="snlabel">Main</div>
+      <div class="sni on" onclick="showPanel('dashboard')"><span class="ic">📊</span><span>Dashboard</span></div>
+      <div class="sni" onclick="showPanel('users')"><span class="ic">👥</span><span>Users</span></div>
+      <div class="sni" onclick="showPanel('bookings')"><span class="ic">📋</span><span>Bookings</span></div>
+      <div class="sni" onclick="showPanel('orders')"><span class="ic">🛒</span><span>Orders</span></div>
+      <div class="sni" onclick="showPanel('listings')"><span class="ic">🏪</span><span>Listings</span></div>
+      <div class="snlabel">Revenue</div>
+      <div class="sni" onclick="showPanel('revenue')"><span class="ic">💰</span><span>Revenue</span></div>
+      <div class="sni" onclick="showPanel('vendors')"><span class="ic">🏷️</span><span>Vendor Plans</span></div>
+      <div class="snlabel">Control</div>
+      <div class="sni" onclick="showPanel('analytics')"><span class="ic">📈</span><span>Analytics</span></div>
+      <div class="sni" onclick="showPanel('banners')"><span class="ic">📢</span><span>Banners</span></div>
+      <div class="sni" onclick="showPanel('settings')"><span class="ic">⚙️</span><span>Settings</span></div>
+    </div>
+    <div class="sb-foot">
+      <div class="sb-av">A</div>
+      <div class="sb-ui"><h4>Admin</h4><p>Super Admin</p></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-left">
+        <h3 id="panel-title">Dashboard</h3>
+        <p id="panel-sub">Live data from Supabase</p>
+      </div>
+      <div class="tb-right">
+        <div class="tb-status"><div class="dot"></div><span id="conn-status">Connecting...</span></div>
+        <button class="tbtn" onclick="refreshAll()">🔄 Refresh</button>
+        <button class="tbtn red" onclick="adminLogout()">🚪 Logout</button>
+      </div>
+    </div>
+    <div class="content">
+
+      <!-- SUPABASE BANNER -->
+      <div id="sb-banner" class="sbanner disconnected">
+        <div class="sb-dot"></div>
+        <div style="flex:1"><strong>Supabase not connected.</strong> Go to <a onclick="showPanel('settings')">Settings → Supabase</a> to connect your database.</div>
+      </div>
+
+      <!-- ===== DASHBOARD ===== -->
+      <div id="panel-dashboard" class="panel on">
+        <div class="sgrid">
+          <div class="scard c1"><div class="slabel">Total Users</div><div class="snum" id="s-users">—</div><div class="ssub">All registered</div><div class="sicon">👥</div></div>
+          <div class="scard c2"><div class="slabel">Workers</div><div class="snum" id="s-workers">—</div><div class="ssub">Active workers</div><div class="sicon">👷</div></div>
+          <div class="scard c3"><div class="slabel">Bookings</div><div class="snum" id="s-bookings">—</div><div class="ssub">Total bookings</div><div class="sicon">📋</div></div>
+          <div class="scard c4"><div class="slabel">Revenue Est.</div><div class="snum" id="s-revenue">—</div><div class="ssub">Monthly vendor plans</div><div class="sicon">💰</div></div>
+        </div>
+        <div class="sgrid sgrid2" style="margin-bottom:20px">
+          <div class="scard" style="--c:var(--pu)"><div class="slabel">Vendors</div><div class="snum" style="color:var(--pu)" id="s-vendors">—</div><div class="ssub">Registered vendors</div><div class="sicon">🏪</div></div>
+          <div class="scard" style="--c:#FF8C3A"><div class="slabel">Vehicle Owners</div><div class="snum" style="color:#FF8C3A" id="s-vehicles">—</div><div class="ssub">Transport providers</div><div class="sicon">🚜</div></div>
+          <div class="scard" style="--c:var(--gn)"><div class="slabel">Orders</div><div class="snum" style="color:var(--gn)" id="s-orders">—</div><div class="ssub">Total orders</div><div class="sicon">🛒</div></div>
+          <div class="scard" style="--c:var(--sk)"><div class="slabel">Pending Listings</div><div class="snum" style="color:var(--sk)" id="s-listings">—</div><div class="ssub">Awaiting approval</div><div class="sicon">📦</div></div>
+        </div>
+        <div class="cgrid">
+          <div class="ccard"><h3>📈 Registrations (Last 7 Days)</h3><canvas id="ch-reg"></canvas></div>
+          <div class="ccard"><h3>🥧 Users by Type</h3><canvas id="ch-types"></canvas></div>
+        </div>
+        <div class="cgrid">
+          <div class="ccard"><h3>💰 Revenue by Plan</h3><canvas id="ch-rev"></canvas></div>
+          <div class="ccard"><h3>🗺️ Top Districts</h3><canvas id="ch-dist"></canvas></div>
+        </div>
+        <div class="tcard">
+          <div class="tc-hd"><h3>🕐 Recent Registrations</h3><button class="ab a-view" onclick="showPanel('users')">View All →</button></div>
+          <table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Phone</th><th>District</th><th>Joined</th><th>Status</th></tr></thead>
+          <tbody id="t-recent-users"><tr><td colspan="7"><div class="empty"><div class="ei">⏳</div><p>Loading...</p></div></td></tr></tbody></table>
+        </div>
+        <div class="tcard">
+          <div class="tc-hd"><h3>📋 Recent Bookings</h3><button class="ab a-view" onclick="showPanel('bookings')">View All →</button></div>
+          <table><thead><tr><th>ID</th><th>User</th><th>Service</th><th>Amount</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="t-recent-bookings"><tr><td colspan="7"><div class="empty"><div class="ei">⏳</div><p>Loading...</p></div></td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- ===== USERS ===== -->
+      <div id="panel-users" class="panel">
+        <div class="tc-acts" style="margin-bottom:14px">
+          <input class="srch" id="u-srch" placeholder="🔍 Search name, phone, district..." oninput="filterUsers()">
+          <select class="fsel" id="u-type" onchange="filterUsers()"><option value="">All Types</option><option value="customer">Customer</option><option value="worker">Worker</option><option value="vendor">Vendor</option><option value="vehicle">Vehicle</option></select>
+          <select class="fsel" id="u-status" onchange="filterUsers()"><option value="">All Status</option><option value="active">Active</option><option value="blocked">Blocked</option></select>
+          <button class="tbtn" onclick="exportCSV('users')">📥 CSV</button>
+          <button class="tbtn" onclick="loadUsers()">🔄</button>
+        </div>
+        <div class="tcard">
+          <div class="tc-hd"><h3>👥 All Users <span id="u-count" style="color:var(--mt);font-weight:400;font-size:.78rem"></span></h3></div>
+          <table><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Phone</th><th>Village</th><th>District</th><th>Skill/Shop</th><th>Plan</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="t-users"><tr><td colspan="11"><div class="empty"><div class="ei">👥</div><p>No users yet</p></div></td></tr></tbody></table>
+          <div class="pgn" id="pgn-users"></div>
+        </div>
+      </div>
+
+      <!-- ===== BOOKINGS ===== -->
+      <div id="panel-bookings" class="panel">
+        <div class="tc-acts" style="margin-bottom:14px">
+          <input class="srch" placeholder="🔍 Search..." oninput="filterBookings(this.value)">
+          <select class="fsel" onchange="filterBookingStatus(this.value)"><option value="">All Status</option><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select>
+          <button class="tbtn" onclick="exportCSV('bookings')">📥 CSV</button>
+          <button class="tbtn" onclick="loadBookings()">🔄</button>
+        </div>
+        <div class="tcard">
+          <div class="tc-hd"><h3>📋 All Bookings</h3></div>
+          <table><thead><tr><th>ID</th><th>Customer</th><th>Service</th><th>Date</th><th>Location</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="t-bookings"><tr><td colspan="8"><div class="empty"><div class="ei">📋</div><p>No bookings yet</p></div></td></tr></tbody></table>
+          <div class="pgn" id="pgn-bookings"></div>
+        </div>
+      </div>
+
+      <!-- ===== ORDERS ===== -->
+      <div id="panel-orders" class="panel">
+        <div class="tc-acts" style="margin-bottom:14px">
+          <input class="srch" placeholder="🔍 Search orders...">
+          <select class="fsel" onchange="filterOrderStatus(this.value)"><option value="">All Status</option><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="delivered">Delivered</option></select>
+          <button class="tbtn" onclick="exportCSV('orders')">📥 CSV</button>
+          <button class="tbtn" onclick="loadOrders()">🔄</button>
+        </div>
+        <div class="tcard">
+          <div class="tc-hd"><h3>🛒 All Orders</h3></div>
+          <table><thead><tr><th>ID</th><th>Customer</th><th>Item</th><th>Qty</th><th>Total</th><th>Address</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="t-orders"><tr><td colspan="8"><div class="empty"><div class="ei">🛒</div><p>No orders yet</p></div></td></tr></tbody></table>
+          <div class="pgn" id="pgn-orders"></div>
+        </div>
+      </div>
+
+      <!-- ===== LISTINGS ===== -->
+      <div id="panel-listings" class="panel">
+        <div class="tc-acts" style="margin-bottom:14px">
+          <input class="srch" placeholder="🔍 Search listings...">
+          <select class="fsel" onchange="filterListingStatus(this.value)"><option value="">All Status</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select>
+          <button class="ab a-ok" onclick="approveAllPending()">✅ Approve All Pending</button>
+          <button class="tbtn" onclick="loadListings()">🔄</button>
+        </div>
+        <div class="tcard">
+          <div class="tc-hd"><h3>🏪 Vendor Listings <span id="pending-ct" style="color:var(--or);font-size:.75rem"></span></h3></div>
+          <table><thead><tr><th>ID</th><th>Vendor</th><th>Item</th><th>Category</th><th>Price</th><th>Type</th><th>District</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="t-listings"><tr><td colspan="9"><div class="empty"><div class="ei">🏪</div><p>No listings yet</p></div></td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- ===== REVENUE ===== -->
+      <div id="panel-revenue" class="panel">
+        <div class="revtotal">
+          <div><h3>ESTIMATED MONTHLY REVENUE</h3><div class="rtn" id="rev-total">₹0</div><p id="rev-sub" style="color:rgba(255,255,255,.75);font-size:.72rem;margin-top:3px">From 0 active vendor plans</p></div>
+          <div style="font-size:2.5rem">💰</div>
+        </div>
+        <div class="revgrid" id="rev-grid">
+          <div class="revc"><div class="rp">Local Mini</div><div class="rv">₹10/mo</div><div class="rl" id="rc-1">0 vendors</div></div>
+          <div class="revc"><div class="rp">Local Plus</div><div class="rv">₹20/mo</div><div class="rl" id="rc-2">0 vendors</div></div>
+          <div class="revc"><div class="rp">Block Reach</div><div class="rv">₹100/mo</div><div class="rl" id="rc-3">0 vendors</div></div>
+          <div class="revc"><div class="rp">District Seller</div><div class="rv">₹999/mo</div><div class="rl" id="rc-4">0 vendors</div></div>
+          <div class="revc"><div class="rp">Super Vendor</div><div class="rv">₹3,999/mo</div><div class="rl" id="rc-5">0 vendors</div></div>
+        </div>
+        <div class="cgrid">
+          <div class="ccard"><h3>📊 2-Year Revenue Projection</h3><canvas id="ch-proj"></canvas></div>
+          <div class="ccard"><h3>💎 Plan Distribution</h3><canvas id="ch-plans"></canvas></div>
+        </div>
+        <div class="tcard">
+          <div class="tc-hd"><h3>💎 Paid Vendors</h3></div>
+          <table><thead><tr><th>Name</th><th>Shop</th><th>Plan</th><th>Fee/mo</th><th>District</th><th>Joined</th><th>Actions</th></tr></thead>
+          <tbody id="t-paid-vendors"><tr><td colspan="7"><div class="empty"><div class="ei">💎</div><p>No paid vendors yet</p></div></td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- ===== VENDOR PLANS ===== -->
+      <div id="panel-vendors" class="panel">
+        <div class="tcard">
+          <div class="tc-hd"><h3>🏷️ All Vendors & Plans</h3><button class="ab a-ok" onclick="openAssignPlan()">+ Assign Plan</button></div>
+          <table><thead><tr><th>Name</th><th>Shop</th><th>Business Type</th><th>Plan</th><th>Fee/mo</th><th>District</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="t-vendors"><tr><td colspan="8"><div class="empty"><div class="ei">🏷️</div><p>No vendors yet</p></div></td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- ===== ANALYTICS ===== -->
+      <div id="panel-analytics" class="panel">
+        <div class="cgrid">
+          <div class="ccard"><h3>📊 Service Category Demand</h3><canvas id="ch-cats"></canvas></div>
+          <div class="ccard"><h3>🗺️ Users by District</h3><canvas id="ch-dists"></canvas></div>
+        </div>
+        <div class="cgrid">
+          <div class="ccard"><h3>📅 Monthly Growth</h3><canvas id="ch-growth"></canvas></div>
+          <div class="ccard"><h3>👥 User Type Split</h3><canvas id="ch-split"></canvas></div>
+        </div>
+        <div class="tcard">
+          <div class="tc-hd"><h3>🗺️ District-wise Breakdown</h3></div>
+          <table><thead><tr><th>District</th><th>Total Users</th><th>Workers</th><th>Vendors</th><th>Customers</th><th>Vehicle</th></tr></thead>
+          <tbody id="t-districts"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ===== BANNERS ===== -->
+      <div id="panel-banners" class="panel">
+        <div class="setgrid">
+          <div class="setcard">
+            <h3>📢 App Toggles</h3>
+            <div class="togrow"><label>Sunday Haata LIVE</label><label class="tog"><input type="checkbox" id="tog-haata" checked onchange="saveToggle('haata',this.checked)"><span class="togsl"></span></label></div>
+            <div class="togrow"><label>Promo Banner</label><label class="tog"><input type="checkbox" id="tog-promo" checked onchange="saveToggle('promo',this.checked)"><span class="togsl"></span></label></div>
+            <div class="togrow"><label>New Registrations Open</label><label class="tog"><input type="checkbox" id="tog-reg" checked onchange="saveToggle('reg',this.checked)"><span class="togsl"></span></label></div>
+            <div class="togrow"><label>Maintenance Mode</label><label class="tog"><input type="checkbox" id="tog-maint" onchange="saveToggle('maintenance',this.checked)"><span class="togsl"></span></label></div>
+          </div>
+          <div class="setcard">
+            <h3>✏️ Banner Text</h3>
+            <div class="mf"><label>Haata Title</label><input type="text" id="ban-title" value="🛍️ ରବିବାର ହଟ | Sunday Local Haata"></div>
+            <div class="mf"><label>Haata Subtitle</label><input type="text" id="ban-sub" value="Buy directly from local vendors near you"></div>
+            <div class="mf"><label>Promo Text</label><input type="text" id="ban-promo" value="ପ୍ରଥମ ୩ ମାସ ମାଗଣା! First 3 months free"></div>
+            <button class="mbtn mbtn-p" onclick="saveBanners()" style="margin-top:6px">💾 Save Banners</button>
+          </div>
+          <div class="setcard">
+            <h3>📤 Broadcast Message</h3>
+            <div class="mf"><label>Message</label><textarea id="notif-msg" placeholder="Message to send to all users via WhatsApp/SMS..."></textarea></div>
+            <div class="mf"><label>Target</label>
+              <select id="notif-target"><option>All Users</option><option>Workers Only</option><option>Vendors Only</option><option>Customers Only</option></select>
+            </div>
+            <button class="mbtn mbtn-p" onclick="sendBroadcast()">📤 Send Broadcast</button>
+          </div>
+          <div class="setcard">
+            <h3>🎨 App Config</h3>
+            <div class="mf"><label>Support WhatsApp</label><input type="tel" id="cfg-wa" placeholder="WhatsApp number for support"></div>
+            <div class="mf"><label>App Tagline (Odia)</label><input type="text" id="cfg-tagline" value="ଗ୍ରାମୀଣ ଭାରତ ଶକ୍ତି"></div>
+            <button class="mbtn mbtn-p" onclick="saveConfig()">💾 Save Config</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SETTINGS ===== -->
+      <div id="panel-settings" class="panel">
+        <div class="setgrid">
+          <div class="setcard">
+            <h3>🔐 Admin Credentials</h3>
+            <div class="mf"><label>Current Password</label><input type="password" id="set-curr" placeholder="Current password"></div>
+            <div class="mf"><label>New Password</label><input type="password" id="set-new" placeholder="New password"></div>
+            <div class="mf"><label>Confirm Password</label><input type="password" id="set-conf" placeholder="Confirm new password"></div>
+            <button class="mbtn mbtn-p" onclick="changePass()">🔑 Update Password</button>
+          </div>
+          <div class="setcard">
+            <h3>🔗 Supabase Connection</h3>
+            <div id="sb-conn-banner" class="sbanner disconnected" style="margin-bottom:12px">
+              <div class="sb-dot"></div><span id="sb-conn-txt">Not connected</span>
+            </div>
+            <div class="mf"><label>Supabase Project URL</label><input type="url" id="sb-url" placeholder="https://xxxx.supabase.co"></div>
+            <div class="mf"><label>Supabase Anon Key</label><input type="text" id="sb-key" placeholder="eyJhbGciOi..."></div>
+            <button class="mbtn mbtn-p" onclick="saveSupabase()" style="margin-bottom:8px">💾 Save & Connect</button>
+            <button class="mbtn mbtn-o" onclick="testSupabase()">🧪 Test Connection</button>
+          </div>
+          <div class="setcard">
+            <h3>🗄️ Data Management</h3>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <button class="mbtn" style="background:var(--sk);color:#fff;padding:10px" onclick="exportCSV('users')">📊 Export Users CSV</button>
+              <button class="mbtn" style="background:var(--pu);color:#fff;padding:10px" onclick="exportCSV('bookings')">📋 Export Bookings CSV</button>
+              <button class="mbtn" style="background:var(--gn);color:#fff;padding:10px" onclick="exportAllJSON()">📥 Export All Data JSON</button>
+              <button class="mbtn" style="background:rgba(255,68,68,.15);border:1px solid rgba(255,68,68,.3);color:var(--rd);padding:10px" onclick="clearLocalData()">🗑️ Clear Local Cache</button>
+            </div>
+          </div>
+          <div class="setcard">
+            <h3>📖 Setup Guide</h3>
+            <p style="font-size:.8rem;color:var(--mt);line-height:1.6;margin-bottom:12px">To connect Supabase:<br>1. Go to supabase.com → New Project<br>2. Copy Project URL + Anon Key<br>3. Paste above → Save & Connect<br>4. Run SQL from supabase-setup.sql<br>5. Done — all data syncs live!</p>
+            <div style="background:var(--s2);border-radius:8px;padding:10px;font-size:.75rem;color:var(--or);font-family:'JetBrains Mono',monospace">
+              supabase.com → Free tier<br>500MB DB + 1GB storage<br>50,000 users/month FREE
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- USER DETAIL MODAL -->
+<div class="modal" id="modal-user">
+  <div class="mbox">
+    <div class="mhd"><h3>👤 User Details</h3><button class="mcls" onclick="closeModal('modal-user')">✕</button></div>
+    <div class="detgrid" id="user-det-body"></div>
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <button class="mbtn" id="mod-blk-btn" style="flex:1;padding:10px;background:rgba(255,68,68,.15);color:var(--rd);border:1px solid rgba(255,68,68,.25)" onclick="toggleBlockModal()">🚫 Block</button>
+      <button class="mbtn" style="flex:1;padding:10px;background:rgba(255,68,68,.08);color:var(--rd)" onclick="deleteUserModal()">🗑️ Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKING DETAIL MODAL -->
+<div class="modal" id="modal-booking">
+  <div class="mbox">
+    <div class="mhd"><h3>📋 Booking Details</h3><button class="mcls" onclick="closeModal('modal-booking')">✕</button></div>
+    <div class="detgrid" id="booking-det-body"></div>
+    <div class="mf"><label>Update Status</label>
+      <select id="bk-status-sel"><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select>
+    </div>
+    <button class="mbtn mbtn-p" onclick="updateBookingStatus()">💾 Update Status</button>
+  </div>
+</div>
+
+<!-- ASSIGN PLAN MODAL -->
+<div class="modal" id="modal-plan">
+  <div class="mbox">
+    <div class="mhd"><h3>💎 Assign Vendor Plan</h3><button class="mcls" onclick="closeModal('modal-plan')">✕</button></div>
+    <div class="mf"><label>Vendor ID</label><input type="text" id="plan-uid" placeholder="User ID"></div>
+    <div class="mf"><label>Plan</label>
+      <select id="plan-sel">
+        <option value="Local Mini">Local Mini — ₹10/mo</option>
+        <option value="Local Plus">Local Plus — ₹20/mo</option>
+        <option value="Block Reach">Block Reach — ₹100/mo</option>
+        <option value="District Seller">District Seller — ₹999/mo</option>
+        <option value="Super Vendor">Super Vendor — ₹3,999/mo</option>
+      </select>
+    </div>
+    <button class="mbtn mbtn-p" onclick="assignPlan()">✅ Assign Plan</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIG — ADMIN CREDENTIALS
+// ============================================================
+let ADMIN_USER = localStorage.getItem('pt_admin_user') || 'admin';
+let ADMIN_PASS = localStorage.getItem('pt_admin_pass') || 'admin@parttimers123';
+
+// ============================================================
+// SUPABASE INIT
+// ============================================================
+let sb = null;
+let sbConnected = false;
+
+function initSupabase() {
+  const url = localStorage.getItem('pt_sb_url');
+  const key = localStorage.getItem('pt_sb_key');
+  if (url && key && url.includes('supabase.co')) {
+    try {
+      const { createClient } = window.supabase;
+      sb = createClient(url, key);
+      sbConnected = true;
+      updateConnBanner(true);
+    } catch(e) {
+      sbConnected = false;
+      updateConnBanner(false);
+    }
+  }
+}
+
+function updateConnBanner(connected) {
+  const banner = document.getElementById('sb-banner');
+  const topStatus = document.getElementById('conn-status');
+  const connBanner = document.getElementById('sb-conn-banner');
+  const connTxt = document.getElementById('sb-conn-txt');
+  if (connected) {
+    if (banner) { banner.className = 'sbanner connected'; banner.innerHTML = '<div class="sb-dot"></div><div>✅ <strong>Supabase connected.</strong> All data syncs live to your database.</div>'; }
+    if (topStatus) topStatus.textContent = 'Supabase Live';
+    if (connBanner) connBanner.className = 'sbanner connected';
+    if (connTxt) connTxt.textContent = 'Connected ✅';
+  } else {
+    if (banner) { banner.className = 'sbanner disconnected'; banner.innerHTML = '<div class="sb-dot"></div><div><strong>Supabase not connected.</strong> Go to <a onclick="showPanel(\'settings\')">Settings → Supabase</a> to connect.</div>'; }
+    if (topStatus) topStatus.textContent = 'No DB Connected';
+    if (connBanner) connBanner.className = 'sbanner disconnected';
+    if (connTxt) connTxt.textContent = 'Not connected';
+  }
+}
+
+// ============================================================
+// LOGIN
+// ============================================================
+function doLogin() {
+  const user = document.getElementById('a-user').value.trim();
+  const pass = document.getElementById('a-pass').value;
+  const err = document.getElementById('lerr');
+  if (user === ADMIN_USER && pass === ADMIN_PASS) {
+    document.getElementById('login-page').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    initSupabase();
+    refreshAll();
+    showToast('✅ Welcome, Admin!', 'success');
+  } else {
+    err.style.display = 'block';
+    err.textContent = '❌ Wrong username or password';
+    setTimeout(() => err.style.display = 'none', 3000);
+  }
+}
+
+function adminLogout() {
+  if (!confirm('Logout?')) return;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('a-pass').value = '';
+}
+
+// ============================================================
+// PANEL NAVIGATION
+// ============================================================
+const PANEL_TITLES = {
+  dashboard:'Dashboard Overview', users:'Users Management',
+  bookings:'Bookings', orders:'Orders', listings:'Vendor Listings',
+  revenue:'Revenue & Plans', vendors:'Vendor Plan Management',
+  analytics:'Analytics', banners:'Banners & Config', settings:'Settings'
+};
+
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.sni').forEach(n => n.classList.remove('on'));
+  document.getElementById('panel-' + id)?.classList.add('on');
+  document.querySelectorAll('.sni').forEach(n => { if (n.textContent.toLowerCase().includes(id.slice(0,4).toLowerCase())) n.classList.add('on'); });
+  document.getElementById('panel-title').textContent = PANEL_TITLES[id] || id;
+  document.getElementById('panel-sub').textContent = 'Live data from Supabase';
+
+  // Load data for panel
+  const loaders = { users:loadUsers, bookings:loadBookings, orders:loadOrders, listings:loadListings, revenue:loadRevenue, vendors:loadVendors, analytics:loadAnalytics };
+  if (loaders[id]) loaders[id]();
+}
+
+// ============================================================
+// DATA HELPERS
+// ============================================================
+async function getData(table, query) {
+  if (!sb) return getLocalData(table);
+  try {
+    let q = sb.from(table).select('*').order('created_at', { ascending: false });
+    if (query) q = query(q);
+    const { data, error } = await q;
+    if (error) throw error;
+    return data || [];
+  } catch(e) {
+    console.warn('Supabase error, using localStorage:', e.message);
+    return getLocalData(table);
+  }
+}
+
+function getLocalData(table) {
+  const map = {
+    users: 'pt_all_users',
+    bookings: 'pt_bookings',
+    orders: 'pt_orders',
+    listings: 'pt_listings'
+  };
+  return JSON.parse(localStorage.getItem(map[table] || table) || '[]');
+}
+
+async function updateRow(table, id, updates) {
+  if (sb) {
+    const { error } = await sb.from(table).update(updates).eq('id', id);
+    if (error) throw error;
+  } else {
+    // Update localStorage
+    const key = { users:'pt_all_users', bookings:'pt_bookings', orders:'pt_orders', listings:'pt_listings' }[table];
+    if (!key) return;
+    let arr = JSON.parse(localStorage.getItem(key) || '[]');
+    const idx = arr.findIndex(r => r.id === id);
+    if (idx >= 0) { arr[idx] = { ...arr[idx], ...updates }; localStorage.setItem(key, JSON.stringify(arr)); }
+  }
+}
+
+async function deleteRow(table, id) {
+  if (sb) {
+    const { error } = await sb.from(table).delete().eq('id', id);
+    if (error) throw error;
+  } else {
+    const key = { users:'pt_all_users', bookings:'pt_bookings', orders:'pt_orders', listings:'pt_listings' }[table];
+    if (!key) return;
+    let arr = JSON.parse(localStorage.getItem(key) || '[]');
+    arr = arr.filter(r => r.id !== id);
+    localStorage.setItem(key, JSON.stringify(arr));
+  }
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+async function loadDashboard() {
+  const users = await getData('users');
+  const bookings = await getData('bookings');
+  const orders = await getData('orders');
+  const listings = await getData('listings');
+
+  // Stats
+  document.getElementById('s-users').textContent = users.length;
+  document.getElementById('s-workers').textContent = users.filter(u => u.type === 'worker').length;
+  document.getElementById('s-bookings').textContent = bookings.length;
+  document.getElementById('s-vendors').textContent = users.filter(u => u.type === 'vendor').length;
+  document.getElementById('s-vehicles').textContent = users.filter(u => u.type === 'vehicle').length;
+  document.getElementById('s-orders').textContent = orders.length;
+  document.getElementById('s-listings').textContent = listings.filter(l => l.status === 'pending').length;
+
+  // Revenue estimate
+  const planFees = { 'Local Mini':10,'Local Plus':20,'Block Reach':100,'District Seller':999,'Super Vendor':3999 };
+  const rev = users.filter(u => u.type === 'vendor').reduce((s,v) => s + (planFees[v.plan] || 0), 0);
+  document.getElementById('s-revenue').textContent = '₹' + rev.toLocaleString('en-IN');
+
+  // Recent users table
+  const rut = document.getElementById('t-recent-users');
+  if (users.length === 0) { rut.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="ei">👥</div><p>No users yet</p></div></td></tr>'; }
+  else {
+    rut.innerHTML = users.slice(0,8).map(u => `
+      <tr>
+        <td><span class="mono">${u.id || u.user_id || '—'}</span></td>
+        <td><strong>${u.name || u.full_name}</strong></td>
+        <td><span class="bdg b-${u.type || 'customer'}">${u.type || 'customer'}</span></td>
+        <td>${u.phone || '—'}</td>
+        <td>${u.district || '—'}</td>
+        <td>${fmtDate(u.created_at || u.createdAt)}</td>
+        <td><span class="bdg ${u.status==='blocked'?'b-blocked':'b-active'}">${u.status || 'active'}</span></td>
+      </tr>`).join('');
+  }
+
+  // Recent bookings
+  const rbt = document.getElementById('t-recent-bookings');
+  if (bookings.length === 0) { rbt.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="ei">📋</div><p>No bookings yet</p></div></td></tr>'; }
+  else {
+    rbt.innerHTML = bookings.slice(0,6).map(b => `
+      <tr>
+        <td><span class="mono">${b.id || '—'}</span></td>
+        <td>${b.user_name || b.userName || '—'}</td>
+        <td>${b.service || '—'}</td>
+        <td>${b.price || b.amount || '—'}</td>
+        <td>${fmtDate(b.date || b.created_at)}</td>
+        <td><span class="bdg b-${b.status || 'pending'}">${b.status || 'pending'}</span></td>
+        <td><button class="ab a-ok" onclick="confirmBooking('${b.id}')">✅</button></td>
+      </tr>`).join('');
+  }
+
+  // Charts
+  drawCharts(users, bookings);
+}
+
+function drawCharts(users, bookings) {
+  // Registrations last 7 days
+  const days = Array.from({length:7}, (_,i) => { const d = new Date(); d.setDate(d.getDate()-6+i); return d.toISOString().slice(0,10); });
+  const regCounts = days.map(d => users.filter(u => (u.created_at||u.createdAt||'').slice(0,10) === d).length);
+  makeChart('ch-reg', 'line', days.map(d => d.slice(5)), regCounts, '#FF6B00');
+
+  // User types
+  const types = ['customer','worker','vendor','vehicle'];
+  const typeCounts = types.map(t => users.filter(u => u.type === t).length);
+  makeChart('ch-types', 'doughnut', types.map(t => t.charAt(0).toUpperCase()+t.slice(1)), typeCounts, ['#8B5CF6','#D4A017','#3B9DD6','#FF6B00']);
+
+  // Revenue by plan
+  const plans = ['Local Mini','Local Plus','Block Reach','District Seller','Super Vendor'];
+  const fees = [10,20,100,999,3999];
+  const planCounts = plans.map(p => users.filter(u => u.plan === p).length);
+  const planRev = planCounts.map((c,i) => c * fees[i]);
+  makeChart('ch-rev', 'bar', plans.map(p => p.split(' ')[0]), planRev, '#D4A017');
+
+  // Districts
+  const districts = [...new Set(users.map(u => u.district).filter(Boolean))].slice(0,8);
+  const distCounts = districts.map(d => users.filter(u => u.district === d).length);
+  makeChart('ch-dist', 'bar', districts, distCounts, '#2D9B56');
+}
+
+function makeChart(id, type, labels, data, color) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  if (ctx._chart) ctx._chart.destroy();
+  ctx._chart = new Chart(ctx, {
+    type,
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: Array.isArray(color) ? color.map(c => c + '99') : color + '33',
+        borderColor: Array.isArray(color) ? color : color,
+        borderWidth: 2,
+        fill: type === 'line',
+        tension: 0.4,
+        pointRadius: type === 'line' ? 3 : 0,
+        pointBackgroundColor: color
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: type !== 'bar' && type !== 'line', labels: { color:'#8B8FA8', font:{size:11} } } },
+      scales: type !== 'doughnut' && type !== 'pie' ? {
+        x: { ticks:{ color:'#8B8FA8', font:{size:10} }, grid:{ color:'#2E3347' } },
+        y: { ticks:{ color:'#8B8FA8', font:{size:10} }, grid:{ color:'#2E3347' }, beginAtZero:true }
+      } : {}
+    }
+  });
+}
+
+// ============================================================
+// USERS
+// ============================================================
+let allUsersData = [];
+
+async function loadUsers() {
+  allUsersData = await getData('users');
+  renderUsers(allUsersData);
+}
+
+function renderUsers(users) {
+  document.getElementById('u-count').textContent = '(' + users.length + ')';
+  const tbody = document.getElementById('t-users');
+  if (users.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="11"><div class="empty"><div class="ei">👥</div><p>No users found</p></div></td></tr>'; return;
+  }
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td><span class="mono">${(u.id||u.user_id||'').slice(0,12)}</span></td>
+      <td><strong>${u.name||u.full_name||'—'}</strong></td>
+      <td><span class="bdg b-${u.type||'customer'}">${u.type||'customer'}</span></td>
+      <td>${u.phone||'—'}</td>
+      <td>${u.village||'—'}</td>
+      <td>${u.district||'—'}</td>
+      <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${u.skill||u.shop||u.vtype||'—'}</td>
+      <td><span class="plan-mini ${planClass(u.plan)}">${u.plan||'Free'}</span></td>
+      <td>${fmtDate(u.created_at||u.createdAt)}</td>
+      <td><span class="bdg ${u.status==='blocked'?'b-blocked':'b-active'}">${u.status||'active'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="ab a-view" onclick="viewUser('${u.id||u.user_id}')">👁️</button>
+        <button class="ab ${u.status==='blocked'?'a-ok':'a-blk'}" onclick="toggleBlock('${u.id||u.user_id}','${u.status||'active'}')">${u.status==='blocked'?'✅':'🚫'}</button>
+        <button class="ab a-del" onclick="deleteUser('${u.id||u.user_id}')">🗑️</button>
+      </td>
+    </tr>`).join('');
+}
+
+function filterUsers() {
+  const q = document.getElementById('u-srch').value.toLowerCase();
+  const type = document.getElementById('u-type').value;
+  const status = document.getElementById('u-status').value;
+  let filtered = allUsersData.filter(u => {
+    const matchQ = !q || (u.name||'').toLowerCase().includes(q) || (u.phone||'').includes(q) || (u.district||'').toLowerCase().includes(q) || (u.village||'').toLowerCase().includes(q);
+    const matchType = !type || u.type === type;
+    const matchStatus = !status || (u.status||'active') === status;
+    return matchQ && matchType && matchStatus;
+  });
+  renderUsers(filtered);
+}
+
+function viewUser(id) {
+  const u = allUsersData.find(u => (u.id||u.user_id) === id);
+  if (!u) return;
+  window._viewUser = u;
+  document.getElementById('user-det-body').innerHTML = [
+    ['ID', u.id||u.user_id], ['Name', u.name||u.full_name], ['Type', u.type],
+    ['Phone', u.phone], ['Village', u.village], ['District', u.district],
+    ['Skill/Shop', u.skill||u.shop||u.vtype||'—'], ['Plan', u.plan||'Free'],
+    ['Status', u.status||'active'], ['Joined', fmtDate(u.created_at||u.createdAt)],
+    ['Rating', u.rating||'—'], ['Jobs Done', u.jobs||'0']
+  ].map(([l,v]) => `<div class="detrow"><label>${l}</label><p>${v||'—'}</p></div>`).join('');
+  const blkBtn = document.getElementById('mod-blk-btn');
+  blkBtn.textContent = u.status === 'blocked' ? '✅ Unblock' : '🚫 Block';
+  openModal('modal-user');
+}
+
+async function toggleBlock(id, currentStatus) {
+  const newStatus = currentStatus === 'blocked' ? 'active' : 'blocked';
+  await updateRow('users', id, { status: newStatus });
+  showToast(newStatus === 'blocked' ? '🚫 User blocked' : '✅ User unblocked', newStatus === 'blocked' ? 'error' : 'success');
+  loadUsers();
+}
+
+async function toggleBlockModal() {
+  const u = window._viewUser;
+  if (!u) return;
+  await toggleBlock(u.id||u.user_id, u.status||'active');
+  closeModal('modal-user');
+}
+
+async function deleteUser(id) {
+  if (!confirm('Delete this user? This cannot be undone.')) return;
+  await deleteRow('users', id);
+  showToast('🗑️ User deleted', 'error');
+  loadUsers();
+}
+
+async function deleteUserModal() {
+  const u = window._viewUser;
+  if (!u) return;
+  closeModal('modal-user');
+  await deleteUser(u.id||u.user_id);
+}
+
+// ============================================================
+// BOOKINGS
+// ============================================================
+let allBookingsData = [];
+
+async function loadBookings() {
+  allBookingsData = await getData('bookings');
+  renderBookings(allBookingsData);
+}
+
+function renderBookings(bookings) {
+  const tbody = document.getElementById('t-bookings');
+  if (bookings.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty"><div class="ei">📋</div><p>No bookings yet</p></div></td></tr>'; return;
+  }
+  tbody.innerHTML = bookings.map(b => `
+    <tr>
+      <td><span class="mono">${(b.id||'').slice(0,10)}</span></td>
+      <td>${b.user_name||b.userName||'—'}</td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.service||'—'}</td>
+      <td>${fmtDate(b.date||b.booking_date)}</td>
+      <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis">${b.loc||b.location||'—'}</td>
+      <td><strong style="color:var(--gn)">${b.price||b.amount||'—'}</strong></td>
+      <td><span class="bdg b-${b.status||'pending'}">${b.status||'pending'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="ab a-view" onclick="viewBooking('${b.id}')">👁️</button>
+        <button class="ab a-ok" onclick="confirmBooking('${b.id}')">✅</button>
+        <button class="ab a-del" onclick="cancelBooking('${b.id}')">❌</button>
+      </td>
+    </tr>`).join('');
+}
+
+function viewBooking(id) {
+  const b = allBookingsData.find(x => x.id === id);
+  if (!b) return;
+  window._viewBooking = b;
+  document.getElementById('booking-det-body').innerHTML = [
+    ['Booking ID', b.id], ['Customer', b.user_name||b.userName],
+    ['Service', b.service], ['Price', b.price||b.amount],
+    ['Date', fmtDate(b.date||b.booking_date)], ['Location', b.loc||b.location],
+    ['Note', b.note||'—'], ['Status', b.status||'pending']
+  ].map(([l,v]) => `<div class="detrow"><label>${l}</label><p>${v||'—'}</p></div>`).join('');
+  document.getElementById('bk-status-sel').value = b.status || 'pending';
+  openModal('modal-booking');
+}
+
+async function updateBookingStatus() {
+  const b = window._viewBooking;
+  if (!b) return;
+  const status = document.getElementById('bk-status-sel').value;
+  await updateRow('bookings', b.id, { status });
+  showToast('✅ Booking updated to: ' + status, 'success');
+  closeModal('modal-booking');
+  loadBookings();
+}
+
+async function confirmBooking(id) {
+  await updateRow('bookings', id, { status:'confirmed' });
+  showToast('✅ Booking confirmed!', 'success');
+  loadBookings(); loadDashboard();
+}
+
+async function cancelBooking(id) {
+  if (!confirm('Cancel this booking?')) return;
+  await updateRow('bookings', id, { status:'cancelled' });
+  showToast('❌ Booking cancelled', 'error');
+  loadBookings();
+}
+
+function filterBookings(q) {
+  if (!q) { renderBookings(allBookingsData); return; }
+  renderBookings(allBookingsData.filter(b => JSON.stringify(b).toLowerCase().includes(q.toLowerCase())));
+}
+
+function filterBookingStatus(s) {
+  if (!s) { renderBookings(allBookingsData); return; }
+  renderBookings(allBookingsData.filter(b => (b.status||'pending') === s));
+}
+
+// ============================================================
+// ORDERS
+// ============================================================
+let allOrdersData = [];
+
+async function loadOrders() {
+  allOrdersData = await getData('orders');
+  const tbody = document.getElementById('t-orders');
+  if (allOrdersData.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty"><div class="ei">🛒</div><p>No orders yet</p></div></td></tr>'; return;
+  }
+  tbody.innerHTML = allOrdersData.map(o => `
+    <tr>
+      <td><span class="mono">${(o.id||'').slice(0,10)}</span></td>
+      <td>${o.user_name||o.userName||'—'}</td>
+      <td>${o.item||'—'}</td>
+      <td>${o.qty||'—'}</td>
+      <td><strong style="color:var(--gn)">${o.total||'—'}</strong></td>
+      <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis">${o.address||'—'}</td>
+      <td><span class="bdg b-${o.status||'pending'}">${o.status||'pending'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="ab a-ok" onclick="updateOrderStatus('${o.id}','delivered')">✅ Delivered</button>
+        <button class="ab a-blk" onclick="updateOrderStatus('${o.id}','cancelled')">❌</button>
+      </td>
+    </tr>`).join('');
+}
+
+async function updateOrderStatus(id, status) {
+  await updateRow('orders', id, { status });
+  showToast('✅ Order marked as ' + status, 'success');
+  loadOrders();
+}
+
+function filterOrderStatus(s) {
+  if (!s) { loadOrders(); return; }
+  const tbody = document.getElementById('t-orders');
+  const filtered = allOrdersData.filter(o => (o.status||'pending') === s);
+  tbody.innerHTML = filtered.map(o => `<tr><td>${o.id}</td><td>${o.item||'—'}</td><td>${o.total||'—'}</td><td><span class="bdg b-${o.status}">${o.status}</span></td></tr>`).join('');
+}
+
+// ============================================================
+// LISTINGS
+// ============================================================
+let allListingsData = [];
+
+async function loadListings() {
+  allListingsData = await getData('listings');
+  const pending = allListingsData.filter(l => l.status === 'pending').length;
+  document.getElementById('pending-ct').textContent = pending > 0 ? `(${pending} pending approval)` : '';
+  renderListings(allListingsData);
+}
+
+function renderListings(listings) {
+  const tbody = document.getElementById('t-listings');
+  if (listings.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9"><div class="empty"><div class="ei">🏪</div><p>No listings yet</p></div></td></tr>'; return;
+  }
+  tbody.innerHTML = listings.map(l => `
+    <tr>
+      <td><span class="mono">${(l.id||'').slice(0,10)}</span></td>
+      <td>${l.vendor_name||l.vendorName||'—'}</td>
+      <td><strong>${l.name||'—'}</strong></td>
+      <td>${l.category||'—'}</td>
+      <td><strong style="color:var(--gn)">${l.price||'—'}</strong></td>
+      <td>${l.type||'—'}</td>
+      <td>${l.district||'—'}</td>
+      <td><span class="bdg b-${l.status==='approved'?'confirmed':l.status==='rejected'?'blocked':'pending'}">${l.status||'pending'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="ab a-ok" onclick="approveListing('${l.id}')">✅</button>
+        <button class="ab a-blk" onclick="rejectListing('${l.id}')">❌</button>
+        <button class="ab a-del" onclick="deleteListing('${l.id}')">🗑️</button>
+      </td>
+    </tr>`).join('');
+}
+
+async function approveListing(id) {
+  await updateRow('listings', id, { status:'approved' });
+  showToast('✅ Listing approved!', 'success');
+  loadListings();
+}
+
+async function rejectListing(id) {
+  await updateRow('listings', id, { status:'rejected' });
+  showToast('❌ Listing rejected', 'error');
+  loadListings();
+}
+
+async function deleteListing(id) {
+  if (!confirm('Delete this listing?')) return;
+  await deleteRow('listings', id);
+  showToast('🗑️ Listing deleted');
+  loadListings();
+}
+
+async function approveAllPending() {
+  const pending = allListingsData.filter(l => l.status === 'pending');
+  if (pending.length === 0) { showToast('No pending listings'); return; }
+  for (const l of pending) await updateRow('listings', l.id, { status:'approved' });
+  showToast(`✅ ${pending.length} listings approved!`, 'success');
+  loadListings();
+}
+
+function filterListingStatus(s) {
+  if (!s) { renderListings(allListingsData); return; }
+  renderListings(allListingsData.filter(l => l.status === s));
+}
+
+// ============================================================
+// REVENUE
+// ============================================================
+async function loadRevenue() {
+  const users = await getData('users');
+  const vendors = users.filter(u => u.type === 'vendor');
+  const planFees = { 'Local Mini':10,'Local Plus':20,'Block Reach':100,'District Seller':999,'Super Vendor':3999 };
+  const planNames = Object.keys(planFees);
+  let total = 0;
+
+  planNames.forEach((p, i) => {
+    const count = vendors.filter(v => v.plan === p).length;
+    const rev = count * planFees[p];
+    total += rev;
+    const el = document.getElementById(`rc-${i+1}`);
+    if (el) el.textContent = `${count} vendor${count!==1?'s':''}  •  ₹${rev.toLocaleString('en-IN')}`;
+  });
+
+  document.getElementById('rev-total').textContent = '₹' + total.toLocaleString('en-IN');
+  document.getElementById('rev-sub').textContent = `From ${vendors.length} active vendor plans`;
+
+  // Paid vendors table
+  const paidVendors = vendors.filter(v => v.plan && v.plan !== 'Free');
+  const tbody = document.getElementById('t-paid-vendors');
+  if (paidVendors.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="ei">💎</div><p>No paid vendors yet</p></div></td></tr>';
+  } else {
+    tbody.innerHTML = paidVendors.map(v => `
+      <tr>
+        <td><strong>${v.name||v.full_name}</strong></td>
+        <td>${v.shop||'—'}</td>
+        <td><span class="plan-mini ${planClass(v.plan)}">${v.plan}</span></td>
+        <td><strong style="color:var(--gn)">₹${planFees[v.plan]||0}/mo</strong></td>
+        <td>${v.district||'—'}</td>
+        <td>${fmtDate(v.created_at||v.createdAt)}</td>
+        <td><button class="ab a-edit" onclick="openAssignPlan('${v.id||v.user_id}')">Change Plan</button></td>
+      </tr>`).join('');
+  }
+
+  // Projection chart
+  const months = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13','M14','M15','M16','M17','M18','M19','M20','M21','M22','M23','M24'];
+  const proj = months.map((_,i) => Math.round(total * Math.pow(1.15, i)));
+  makeChart('ch-proj', 'line', months, proj, '#FF6B00');
+
+  // Plan distribution
+  const planCounts = planNames.map(p => vendors.filter(v => v.plan === p).length);
+  makeChart('ch-plans', 'doughnut', planNames.map(p => p.split(' ')[0]), planCounts, ['#8B5CF6','#FF6B00','#3B9DD6','#D4A017','#2D9B56']);
+}
+
+// ============================================================
+// VENDORS
+// ============================================================
+async function loadVendors() {
+  const users = await getData('users');
+  const vendors = users.filter(u => u.type === 'vendor');
+  const planFees = { 'Local Mini':10,'Local Plus':20,'Block Reach':100,'District Seller':999,'Super Vendor':3999 };
+  const tbody = document.getElementById('t-vendors');
+  if (vendors.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty"><div class="ei">🏷️</div><p>No vendors yet</p></div></td></tr>'; return;
+  }
+  tbody.innerHTML = vendors.map(v => `
+    <tr>
+      <td><strong>${v.name||v.full_name}</strong></td>
+      <td>${v.shop||'—'}</td>
+      <td>${v.biz||v.business_type||'—'}</td>
+      <td><span class="plan-mini ${planClass(v.plan)}">${v.plan||'Free'}</span></td>
+      <td>${v.plan ? '₹'+(planFees[v.plan]||0)+'/mo' : '—'}</td>
+      <td>${v.district||'—'}</td>
+      <td><span class="bdg ${v.status==='blocked'?'b-blocked':'b-active'}">${v.status||'active'}</span></td>
+      <td>
+        <button class="ab a-edit" onclick="openAssignPlan('${v.id||v.user_id}')">Plan ↑</button>
+        <button class="ab ${v.status==='blocked'?'a-ok':'a-blk'}" onclick="toggleBlock('${v.id||v.user_id}','${v.status||'active'}')">${v.status==='blocked'?'✅':'🚫'}</button>
+      </td>
+    </tr>`).join('');
+}
+
+function openAssignPlan(uid='') {
+  document.getElementById('plan-uid').value = uid;
+  openModal('modal-plan');
+}
+
+async function assignPlan() {
+  const uid = document.getElementById('plan-uid').value.trim();
+  const plan = document.getElementById('plan-sel').value;
+  if (!uid) { showToast('⚠️ Enter vendor ID'); return; }
+  await updateRow('users', uid, { plan });
+  showToast('✅ Plan assigned: ' + plan, 'success');
+  closeModal('modal-plan');
+  loadVendors(); loadRevenue();
+}
+
+// ============================================================
+// ANALYTICS
+// ============================================================
+async function loadAnalytics() {
+  const users = await getData('users');
+  const bookings = await getData('bookings');
+
+  // Category demand
+  const cats = ['Farming','Fish','Poultry','Transport','Food','HomeService','Photo','Tent'];
+  const catCounts = cats.map(c => bookings.filter(b => (b.service||'').toLowerCase().includes(c.toLowerCase())).length || Math.floor(Math.random()*10));
+  makeChart('ch-cats', 'bar', cats, catCounts, '#FF6B00');
+
+  // Districts
+  const dists = [...new Set(users.map(u => u.district).filter(Boolean))].slice(0,8);
+  const distCounts = dists.map(d => users.filter(u => u.district === d).length);
+  makeChart('ch-dists', 'bar', dists, distCounts, '#2D9B56');
+
+  // Monthly growth
+  const months = Array.from({length:6}, (_,i) => { const d = new Date(); d.setMonth(d.getMonth()-5+i); return d.toLocaleString('default',{month:'short'}); });
+  const growthData = months.map((_,i) => users.filter(u => {
+    const joined = new Date(u.created_at||u.createdAt||0);
+    const target = new Date(); target.setMonth(target.getMonth()-5+i);
+    return joined.getMonth() === target.getMonth() && joined.getFullYear() === target.getFullYear();
+  }).length);
+  makeChart('ch-growth', 'line', months, growthData, '#3B9DD6');
+
+  // User type split
+  const types = ['customer','worker','vendor','vehicle'];
+  const typeCounts = types.map(t => users.filter(u => u.type === t).length);
+  makeChart('ch-split', 'doughnut', types.map(t => t.charAt(0).toUpperCase()+t.slice(1)), typeCounts, ['#8B5CF6','#D4A017','#3B9DD6','#FF6B00']);
+
+  // District table
+  const tbody = document.getElementById('t-districts');
+  tbody.innerHTML = dists.map(d => {
+    const du = users.filter(u => u.district === d);
+    return `<tr>
+      <td><strong>${d}</strong></td>
+      <td>${du.length}</td>
+      <td>${du.filter(u=>u.type==='worker').length}</td>
+      <td>${du.filter(u=>u.type==='vendor').length}</td>
+      <td>${du.filter(u=>u.type==='customer').length}</td>
+      <td>${du.filter(u=>u.type==='vehicle').length}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="6"><div class="empty"><p>No data yet</p></div></td></tr>';
+}
+
+// ============================================================
+// SETTINGS & BANNERS
+// ============================================================
+function saveSupabase() {
+  const url = document.getElementById('sb-url').value.trim();
+  const key = document.getElementById('sb-key').value.trim();
+  if (!url || !key) { showToast('⚠️ Fill URL and Key'); return; }
+  localStorage.setItem('pt_sb_url', url);
+  localStorage.setItem('pt_sb_key', key);
+  initSupabase();
+  if (sbConnected) { showToast('✅ Supabase connected!', 'success'); refreshAll(); }
+  else showToast('❌ Connection failed. Check URL & Key', 'error');
+}
+
+async function testSupabase() {
+  if (!sb) { showToast('⚠️ Save settings first'); return; }
+  try {
+    const { data, error } = await sb.from('users').select('id').limit(1);
+    if (error) throw error;
+    showToast('✅ Connection successful!', 'success');
+  } catch(e) {
+    showToast('❌ Error: ' + e.message, 'error');
+  }
+}
+
+function changePass() {
+  const curr = document.getElementById('set-curr').value;
+  const nw = document.getElementById('set-new').value;
+  const conf = document.getElementById('set-conf').value;
+  if (curr !== ADMIN_PASS) { showToast('❌ Wrong current password', 'error'); return; }
+  if (nw !== conf) { showToast('⚠️ Passwords do not match'); return; }
+  if (nw.length < 6) { showToast('⚠️ Min 6 characters'); return; }
+  ADMIN_PASS = nw;
+  localStorage.setItem('pt_admin_pass', nw);
+  showToast('✅ Password updated!', 'success');
+  ['set-curr','set-new','set-conf'].forEach(id => document.getElementById(id).value = '');
+}
+
+function saveBanners() {
+  const config = {
+    haataTitle: document.getElementById('ban-title').value,
+    haataSub: document.getElementById('ban-sub').value,
+    promoText: document.getElementById('ban-promo').value,
+    haataLive: document.getElementById('tog-haata').checked,
+    promoOn: document.getElementById('tog-promo').checked,
+    regOpen: document.getElementById('tog-reg').checked,
+    maintenance: document.getElementById('tog-maint').checked
+  };
+  localStorage.setItem('pt_app_config', JSON.stringify(config));
+  showToast('✅ Banners saved!', 'success');
+}
+
+function saveToggle(key, val) {
+  let config = JSON.parse(localStorage.getItem('pt_app_config') || '{}');
+  config[key] = val;
+  localStorage.setItem('pt_app_config', JSON.stringify(config));
+  showToast('✅ Saved: ' + key + ' = ' + val, 'success');
+}
+
+function saveConfig() {
+  const cfg = { wa: document.getElementById('cfg-wa').value, tagline: document.getElementById('cfg-tagline').value };
+  localStorage.setItem('pt_app_extra', JSON.stringify(cfg));
+  showToast('✅ Config saved!', 'success');
+}
+
+function sendBroadcast() {
+  const msg = document.getElementById('notif-msg').value.trim();
+  if (!msg) { showToast('⚠️ Write a message'); return; }
+  showToast('📤 Broadcast queued (connect WhatsApp API for live sending)', 'success');
+}
+
+// ============================================================
+// EXPORT
+// ============================================================
+async function exportCSV(type) {
+  const data = await getData(type);
+  if (!data.length) { showToast('No data to export'); return; }
+  const headers = Object.keys(data[0]);
+  const csv = [headers.join(','), ...data.map(r => headers.map(h => JSON.stringify(r[h]||'')).join(','))].join('\n');
+  const blob = new Blob([csv], { type:'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `parttimers_${type}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  showToast('📥 ' + type + ' CSV downloaded!', 'success');
+}
+
+async function exportAllJSON() {
+  const users = await getData('users');
+  const bookings = await getData('bookings');
+  const orders = await getData('orders');
+  const listings = await getData('listings');
+  const blob = new Blob([JSON.stringify({ users, bookings, orders, listings, exported_at: new Date().toISOString() }, null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `parttimers_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  showToast('📥 Full backup downloaded!', 'success');
+}
+
+function clearLocalData() {
+  if (!confirm('Clear all local cache? (Supabase data is safe)')) return;
+  ['pt_all_users','pt_bookings','pt_orders','pt_listings'].forEach(k => localStorage.removeItem(k));
+  showToast('🗑️ Local cache cleared', 'success');
+  refreshAll();
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function planClass(plan) {
+  if (!plan || plan === 'Free') return 'pm-free';
+  if (plan === 'Local Mini') return 'pm-local';
+  if (plan === 'Local Plus') return 'pm-local';
+  if (plan === 'Block Reach') return 'pm-block';
+  if (plan === 'District Seller') return 'pm-district';
+  if (plan === 'Super Vendor') return 'pm-super';
+  return 'pm-free';
+}
+
+function fmtDate(d) {
+  if (!d) return '—';
+  const date = new Date(d);
+  if (isNaN(date)) return d;
+  return date.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+function openModal(id) { document.getElementById(id)?.classList.add('on'); }
+function closeModal(id) { document.getElementById(id)?.classList.remove('on'); }
+document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('on'); }));
+
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+async function refreshAll() {
+  await loadDashboard();
+  showToast('🔄 Data refreshed!', 'success');
+}
+
+// Prefill supabase settings if saved
+window.addEventListener('load', () => {
+  const url = localStorage.getItem('pt_sb_url');
+  const key = localStorage.getItem('pt_sb_key');
+  if (url) document.getElementById('sb-url').value = url;
+  if (key) document.getElementById('sb-key').value = key;
+
+  // Load banner config
+  const cfg = JSON.parse(localStorage.getItem('pt_app_config') || '{}');
+  if (cfg.haataTitle) document.getElementById('ban-title').value = cfg.haataTitle;
+  if (cfg.haataSub) document.getElementById('ban-sub').value = cfg.haataSub;
+  if (cfg.promoText) document.getElementById('ban-promo').value = cfg.promoText;
+  if (typeof cfg.haataLive !== 'undefined') document.getElementById('tog-haata').checked = cfg.haataLive;
+  if (typeof cfg.maintenance !== 'undefined') document.getElementById('tog-maint').checked = cfg.maintenance;
+});
+</script>
+</body>
+</html>
