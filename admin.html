@@ -1079,7 +1079,15 @@ async function getListings() {
 
 // Normalise Supabase snake_case → camelCase used throughout admin UI
 function normaliseUser(u) {
-  return { ...u, createdAt: u.created_at || u.createdAt, userName: u.user_name || u.userName };
+  return {
+    ...u,
+    createdAt: u.created_at || u.createdAt,
+    // map Supabase column names → UI field names
+    biz:   u.biz_type    || u.biz   || '',
+    vtype: u.vehicle_type || u.vtype || '',
+    vnum:  u.vehicle_num  || u.vnum  || '',
+    vrate: u.vehicle_rate || u.vrate || '',
+  };
 }
 function normaliseRecord(r) {
   return { ...r, createdAt: r.created_at || r.createdAt, userId: r.user_id || r.userId, userName: r.user_name || r.userName };
@@ -1901,7 +1909,7 @@ async function sendNotif() {
   const msg = document.getElementById('notif-msg').value.trim();
   if (!msg) { toast('⚠️ Enter a message first'); return; }
   const target = document.getElementById('notif-target').value;
-  const notif = { id: 'NOTIF-'+Date.now().toString().slice(-6), message: msg, target };
+  const notif = { message: msg, target, title: 'Admin Announcement', type: 'broadcast' };
   if (isSbReady()) {
     await sb.from('notifications').insert([notif]);
   } else {
