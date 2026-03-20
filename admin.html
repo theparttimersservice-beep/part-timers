@@ -431,7 +431,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
         <div style="background:linear-gradient(135deg,#FF6B00,#D4A017);padding:16px 20px;border-radius:12px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
           <div style="font-size:2rem">💎</div>
           <div><h3 style="color:#fff;font-size:1rem;font-weight:800">Plan Management</h3>
-          <p style="color:rgba(255,255,255,.8);font-size:.75rem;margin-top:2px">Plan prices, limits aur features admin se change karo — app mein automatically reflect hoga</p></div>
+          <p style="color:rgba(255,255,255,.8);font-size:.75rem;margin-top:2px">Change plan prices, area radius and listing limits — updates reflect instantly in the user app</p></div>
         </div>
 
         <div class="set-grid">
@@ -496,7 +496,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
           <button onclick="savePlansConfig()" style="flex:1;background:var(--saffron);border:none;color:#fff;padding:11px;border-radius:9px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.88rem;cursor:pointer">💾 Save Plans — App mein Apply Karo</button>
           <button onclick="resetPlansConfig()" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:11px 18px;border-radius:9px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer">↺ Reset</button>
         </div>
-        <p style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:8px">Changes user app ke plan modal mein immediately reflect honge</p>
+        <p style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:8px">Changes reflect immediately in the user app's plan selection screen</p>
       </div>
 
       <!-- ══ ANALYTICS ══ -->
@@ -830,7 +830,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
           </div>
           <div class="pc-section">
             <div class="pc-sec-title">🔒 Logout</div>
-            <div class="pc-row"><label>Logout confirm message</label><input id="ct-logout-confirm" value="Logout karna chahte hain? / Logout?"></div>
+            <div class="pc-row"><label>Logout confirm message</label><input id="ct-logout-confirm" value="Are you sure you want to logout?"></div>
           </div>
           <div class="pc-section">
             <div class="pc-sec-title">📱 App Loader Screen</div>
@@ -999,7 +999,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
             <div class="sheet-stat" style="margin-bottom:12px"><div class="sdot off" id="set-sdot"></div><p><span id="set-stext">Not Connected</span></p></div>
             <div class="mf"><label>Apps Script Web App URL</label><input type="url" id="set-url" placeholder="https://script.google.com/macros/s/XXXX/exec"></div>
             <button onclick="saveSheet()" style="background:var(--green);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;width:100%;margin-bottom:8px">💾 Save & Test</button>
-            <p style="font-size:.7rem;color:var(--muted);text-align:center">Supabase use karo — Sheets optional hai</p>
+            <p style="font-size:.7rem;color:var(--muted);text-align:center">Supabase is already configured — Google Sheets is optional</p>
           </div>
 
           <!-- DATA MANAGEMENT -->
@@ -1179,7 +1179,7 @@ const panSubs = {
   workers:'All worker profiles',vendors:'Vendors & plan management',vehicles:'Transport & vehicle providers',
   bookings:'All service bookings',orders:'All product orders',listings:'Vendor listing approvals',
   revenue:'Revenue from vendor plans',analytics:'Platform growth analytics',
-  planmgmt:'Plan prices aur limits admin se change karo',
+  planmgmt:'Manage plan prices, area limits and listing counts',
   pagecontent:'Edit every Odia/English text shown in the user app',
   banners:'Control app content',settings:'Admin configuration'
 };
@@ -2080,7 +2080,7 @@ function savePlansConfig() {
   if (isSbReady()) {
     sb.from('app_config').upsert({ key: 'plans_config', value: JSON.stringify(config) }).then(() => {});
   }
-  toast('✅ Plans saved! App mein reflect ho gaya.');
+  toast('✅ Plans saved! Changes will reflect in the user app.');
 }
 
 function resetPlansConfig() {
@@ -2105,7 +2105,7 @@ function loadPlanAlerts() {
   // Check vendors with no plan
   const vendors = users.filter(u => u.type === 'vendor');
   const noPlanVendors = vendors.filter(u => !u.plan || u.plan === 'Local Mini');
-  if (noPlanVendors.length > 5) alerts.push({ type:'amber', msg: `ℹ️ ${noPlanVendors.length} vendors on Local Mini — consider upsell` });
+  if (noPlanVendors.length > 5) alerts.push({ type:'amber', msg: `ℹ️ ${noPlanVendors.length} vendors on Local Mini — consider promoting higher plans` });
 
   // Check for very high bookings in short time
   const bookings = JSON.parse(localStorage.getItem('pt_bookings') || '[]');
@@ -2114,7 +2114,7 @@ function loadPlanAlerts() {
   if (todayBooks.length > 50) alerts.push({ type:'amber', msg: `⚠️ ${todayBooks.length} bookings today — unusually high activity` });
 
   if (alerts.length === 0) {
-    alertBox.innerHTML = '<div style="font-size:.78rem;color:var(--green);text-align:center;padding:10px">✅ Koi suspicious activity nahi mili</div>';
+    alertBox.innerHTML = '<div style="font-size:.78rem;color:var(--green);text-align:center;padding:10px">✅ No suspicious activity detected</div>';
   } else {
     alertBox.innerHTML = alerts.map(a => `
       <div style="background:${a.type==='red'?'rgba(255,68,68,.1)':'rgba(212,160,23,.1)'};border-radius:8px;padding:10px;margin-bottom:8px;font-size:.78rem;color:${a.type==='red'?'var(--red)':'var(--gold)'}">
