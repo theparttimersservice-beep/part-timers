@@ -403,7 +403,14 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
           <div class="fg"><label>ଦକ୍ଷତା <span>/ Skill</span></label>
             <select id="r-skill"><option value="">Select your skill</option><option>ଶସ୍ୟ ଚାଷ / Crop Farming</option><option>ମତ୍ସ୍ୟ ଚାଷ / Fish &amp; Aqua</option><option>ମୁର୍ଗୀ ପାଳନ / Poultry</option><option>ନିର୍ମାଣ / Construction Mason</option><option>ଇଲେକ୍ଟ୍ରିସିଆନ / Electrician</option><option>ଜଳ ସଂଯୋଗ / Plumber</option><option>ଟ୍ରାକ୍ଟର / Tractor Driver</option><option>ଫଟୋ / Photo-Video</option><option>ଶିକ୍ଷା / Tuition</option><option>ରନ୍ଧନ / Cooking</option><option>ଡ୍ରାଇଭର / Driver</option><option>ଜାଲ ତୈରି / Net Making</option><option>ଚିତ୍ରକ / Painter</option><option>ଅନ୍ୟ / Other</option></select>
           </div>
-          <div class="fg"><label>ଦୈନିକ ମଜୁରି <span>/ Daily Rate (₹)</span></label><input id="r-rate" type="number" placeholder="e.g. 400"></div>
+          <div class="fg"><label>ପ୍ରତି ଘଣ୍ଟା ମଜୁରି <span>/ Hourly Rate (₹)</span></label>
+            <input id="r-rate" type="number" placeholder="e.g. 80 per hour" min="0" oninput="updateRegSlots()">
+          </div>
+          <!-- Live slot price preview -->
+          <div id="r-slot-preview" style="display:none;background:rgba(255,107,0,.07);border-radius:10px;padding:10px;margin-bottom:8px">
+            <div style="font-size:.72rem;font-weight:700;color:var(--saffron);margin-bottom:7px">Auto-calculated slot prices:</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px" id="r-slot-grid"></div>
+          </div>
           <div class="fg"><label>ଅଭିଜ୍ଞତା <span>/ Experience (years)</span></label><input id="r-exp" type="number" placeholder="e.g. 3"></div>
         </div>
         <div id="vdf" class="hidden">
@@ -495,11 +502,11 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   <div class="sec">
     <div class="sec-hd"><div class="sec-t">ନିକଟ କର୍ମୀ <span>Nearby Workers</span></div><button class="see-all" onclick="goSvc('farming')">ସବୁ ଦେଖ →</button></div>
     <div class="hs" id="workers-hs">
-      <div class="wc" onclick="openBook('Ramesh Sahoo','👨‍🌾','Crop Farming','₹350/day','⭐ 4.8','Nayagarh')"><div class="wav">👨‍🌾</div><h4>Ramesh Sahoo</h4><div class="wsk">Crop Farming</div><div class="wrt">⭐ 4.8 (42)</div><div class="wpr">₹350/day</div></div>
-      <div class="wc" onclick="openBook('Suna Nayak','👩','Fish Harvest','₹300/day','⭐ 4.6','Kendrapara')"><div class="wav">👩</div><h4>Suna Nayak</h4><div class="wsk">Fish Harvesting</div><div class="wrt">⭐ 4.6 (28)</div><div class="wpr">₹300/day</div></div>
-      <div class="wc" onclick="openBook('Bijay Das','👨','Electrician','₹500/day','⭐ 4.9','Khurda')"><div class="wav">⚡</div><h4>Bijay Das</h4><div class="wsk">Electrician</div><div class="wrt">⭐ 4.9 (67)</div><div class="wpr">₹500/day</div></div>
-      <div class="wc" onclick="openBook('Krushna Panda','🔧','Plumber','₹450/day','⭐ 4.5','Cuttack')"><div class="wav">🔧</div><h4>Krushna Panda</h4><div class="wsk">Plumber</div><div class="wrt">⭐ 4.5 (33)</div><div class="wpr">₹450/day</div></div>
-      <div class="wc" onclick="openBook('Lipsa Mohanty','👩','Tractor Driver','₹600/day','⭐ 4.7','Puri')"><div class="wav">🚜</div><h4>Lipsa Mohanty</h4><div class="wsk">Tractor Driver</div><div class="wrt">⭐ 4.7 (19)</div><div class="wpr">₹600/day</div></div>
+      <div class="wc" onclick="openBook('Ramesh Sahoo','👨‍🌾','Crop Farming','₹44/hr','⭐ 4.8','Nayagarh')"><div class="wav">👨‍🌾</div><h4>Ramesh Sahoo</h4><div class="wsk">Crop Farming</div><div class="wrt">⭐ 4.8 (42)</div><div class="wpr">₹44/hr</div></div>
+      <div class="wc" onclick="openBook('Suna Nayak','👩','Fish Harvest','₹38/hr','⭐ 4.6','Kendrapara')"><div class="wav">👩</div><h4>Suna Nayak</h4><div class="wsk">Fish Harvesting</div><div class="wrt">⭐ 4.6 (28)</div><div class="wpr">₹38/hr</div></div>
+      <div class="wc" onclick="openBook('Bijay Das','👨','Electrician','₹63/hr','⭐ 4.9','Khurda')"><div class="wav">⚡</div><h4>Bijay Das</h4><div class="wsk">Electrician</div><div class="wrt">⭐ 4.9 (67)</div><div class="wpr">₹63/hr</div></div>
+      <div class="wc" onclick="openBook('Krushna Panda','🔧','Plumber','₹56/hr','⭐ 4.5','Cuttack')"><div class="wav">🔧</div><h4>Krushna Panda</h4><div class="wsk">Plumber</div><div class="wrt">⭐ 4.5 (33)</div><div class="wpr">₹56/hr</div></div>
+      <div class="wc" onclick="openBook('Lipsa Mohanty','👩','Tractor Driver','₹75/hr','⭐ 4.7','Puri')"><div class="wav">🚜</div><h4>Lipsa Mohanty</h4><div class="wsk">Tractor Driver</div><div class="wrt">⭐ 4.7 (19)</div><div class="wpr">₹75/hr</div></div>
     </div>
   </div>
 
@@ -546,7 +553,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   </div>
   <div class="lc">
     <div class="lc-row"><div class="lc-img">💧</div><div class="lc-info"><h4>Sprayer Machine (Battery)</h4><div class="lc-sub">📍 Balasore, 3.7 km</div><div class="lc-meta"><span class="lc-price">₹150/day</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-go">For Rent</span></div></div></div>
-    <div class="lc-actions"><button class="bb" onclick="openBook('Sprayer Machine','💧','Battery sprayer rental','₹150/day','⭐ 4.6','Balasore')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div>
+    <div class="lc-actions"><button class="bb" onclick="openBook('Sprayer Machine','💧','Battery sprayer rental','₹19/hr','⭐ 4.6','Balasore')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div>
   </div>
   <div class="lc">
     <div class="lc-row"><div class="lc-img">🌾</div><div class="lc-info"><h4>Fresh Paddy — Sona Masuri</h4><div class="lc-sub">📍 Puri • Direct from Farmer</div><div class="lc-meta"><span class="lc-price">₹22/kg</span><span class="lc-rt">⭐ 4.5</span><span class="bdg bdg-s">Bulk Available</span></div></div></div>
@@ -554,7 +561,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   </div>
   <div class="lc">
     <div class="lc-row"><div class="lc-img">👩</div><div class="lc-info"><h4>Harvesting Helper — Female</h4><div class="lc-sub">📍 Ganjam, 1.9 km</div><div class="lc-meta"><span class="lc-price">₹280/day</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-g">Available</span></div></div></div>
-    <div class="lc-actions"><button class="bb" onclick="openBook('Harvesting Helper','👩','Female harvesting helper','₹280/day','⭐ 4.6','Ganjam')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div>
+    <div class="lc-actions"><button class="bb" onclick="openBook('Harvesting Helper','👩','Female harvesting helper','₹35/hr','⭐ 4.6','Ganjam')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div>
   </div>
 </div><!-- /farming -->
 
@@ -568,9 +575,9 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     <div class="ti" onclick="tabSel(this,'fish-boat')">Boat Fishing</div>
   </div>
   <div id="fish-workers">
-    <div class="lc"><div class="lc-row"><div class="lc-img">🎣</div><div class="lc-info"><h4>Pond Cleaner + Feeder</h4><div class="lc-sub">📍 Kendrapara, 2.1 km</div><div class="lc-meta"><span class="lc-price">₹350/day</span><span class="lc-rt">⭐ 4.8</span><span class="bdg bdg-g">Available</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Pond Cleaner','🎣','Pond cleaning & daily feeding','₹350/day','⭐ 4.8','Kendrapara')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
-    <div class="lc"><div class="lc-row"><div class="lc-img">🕸️</div><div class="lc-info"><h4>Net Caster — Harvest Team</h4><div class="lc-sub">📍 Jagatsinghpur, 3.4 km</div><div class="lc-meta"><span class="lc-price">₹400/day</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-g">Available</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Net Caster Team','🕸️','Fish harvest net team','₹400/day','⭐ 4.7','Jagatsinghpur')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
-    <div class="lc"><div class="lc-row"><div class="lc-img">🧪</div><div class="lc-info"><h4>Biofloc Technician</h4><div class="lc-sub">📍 Bhadrak, 5.2 km</div><div class="lc-meta"><span class="lc-price">₹600/day</span><span class="lc-rt">⭐ 4.9</span><span class="bdg bdg-sky">Expert</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Biofloc Technician','🧪','Biofloc tank setup & maintenance','₹600/day','⭐ 4.9','Bhadrak')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🎣</div><div class="lc-info"><h4>Pond Cleaner + Feeder</h4><div class="lc-sub">📍 Kendrapara, 2.1 km</div><div class="lc-meta"><span class="lc-price">₹44/hr</span><span class="lc-rt">⭐ 4.8</span><span class="bdg bdg-g">Available</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Pond Cleaner','🎣','Pond cleaning & daily feeding','₹44/hr','⭐ 4.8','Kendrapara')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🕸️</div><div class="lc-info"><h4>Net Caster — Harvest Team</h4><div class="lc-sub">📍 Jagatsinghpur, 3.4 km</div><div class="lc-meta"><span class="lc-price">₹400/day</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-g">Available</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Net Caster Team','🕸️','Fish harvest net team','₹50/hr','⭐ 4.7','Jagatsinghpur')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
+    <div class="lc"><div class="lc-row"><div class="lc-img">🧪</div><div class="lc-info"><h4>Biofloc Technician</h4><div class="lc-sub">📍 Bhadrak, 5.2 km</div><div class="lc-meta"><span class="lc-price">₹75/hr</span><span class="lc-rt">⭐ 4.9</span><span class="bdg bdg-sky">Expert</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Biofloc Technician','🧪','Biofloc tank setup & maintenance','₹75/hr','⭐ 4.9','Bhadrak')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
   </div>
   <div id="fish-sell" class="hidden">
     <div class="lc"><div class="lc-row"><div class="lc-img">🐟</div><div class="lc-info"><h4>Fresh Rohu (Rui)</h4><div class="lc-sub">📍 Puri, Direct Fisher</div><div class="lc-meta"><span class="lc-price">₹180/kg</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-g">Fresh Today</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Fresh Rohu Fish','🐟','₹180','kg')">🛒 Order</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
@@ -578,8 +585,8 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     <div class="lc"><div class="lc-row"><div class="lc-img">🐠</div><div class="lc-info"><h4>Catla Fish (Live)</h4><div class="lc-sub">📍 Cuttack, 2.3 km</div><div class="lc-meta"><span class="lc-price">₹200/kg</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-g">Live Fish</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Catla Fish Live','🐠','₹200','kg')">🛒 Order</button><button class="bc" onclick="showToast('📞 Connecting...')">📞 Call</button></div></div>
   </div>
   <div id="fish-rent" class="hidden">
-    <div class="rc"><div class="rc-row"><div class="rc-img">🕸️</div><div class="rc-info"><h4>Jhaala Net (Fishing Net)</h4><div class="rc-sub">📍 Kendrapara, 1.8 km</div><div class="rc-pr"><span class="rc-price">₹200/day</span><span class="rc-unit">• Deposit ₹500</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('Jhaala Net','🕸️','Traditional fishing net rental','₹200/day','⭐ 4.5','Kendrapara')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
-    <div class="rc"><div class="rc-row"><div class="rc-img">🧊</div><div class="rc-info"><h4>Ice Box (Fish Storage)</h4><div class="rc-sub">📍 Puri, 2.2 km</div><div class="rc-pr"><span class="rc-price">₹100/day</span><span class="rc-unit">• 100 litre</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('Ice Box','🧊','100L ice box for fish storage','₹100/day','⭐ 4.6','Puri')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+    <div class="rc"><div class="rc-row"><div class="rc-img">🕸️</div><div class="rc-info"><h4>Jhaala Net (Fishing Net)</h4><div class="rc-sub">📍 Kendrapara, 1.8 km</div><div class="rc-pr"><span class="rc-price">₹200/day</span><span class="rc-unit">• Deposit ₹500</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('Jhaala Net','🕸️','Traditional fishing net rental','₹25/hr','⭐ 4.5','Kendrapara')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+    <div class="rc"><div class="rc-row"><div class="rc-img">🧊</div><div class="rc-info"><h4>Ice Box (Fish Storage)</h4><div class="rc-sub">📍 Puri, 2.2 km</div><div class="rc-pr"><span class="rc-price">₹100/day</span><span class="rc-unit">• 100 litre</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('Ice Box','🧊','100L ice box for fish storage','₹12/hr','⭐ 4.6','Puri')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
   </div>
   <div id="fish-boat" class="hidden">
     <div class="vc" onclick="openBook('Wooden Boat + Crew','⛵','3-person fishing boat team','₹1,500/trip','⭐ 4.8','Chilika')"><div class="vc-row"><div class="vc-icon">⛵</div><div class="vc-info"><h4>Wooden Boat + 3 Crew</h4><div class="vc-sub">📍 Chilika Lake • 4-6 hrs trip</div></div><div class="vc-pr"><div class="vc-price">₹1,500</div><div class="vc-eta">per trip</div></div></div></div>
@@ -615,8 +622,8 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   </div>
   <div id="bs-all">
     <div style="padding:12px 15px 4px"><div class="hsearch" style="box-shadow:var(--sh)"><span>🔍</span><input type="text" placeholder="Search items..."></div></div>
-    <div class="rc"><div class="rc-row"><div class="rc-img">🚜</div><div class="rc-info"><h4>Tractor for Rent</h4><div class="rc-sub">📍 Balasore • Mahindra 575 DI</div><div class="rc-pr"><span class="rc-price">₹800/day</span><span class="rc-unit">• Deposit ₹2000</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('Tractor Rent','🚜','Mahindra 575DI with driver','₹800/day','⭐ 4.8','Balasore')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
-    <div class="rc"><div class="rc-row"><div class="rc-img">📷</div><div class="rc-info"><h4>DSLR Camera Rent</h4><div class="rc-sub">📍 Cuttack • Canon 1500D</div><div class="rc-pr"><span class="rc-price">₹500/day</span><span class="rc-unit">• Deposit ₹5000</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('DSLR Camera','📷','Canon 1500D with lens kit','₹500/day','⭐ 4.7','Cuttack')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+    <div class="rc"><div class="rc-row"><div class="rc-img">🚜</div><div class="rc-info"><h4>Tractor for Rent</h4><div class="rc-sub">📍 Balasore • Mahindra 575 DI</div><div class="rc-pr"><span class="rc-price">₹800/day</span><span class="rc-unit">• Deposit ₹2000</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('Tractor Rent','🚜','Mahindra 575DI with driver','₹100/hr','⭐ 4.8','Balasore')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+    <div class="rc"><div class="rc-row"><div class="rc-img">📷</div><div class="rc-info"><h4>DSLR Camera Rent</h4><div class="rc-sub">📍 Cuttack • Canon 1500D</div><div class="rc-pr"><span class="rc-price">₹63/hr</span><span class="rc-unit">• Deposit ₹5000</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('DSLR Camera','📷','Canon 1500D with lens kit','₹63/hr','⭐ 4.7','Cuttack')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
     <div class="lc"><div class="lc-row"><div class="lc-img">🪚</div><div class="lc-info"><h4>Used Carpenter Tools (Set)</h4><div class="lc-sub">📍 Puri • Second-hand, good condition</div><div class="lc-meta"><span class="lc-price">₹2,500</span><span class="lc-rt">⭐ 4.4</span><span class="bdg bdg-go">For Sale</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Carpenter Tools Set','🪚','₹2,500','set')">🛒 Buy</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
     <div class="lc"><div class="lc-row"><div class="lc-img">⛺</div><div class="lc-info"><h4>Tent House Setup (50 pax)</h4><div class="lc-sub">📍 Khurda • Includes chairs, lights</div><div class="lc-meta"><span class="lc-price">₹8,000/event</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-s">Popular</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Tent House','⛺','50-person tent setup with chairs','₹8,000/event','⭐ 4.6','Khurda')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
   </div>
@@ -627,7 +634,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   </div>
   <div id="bs-rent" class="hidden">
     <div class="rc"><div class="rc-row"><div class="rc-img">🔊</div><div class="rc-info"><h4>DJ Sound System</h4><div class="rc-sub">📍 Cuttack • 10,000W setup</div><div class="rc-pr"><span class="rc-price">₹5,000/event</span><span class="rc-unit">• 12 hrs</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('DJ Sound System','🔊','10000W DJ sound setup','₹5,000/event','⭐ 4.8','Cuttack')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
-    <div class="rc"><div class="rc-row"><div class="rc-img">🏗️</div><div class="rc-info"><h4>Cement Mixer Machine</h4><div class="rc-sub">📍 Khurda, 2.4 km</div><div class="rc-pr"><span class="rc-price">₹400/day</span><span class="rc-unit">• Deposit ₹1500</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('Cement Mixer','🏗️','Electric cement mixer rental','₹400/day','⭐ 4.5','Khurda')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+    <div class="rc"><div class="rc-row"><div class="rc-img">🏗️</div><div class="rc-info"><h4>Cement Mixer Machine</h4><div class="rc-sub">📍 Khurda, 2.4 km</div><div class="rc-pr"><span class="rc-price">₹400/day</span><span class="rc-unit">• Deposit ₹1500</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('Cement Mixer','🏗️','Electric cement mixer rental','₹50/hr','⭐ 4.5','Khurda')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
   </div>
   <div id="bs-haata" class="hidden">
     <div class="hbanner" style="margin:14px 15px"><div class="live-dot">🔴 LIVE</div><h3>🎪 ରବିବାର ହଟ</h3><p>Local vendors near you — every Sunday</p></div>
@@ -655,7 +662,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   <div style="padding:0 15px 8px;font-size:.82rem;font-weight:700;color:var(--muted)">AVAILABLE VEHICLES NEARBY</div>
   <div class="vc" onclick="openBook('Auto Rickshaw','🛺','Passenger auto, up to 3 persons','₹15/km','⭐ 4.6','Khurda')"><div class="vc-row"><div class="vc-icon">🛺</div><div class="vc-info"><h4>Auto Rickshaw</h4><div class="vc-sub">Binod Auto • 1.2 km away • 3 seats</div></div><div class="vc-pr"><div class="vc-price">₹15/km</div><div class="vc-eta">~4 min</div></div></div></div>
   <div class="vc" onclick="openBook('Tempo (Goods)','🚐','Mini tempo for goods transport','₹20/km','⭐ 4.8','Cuttack')"><div class="vc-row"><div class="vc-icon">🚐</div><div class="vc-info"><h4>Tempo — Goods Transport</h4><div class="vc-sub">Raju Tempo • 2.8 km • 500kg capacity</div></div><div class="vc-pr"><div class="vc-price">₹20/km</div><div class="vc-eta">~8 min</div></div></div></div>
-  <div class="vc" onclick="openBook('Tractor (Farm)','🚜','Farm tractor, field or village roads','₹800/day','⭐ 4.9','Nayagarh')"><div class="vc-row"><div class="vc-icon">🚜</div><div class="vc-info"><h4>Tractor — Farm Transport</h4><div class="vc-sub">Sura Tractor • 3.5 km • Full day rental</div></div><div class="vc-pr"><div class="vc-price">₹800/day</div><div class="vc-eta">~12 min</div></div></div></div>
+  <div class="vc" onclick="openBook('Tractor (Farm)','🚜','Farm tractor, field or village roads','₹100/hr','⭐ 4.9','Nayagarh')"><div class="vc-row"><div class="vc-icon">🚜</div><div class="vc-info"><h4>Tractor — Farm Transport</h4><div class="vc-sub">Sura Tractor • 3.5 km • Full day rental</div></div><div class="vc-pr"><div class="vc-price">₹800/day</div><div class="vc-eta">~12 min</div></div></div></div>
   <div class="vc" onclick="openBook('Car/Cab','🚗','Shared cab to city or hospital','₹12/km','⭐ 4.7','Puri')"><div class="vc-row"><div class="vc-icon">🚗</div><div class="vc-info"><h4>Car — City / Hospital Trip</h4><div class="vc-sub">Manoj Cab • 4.1 km • AC car</div></div><div class="vc-pr"><div class="vc-price">₹12/km</div><div class="vc-eta">~14 min</div></div></div></div>
   <div class="vc" onclick="openBook('E-Rickshaw','⚡','Electric rickshaw, local trips','₹10/km','⭐ 4.5','Balasore')"><div class="vc-row"><div class="vc-icon">⚡</div><div class="vc-info"><h4>E-Rickshaw — Local</h4><div class="vc-sub">Raju E-Rikshaw • 0.9 km</div></div><div class="vc-pr"><div class="vc-price">₹10/km</div><div class="vc-eta">~3 min</div></div></div></div>
   <div class="vc" onclick="openBook('Truck','🚛','Heavy truck for large loads','₹25/km','⭐ 4.6','Ganjam')"><div class="vc-row"><div class="vc-icon">🚛</div><div class="vc-info"><h4>Truck — Heavy Goods</h4><div class="vc-sub">SK Logistics • 7.2 km • 5-tonne</div></div><div class="vc-pr"><div class="vc-price">₹25/km</div><div class="vc-eta">~22 min</div></div></div></div>
@@ -714,9 +721,9 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   </div>
   <div class="lc"><div class="lc-row"><div class="lc-img" style="background:#FFF9E6">⚡</div><div class="lc-info"><h4>Electrician — Home Wiring</h4><div class="lc-sub">📍 Bijay Das • Khurda, 1.2 km</div><div class="lc-meta"><span class="lc-price">₹500/visit</span><span class="lc-rt">⭐ 4.9</span><span class="bdg bdg-go">Same Day</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Electrician','⚡','Home wiring, switch & fan repair','₹500/visit','⭐ 4.9','Khurda')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
   <div class="lc"><div class="lc-row"><div class="lc-img">🚿</div><div class="lc-info"><h4>Plumber — Pipe & Tap Repair</h4><div class="lc-sub">📍 Krushna Panda • Cuttack, 2.1 km</div><div class="lc-meta"><span class="lc-price">₹350/visit</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-g">Available</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Plumber','🚿','Pipe, tap & motor repair','₹350/visit','⭐ 4.7','Cuttack')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
-  <div class="lc"><div class="lc-row"><div class="lc-img">🧱</div><div class="lc-info"><h4>Mason — Wall & Construction</h4><div class="lc-sub">📍 Sundargarh, 5.8 km</div><div class="lc-meta"><span class="lc-price">₹700/day</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-g">Skilled Mason</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Mason','🧱','Wall building, plastering, tiles','₹700/day','⭐ 4.6','Sundargarh')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🧱</div><div class="lc-info"><h4>Mason — Wall & Construction</h4><div class="lc-sub">📍 Sundargarh, 5.8 km</div><div class="lc-meta"><span class="lc-price">₹700/day</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-g">Skilled Mason</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Mason','🧱','Wall building, plastering, tiles','₹88/hr','⭐ 4.6','Sundargarh')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
   <div class="lc"><div class="lc-row"><div class="lc-img">🏍️</div><div class="lc-info"><h4>Bike / Motorcycle Repair</h4><div class="lc-sub">📍 Sonu Garage • Puri, 0.9 km</div><div class="lc-meta"><span class="lc-price">₹200/visit</span><span class="lc-rt">⭐ 4.8</span><span class="bdg bdg-sky">Doorstep</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Bike Mechanic','🏍️','2-wheeler doorstep repair','₹200/visit','⭐ 4.8','Puri')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
-  <div class="lc"><div class="lc-row"><div class="lc-img">🎨</div><div class="lc-info"><h4>House Painter</h4><div class="lc-sub">📍 Ganjam, 4.2 km</div><div class="lc-meta"><span class="lc-price">₹500/day</span><span class="lc-rt">⭐ 4.5</span><span class="bdg bdg-g">Available</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('House Painter','🎨','Interior & exterior wall painting','₹500/day','⭐ 4.5','Ganjam')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">🎨</div><div class="lc-info"><h4>House Painter</h4><div class="lc-sub">📍 Ganjam, 4.2 km</div><div class="lc-meta"><span class="lc-price">₹63/hr</span><span class="lc-rt">⭐ 4.5</span><span class="bdg bdg-g">Available</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('House Painter','🎨','Interior & exterior wall painting','₹63/hr','⭐ 4.5','Ganjam')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
   <div class="lc"><div class="lc-row"><div class="lc-img">❄️</div><div class="lc-info"><h4>AC / Cooler Repair</h4><div class="lc-sub">📍 Bhubaneswar area, 6.5 km</div><div class="lc-meta"><span class="lc-price">₹400/visit</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-sky">Expert</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('AC Repair','❄️','AC servicing, gas refill, cooler repair','₹400/visit','⭐ 4.7','Khurda')">📅 Book Now</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
 </div><!-- /homeservice -->
 
@@ -733,7 +740,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   <div class="lc"><div class="lc-row"><div class="lc-img">🎬</div><div class="lc-info"><h4>Video + Reels (Event)</h4><div class="lc-sub">📍 Creative Vision • Puri</div><div class="lc-meta"><span class="lc-price">₹5,000/event</span><span class="lc-rt">⭐ 4.7</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Event Videography','🎬','Event video + 3 reels editing','₹5,000/event','⭐ 4.7','Puri')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
   <div class="lc"><div class="lc-row"><div class="lc-img">🛸</div><div class="lc-info"><h4>Drone Videography</h4><div class="lc-sub">📍 Bhubaneswar area</div><div class="lc-meta"><span class="lc-price">₹3,000/hr</span><span class="lc-rt">⭐ 4.8</span><span class="bdg bdg-sky">Aerial</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Drone Video','🛸','Aerial drone videography','₹3,000/hr','⭐ 4.8','Khurda')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
   <div class="lc"><div class="lc-row"><div class="lc-img">🪪</div><div class="lc-info"><h4>Passport / ID Photo</h4><div class="lc-sub">📍 Multiple locations</div><div class="lc-meta"><span class="lc-price">₹50/4 photos</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-g">Instant</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Passport Photo','🪪','Passport size, ID, visa photos','₹50/set','⭐ 4.6','Cuttack')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
-  <div class="lc"><div class="lc-row"><div class="lc-img">📷</div><div class="lc-info"><h4>DSLR Camera Rent</h4><div class="lc-sub">📍 Cuttack, 3.3 km</div><div class="lc-meta"><span class="lc-price">₹500/day</span><span class="lc-rt">⭐ 4.5</span><span class="bdg bdg-go">Rent</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('DSLR Rent','📷','Canon 1500D + lens kit rental','₹500/day','⭐ 4.5','Cuttack')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">📷</div><div class="lc-info"><h4>DSLR Camera Rent</h4><div class="lc-sub">📍 Cuttack, 3.3 km</div><div class="lc-meta"><span class="lc-price">₹63/hr</span><span class="lc-rt">⭐ 4.5</span><span class="bdg bdg-go">Rent</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('DSLR Rent','📷','Canon 1500D + lens kit rental','₹63/hr','⭐ 4.5','Cuttack')">📅 Rent</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
 </div><!-- /photo -->
 
 <!-- ===== SERVICE: TENT & EVENTS ===== -->
@@ -764,7 +771,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🩺 Doctor & Health | ଡାକ୍ତର</h3></div>
   <div class="lc"><div class="lc-row"><div class="lc-img">🩺</div><div class="lc-info"><h4>Village Doctor — General</h4><div class="lc-sub">📍 Dr. Ramesh • Nayagarh, 2.1 km</div><div class="lc-meta"><span class="lc-price">₹200/visit</span><span class="lc-rt">⭐ 4.7</span><span class="bdg bdg-g">On-Call</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Village Doctor','🩺','General health consultation, home visit','₹200/visit','⭐ 4.7','Nayagarh')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
   <div class="lc"><div class="lc-row"><div class="lc-img">🏥</div><div class="lc-info"><h4>Mobile Health Camp</h4><div class="lc-sub">📍 NGO Health Van • Covers 5km</div><div class="lc-meta"><span class="lc-price">Free / ₹50</span><span class="lc-rt">⭐ 4.9</span><span class="bdg bdg-g">This Week</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Health Camp','🏥','Mobile health checkup camp','Free/₹50','⭐ 4.9','Khurda')">📅 Register</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
-  <div class="lc"><div class="lc-row"><div class="lc-img">💊</div><div class="lc-info"><h4>Nurse on Call — Home Care</h4><div class="lc-sub">📍 Balasore, 3.8 km</div><div class="lc-meta"><span class="lc-price">₹400/day</span><span class="lc-rt">⭐ 4.6</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Home Nurse','💊','Daily home nursing care','₹400/day','⭐ 4.6','Balasore')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+  <div class="lc"><div class="lc-row"><div class="lc-img">💊</div><div class="lc-info"><h4>Nurse on Call — Home Care</h4><div class="lc-sub">📍 Balasore, 3.8 km</div><div class="lc-meta"><span class="lc-price">₹400/day</span><span class="lc-rt">⭐ 4.6</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openBook('Home Nurse','💊','Daily home nursing care','₹50/hr','⭐ 4.6','Balasore')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
 </div><!-- /doctor -->
 
 <!-- ===== SERVICE: TUITION ===== -->
@@ -907,7 +914,24 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
       <div><div style="font-weight:800" id="bk-name">Service Name</div><div style="font-size:.77rem;color:var(--muted)" id="bk-desc">Description</div><div style="font-weight:800;color:var(--green);margin-top:4px" id="bk-price">₹000</div></div>
     </div>
     <div class="fg"><label>📅 ତାରିଖ <span>/ Date</span></label><input type="date" id="bk-date"></div>
-    <div class="fg"><label>🕐 ସମୟ <span>/ Time</span></label><input type="time" id="bk-time"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="fg"><label>🕐 Start Time</label><input type="time" id="bk-time" value="08:00" onchange="calcBookingEnd()"></div>
+      <div class="fg"><label>⏱️ Duration</label>
+        <select id="bk-duration" onchange="calcBookingEnd()">
+          <option value="1">1 hour</option>
+          <option value="2">2 hours</option>
+          <option value="3">3 hours</option>
+          <option value="4">4 hours — Half Day</option>
+          <option value="6">6 hours</option>
+          <option value="8" selected>8 hours — Full Day</option>
+          <option value="12">12 hours</option>
+          <option value="custom">Custom hours</option>
+        </select>
+      </div>
+    </div>
+    <div id="bk-custom-hrs" style="display:none" class="fg"><label>Custom Hours</label><input type="number" id="bk-hrs-input" min="1" max="24" value="8" onchange="calcBookingEnd()"></div>
+    <div id="bk-time-summary" style="background:var(--green-p);border-radius:9px;padding:10px 13px;margin-bottom:10px;font-size:.8rem;color:var(--green);font-weight:700"></div>
+    <div id="bk-price-calc" style="background:var(--saffron-p);border-radius:9px;padding:10px 13px;margin-bottom:10px;font-size:.82rem;color:var(--saffron);font-weight:700;display:none"></div>
     <div class="fg"><label>📍 ଆପଣଙ୍କ ଗ୍ରାମ <span>/ Your Location</span></label><input type="text" id="bk-loc" placeholder="Village, landmark"></div>
     <div class="fg"><label>📝 ଟିପ୍ପଣୀ <span>/ Note (optional)</span></label><textarea id="bk-note" placeholder="Any special instructions..."></textarea></div>
     <button class="btn btn-p" onclick="confirmBook()">✅ Confirm Booking</button>
@@ -1151,6 +1175,53 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
 </div>
+
+<!-- SAFETY CHECK-IN MODAL -->
+<div class="modal" id="modal-safety">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">🛡️ Safety Check-in</div>
+    <div class="msub">Your status is tracked for safety</div>
+    <div id="safety-booking-info" style="background:var(--saffron-p);border-radius:12px;padding:14px;margin-bottom:14px">
+      <div style="font-size:.78rem;color:var(--muted);margin-bottom:4px">Active Booking</div>
+      <div style="font-weight:800;font-size:.92rem" id="safety-service-name">—</div>
+      <div style="font-size:.78rem;color:var(--muted);margin-top:3px" id="safety-time-info">—</div>
+    </div>
+    <div style="text-align:center;margin-bottom:14px">
+      <div style="font-size:3rem;margin-bottom:8px" id="safety-status-icon">⏳</div>
+      <div style="font-size:.85rem;font-weight:700" id="safety-status-text">Not checked in yet</div>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:3px" id="safety-timer">—</div>
+    </div>
+    <button id="btn-checkin" onclick="doCheckIn()" class="btn btn-p" style="margin-bottom:10px">📍 Check In — I have arrived</button>
+    <button id="btn-checkout" onclick="doCheckOut()" class="btn" style="background:var(--green);color:#fff;display:none;margin-bottom:10px">✅ Check Out — Work completed safely</button>
+    <button onclick="sendSafetyPing()" class="btn btn-o" style="margin-bottom:10px">📶 Send Safety Ping — I am safe</button>
+    <div style="background:#FFF4EC;border-radius:10px;padding:11px;font-size:.75rem;color:var(--saffron);line-height:1.6">
+      🛡️ If you do not check out within 1 hour after scheduled end time, an automatic safety alert will be sent to the customer and admin.
+    </div>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-safety')">Close</button>
+  </div>
+</div>
+
+<!-- SAFETY ALERT MODAL -->
+<div class="modal" id="modal-safety-alert">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div style="text-align:center;padding:10px 0">
+      <div style="font-size:3rem;margin-bottom:10px">🚨</div>
+      <div class="mt" style="color:#FF4444">Safety Alert!</div>
+      <div class="msub" id="safety-alert-msg">Worker has not checked out</div>
+    </div>
+    <div style="background:#FFECEC;border-radius:12px;padding:14px;margin:14px 0;font-size:.8rem;color:#CC0000;line-height:1.7">
+      <strong>Action needed:</strong><br>
+      • Worker should tap "Check Out" to confirm they are safe<br>
+      • If you cannot reach the worker, contact admin immediately<br>
+      • Emergency: Call 112
+    </div>
+    <button onclick="doCheckOut()" class="btn btn-p" style="background:#FF4444;margin-bottom:10px">✅ I am safe — Check Out Now</button>
+    <button onclick="closeModal('modal-safety-alert')" class="btn btn-o">Dismiss</button>
+  </div>
+</div>
+
 <div class="modal" id="modal-vendor">
   <div class="msheet">
     <div class="mhandle"></div>
@@ -1202,7 +1273,28 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     </div>
     <div id="ep-worker-extra">
       <div class="fg"><label>ଦକ୍ଷତା <span>/ Skill</span></label><input id="ep-skill" type="text" placeholder="Your skills"></div>
-      <div class="fg"><label>ଦୈନିକ ମଜୁରି <span>/ Daily Rate ₹</span></label><input id="ep-rate" type="number" placeholder="e.g. 400"></div>
+      <div style="background:var(--saffron-p);border-radius:12px;padding:14px;margin-bottom:12px">
+        <div style="font-size:.82rem;font-weight:800;color:var(--saffron);margin-bottom:10px">💰 Pricing</div>
+        <div class="fg" style="margin-bottom:8px"><label>Hourly Rate ₹ <span>/ Per Hour</span></label>
+          <input id="ep-rate-hr" type="number" placeholder="e.g. 80 per hour" min="0" oninput="updateEpSlots()">
+        </div>
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:10px">Common slots (auto-calculated from hourly rate):</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px" id="ep-slot-preview">
+          <div style="background:#fff;border-radius:8px;padding:8px;text-align:center;font-size:.72rem">
+            <div style="font-weight:700">2 hrs</div><div id="ep-slot-2" style="color:var(--saffron)">₹—</div>
+          </div>
+          <div style="background:#fff;border-radius:8px;padding:8px;text-align:center;font-size:.72rem">
+            <div style="font-weight:700">4 hrs (Half Day)</div><div id="ep-slot-4" style="color:var(--saffron)">₹—</div>
+          </div>
+          <div style="background:#fff;border-radius:8px;padding:8px;text-align:center;font-size:.72rem">
+            <div style="font-weight:700">8 hrs (Full Day)</div><div id="ep-slot-8" style="color:var(--saffron)">₹—</div>
+          </div>
+          <div style="background:#fff;border-radius:8px;padding:8px;text-align:center;font-size:.72rem">
+            <div style="font-weight:700">12 hrs</div><div id="ep-slot-12" style="color:var(--saffron)">₹—</div>
+          </div>
+        </div>
+      </div>
+      <div class="fg"><label>ଦୈନିକ ମଜୁରି <span>/ Hourly Rate ₹ (per hour)</span></label><input id="ep-rate" type="number" placeholder="e.g. 80 per hour" style="display:none"></div>
       <!-- UPI Payment Section -->
       <div style="background:var(--green-p);border-radius:12px;padding:14px;margin-bottom:12px">
         <div style="font-size:.82rem;font-weight:800;color:var(--green);margin-bottom:10px">💳 Payment Details (UPI / Cash)</div>
@@ -1632,7 +1724,8 @@ async function launchApp() {
   loadHomeData();
   loadProfileData();
   goTab('home');
-  checkTnC(); // Show T&C on first use
+  checkTnC();
+  checkPendingSafetyAlerts(); // Check if worker has overdue check-in
 }
 
 function startRealtimeListener() {
@@ -1852,11 +1945,28 @@ async function loadHomeData() {
   if (workers.length > 0) {
     const hs = document.getElementById('workers-hs');
     if (hs.dataset.loaded) return;
+    // Clear demo hardcoded workers if real data found
+    hs.innerHTML = '';
     workers.forEach(w => {
+      const rate = w.rate || '0';
+      const rateNum = parseInt(rate) || 0;
+      const rateDisplay = rateNum > 0 ? `₹${rateNum}/hr` : 'Rate on request';
       const div = document.createElement('div');
       div.className = 'wc';
-      div.onclick = () => openBook(w.name, '👷', w.skill||'Worker', '₹'+(w.rate||'300')+'/day', '⭐ '+(w.rating||'4.5'), w.district);
-      div.innerHTML = `<div class="wav">👷</div><h4>${w.name}</h4><div class="wsk">${w.skill||'Worker'}</div><div class="wrt">⭐ ${w.rating||'4.5'} ${w.featured?'🌟':''}</div><div class="wpr">₹${w.rate||'300'}/day</div>`;
+      div.onclick = () => openBook(
+        w.name, '👷',
+        (w.skill || 'Worker') + (w.exp ? ' • ' + w.exp + ' yrs exp' : ''),
+        `₹${rateNum}/hr`,
+        '⭐ ' + (w.rating || '4.5'),
+        w.district,
+        rateNum  // pass hourly rate for price calculation
+      );
+      div.innerHTML = `
+        <div class="wav">👷</div>
+        <h4>${w.name}</h4>
+        <div class="wsk">${w.skill || 'Worker'}</div>
+        <div class="wrt">⭐ ${w.rating || '4.5'} ${w.featured ? '🌟' : ''}</div>
+        <div class="wpr">${rateDisplay}</div>`;
       hs.appendChild(div);
     });
     hs.dataset.loaded = '1';
@@ -1961,7 +2071,7 @@ async function saveProfile() {
   currentUser.village  = document.getElementById('ep-village').value.trim() || currentUser.village;
   currentUser.district = document.getElementById('ep-dist').value || currentUser.district;
   currentUser.skill    = document.getElementById('ep-skill').value;
-  currentUser.rate     = document.getElementById('ep-rate').value;
+  currentUser.rate     = document.getElementById('ep-rate-hr')?.value || document.getElementById('ep-rate')?.value || currentUser.rate;
   currentUser.shop     = document.getElementById('ep-shop').value;
   currentUser.bio      = document.getElementById('ep-bio').value;
 
@@ -2057,6 +2167,11 @@ function openEditProfile() {
   if (document.getElementById('ep-upi')) document.getElementById('ep-upi').value = u.upi_id || '';
   if (document.getElementById('ep-cash')) document.getElementById('ep-cash').value = u.cash_accept || 'both';
   if (document.getElementById('ep-vendor-upi')) document.getElementById('ep-vendor-upi').value = u.upi_id || '';
+  // Load hourly rate
+  if (document.getElementById('ep-rate-hr')) {
+    document.getElementById('ep-rate-hr').value = u.rate || '';
+    updateEpSlots();
+  }
   // Load UPI QR preview
   if (u.upi_qr && document.getElementById('ep-upi-qr-img')) {
     document.getElementById('ep-upi-qr-img').src = u.upi_qr;
@@ -2081,17 +2196,21 @@ function previewProfilePhoto(input) {
 // ============================================================
 // BOOKING
 // ============================================================
-function openBook(name, icon, desc, price, rating, loc) {
+function openBook(name, icon, desc, price, rating, loc, hourlyRate = 0) {
   document.getElementById('bk-title').textContent = 'Book: ' + name;
   document.getElementById('bk-icon').textContent = icon;
   document.getElementById('bk-name').textContent = name;
-  document.getElementById('bk-desc').textContent = desc + ' • 📍 ' + loc;
-  document.getElementById('bk-price').textContent = price + ' • ' + rating;
+  document.getElementById('bk-desc').textContent = desc + (loc ? ' • 📍 ' + loc : '');
+  document.getElementById('bk-price').textContent = price + (rating ? ' • ' + rating : '');
   document.getElementById('bk-loc').value = currentUser ? (currentUser.village + ', ' + currentUser.district) : '';
-  // Always set today as default date
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('bk-date').value = today;
   document.getElementById('bk-note').value = '';
+  // Store hourly rate for price calculation
+  document.getElementById('bk-price').dataset.hourlyRate = hourlyRate || 0;
+  // Init time and duration calculator
+  if (document.getElementById('bk-time')) document.getElementById('bk-time').value = '08:00';
+  setTimeout(calcBookingEnd, 100);
   openModal('modal-book');
 }
 
@@ -2324,6 +2443,9 @@ async function loadOrders() {
     const payBtn = o.status === 'confirmed' && o.type === 'booking' ? `
       <button onclick="openPaymentModal({name:'${o.item}',upi_id:'',cash_accept:'both'})"
         style="margin-top:8px;margin-left:6px;background:var(--green);color:#fff;border:none;padding:6px 14px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">💳 Payment Info</button>` : '';
+    const safetyBtn = (o.status === 'confirmed' || o.status === 'in progress') && o.type === 'booking' && currentUser?.type === 'worker' ? `
+      <button onclick="openSafetyModal('${o.id}','${o.item}','${o.date}','${o.time_slot||''}')"
+        style="margin-top:8px;margin-left:6px;background:#FF6B00;color:#fff;border:none;padding:6px 14px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">🛡️ Safety Check-in</button>` : '';
     return `<div class="order-item">
       <div class="order-hd">
         <h4>${o.icon} ${o.item}</h4>
@@ -2332,14 +2454,260 @@ async function loadOrders() {
       ${pipeline}
       ${resubmitBtn}
       <div class="order-det" style="margin-top:6px">📅 ${o.date} • 💰 ${o.total}${o.qty?' • Qty: '+o.qty:''}${o.loc?' • 📍 '+o.loc:''}</div>
-      <div>${rateBtn}${payBtn}</div>
+      <div>${rateBtn}${payBtn}${safetyBtn}</div>
     </div>`;
   }).join('');
 }
 
 // ============================================================
-// PLAN CONFIG — loaded from admin settings (dynamic)
+// HOURLY PRICING — booking duration calculator
 // ============================================================
+function calcBookingEnd() {
+  const startTime = document.getElementById('bk-time')?.value || '08:00';
+  const durSel = document.getElementById('bk-duration')?.value;
+  const customHrs = parseInt(document.getElementById('bk-hrs-input')?.value) || 8;
+  const customDiv = document.getElementById('bk-custom-hrs');
+
+  if (durSel === 'custom') {
+    if (customDiv) customDiv.style.display = '';
+  } else {
+    if (customDiv) customDiv.style.display = 'none';
+  }
+
+  const hours = durSel === 'custom' ? customHrs : parseInt(durSel) || 8;
+
+  // Calculate end time
+  const [h, m] = startTime.split(':').map(Number);
+  const endMins = h * 60 + m + hours * 60;
+  const endH = Math.floor(endMins / 60) % 24;
+  const endM = endMins % 60;
+  const endStr = String(endH).padStart(2,'0') + ':' + String(endM).padStart(2,'0');
+
+  // Update time summary
+  const summary = document.getElementById('bk-time-summary');
+  if (summary) summary.textContent = `⏰ ${startTime} → ${endStr}  (${hours} hour${hours > 1 ? 's' : ''})`;
+
+  // Calculate total price using stored hourly rate
+  const priceEl = document.getElementById('bk-price');
+  const priceCalc = document.getElementById('bk-price-calc');
+  if (priceEl && priceCalc) {
+    // First try stored hourly rate from worker data
+    let hourlyRate = parseInt(priceEl.dataset.hourlyRate) || 0;
+    // Fallback: parse from price text e.g. "₹80/hr"
+    if (!hourlyRate) {
+      const match = priceEl.textContent.match(/₹(\d+)\/hr/);
+      if (match) hourlyRate = parseInt(match[1]);
+    }
+    if (hourlyRate > 0) {
+      const total = hourlyRate * hours;
+      priceCalc.style.display = '';
+      priceCalc.innerHTML = `💰 ${hours} hrs × ₹${hourlyRate}/hr = <strong>₹${total} total</strong>`;
+      priceCalc.dataset.total = total;
+    } else {
+      priceCalc.style.display = 'none';
+    }
+  }
+}
+
+function updateEpSlots() {
+  const rate = parseInt(document.getElementById('ep-rate-hr')?.value) || 0;
+  ['2','4','8','12'].forEach(h => {
+    const el = document.getElementById('ep-slot-' + h);
+    if (el) el.textContent = rate > 0 ? '₹' + (rate * parseInt(h)) : '₹—';
+  });
+  // Keep hidden ep-rate in sync (daily equiv = 8hr rate)
+  const epRate = document.getElementById('ep-rate');
+  if (epRate) epRate.value = rate; // store hourly in rate field
+}
+
+function updateRegSlots() {
+  const rate = parseInt(document.getElementById('r-rate')?.value) || 0;
+  const preview = document.getElementById('r-slot-preview');
+  const grid = document.getElementById('r-slot-grid');
+  if (!preview || !grid) return;
+
+  if (rate <= 0) { preview.style.display = 'none'; return; }
+
+  preview.style.display = '';
+  const slots = [
+    { hrs: 1,  label: '1 Hour' },
+    { hrs: 2,  label: '2 Hours' },
+    { hrs: 4,  label: '4 hrs — Half Day' },
+    { hrs: 8,  label: '8 hrs — Full Day' },
+  ];
+  grid.innerHTML = slots.map(s => `
+    <div style="background:#fff;border-radius:8px;padding:9px;text-align:center;border:1px solid var(--border)">
+      <div style="font-size:.72rem;font-weight:700;color:var(--muted)">${s.label}</div>
+      <div style="font-size:.9rem;font-weight:800;color:var(--saffron)">₹${rate * s.hrs}</div>
+    </div>`).join('');
+}
+
+// ============================================================
+// SAFETY SYSTEM — check-in, check-out, alerts
+// ============================================================
+let activeSafetyBooking = null;
+let safetyTimerInterval = null;
+let safetyAlertTimeout = null;
+
+function openSafetyModal(bookingId, serviceName, date, timeSlot) {
+  activeSafetyBooking = { bookingId, serviceName, date, timeSlot };
+
+  document.getElementById('safety-service-name').textContent = serviceName;
+  document.getElementById('safety-time-info').textContent = `📅 ${date}${timeSlot ? ' at ' + timeSlot : ''}`;
+
+  // Check existing check-in state
+  const checkinData = lsGet('pt_checkin_' + bookingId);
+  if (checkinData?.checkedIn && !checkinData?.checkedOut) {
+    showCheckedInState(checkinData.checkinTime);
+  } else if (checkinData?.checkedOut) {
+    showCheckedOutState();
+  } else {
+    showNotCheckedInState();
+  }
+  openModal('modal-safety');
+}
+
+function showNotCheckedInState() {
+  document.getElementById('safety-status-icon').textContent = '⏳';
+  document.getElementById('safety-status-text').textContent = 'Not checked in yet';
+  document.getElementById('safety-timer').textContent = 'Check in when you arrive at work location';
+  document.getElementById('btn-checkin').style.display = '';
+  document.getElementById('btn-checkout').style.display = 'none';
+}
+
+function showCheckedInState(checkinTime) {
+  document.getElementById('safety-status-icon').textContent = '🟢';
+  document.getElementById('safety-status-text').textContent = 'Checked in — Working';
+  document.getElementById('btn-checkin').style.display = 'none';
+  document.getElementById('btn-checkout').style.display = '';
+  // Start timer
+  if (safetyTimerInterval) clearInterval(safetyTimerInterval);
+  safetyTimerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - new Date(checkinTime)) / 60000);
+    const h = Math.floor(elapsed / 60), m = elapsed % 60;
+    document.getElementById('safety-timer').textContent =
+      `⏱️ Working for: ${h > 0 ? h + 'h ' : ''}${m}m`;
+  }, 10000);
+}
+
+function showCheckedOutState() {
+  document.getElementById('safety-status-icon').textContent = '✅';
+  document.getElementById('safety-status-text').textContent = 'Checked out — Work completed safely';
+  document.getElementById('safety-timer').textContent = 'Thank you for completing the safety check-out!';
+  document.getElementById('btn-checkin').style.display = 'none';
+  document.getElementById('btn-checkout').style.display = 'none';
+}
+
+async function doCheckIn() {
+  if (!activeSafetyBooking) return;
+  const checkinTime = new Date().toISOString();
+  const data = { checkedIn: true, checkedOut: false, checkinTime, bookingId: activeSafetyBooking.bookingId };
+  lsSet('pt_checkin_' + activeSafetyBooking.bookingId, data);
+
+  // Save to Supabase
+  if (isSupabaseReady()) {
+    await sbInsert('notifications', {
+      message: `✅ Worker ${currentUser?.name} has checked in for: ${activeSafetyBooking.serviceName}`,
+      target: 'admin',
+      title: 'Worker Check-in',
+      type: 'safety'
+    });
+  }
+
+  showCheckedInState(checkinTime);
+  showToast('✅ Checked in! Your location is recorded for safety.');
+
+  // Schedule safety alert if no check-out after booking end + 1 hour
+  scheduleSafetyAlert(activeSafetyBooking.bookingId, activeSafetyBooking.serviceName);
+}
+
+async function doCheckOut() {
+  if (!activeSafetyBooking && !lsGet('pt_active_safety')) return;
+  const bid = activeSafetyBooking?.bookingId || lsGet('pt_active_safety');
+  const data = lsGet('pt_checkin_' + bid) || {};
+  data.checkedOut = true;
+  data.checkoutTime = new Date().toISOString();
+  lsSet('pt_checkin_' + bid, data);
+
+  // Cancel any pending alert
+  if (safetyAlertTimeout) { clearTimeout(safetyAlertTimeout); safetyAlertTimeout = null; }
+  if (safetyTimerInterval) { clearInterval(safetyTimerInterval); safetyTimerInterval = null; }
+  lsSet('pt_active_safety', null);
+
+  // Notify admin + customer
+  if (isSupabaseReady()) {
+    await sbInsert('notifications', {
+      message: `✅ Worker ${currentUser?.name} has safely checked out from: ${activeSafetyBooking?.serviceName || 'job'}`,
+      target: 'admin',
+      title: 'Worker Safe Check-out',
+      type: 'safety'
+    });
+  }
+
+  showCheckedOutState();
+  showToast('✅ Checked out safely! Thank you.');
+  closeModal('modal-safety-alert');
+
+  // Update booking status to done
+  if (isSupabaseReady() && bid) await sbUpdate('bookings', bid, { status: 'done' });
+  setTimeout(loadOrders, 500);
+}
+
+async function sendSafetyPing() {
+  if (isSupabaseReady()) {
+    await sbInsert('notifications', {
+      message: `📶 ${currentUser?.name} is safe — Safety ping sent`,
+      target: 'admin', title: 'Safety Ping', type: 'safety'
+    });
+  }
+  showToast('📶 Safety ping sent to admin and customer!');
+}
+
+function scheduleSafetyAlert(bookingId, serviceName) {
+  // Store active safety booking
+  lsSet('pt_active_safety', bookingId);
+  // Alert after 9 hours if no checkout (configurable)
+  const alertDelay = 9 * 60 * 60 * 1000; // 9 hours
+  if (safetyAlertTimeout) clearTimeout(safetyAlertTimeout);
+  safetyAlertTimeout = setTimeout(() => {
+    const data = lsGet('pt_checkin_' + bookingId);
+    if (!data?.checkedOut) {
+      triggerSafetyAlert(bookingId, serviceName);
+    }
+  }, alertDelay);
+}
+
+async function triggerSafetyAlert(bookingId, serviceName) {
+  // Show in-app alert
+  document.getElementById('safety-alert-msg').textContent =
+    `${currentUser?.name || 'Worker'} has not checked out from: ${serviceName}. Please confirm safety.`;
+  activeSafetyBooking = activeSafetyBooking || { bookingId, serviceName };
+  openModal('modal-safety-alert');
+
+  // Notify admin
+  if (isSupabaseReady()) {
+    await sbInsert('notifications', {
+      message: `🚨 SAFETY ALERT: ${currentUser?.name} has not checked out from "${serviceName}". Last check-in was over 9 hours ago.`,
+      target: 'admin', title: '🚨 Safety Alert', type: 'safety_alert'
+    });
+  }
+  showToast('🚨 Safety alert sent to admin!');
+}
+
+// Check on app start if any pending safety check-in is overdue
+function checkPendingSafetyAlerts() {
+  const activeBid = lsGet('pt_active_safety');
+  if (!activeBid) return;
+  const data = lsGet('pt_checkin_' + activeBid);
+  if (data?.checkedIn && !data?.checkedOut) {
+    const elapsed = Date.now() - new Date(data.checkinTime);
+    if (elapsed > 9 * 60 * 60 * 1000) {
+      triggerSafetyAlert(activeBid, 'your scheduled job');
+    }
+  }
+}
+
+
 function getPlansConfig() {
   const saved = localStorage.getItem('pt_plans_config');
   if (saved) return JSON.parse(saved);
@@ -2544,16 +2912,30 @@ async function confirmBook() {
   const time = document.getElementById('bk-time')?.value || '';
   if (!date || !loc) { showToast('⚠️ Fill date & location'); return; }
 
+  // Get duration and calculated price
+  const durSel = document.getElementById('bk-duration')?.value || '8';
+  const customHrs = parseInt(document.getElementById('bk-hrs-input')?.value) || 8;
+  const hours = durSel === 'custom' ? customHrs : parseInt(durSel) || 8;
+  const priceCalc = document.getElementById('bk-price-calc');
+  const calculatedTotal = priceCalc?.dataset.total ? '₹' + priceCalc.dataset.total : document.getElementById('bk-price').textContent;
+  const timeEnd = (() => {
+    const [h, m] = time.split(':').map(Number);
+    const endMins = h * 60 + m + hours * 60;
+    const eH = Math.floor(endMins / 60) % 24;
+    const eM = endMins % 60;
+    return String(eH).padStart(2,'0') + ':' + String(eM).padStart(2,'0');
+  })();
+
   const booking = {
     id: 'BK-' + Date.now().toString().slice(-6),
     user_id: currentUser?.id, user_name: currentUser?.name,
     service: document.getElementById('bk-name').textContent,
     description: document.getElementById('bk-desc').textContent,
-    price: document.getElementById('bk-price').textContent,
-    date, time_slot: time, loc,
+    price: calculatedTotal,
+    date, time_slot: `${time}–${timeEnd} (${hours}hrs)`, loc,
     note: document.getElementById('bk-note')?.value || '',
     status: 'pending',
-    reject_count: 0,          // Smart booking: track rejections
+    reject_count: 0,
     assigned_worker_id: null,
     created_at: new Date().toISOString()
   };
