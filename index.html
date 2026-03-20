@@ -1308,12 +1308,17 @@ async function doRegister() {
     rate: document.getElementById('r-rate')?.value || '',
     exp: document.getElementById('r-exp')?.value || '',
     shop: document.getElementById('r-shop')?.value || '',
+    biz_type: document.getElementById('r-biz')?.value || '',
+    vehicle_type: document.getElementById('r-vtype')?.value || '',
+    vehicle_num: document.getElementById('r-vnum')?.value || '',
+    vehicle_rate: document.getElementById('r-vrate')?.value || '',
+    plan: 'Local Mini', rating: 4.8, jobs: 0, bio: '',
+    status: 'active', available: true, featured: false,
+    // local aliases for UI (not sent to Supabase)
     biz: document.getElementById('r-biz')?.value || '',
     vtype: document.getElementById('r-vtype')?.value || '',
     vnum: document.getElementById('r-vnum')?.value || '',
     vrate: document.getElementById('r-vrate')?.value || '',
-    plan: 'Local Mini', rating: '4.8', jobs: 0, bio: '',
-    status: 'active', available: true, featured: false
   };
 
   showToast('⏳ Creating account...');
