@@ -219,7 +219,12 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <div class="sb-logo"><h2>🌾 Part-Timer's</h2><p>Admin Panel v1.0</p></div>
+    <div class="sb-logo">
+      <div style="display:flex;align-items:center;gap:9px">
+        <div id="admin-sidebar-logo" style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#FF6B00,#D4A017);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;overflow:hidden">🌾</div>
+        <div><h2 id="admin-sidebar-name">Part-Timer's</h2><p>Admin Panel v1.0</p></div>
+      </div>
+    </div>
     <div class="sb-nav">
       <div class="sn-label">Overview</div>
       <div class="sn-item on" data-pan="dashboard" onclick="goPan('dashboard')"><div class="ic">📊</div><span>Dashboard</span></div>
@@ -912,14 +917,23 @@ tr:hover td{background:rgba(255,255,255,.02)}
               <div>
                 <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">App Logo</div>
                 <div style="display:flex;align-items:center;gap:12px">
-                  <div id="logo-preview" style="width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,#FF6B00,#D4A017);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;overflow:hidden">🌾</div>
+                  <div id="logo-preview" style="width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,#FF6B00,#D4A017);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;overflow:hidden;border:3px solid rgba(255,107,0,.2)">🌾</div>
                   <div>
                     <label style="display:block;background:var(--saffron);color:#fff;padding:8px 14px;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;margin-bottom:6px">
                       📷 Upload Logo
                       <input type="file" id="logo-upload" accept="image/*" style="display:none" onchange="previewLogo(this)">
                     </label>
-                    <div style="font-size:.65rem;color:var(--muted)">PNG/JPG • Recommended 200×200px</div>
+                    <div style="font-size:.65rem;color:var(--muted)">PNG/JPG • Max 2MB • Recommended 200×200px</div>
                   </div>
+                </div>
+                <!-- Where logo appears -->
+                <div style="margin-top:10px;background:var(--surf2);border-radius:8px;padding:10px;font-size:.68rem;color:var(--muted)">
+                  <div style="font-weight:700;color:var(--text);margin-bottom:5px">Logo appears in:</div>
+                  <div>🔵 Splash / Loader screen</div>
+                  <div>🔵 Login & Register screen</div>
+                  <div>🔵 Profile Digital ID card</div>
+                  <div>🔵 Browser favicon (tab icon)</div>
+                  <div>🔵 Admin panel sidebar</div>
                 </div>
               </div>
               <!-- Favicon -->
@@ -1141,6 +1155,21 @@ function loadSupabase() {
   document.head.appendChild(s);
 }
 loadSupabase();
+
+// Apply logo to admin sidebar on startup
+(function() {
+  const logo = localStorage.getItem('pt_logo');
+  if (logo) {
+    const el = document.getElementById('admin-sidebar-logo');
+    if (el) el.innerHTML = `<img src="${logo}" style="width:100%;height:100%;object-fit:contain;border-radius:7px">`;
+  }
+  const branding = JSON.parse(localStorage.getItem('pt_branding') || '{}');
+  if (branding.appName) {
+    const nameEl = document.getElementById('admin-sidebar-name');
+    if (nameEl) nameEl.textContent = branding.appName;
+  }
+})();
+
 function adminLogin() {
   const u = document.getElementById('au').value.trim();
   const p = document.getElementById('ap').value;
@@ -2203,11 +2232,17 @@ function saveSheet() {
 // ── LOGO & BRANDING ────────────────────────────────
 function previewLogo(input) {
   if (!input.files?.[0]) return;
+  if (input.files[0].size > 2 * 1024 * 1024) { toast('⚠️ Logo must be under 2MB'); input.value = ''; return; }
   const reader = new FileReader();
   reader.onload = e => {
+    const logoSrc = e.target.result;
+    // Show preview in admin
     const prev = document.getElementById('logo-preview');
-    prev.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:14px">`;
-    localStorage.setItem('pt_logo', e.target.result);
+    prev.innerHTML = `<img src="${logoSrc}" style="width:100%;height:100%;object-fit:contain;border-radius:14px">`;
+    // Save to localStorage — user app reads this
+    localStorage.setItem('pt_logo', logoSrc);
+    // Show where it will appear
+    toast('✅ Logo uploaded! Will appear in: Splash screen, Login screen, Profile Digital ID, Favicon');
   };
   reader.readAsDataURL(input.files[0]);
 }
@@ -2293,9 +2328,17 @@ function saveContact() {
 }
 
 function loadSettings() {
-  // Load logo
+  // Load logo — apply to preview and sidebar
   const logo = localStorage.getItem('pt_logo');
-  if (logo) document.getElementById('logo-preview').innerHTML = `<img src="${logo}" style="width:100%;height:100%;object-fit:cover;border-radius:14px">`;
+  if (logo) {
+    document.getElementById('logo-preview').innerHTML = `<img src="${logo}" style="width:100%;height:100%;object-fit:contain;border-radius:14px">`;
+    // Update admin sidebar logo
+    const sidebarLogo = document.getElementById('admin-sidebar-logo');
+    if (sidebarLogo) sidebarLogo.innerHTML = `<img src="${logo}" style="width:100%;height:100%;object-fit:contain;border-radius:7px">`;
+  }
+  // Load favicon
+  const fav = localStorage.getItem('pt_favicon');
+  if (fav) document.getElementById('fav-preview').innerHTML = `<img src="${fav}" style="width:100%;height:100%;object-fit:contain">`;
 
   // Load branding
   const branding = JSON.parse(localStorage.getItem('pt_branding') || '{}');
