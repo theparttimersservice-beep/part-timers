@@ -1539,18 +1539,27 @@ function loadProfileData() {
 
   document.getElementById('did-id').textContent = u.id;
   document.getElementById('did-name').textContent = u.name;
-  document.getElementById('did-role').textContent = u.type.charAt(0).toUpperCase() + u.type.slice(1) + ' • ' + (u.skill || u.biz || u.vtype || 'Member');
+
+  // Role line — show type-appropriate detail only
+  const roleDetail = u.type === 'worker'  ? (u.skill || 'Worker') :
+                     u.type === 'vendor'  ? (u.biz_type || u.biz || u.shop || 'Vendor') :
+                     u.type === 'vehicle' ? (u.vehicle_type || u.vtype || 'Vehicle Owner') :
+                     'Customer';
+  document.getElementById('did-role').textContent = u.type.charAt(0).toUpperCase() + u.type.slice(1) + ' • ' + roleDetail;
   document.getElementById('did-loc').textContent = '📍 ' + u.village + ', ' + u.district + ', Odisha';
 
   document.getElementById('stat-jobs').textContent = u.jobs || '0';
   document.getElementById('stat-rating').textContent = u.rating || '4.8';
   document.getElementById('stat-member').textContent = (u.created_at||u.createdAt) ? new Date(u.created_at||u.createdAt).getFullYear() : new Date().getFullYear();
 
-  // Skills tags
+  // Skills tags — only relevant to user type
   const sk = document.getElementById('did-skills');
   sk.innerHTML = '';
-  const tags = [u.skill, u.biz, u.vtype].filter(Boolean);
-  if (tags.length === 0) tags.push(u.type.charAt(0).toUpperCase() + u.type.slice(1));
+  let tags = [];
+  if      (u.type === 'worker')  tags = [u.skill, u.exp ? u.exp + ' yrs exp' : null].filter(Boolean);
+  else if (u.type === 'vendor')  tags = [u.biz_type || u.biz, u.shop].filter(Boolean);
+  else if (u.type === 'vehicle') tags = [u.vehicle_type || u.vtype, u.vehicle_num || u.vnum].filter(Boolean);
+  else                           tags = ['Customer'];
   tags.forEach(t => { const span = document.createElement('span'); span.className = 'dtag'; span.textContent = t; sk.appendChild(span); });
 
   // Vendor plan section
