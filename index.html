@@ -682,29 +682,181 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
-<!-- ===== SERVICE: TRANSPORT (OLA LOGIC) ===== -->
+<!-- ===== SERVICE: TRANSPORT ===== -->
 <div id="ap-transport" class="ca hidden">
-  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🚜 Transport | ପରିବହନ</h3></div>
-  <div style="padding:14px 15px">
-    <div class="fg"><label>📍 ଉଠିବା ସ୍ଥାନ <span>/ Pickup Location</span></label><input type="text" id="t-from" placeholder="From: Your village/location" style="background:white"></div>
-    <div class="fg"><label>🎯 ଯିବା ସ୍ଥାନ <span>/ Drop Location</span></label><input type="text" id="t-to" placeholder="To: Destination"></div>
-    <div class="fg"><label>📦 ଯାତ୍ରା ପ୍ରକାର <span>/ Trip Type</span></label>
-      <select id="t-type" style="background:white">
-        <option>ବ୍ୟକ୍ତି / Passenger</option>
-        <option>ମାଲ ପରିବହନ / Goods Transport</option>
-        <option>ଶସ୍ୟ / Farm Produce</option>
-        <option>ନିର୍ମାଣ ସାମଗ୍ରୀ / Construction Material</option>
-      </select>
-    </div>
-    <button class="btn btn-p" onclick="searchVehicles()" style="margin-bottom:14px">🔍 ଯାନ ଖୋଜ | Find Vehicles</button>
+  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🚌 Transport | ପରିବହନ</h3></div>
+
+  <!-- Category tabs -->
+  <div class="tabrow">
+    <div class="ti on" onclick="tabSel(this,'tr-bus')">🚌 Bus</div>
+    <div class="ti" onclick="tabSel(this,'tr-auto')">🛺 Auto/Car</div>
+    <div class="ti" onclick="tabSel(this,'tr-heavy')">🚛 Heavy</div>
+    <div class="ti" onclick="tabSel(this,'tr-book')">📋 My Tickets</div>
   </div>
-  <div style="padding:0 15px 8px;font-size:.82rem;font-weight:700;color:var(--muted)">AVAILABLE VEHICLES NEARBY</div>
-  <div class="vc" onclick="openBook('Auto Rickshaw','🛺','Passenger auto, up to 3 persons','₹15/km','⭐ 4.6','Khurda')"><div class="vc-row"><div class="vc-icon">🛺</div><div class="vc-info"><h4>Auto Rickshaw</h4><div class="vc-sub">Binod Auto • 1.2 km away • 3 seats</div></div><div class="vc-pr"><div class="vc-price">₹15/km</div><div class="vc-eta">~4 min</div></div></div></div>
-  <div class="vc" onclick="openBook('Tempo (Goods)','🚐','Mini tempo for goods transport','₹20/km','⭐ 4.8','Cuttack')"><div class="vc-row"><div class="vc-icon">🚐</div><div class="vc-info"><h4>Tempo — Goods Transport</h4><div class="vc-sub">Raju Tempo • 2.8 km • 500kg capacity</div></div><div class="vc-pr"><div class="vc-price">₹20/km</div><div class="vc-eta">~8 min</div></div></div></div>
-  <div class="vc" onclick="openBook('Tractor (Farm)','🚜','Farm tractor, field or village roads','₹100/hr','⭐ 4.9','Nayagarh')"><div class="vc-row"><div class="vc-icon">🚜</div><div class="vc-info"><h4>Tractor — Farm Transport</h4><div class="vc-sub">Sura Tractor • 3.5 km • Full day rental</div></div><div class="vc-pr"><div class="vc-price">₹800/day</div><div class="vc-eta">~12 min</div></div></div></div>
-  <div class="vc" onclick="openBook('Car/Cab','🚗','Shared cab to city or hospital','₹12/km','⭐ 4.7','Puri')"><div class="vc-row"><div class="vc-icon">🚗</div><div class="vc-info"><h4>Car — City / Hospital Trip</h4><div class="vc-sub">Manoj Cab • 4.1 km • AC car</div></div><div class="vc-pr"><div class="vc-price">₹12/km</div><div class="vc-eta">~14 min</div></div></div></div>
-  <div class="vc" onclick="openBook('E-Rickshaw','⚡','Electric rickshaw, local trips','₹10/km','⭐ 4.5','Balasore')"><div class="vc-row"><div class="vc-icon">⚡</div><div class="vc-info"><h4>E-Rickshaw — Local</h4><div class="vc-sub">Raju E-Rikshaw • 0.9 km</div></div><div class="vc-pr"><div class="vc-price">₹10/km</div><div class="vc-eta">~3 min</div></div></div></div>
-  <div class="vc" onclick="openBook('Truck','🚛','Heavy truck for large loads','₹25/km','⭐ 4.6','Ganjam')"><div class="vc-row"><div class="vc-icon">🚛</div><div class="vc-info"><h4>Truck — Heavy Goods</h4><div class="vc-sub">SK Logistics • 7.2 km • 5-tonne</div></div><div class="vc-pr"><div class="vc-price">₹25/km</div><div class="vc-eta">~22 min</div></div></div></div>
+
+  <!-- BUS BOOKING TAB -->
+  <div id="tr-bus">
+    <div style="padding:12px 15px 0">
+      <!-- Journey selector -->
+      <div style="background:var(--saffron-p);border-radius:14px;padding:14px;margin-bottom:12px">
+        <div style="font-size:.82rem;font-weight:700;color:var(--saffron);margin-bottom:10px">🎟️ Book Bus Ticket</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div class="fg" style="margin:0">
+            <label style="font-size:.72rem">From Stop</label>
+            <select id="tr-from" style="background:#fff;width:100%" onchange="loadBusRoutes()">
+              <option value="">Select stop</option>
+            </select>
+          </div>
+          <div class="fg" style="margin:0">
+            <label style="font-size:.72rem">To Stop</label>
+            <select id="tr-to" style="background:#fff;width:100%" onchange="loadBusRoutes()">
+              <option value="">Select stop</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg" style="margin-bottom:8px">
+          <label style="font-size:.72rem">Journey Date</label>
+          <input type="date" id="tr-date" style="background:#fff;width:100%" onchange="loadBusRoutes()">
+        </div>
+        <button class="btn btn-p" onclick="loadBusRoutes()" style="margin:0;padding:10px">🔍 Search Routes</button>
+      </div>
+
+      <!-- Available routes -->
+      <div id="tr-routes-list">
+        <div style="text-align:center;padding:20px;color:var(--muted);font-size:.82rem">Select stops and date to see available buses</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEAT MAP MODAL (shown inside page) -->
+  <div id="tr-seat-view" style="display:none;padding:0 15px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <button onclick="document.getElementById('tr-seat-view').style.display='none';document.getElementById('tr-routes-list').style.display=''" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text)">←</button>
+      <div>
+        <div style="font-weight:800;font-size:.9rem" id="sv-route-name">Route</div>
+        <div style="font-size:.75rem;color:var(--muted)" id="sv-route-info">stops • time</div>
+      </div>
+    </div>
+    <!-- Route stops display -->
+    <div id="sv-stops" style="background:var(--surf2);border-radius:10px;padding:12px;margin-bottom:12px;font-size:.78rem"></div>
+    <!-- Seat availability info -->
+    <div style="display:flex;gap:10px;margin-bottom:10px;font-size:.72rem">
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;border-radius:3px;background:#EAF3DE;border:1.5px solid #639922;display:inline-block"></span>Available</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;border-radius:3px;background:#FCEBEB;border:1.5px solid #E24B4A;display:inline-block"></span>Taken</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;border-radius:3px;background:#FAEEDA;border:1.5px solid #BA7517;display:inline-block"></span>Partial</span>
+    </div>
+    <!-- Seat grid -->
+    <div style="background:#fff;border-radius:12px;padding:14px;border:1px solid var(--border);margin-bottom:12px">
+      <div style="font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between">
+        <span>FRONT</span><span id="sv-avail-count">0 available</span>
+      </div>
+      <!-- Bus layout: 2+2 seating -->
+      <div id="sv-seat-grid" style="display:grid;grid-template-columns:1fr 1fr 32px 1fr 1fr;gap:6px;max-width:260px;margin:0 auto"></div>
+      <div style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:8px">DRIVER END ← → BACK</div>
+    </div>
+    <div id="sv-selected-seat" style="background:var(--green-p);border-radius:10px;padding:12px;margin-bottom:10px;display:none">
+      <div style="font-size:.82rem;font-weight:700;color:var(--green);margin-bottom:4px">✅ Seat selected</div>
+      <div style="font-size:.78rem" id="sv-seat-detail">Seat X • ₹XX</div>
+    </div>
+    <button class="btn btn-p" id="sv-book-btn" onclick="confirmBusBooking()" style="display:none">✅ Confirm Booking</button>
+  </div>
+
+  <!-- AUTO/SHARING CAR TAB -->
+  <div id="tr-auto" class="hidden">
+    <div style="padding:12px 15px">
+      <div class="fg"><label>📍 From | ଉଠିବା ସ୍ଥାନ</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="ta-from" placeholder="Your location" style="flex:1">
+          <button onclick="getGPSLocation('ta-from')" style="background:var(--sky);color:#fff;border:none;border-radius:9px;padding:0 13px;font-size:1.1rem;cursor:pointer">📍</button>
+        </div>
+      </div>
+      <div class="fg"><label>🎯 To | ଯିବା ସ୍ଥାନ</label><input type="text" id="ta-to" placeholder="Destination"></div>
+      <div style="font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:10px">VEHICLE TYPE</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+        <div class="tr-type-card on" onclick="selectTrType(this,'sharing_auto')" style="border:2px solid var(--saffron);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--saffron-p)">
+          <div style="font-size:1.5rem">🛺</div>
+          <div style="font-size:.78rem;font-weight:700">Sharing Auto</div>
+          <div style="font-size:.68rem;color:var(--muted)">3 seats • fixed route</div>
+        </div>
+        <div class="tr-type-card" onclick="selectTrType(this,'sharing_car')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
+          <div style="font-size:1.5rem">🚗</div>
+          <div style="font-size:.78rem;font-weight:700">Sharing Car</div>
+          <div style="font-size:.68rem;color:var(--muted)">4 seats • flexible</div>
+        </div>
+        <div class="tr-type-card" onclick="selectTrType(this,'private_auto')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
+          <div style="font-size:1.5rem">🛺</div>
+          <div style="font-size:.78rem;font-weight:700">Private Auto</div>
+          <div style="font-size:.68rem;color:var(--muted)">Full booking • ₹/km</div>
+        </div>
+        <div class="tr-type-card" onclick="selectTrType(this,'erickshaw')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
+          <div style="font-size:1.5rem">⚡</div>
+          <div style="font-size:.78rem;font-weight:700">E-Rickshaw</div>
+          <div style="font-size:.68rem;color:var(--muted)">Local trips • cheap</div>
+        </div>
+      </div>
+      <button class="btn btn-p" onclick="searchAutoVehicles()">🔍 Find Vehicles</button>
+      <div id="ta-results" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <!-- HEAVY VEHICLE TAB -->
+  <div id="tr-heavy" class="hidden">
+    <div style="padding:12px 15px">
+      <div class="fg"><label>📦 What to transport</label>
+        <select id="th-goods" style="background:#fff">
+          <option>Farm produce (paddy, vegetables)</option>
+          <option>Construction material (sand, bricks)</option>
+          <option>Furniture / household items</option>
+          <option>Fish / seafood (refrigerated)</option>
+          <option>Other goods</option>
+        </select>
+      </div>
+      <div class="fg"><label>📍 Pickup location</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="th-from" placeholder="From where" style="flex:1">
+          <button onclick="getGPSLocation('th-from')" style="background:var(--sky);color:#fff;border:none;border-radius:9px;padding:0 13px;font-size:1.1rem;cursor:pointer">📍</button>
+        </div>
+      </div>
+      <div class="fg"><label>🎯 Drop location</label><input type="text" id="th-to" placeholder="Destination"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+        <div class="tr-type-card" onclick="selectTrType(this,'tractor')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
+          <div style="font-size:1.5rem">🚜</div>
+          <div style="font-size:.78rem;font-weight:700">Tractor</div>
+          <div style="font-size:.68rem;color:var(--muted)">Farm / local roads</div>
+        </div>
+        <div class="tr-type-card" onclick="selectTrType(this,'mini_truck')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
+          <div style="font-size:1.5rem">🚐</div>
+          <div style="font-size:.78rem;font-weight:700">Mini Truck</div>
+          <div style="font-size:.68rem;color:var(--muted)">Up to 1 tonne</div>
+        </div>
+        <div class="tr-type-card" onclick="selectTrType(this,'truck')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
+          <div style="font-size:1.5rem">🚛</div>
+          <div style="font-size:.78rem;font-weight:700">Truck</div>
+          <div style="font-size:.68rem;color:var(--muted)">5–10 tonne</div>
+        </div>
+        <div class="tr-type-card" onclick="selectTrType(this,'boat')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
+          <div style="font-size:1.5rem">⛵</div>
+          <div style="font-size:.78rem;font-weight:700">Boat</div>
+          <div style="font-size:.68rem;color:var(--muted)">River / delta routes</div>
+        </div>
+      </div>
+      <button class="btn btn-p" onclick="searchHeavyVehicles()">🔍 Find Vehicles</button>
+      <div id="th-results" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <!-- MY TICKETS TAB -->
+  <div id="tr-book" class="hidden">
+    <div style="padding:12px 15px">
+      <div id="my-tickets-list">
+        <div style="text-align:center;padding:30px;color:var(--muted);font-size:.82rem">
+          🎟️ No tickets booked yet<br>
+          <span style="font-size:.75rem">Book a bus seat from the Bus tab</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /transport -->
 
 <!-- ===== SERVICE: FOOD (ZOMATO LOGIC) ===== -->
@@ -2097,10 +2249,10 @@ function goSvc(svc) {
   document.getElementById('ap-' + svc)?.classList.remove('hidden');
   // Initialize tabs on first open
   if (svc === 'fish') showTab('fish-workers');
+  if (svc === 'transport') initTransport();
   if (svc === 'buysell') {
     showTab('bs-all');
     loadVendorListings();
-    // Init haata tab state immediately (will show closed/open based on day)
     setTimeout(initHaataTab, 100);
   }
 }
@@ -4028,7 +4180,462 @@ function doSearch(val) {
   showToast('🔍 Try: farming, fish, transport, food...');
 }
 
-function searchVehicles() { showToast('🔍 Searching vehicles near you...'); }
+// ============================================================
+// TRANSPORT SYSTEM — Complete Logic
+// ============================================================
+let selectedTrType  = 'sharing_auto';
+let currentRoute    = null;
+let selectedBusSeat = null;
+let trFromStop      = 0;
+let trToStop        = 1;
+let trJourneyDate   = '';
+
+// ── Called when transport section opens
+function initTransport() {
+  const dateEl = document.getElementById('tr-date');
+  if (dateEl && !dateEl.value) {
+    dateEl.value = new Date().toISOString().split('T')[0];
+    trJourneyDate = dateEl.value;
+  }
+  loadAllStops();
+}
+
+function parseStops(raw) {
+  if (Array.isArray(raw)) return raw;
+  try { return JSON.parse(raw); } catch { return []; }
+}
+
+// ── Load all unique stops from active routes for dropdowns
+async function loadAllStops() {
+  let routes = [];
+  if (isSupabaseReady()) {
+    const { data } = await sb.from('routes').select('stops').eq('status','active');
+    routes = data || [];
+  }
+  const allStops = new Set();
+  routes.forEach(r => parseStops(r.stops).forEach(s => allStops.add(s.name || s)));
+  if (allStops.size === 0) {
+    ['Kendrapara','Salepur','Bhubaneswar','Cuttack','Puri','Bhadrak','Balasore','Berhampur'].forEach(s => allStops.add(s));
+  }
+  ['tr-from','tr-to'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = '<option value="">-- Select stop --</option>' +
+      [...allStops].map(s => `<option value="${s}">${s}</option>`).join('');
+    if (id === 'tr-from' && currentUser?.district) {
+      for (const opt of el.options) {
+        if (opt.value.toLowerCase().includes(currentUser.district.toLowerCase())) { opt.selected = true; break; }
+      }
+    }
+  });
+}
+
+// ── Search bus routes
+async function loadBusRoutes() {
+  const fromStop = document.getElementById('tr-from')?.value;
+  const toStop   = document.getElementById('tr-to')?.value;
+  const date     = document.getElementById('tr-date')?.value;
+  trJourneyDate  = date;
+  const listEl   = document.getElementById('tr-routes-list');
+  if (!listEl) return;
+  if (!fromStop || !toStop || fromStop === toStop) {
+    listEl.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:.82rem">Please select different from and to stops | ଭିନ୍ନ ସ୍ଥାନ ବାଛନ୍ତୁ</div>'; return;
+  }
+  listEl.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:.82rem">⏳ Searching routes...</div>';
+
+  let routes = [];
+  if (isSupabaseReady()) {
+    const { data } = await sb.from('routes').select('*').eq('status','active');
+    routes = data || [];
+  }
+  if (!routes.length) {
+    routes = [{ id:'RT-DEMO01', name:'Kendrapara → Bhubaneswar Express', vehicle_type:'bus',
+      stops:[{name:'Kendrapara',time:'06:00'},{name:'Salepur',time:'07:30'},{name:'Bhubaneswar',time:'09:00'}],
+      total_seats:20, fare_per_segment:40, departure_time:'06:00', driver_name:'Dinesh', driver_phone:'9876543210',
+      current_stop_index:0, status:'active' }];
+  }
+
+  const matching = routes.filter(r => {
+    const stops = parseStops(r.stops);
+    const fi = stops.findIndex(s => (s.name||s) === fromStop);
+    const ti = stops.findIndex(s => (s.name||s) === toStop);
+    return fi !== -1 && ti !== -1 && fi < ti;
+  });
+
+  if (!matching.length) {
+    listEl.innerHTML = `<div style="text-align:center;padding:24px;color:var(--muted);font-size:.82rem">No bus found from ${fromStop} to ${toStop}<br><small>Contact admin to add this route</small></div>`;
+    return;
+  }
+
+  listEl.innerHTML = matching.map(r => {
+    const stops = parseStops(r.stops);
+    const fi  = stops.findIndex(s => (s.name||s) === fromStop);
+    const ti  = stops.findIndex(s => (s.name||s) === toStop);
+    const seg = ti - fi;
+    const fare = (r.fare_per_segment || 40) * seg;
+    const curStop = stops[r.current_stop_index || 0];
+    const isLive  = r.current_stop_index > 0;
+    const vIcon   = r.vehicle_type === 'bus' ? '🚌' : '🛺';
+    return `
+    <div style="background:var(--surf2);border-radius:14px;padding:14px;margin-bottom:12px;cursor:pointer" onclick="openSeatMap('${r.id}',${fi},${ti})">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div>
+          <div style="font-weight:800;font-size:.9rem">${vIcon} ${r.name}</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-top:2px">🕐 ${r.departure_time || '06:00'} • ${fromStop} → ${toStop}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:800;color:var(--saffron)">₹${fare}</div>
+          <div style="font-size:.68rem;color:var(--muted)">${seg} stop${seg>1?'s':''}</div>
+        </div>
+      </div>
+      ${isLive ? `<div style="font-size:.72rem;background:var(--green-p);border-radius:8px;padding:5px 10px;color:var(--green);font-weight:700">🟢 LIVE — Now at: ${curStop?.name||curStop}</div>` : ''}
+      <div style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:.72rem;color:var(--muted)">
+        <span>👤 ${r.driver_name || 'Driver'}</span>
+        <span>•</span>
+        <span>💺 ${r.total_seats || 20} seats</span>
+        <span>•</span>
+        <span style="color:var(--green)">Tap to see seats →</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Open seat map for a route
+async function openSeatMap(routeId, fromIdx, toIdx) {
+  trFromStop = fromIdx;
+  trToStop   = toIdx;
+
+  document.getElementById('tr-routes-list').style.display = 'none';
+  const sv = document.getElementById('tr-seat-view');
+  sv.style.display = '';
+
+  // Load route
+  let route = null;
+  if (isSupabaseReady()) {
+    const { data } = await sb.from('routes').select('*').eq('id', routeId).single();
+    route = data;
+  }
+  if (!route) {
+    route = { id:'RT-DEMO01', name:'Kendrapara → Bhubaneswar Express', vehicle_type:'bus',
+      stops:[{name:'Kendrapara',time:'06:00'},{name:'Salepur',time:'07:30'},{name:'Bhubaneswar',time:'09:00'}],
+      total_seats:20, fare_per_segment:40, current_stop_index:0 };
+  }
+  currentRoute = route;
+
+  const stops = parseStops(route.stops);
+  document.getElementById('sv-route-name').textContent = route.name;
+  document.getElementById('sv-route-info').textContent =
+    `${stops[fromIdx]?.name||fromIdx} → ${stops[toIdx]?.name||toIdx} • ${route.departure_time || '06:00'}`;
+
+  // Build stops strip
+  document.getElementById('sv-stops').innerHTML = stops.map((s, i) => {
+    const isFrom = i === fromIdx, isTo = i === toIdx;
+    const isCur  = i === (route.current_stop_index || 0);
+    const col = isFrom||isTo ? '#FF6B00' : isCur ? '#1B6B3A' : '#888';
+    return `<span style="color:${col};font-weight:${isFrom||isTo?'700':'400'}">${s.name||s}${isCur?' 🟢':''}</span>${i<stops.length-1?' → ':''}`;
+  }).join('');
+
+  // Load existing bookings for this route and date
+  let existingBookings = [];
+  if (isSupabaseReady()) {
+    const { data } = await sb.from('seat_bookings').select('*')
+      .eq('route_id', routeId).eq('journey_date', trJourneyDate).eq('status','confirmed');
+    existingBookings = data || [];
+  }
+
+  // Render seat grid (2+2 layout with aisle)
+  const totalSeats = route.total_seats || 20;
+  const fare = (route.fare_per_segment || 40) * (toIdx - fromIdx);
+  let freeCount = 0;
+  selectedBusSeat = null;
+
+  const seatEl = document.getElementById('sv-seat-grid');
+  let html = '';
+  for (let i = 1; i <= totalSeats; i++) {
+    // Check if seat is available for our segment
+    const conflicts = existingBookings.filter(b =>
+      b.seat_number === i && !(b.to_stop <= fromIdx || b.from_stop >= toIdx)
+    );
+    const partials = existingBookings.filter(b =>
+      b.seat_number === i && (b.to_stop <= fromIdx || b.from_stop >= toIdx) && conflicts.length === 0
+    );
+    const isBooked  = conflicts.length > 0;
+    const isPartial = !isBooked && partials.length > 0;
+    if (!isBooked) freeCount++;
+
+    const bg = isBooked ? '#FCEBEB' : isPartial ? '#FAEEDA' : '#EAF3DE';
+    const bc = isBooked ? '#E24B4A' : isPartial ? '#BA7517' : '#639922';
+    const cursor = isBooked ? 'default' : 'pointer';
+    const onclick = isBooked ? '' : `onclick="selectBusSeat(${i},${fare})"`;
+
+    // Aisle after every 2nd seat
+    if (i % 2 === 1 && i > 1) html += '<div></div>'; // aisle spacer every pair
+    // Actually do 2+aisle+2 layout: cols 1,2,aisle,3,4
+    const col = ((i-1) % 4);
+    if (col === 2) html += '<div style="display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--muted)">│</div>';
+
+    html += `<div id="seat-${i}" style="aspect-ratio:1;border-radius:6px;border:1.5px solid ${bc};background:${bg};display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:500;cursor:${cursor}" ${onclick}>${i}</div>`;
+  }
+  seatEl.innerHTML = html;
+  document.getElementById('sv-avail-count').textContent = `${freeCount} available`;
+  document.getElementById('sv-selected-seat').style.display = 'none';
+  document.getElementById('sv-book-btn').style.display = 'none';
+}
+
+function selectBusSeat(seatNum, fare) {
+  // Deselect previous
+  if (selectedBusSeat) {
+    const prev = document.getElementById('seat-' + selectedBusSeat);
+    if (prev) { prev.style.background = '#EAF3DE'; prev.style.borderColor = '#639922'; }
+  }
+  selectedBusSeat = seatNum;
+  const el = document.getElementById('seat-' + seatNum);
+  if (el) { el.style.background = '#E6F1FB'; el.style.borderColor = '#378ADD'; }
+
+  const stops = parseStops(currentRoute?.stops || []);
+  const fromName = stops[trFromStop]?.name || trFromStop;
+  const toName   = stops[trToStop]?.name   || trToStop;
+
+  document.getElementById('sv-selected-seat').style.display = '';
+  document.getElementById('sv-seat-detail').textContent = `Seat ${seatNum} • ${fromName} → ${toName} • ₹${fare}`;
+  document.getElementById('sv-book-btn').style.display = '';
+  document.getElementById('sv-book-btn').dataset.fare = fare;
+}
+
+async function confirmBusBooking() {
+  if (!currentRoute || !selectedBusSeat) { showToast('⚠️ Select a seat first'); return; }
+  if (!currentUser) { showToast('⚠️ Please login first'); return; }
+
+  const stops = parseStops(currentRoute.stops);
+  const fare  = parseInt(document.getElementById('sv-book-btn').dataset.fare) || 0;
+
+  // T&C check
+  const tncKey = 'pt_transport_tnc_accepted';
+  if (!lsGet(tncKey)) {
+    const accepted = await showTransportTnC('passenger');
+    if (!accepted) return;
+    lsSet(tncKey, true);
+  }
+
+  const booking = {
+    id:              'SB-' + Date.now().toString().slice(-8),
+    route_id:        currentRoute.id,
+    seat_number:     selectedBusSeat,
+    passenger_id:    currentUser.id,
+    passenger_name:  currentUser.name,
+    passenger_phone: currentUser.phone,
+    from_stop:       trFromStop,
+    to_stop:         trToStop,
+    journey_date:    trJourneyDate,
+    fare,
+    status:          'confirmed',
+    booked_at:       new Date().toISOString()
+  };
+
+  if (isSupabaseReady()) {
+    const { error } = await sb.from('seat_bookings').insert([booking]);
+    if (error) { showToast('⚠️ Booking failed. Please try again.'); console.error(error); return; }
+  }
+  let tix = lsGet('pt_seat_bookings') || [];
+  tix.unshift(booking);
+  lsSet('pt_seat_bookings', tix);
+
+  // Notification badge +1
+  const prev = lsGet('pt_unread_notifs') || 0;
+  updateNotifBadge(prev + 1);
+
+  showToast(`✅ Seat ${selectedBusSeat} booked! ${stops[trFromStop]?.name} → ${stops[trToStop]?.name} • ₹${fare}`);
+
+  // Go to My Tickets
+  document.getElementById('tr-seat-view').style.display = 'none';
+  document.getElementById('tr-routes-list').style.display = '';
+  tabSel(document.querySelector('[onclick*="tr-book"]'), 'tr-book');
+  loadMyTickets();
+}
+
+// ── Transport T&C modal
+function showTransportTnC(role) {
+  return new Promise(resolve => {
+    const tnc = role === 'passenger'
+      ? (lsGet('pt_transport_passenger_tnc') ||
+        `Passenger Terms:\n1. Book seat only for confirmed travel\n2. Board on time — 15 min grace period\n3. No overloading or illegal items\n4. Pay fare directly to driver/conductor\n5. Disputes: contact admin\n6. Governed by Motor Vehicles Act 1988 & Consumer Protection Act 2019`)
+      : (lsGet('pt_transport_driver_tnc') ||
+        `Driver/Vehicle Owner Terms:\n1. Valid licence, RC & insurance mandatory (MV Act)\n2. Shared route fares set by admin — cannot overcharge\n3. Private booking rates self-decided but must be agreed upfront\n4. Treat passengers with respect — harassment = account ban\n5. Update route stop when reached\n6. Platform takes 0% commission\n7. Governed by Motor Vehicles Act 1988 & MSME Act 2006`);
+
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.id = 'modal-transport-tnc';
+    modal.innerHTML = `<div class="msheet" style="max-height:90vh">
+      <div class="mhandle"></div>
+      <div class="mt">📜 Transport Terms | ପରିବହନ ସର୍ତ</div>
+      <div class="msub">As per Indian law — Motor Vehicles Act 1988</div>
+      <div style="overflow-y:auto;max-height:50vh;background:var(--surf2);border-radius:10px;padding:14px;font-size:.78rem;line-height:1.9;white-space:pre-line;margin:14px 0">${tnc}</div>
+      <button class="btn btn-p" onclick="document.getElementById('modal-transport-tnc').classList.remove('on');resolve(true)">✅ I Agree & Continue | ସ୍ୱୀକାର</button>
+      <button class="btn btn-o mt8" onclick="document.getElementById('modal-transport-tnc').classList.remove('on');resolve(false)">Decline</button>
+    </div>`;
+    document.body.appendChild(modal);
+    openModal('modal-transport-tnc');
+  });
+}
+
+// ── Search auto/private vehicles
+async function searchAutoVehicles() {
+  const from = document.getElementById('ta-from')?.value.trim();
+  const to   = document.getElementById('ta-to')?.value.trim();
+  if (!from || !to) { showToast('⚠️ Enter from and to location'); return; }
+  const resEl = document.getElementById('ta-results');
+  resEl.innerHTML = '<div style="text-align:center;padding:14px;color:var(--muted);font-size:.82rem">⏳ Finding vehicles...</div>';
+
+  // For sharing: search routes. For private: search vehicle owners
+  let vehicles = [];
+  if (isSupabaseReady()) {
+    if (selectedTrType === 'sharing_auto' || selectedTrType === 'sharing_car') {
+      const { data } = await sb.from('routes').select('*').eq('vehicle_type', selectedTrType).eq('status','active');
+      vehicles = (data||[]).map(r => ({ ...r, _isRoute: true }));
+    } else {
+      const { data } = await sb.from('users').select('*')
+        .eq('type','vehicle').eq('status','active').eq('available',true)
+        .in('vehicle_type', [selectedTrType, selectedTrType.replace('_','/'), selectedTrType.replace('_',' ')]);
+      vehicles = data || [];
+    }
+  }
+
+  if (!vehicles.length) {
+    // Demo fallback
+    vehicles = [
+      { name: 'Binod Kumar', vehicle_type: selectedTrType, vehicle_rate:'15', vehicle_num:'OD-05-1234', rating:'4.7', phone:'9876543210', district: currentUser?.district || 'Kendrapara', available:true },
+      { name: 'Ramesh Nayak', vehicle_type: selectedTrType, vehicle_rate:'18', vehicle_num:'OD-07-5678', rating:'4.5', phone:'9876543211', district: currentUser?.district || 'Kendrapara', available:true },
+    ];
+  }
+
+  const typeIcons = { sharing_auto:'🛺', sharing_car:'🚗', private_auto:'🛺', erickshaw:'⚡', bike_taxi:'🏍️' };
+  const icon = typeIcons[selectedTrType] || '🚗';
+
+  resEl.innerHTML = vehicles.map(v => `
+    <div style="background:var(--surf2);border-radius:12px;padding:13px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--saffron-p);display:flex;align-items:center;justify-content:center;font-size:1.3rem">${icon}</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:.88rem">${v.name || v.driver_name}</div>
+          <div style="font-size:.72rem;color:var(--muted)">${v.vehicle_num||v.vehicle_number||''} • ⭐ ${v.rating||'4.5'}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:800;color:var(--saffron)">₹${v.vehicle_rate||v.fare_per_segment||'15'}/km</div>
+          <div style="font-size:.68rem;color:var(--green)">🟢 Available</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="bb" style="flex:1" onclick="bookPrivateVehicle('${v.name||v.driver_name}','${icon}','${v.vehicle_type||selectedTrType}','₹${v.vehicle_rate||'15'}/km','${v.phone||v.driver_phone||''}')">📅 Book</button>
+        <button class="bc" onclick="callVendor('${v.phone||v.driver_phone||''}','${v.name||v.driver_name}')">📞 Call</button>
+      </div>
+    </div>`).join('');
+}
+
+function bookPrivateVehicle(name, icon, vtype, rate, phone) {
+  openBook(name, icon, `${vtype} • Contact: ${phone}`, rate, '', currentUser?.district || '');
+}
+
+// ── Search heavy vehicles
+async function searchHeavyVehicles() {
+  const from   = document.getElementById('th-from')?.value.trim();
+  const to     = document.getElementById('th-to')?.value.trim();
+  const goods  = document.getElementById('th-goods')?.value;
+  const resEl  = document.getElementById('th-results');
+  if (!from || !to) { showToast('⚠️ Enter pickup and drop location'); return; }
+  resEl.innerHTML = '<div style="text-align:center;padding:14px;color:var(--muted)">⏳ Finding vehicles...</div>';
+
+  let vehicles = [];
+  if (isSupabaseReady()) {
+    const { data } = await sb.from('users').select('*')
+      .eq('type','vehicle').eq('status','active').eq('available',true)
+      .in('vehicle_type', ['tractor','mini_truck','truck','boat','Tractor','Truck']);
+    vehicles = data || [];
+  }
+  if (!vehicles.length) {
+    vehicles = [
+      { name:'Sura Tractor Service', vehicle_type:'tractor', vehicle_rate:'800', vehicle_num:'OD-09-2233', rating:'4.8', phone:'9876543220', district:currentUser?.district||'Kendrapara' },
+      { name:'Ram Logistics', vehicle_type:'truck', vehicle_rate:'2500', vehicle_num:'OD-05-7890', rating:'4.6', phone:'9876543221', district:currentUser?.district||'Kendrapara' },
+    ];
+  }
+  const icons = { tractor:'🚜', mini_truck:'🚐', truck:'🚛', boat:'⛵' };
+  resEl.innerHTML = vehicles.map(v => {
+    const ic = icons[v.vehicle_type?.toLowerCase()] || '🚛';
+    return `<div style="background:var(--surf2);border-radius:12px;padding:13px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div style="font-size:1.6rem">${ic}</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:.88rem">${v.name}</div>
+          <div style="font-size:.72rem;color:var(--muted)">${v.vehicle_type} • ${v.vehicle_num||''} • ⭐${v.rating||'4.5'}</div>
+          <div style="font-size:.72rem;color:var(--muted)">📦 ${goods}</div>
+        </div>
+        <div style="font-weight:800;color:var(--saffron)">₹${v.vehicle_rate||'1000'}</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="bb" style="flex:1" onclick="bookPrivateVehicle('${v.name}','${ic}','${v.vehicle_type}','₹${v.vehicle_rate}','${v.phone||''}')">📅 Book</button>
+        <button class="bc" onclick="callVendor('${v.phone||''}','${v.name}')">📞 Call</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── My Tickets
+async function loadMyTickets() {
+  const el = document.getElementById('my-tickets-list');
+  if (!el || !currentUser) return;
+  let tickets = [];
+  if (isSupabaseReady()) {
+    const { data } = await sb.from('seat_bookings').select('*, routes(name,stops,departure_time)')
+      .eq('passenger_id', currentUser.id).order('booked_at', { ascending: false });
+    tickets = data || [];
+  } else {
+    tickets = (lsGet('pt_seat_bookings')||[]).filter(t => t.passenger_id === currentUser.id);
+  }
+  if (!tickets.length) {
+    el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted);font-size:.82rem">🎟️ No tickets booked yet</div>';
+    return;
+  }
+  const statusCol = { confirmed:'var(--green)', cancelled:'var(--red)', done:'var(--muted)' };
+  el.innerHTML = tickets.map(t => {
+    const route = t.routes || {};
+    const stops = parseStops(route.stops || '[]');
+    const fromName = stops[t.from_stop]?.name || `Stop ${t.from_stop}`;
+    const toName   = stops[t.to_stop]?.name   || `Stop ${t.to_stop}`;
+    return `<div style="background:var(--surf2);border-radius:12px;padding:13px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-weight:700;font-size:.88rem">${route.name || 'Bus Ticket'}</div>
+          <div style="font-size:.75rem;color:var(--muted)">${fromName} → ${toName}</div>
+          <div style="font-size:.75rem;color:var(--muted)">📅 ${t.journey_date} • 💺 Seat ${t.seat_number} • ₹${t.fare}</div>
+        </div>
+        <span style="font-size:.7rem;font-weight:700;color:${statusCol[t.status]||'var(--muted)'};background:var(--surf2);border:1px solid var(--border);border-radius:20px;padding:2px 10px">${t.status}</span>
+      </div>
+      ${t.status === 'confirmed' ? `<button class="bc" style="margin-top:8px;width:100%;background:#FFE8E8;color:#FF4444;border-color:#FFB3B3" onclick="cancelTicket('${t.id}')">❌ Cancel Ticket</button>` : ''}
+    </div>`;
+  }).join('');
+}
+
+async function cancelTicket(id) {
+  if (!confirm('Cancel this ticket? | ଟିକେଟ ବାତିଲ?')) return;
+  if (isSupabaseReady()) await sbUpdate('seat_bookings', id, { status: 'cancelled' });
+  let tix = lsGet('pt_seat_bookings') || [];
+  const t = tix.find(x => x.id === id);
+  if (t) { t.status = 'cancelled'; lsSet('pt_seat_bookings', tix); }
+  showToast('✅ Ticket cancelled | ଟିକେଟ ବାତିଲ ହୋଇଗଲା');
+  loadMyTickets();
+}
+
+function selectTrType(el, type) {
+  selectedTrType = type;
+  const container = el.parentElement;
+  container.querySelectorAll('.tr-type-card').forEach(c => {
+    c.style.border = '2px solid var(--border)';
+    c.style.background = 'var(--surf2)';
+  });
+  el.style.border = '2px solid var(--saffron)';
+  el.style.background = 'var(--saffron-p)';
+}
+
+function searchVehicles() { searchAutoVehicles(); }
 
 // ============================================================
 // LANG
@@ -4181,6 +4788,7 @@ function tabSel(el, target) {
   el.classList.add('on');
   // Haata tab — check open/closed state on click
   if (target === 'bs-haata') setTimeout(initHaataTab, 50);
+  if (target === 'tr-book')  setTimeout(loadMyTickets, 50);
   showTab(target);
 }
 
