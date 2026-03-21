@@ -424,10 +424,27 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
         </div>
         <div id="vhf" class="hidden">
           <div class="fg"><label>ଯାନ ପ୍ରକାର <span>/ Vehicle Type</span></label>
-            <select id="r-vtype"><option>ଟ୍ରାକ୍ଟର / Tractor</option><option>ଟେମ୍ପୋ / Tempo</option><option>ଅଟୋ / Auto Rickshaw</option><option>ଟ୍ରକ / Truck</option><option>ଇ-ରିକ୍ସା / E-Rickshaw</option><option>ଗାଡ଼ି / Car (Taxi)</option><option>ଜଳଯାନ / Boat</option><option>ମୋଟରସାଇକେଲ / Bike</option></select>
+            <select id="r-vtype">
+  <option value="bike">🏍️ Bike / ମୋଟରସାଇକେଲ</option>
+  <option value="auto">🛺 Auto Rickshaw / ଅଟୋ</option>
+  <option value="erickshaw">⚡ E-Rickshaw / ଇ-ରିକ୍ସା</option>
+  <option value="car">🚗 Car/Taxi / ଗାଡ଼ି</option>
+  <option value="tractor">🚜 Tractor / ଟ୍ରାକ୍ଟର</option>
+  <option value="tempo">🚐 Tempo / ଟେମ୍ପୋ</option>
+  <option value="truck">🚛 Truck / ଟ୍ରକ</option>
+  <option value="boat">⛵ Boat / ଜଳଯାନ</option>
+</select>
           </div>
           <div class="fg"><label>ଯାନ ନମ୍ବର <span>/ Vehicle Number</span></label><input id="r-vnum" type="text" placeholder="OD-XX-XXXX"></div>
-          <div class="fg"><label>ଭଡ଼ା <span>/ Rental Rate</span></label><input id="r-vrate" type="text" placeholder="e.g. ₹800/day or ₹40/km"></div>
+          <div class="fg"><label>ଭଡ଼ା ପ୍ରକାର <span>/ Rate Type</span></label>
+  <select id="r-rate-type">
+    <option value="per_km">₹ per km</option>
+    <option value="per_hr">₹ per hour</option>
+    <option value="per_day">₹ per day</option>
+    <option value="fixed">Fixed price</option>
+  </select>
+</div>
+<div class="fg"><label>ଭଡ଼ା ରାଶି <span>/ Rate Amount (₹)</span></label><input id="r-vrate" type="number" placeholder="e.g. 15" min="0"></div>
         </div>
         <div class="fg"><label>ପାସୱାର୍ଡ <span>/ Password</span></label>
           <div style="position:relative">
@@ -684,176 +701,193 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
 
 <!-- ===== SERVICE: TRANSPORT ===== -->
 <div id="ap-transport" class="ca hidden">
-  <div class="tbar"><button class="bk" onclick="backHome()">←</button><h3>🚌 Transport | ପରିବହନ</h3></div>
-
-  <!-- Category tabs -->
-  <div class="tabrow">
-    <div class="ti on" onclick="tabSel(this,'tr-bus')">🚌 Bus</div>
-    <div class="ti" onclick="tabSel(this,'tr-auto')">🛺 Auto/Car</div>
-    <div class="ti" onclick="tabSel(this,'tr-heavy')">🚛 Heavy</div>
-    <div class="ti" onclick="tabSel(this,'tr-book')">📋 My Tickets</div>
+  <div class="tbar">
+    <button class="bk" onclick="backHome()">←</button>
+    <h3 id="tr-title">🚌 Transport | ପରିବହନ</h3>
   </div>
 
-  <!-- BUS BOOKING TAB -->
-  <div id="tr-bus">
-    <div style="padding:12px 15px 0">
-      <!-- Journey selector -->
-      <div style="background:var(--saffron-p);border-radius:14px;padding:14px;margin-bottom:12px">
-        <div style="font-size:.82rem;font-weight:700;color:var(--saffron);margin-bottom:10px">🎟️ Book Bus Ticket</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div class="fg" style="margin:0">
-            <label style="font-size:.72rem">From Stop</label>
-            <select id="tr-from" style="background:#fff;width:100%" onchange="loadBusRoutes()">
-              <option value="">Select stop</option>
-            </select>
-          </div>
-          <div class="fg" style="margin:0">
-            <label style="font-size:.72rem">To Stop</label>
-            <select id="tr-to" style="background:#fff;width:100%" onchange="loadBusRoutes()">
-              <option value="">Select stop</option>
-            </select>
-          </div>
-        </div>
-        <div class="fg" style="margin-bottom:8px">
-          <label style="font-size:.72rem">Journey Date</label>
-          <input type="date" id="tr-date" style="background:#fff;width:100%" onchange="loadBusRoutes()">
-        </div>
-        <button class="btn btn-p" onclick="loadBusRoutes()" style="margin:0;padding:10px">🔍 Search Routes</button>
-      </div>
+  <!-- Tab bar: Ride | Bus | Delivery | Goods -->
+  <div class="tabrow" style="overflow-x:auto;white-space:nowrap;scrollbar-width:none">
+    <div class="ti on"  onclick="trTab(this,'tr-ride')">🚗 Ride</div>
+    <div class="ti"     onclick="trTab(this,'tr-bus')">🚌 Bus</div>
+    <div class="ti"     onclick="trTab(this,'tr-delivery')">📦 Delivery</div>
+    <div class="ti"     onclick="trTab(this,'tr-goods')">🚛 Goods</div>
+    <div class="ti"     onclick="trTab(this,'tr-mytickets')">🎟️ My Tickets</div>
+  </div>
 
-      <!-- Available routes -->
-      <div id="tr-routes-list">
-        <div style="text-align:center;padding:20px;color:var(--muted);font-size:.82rem">Select stops and date to see available buses</div>
+  <!-- ════ RIDE TAB (Ola style) ════ -->
+  <div id="tr-ride" style="padding:12px 15px">
+    <!-- From / To inputs -->
+    <div style="background:var(--saffron-p);border-radius:14px;padding:14px;margin-bottom:14px">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px;background:#fff;border-radius:10px;padding:10px 12px">
+          <div style="width:10px;height:10px;border-radius:50%;background:#22c55e;flex-shrink:0"></div>
+          <input type="text" id="tr-pickup" placeholder="Pickup — Your location | ଉଠିବା ସ୍ଥାନ" style="border:none;outline:none;flex:1;font-size:.85rem;background:transparent">
+          <button onclick="getGPSLocation('tr-pickup')" style="background:var(--sky);color:#fff;border:none;border-radius:7px;padding:4px 10px;font-size:.9rem;cursor:pointer;flex-shrink:0">📍</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;background:#fff;border-radius:10px;padding:10px 12px">
+          <div style="width:10px;height:10px;border-radius:4px;background:#FF6B00;flex-shrink:0"></div>
+          <input type="text" id="tr-drop" placeholder="Drop — Destination | ଯିବା ସ୍ଥାନ" style="border:none;outline:none;flex:1;font-size:.85rem;background:transparent">
+        </div>
+      </div>
+      <button onclick="trSearchRide()" class="btn btn-p" style="margin-top:12px;margin-bottom:0;padding:11px">🔍 Find Rides | ଯାନ ଖୋଜ</button>
+    </div>
+
+    <!-- Vehicle type selector (shown after search) -->
+    <div id="tr-type-section" style="display:none;margin-bottom:14px">
+      <div style="font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:8px">SELECT VEHICLE TYPE</div>
+      <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none">
+        <div class="tr-vtype-btn on" onclick="selectRideType(this,'bike')" data-type="bike" style="flex-shrink:0;text-align:center;border:2px solid var(--saffron);border-radius:12px;padding:10px 14px;background:var(--saffron-p);cursor:pointer;min-width:75px">
+          <div style="font-size:1.5rem">🏍️</div>
+          <div style="font-size:.72rem;font-weight:700;margin-top:3px">Bike</div>
+          <div style="font-size:.65rem;color:var(--muted)">₹8-12/km</div>
+        </div>
+        <div class="tr-vtype-btn" onclick="selectRideType(this,'auto')" data-type="auto" style="flex-shrink:0;text-align:center;border:2px solid var(--border);border-radius:12px;padding:10px 14px;background:var(--surf2);cursor:pointer;min-width:75px">
+          <div style="font-size:1.5rem">🛺</div>
+          <div style="font-size:.72rem;font-weight:700;margin-top:3px">Auto</div>
+          <div style="font-size:.65rem;color:var(--muted)">₹12-15/km</div>
+        </div>
+        <div class="tr-vtype-btn" onclick="selectRideType(this,'erickshaw')" data-type="erickshaw" style="flex-shrink:0;text-align:center;border:2px solid var(--border);border-radius:12px;padding:10px 14px;background:var(--surf2);cursor:pointer;min-width:75px">
+          <div style="font-size:1.5rem">⚡</div>
+          <div style="font-size:.72rem;font-weight:700;margin-top:3px">E-Rikshaw</div>
+          <div style="font-size:.65rem;color:var(--muted)">₹8-10/km</div>
+        </div>
+        <div class="tr-vtype-btn" onclick="selectRideType(this,'car')" data-type="car" style="flex-shrink:0;text-align:center;border:2px solid var(--border);border-radius:12px;padding:10px 14px;background:var(--surf2);cursor:pointer;min-width:75px">
+          <div style="font-size:1.5rem">🚗</div>
+          <div style="font-size:.72rem;font-weight:700;margin-top:3px">Car/Taxi</div>
+          <div style="font-size:.65rem;color:var(--muted)">₹15-20/km</div>
+        </div>
       </div>
     </div>
+
+    <!-- Driver listing (Ola style cards) -->
+    <div id="tr-driver-list"></div>
   </div>
 
-  <!-- SEAT MAP MODAL (shown inside page) -->
+  <!-- ════ BUS TAB ════ -->
+  <div id="tr-bus" style="display:none;padding:12px 15px">
+    <div style="background:var(--saffron-p);border-radius:14px;padding:14px;margin-bottom:12px">
+      <div style="font-size:.82rem;font-weight:700;color:var(--saffron);margin-bottom:10px">🎟️ Book Bus Seat | ସିଟ ବୁକ</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div class="fg" style="margin:0"><label style="font-size:.72rem">From Stop</label>
+          <select id="tr-from" style="background:#fff;width:100%" onchange="trSearchBus()"><option value="">-- Select --</option></select>
+        </div>
+        <div class="fg" style="margin:0"><label style="font-size:.72rem">To Stop</label>
+          <select id="tr-to" style="background:#fff;width:100%" onchange="trSearchBus()"><option value="">-- Select --</option></select>
+        </div>
+      </div>
+      <div class="fg" style="margin-bottom:10px"><label style="font-size:.72rem">Journey Date</label>
+        <input type="date" id="tr-date" style="background:#fff;width:100%" onchange="trSearchBus()">
+      </div>
+      <button onclick="trSearchBus()" class="btn btn-p" style="margin:0;padding:10px">🔍 Search Buses</button>
+    </div>
+    <div id="tr-routes-list"><div style="text-align:center;padding:20px;color:var(--muted);font-size:.82rem">Select stops and date | ସ୍ଥାନ ଓ ତାରିଖ ବାଛନ୍ତୁ</div></div>
+  </div>
+
+  <!-- Seat map view (inside bus tab) -->
   <div id="tr-seat-view" style="display:none;padding:0 15px">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-      <button onclick="document.getElementById('tr-seat-view').style.display='none';document.getElementById('tr-routes-list').style.display=''" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text)">←</button>
+      <button onclick="trBackToRoutes()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text)">←</button>
       <div>
         <div style="font-weight:800;font-size:.9rem" id="sv-route-name">Route</div>
-        <div style="font-size:.75rem;color:var(--muted)" id="sv-route-info">stops • time</div>
+        <div style="font-size:.75rem;color:var(--muted)" id="sv-route-info"></div>
       </div>
     </div>
-    <!-- Route stops display -->
     <div id="sv-stops" style="background:var(--surf2);border-radius:10px;padding:12px;margin-bottom:12px;font-size:.78rem"></div>
-    <!-- Seat availability info -->
     <div style="display:flex;gap:10px;margin-bottom:10px;font-size:.72rem">
       <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;border-radius:3px;background:#EAF3DE;border:1.5px solid #639922;display:inline-block"></span>Available</span>
       <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;border-radius:3px;background:#FCEBEB;border:1.5px solid #E24B4A;display:inline-block"></span>Taken</span>
       <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;border-radius:3px;background:#FAEEDA;border:1.5px solid #BA7517;display:inline-block"></span>Partial</span>
     </div>
-    <!-- Seat grid -->
     <div style="background:#fff;border-radius:12px;padding:14px;border:1px solid var(--border);margin-bottom:12px">
       <div style="font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between">
-        <span>FRONT</span><span id="sv-avail-count">0 available</span>
+        <span>← DRIVER</span><span id="sv-avail-count">0 seats</span>
       </div>
-      <!-- Bus layout: 2+2 seating -->
-      <div id="sv-seat-grid" style="display:grid;grid-template-columns:1fr 1fr 32px 1fr 1fr;gap:6px;max-width:260px;margin:0 auto"></div>
-      <div style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:8px">DRIVER END ← → BACK</div>
+      <div id="sv-seat-grid" style="display:grid;grid-template-columns:1fr 1fr 24px 1fr 1fr;gap:6px;max-width:260px;margin:0 auto"></div>
     </div>
     <div id="sv-selected-seat" style="background:var(--green-p);border-radius:10px;padding:12px;margin-bottom:10px;display:none">
-      <div style="font-size:.82rem;font-weight:700;color:var(--green);margin-bottom:4px">✅ Seat selected</div>
-      <div style="font-size:.78rem" id="sv-seat-detail">Seat X • ₹XX</div>
+      <div style="font-size:.82rem;font-weight:700;color:var(--green)">✅ Seat selected | ସିଟ ବାଛି ହୋଇଛି</div>
+      <div style="font-size:.78rem;margin-top:4px" id="sv-seat-detail"></div>
     </div>
-    <button class="btn btn-p" id="sv-book-btn" onclick="confirmBusBooking()" style="display:none">✅ Confirm Booking</button>
+    <button class="btn btn-p" id="sv-book-btn" onclick="confirmBusBooking()" style="display:none">✅ Confirm Booking | ବୁକ ନିଶ୍ଚିତ</button>
   </div>
 
-  <!-- AUTO/SHARING CAR TAB -->
-  <div id="tr-auto" class="hidden">
-    <div style="padding:12px 15px">
-      <div class="fg"><label>📍 From | ଉଠିବା ସ୍ଥାନ</label>
+  <!-- ════ DELIVERY TAB (Bike parcel) ════ -->
+  <div id="tr-delivery" style="display:none;padding:12px 15px">
+    <div style="background:var(--saffron-p);border-radius:14px;padding:14px;margin-bottom:14px">
+      <div style="font-size:.82rem;font-weight:700;color:var(--saffron);margin-bottom:10px">📦 Send Parcel | ପ୍ୟାକେଟ ପଠାନ୍ତୁ</div>
+      <div class="fg"><label>From | ଠିକଣା</label>
         <div style="display:flex;gap:8px">
-          <input type="text" id="ta-from" placeholder="Your location" style="flex:1">
-          <button onclick="getGPSLocation('ta-from')" style="background:var(--sky);color:#fff;border:none;border-radius:9px;padding:0 13px;font-size:1.1rem;cursor:pointer">📍</button>
+          <input type="text" id="td-from" placeholder="Pickup address" style="flex:1">
+          <button onclick="getGPSLocation('td-from')" style="background:var(--sky);color:#fff;border:none;border-radius:9px;padding:0 12px;font-size:.9rem;cursor:pointer">📍</button>
         </div>
       </div>
-      <div class="fg"><label>🎯 To | ଯିବା ସ୍ଥାନ</label><input type="text" id="ta-to" placeholder="Destination"></div>
-      <div style="font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:10px">VEHICLE TYPE</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
-        <div class="tr-type-card on" onclick="selectTrType(this,'sharing_auto')" style="border:2px solid var(--saffron);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--saffron-p)">
-          <div style="font-size:1.5rem">🛺</div>
-          <div style="font-size:.78rem;font-weight:700">Sharing Auto</div>
-          <div style="font-size:.68rem;color:var(--muted)">3 seats • fixed route</div>
+      <div class="fg"><label>To | ଯିବା ଠିକଣା</label><input type="text" id="td-to" placeholder="Delivery address"></div>
+      <div class="fg"><label>Item description</label><input type="text" id="td-item" placeholder="e.g. Documents, Medicine, Small parcel"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fg" style="margin:0"><label style="font-size:.72rem">Weight (approx)</label>
+          <select id="td-weight" style="background:#fff">
+            <option value="0.5">Under 500g</option>
+            <option value="1">Up to 1 kg</option>
+            <option value="3">1–3 kg</option>
+            <option value="5">3–5 kg</option>
+          </select>
         </div>
-        <div class="tr-type-card" onclick="selectTrType(this,'sharing_car')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
-          <div style="font-size:1.5rem">🚗</div>
-          <div style="font-size:.78rem;font-weight:700">Sharing Car</div>
-          <div style="font-size:.68rem;color:var(--muted)">4 seats • flexible</div>
-        </div>
-        <div class="tr-type-card" onclick="selectTrType(this,'private_auto')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
-          <div style="font-size:1.5rem">🛺</div>
-          <div style="font-size:.78rem;font-weight:700">Private Auto</div>
-          <div style="font-size:.68rem;color:var(--muted)">Full booking • ₹/km</div>
-        </div>
-        <div class="tr-type-card" onclick="selectTrType(this,'erickshaw')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
-          <div style="font-size:1.5rem">⚡</div>
-          <div style="font-size:.78rem;font-weight:700">E-Rickshaw</div>
-          <div style="font-size:.68rem;color:var(--muted)">Local trips • cheap</div>
+        <div class="fg" style="margin:0"><label style="font-size:.72rem">Urgency</label>
+          <select id="td-urgent" style="background:#fff">
+            <option value="normal">Normal</option>
+            <option value="urgent">Urgent (same day)</option>
+          </select>
         </div>
       </div>
-      <button class="btn btn-p" onclick="searchAutoVehicles()">🔍 Find Vehicles</button>
-      <div id="ta-results" style="margin-top:12px"></div>
+      <button onclick="trSearchDelivery()" class="btn btn-p" style="margin-top:12px;margin-bottom:0">🔍 Find Delivery Boys</button>
     </div>
+    <div id="tr-delivery-list"></div>
   </div>
 
-  <!-- HEAVY VEHICLE TAB -->
-  <div id="tr-heavy" class="hidden">
-    <div style="padding:12px 15px">
-      <div class="fg"><label>📦 What to transport</label>
-        <select id="th-goods" style="background:#fff">
-          <option>Farm produce (paddy, vegetables)</option>
-          <option>Construction material (sand, bricks)</option>
-          <option>Furniture / household items</option>
-          <option>Fish / seafood (refrigerated)</option>
-          <option>Other goods</option>
+  <!-- ════ GOODS TAB (Tractor/Truck) ════ -->
+  <div id="tr-goods" style="display:none;padding:12px 15px">
+    <div style="background:var(--saffron-p);border-radius:14px;padding:14px;margin-bottom:14px">
+      <div style="font-size:.82rem;font-weight:700;color:var(--saffron);margin-bottom:10px">🚛 Transport Goods | ମାଲ ପଠାନ୍ତୁ</div>
+      <div class="fg"><label>Goods type | ସାମଗ୍ରୀ</label>
+        <select id="tg-goods" style="background:#fff">
+          <option value="farm">🌾 Farm produce (paddy, vegetables)</option>
+          <option value="sand">🪨 Sand / Bricks / Construction</option>
+          <option value="fish">🐟 Fish / Seafood</option>
+          <option value="furniture">🪑 Furniture / Household items</option>
+          <option value="other">📦 Other goods</option>
         </select>
       </div>
-      <div class="fg"><label>📍 Pickup location</label>
+      <div class="fg"><label>Pickup | ଉଠାଇବା ସ୍ଥାନ</label>
         <div style="display:flex;gap:8px">
-          <input type="text" id="th-from" placeholder="From where" style="flex:1">
-          <button onclick="getGPSLocation('th-from')" style="background:var(--sky);color:#fff;border:none;border-radius:9px;padding:0 13px;font-size:1.1rem;cursor:pointer">📍</button>
+          <input type="text" id="tg-from" placeholder="From location" style="flex:1">
+          <button onclick="getGPSLocation('tg-from')" style="background:var(--sky);color:#fff;border:none;border-radius:9px;padding:0 12px;font-size:.9rem;cursor:pointer">📍</button>
         </div>
       </div>
-      <div class="fg"><label>🎯 Drop location</label><input type="text" id="th-to" placeholder="Destination"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
-        <div class="tr-type-card" onclick="selectTrType(this,'tractor')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
-          <div style="font-size:1.5rem">🚜</div>
-          <div style="font-size:.78rem;font-weight:700">Tractor</div>
-          <div style="font-size:.68rem;color:var(--muted)">Farm / local roads</div>
+      <div class="fg"><label>Drop | ପଠାଇବା ସ୍ଥାନ</label><input type="text" id="tg-to" placeholder="To location"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        <div class="tr-vtype-btn on" onclick="selectGoodsType(this,'tractor')" style="flex:1;min-width:70px;text-align:center;border:2px solid var(--saffron);border-radius:10px;padding:10px 8px;background:var(--saffron-p);cursor:pointer">
+          <div style="font-size:1.3rem">🚜</div><div style="font-size:.7rem;font-weight:700">Tractor</div>
         </div>
-        <div class="tr-type-card" onclick="selectTrType(this,'mini_truck')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
-          <div style="font-size:1.5rem">🚐</div>
-          <div style="font-size:.78rem;font-weight:700">Mini Truck</div>
-          <div style="font-size:.68rem;color:var(--muted)">Up to 1 tonne</div>
+        <div class="tr-vtype-btn" onclick="selectGoodsType(this,'tempo')" style="flex:1;min-width:70px;text-align:center;border:2px solid var(--border);border-radius:10px;padding:10px 8px;background:var(--surf2);cursor:pointer">
+          <div style="font-size:1.3rem">🚐</div><div style="font-size:.7rem;font-weight:700">Tempo</div>
         </div>
-        <div class="tr-type-card" onclick="selectTrType(this,'truck')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
-          <div style="font-size:1.5rem">🚛</div>
-          <div style="font-size:.78rem;font-weight:700">Truck</div>
-          <div style="font-size:.68rem;color:var(--muted)">5–10 tonne</div>
+        <div class="tr-vtype-btn" onclick="selectGoodsType(this,'truck')" style="flex:1;min-width:70px;text-align:center;border:2px solid var(--border);border-radius:10px;padding:10px 8px;background:var(--surf2);cursor:pointer">
+          <div style="font-size:1.3rem">🚛</div><div style="font-size:.7rem;font-weight:700">Truck</div>
         </div>
-        <div class="tr-type-card" onclick="selectTrType(this,'boat')" style="border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;background:var(--surf2)">
-          <div style="font-size:1.5rem">⛵</div>
-          <div style="font-size:.78rem;font-weight:700">Boat</div>
-          <div style="font-size:.68rem;color:var(--muted)">River / delta routes</div>
+        <div class="tr-vtype-btn" onclick="selectGoodsType(this,'boat')" style="flex:1;min-width:70px;text-align:center;border:2px solid var(--border);border-radius:10px;padding:10px 8px;background:var(--surf2);cursor:pointer">
+          <div style="font-size:1.3rem">⛵</div><div style="font-size:.7rem;font-weight:700">Boat</div>
         </div>
       </div>
-      <button class="btn btn-p" onclick="searchHeavyVehicles()">🔍 Find Vehicles</button>
-      <div id="th-results" style="margin-top:12px"></div>
+      <button onclick="trSearchGoods()" class="btn btn-p" style="margin:0">🔍 Find Vehicles | ଯାନ ଖୋଜ</button>
     </div>
+    <div id="tr-goods-list"></div>
   </div>
 
-  <!-- MY TICKETS TAB -->
-  <div id="tr-book" class="hidden">
-    <div style="padding:12px 15px">
-      <div id="my-tickets-list">
-        <div style="text-align:center;padding:30px;color:var(--muted);font-size:.82rem">
-          🎟️ No tickets booked yet<br>
-          <span style="font-size:.75rem">Book a bus seat from the Bus tab</span>
-        </div>
-      </div>
+  <!-- ════ MY TICKETS TAB ════ -->
+  <div id="tr-mytickets" style="display:none;padding:12px 15px">
+    <div id="my-tickets-list">
+      <div style="text-align:center;padding:30px;color:var(--muted);font-size:.82rem">🎟️ No tickets yet | ଟିକେଟ ନାହିଁ</div>
     </div>
   </div>
 
@@ -1659,6 +1693,44 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     </div>
     <div id="ep-vendor-extra">
       <div class="fg"><label>ଦୋକାନ ନାମ <span>/ Shop Name</span></label><input id="ep-shop" type="text"></div>
+
+    <!-- VEHICLE OWNER FIELDS -->
+    <div id="ep-vehicle-extra" style="display:none">
+      <div style="background:var(--saffron-p);border-radius:12px;padding:14px;margin-bottom:12px">
+        <div style="font-size:.82rem;font-weight:800;color:var(--saffron);margin-bottom:10px">🚌 Vehicle Details</div>
+        <div class="fg" style="margin-bottom:8px"><label>Vehicle Type</label>
+          <select id="ep-vtype" style="background:#fff">
+            <option value="bike">🏍️ Bike / ମୋଟରସାଇକେଲ</option>
+            <option value="auto">🛺 Auto Rickshaw / ଅଟୋ</option>
+            <option value="erickshaw">⚡ E-Rickshaw</option>
+            <option value="car">🚗 Car / Taxi</option>
+            <option value="tractor">🚜 Tractor</option>
+            <option value="tempo">🚐 Tempo / Mini Truck</option>
+            <option value="truck">🚛 Truck</option>
+            <option value="boat">⛵ Boat</option>
+          </select>
+        </div>
+        <div class="fg" style="margin-bottom:8px"><label>Vehicle Number | ଯାନ ନମ୍ବର</label>
+          <input id="ep-vnum" type="text" placeholder="OD-XX-XXXX">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <div class="fg" style="margin:0"><label style="font-size:.72rem">Rate Type</label>
+            <select id="ep-vrate-type" style="background:#fff">
+              <option value="per_km">₹ per km</option>
+              <option value="per_hr">₹ per hour</option>
+              <option value="per_day">₹ per day</option>
+              <option value="fixed">Fixed price</option>
+            </select>
+          </div>
+          <div class="fg" style="margin:0"><label style="font-size:.72rem">Rate Amount (₹)</label>
+            <input id="ep-vrate" type="number" placeholder="e.g. 15" min="0">
+          </div>
+        </div>
+        <div class="fg" style="margin-bottom:0"><label>Seating Capacity | ସିଟ ସଂଖ୍ୟା</label>
+          <input id="ep-vcapacity" type="number" placeholder="e.g. 3 for auto, 20 for bus" min="1">
+        </div>
+      </div>
+    </div>
       <!-- Vendor UPI too -->
       <div style="background:var(--green-p);border-radius:12px;padding:14px;margin-bottom:12px">
         <div style="font-size:.82rem;font-weight:800;color:var(--green);margin-bottom:10px">💳 Payment Details</div>
@@ -1710,6 +1782,20 @@ let sb = null;
 function isSupabaseReady() {
   return sb !== null && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
 }
+
+const VTYPE_MAP = {
+  'bike':      ['bike','ମୋଟରସାଇକେଲ','Bike','motorcycle'],
+  'auto':      ['auto','ଅଟୋ','Auto Rickshaw','auto rickshaw'],
+  'erickshaw': ['erickshaw','ଇ-ରିକ୍ସା','E-Rickshaw','e-rickshaw'],
+  'car':       ['car','ଗାଡ଼ି','Car (Taxi)','car/taxi','taxi'],
+  'tractor':   ['tractor','ଟ୍ରାକ୍ଟର','Tractor'],
+  'tempo':     ['tempo','ଟେମ୍ପୋ','Tempo','mini_truck'],
+  'truck':     ['truck','ଟ୍ରକ','Truck'],
+  'boat':      ['boat','ଜଳଯାନ','Boat'],
+};
+const VTYPE_ICONS = { bike:'🏍️', auto:'🛺', erickshaw:'⚡', car:'🚗', tractor:'🚜', tempo:'🚐', truck:'🚛', boat:'⛵' };
+const VTYPE_RATES = { bike:'₹8-12/km', auto:'₹12-15/km', erickshaw:'₹8-10/km', car:'₹15-20/km', tractor:'₹600-1000/day', tempo:'₹800-1500', truck:'₹1500-3000', boat:'₹500-2000' };
+
 
 function loadSupabase() {
   if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return; // not configured, skip
@@ -2046,6 +2132,7 @@ async function doRegister() {
       vehicle_type: selectedUserType === 'vehicle' ? user.vehicle_type : null,
       vehicle_num:  selectedUserType === 'vehicle' ? user.vehicle_num  : null,
       vehicle_rate: selectedUserType === 'vehicle' ? user.vehicle_rate : null,
+      vehicle_rate_type: selectedUserType === 'vehicle' ? (document.getElementById('r-rate-type')?.value || 'per_km') : null,
     };
     const { error: insertError } = await sb.from('users').insert([dbUser]);
     if (insertError) {
@@ -2247,14 +2334,9 @@ function goSvc(svc) {
   hideAll();
   document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
   document.getElementById('ap-' + svc)?.classList.remove('hidden');
-  // Initialize tabs on first open
-  if (svc === 'fish') showTab('fish-workers');
+  if (svc === 'fish')      showTab('fish-workers');
   if (svc === 'transport') initTransport();
-  if (svc === 'buysell') {
-    showTab('bs-all');
-    loadVendorListings();
-    setTimeout(initHaataTab, 100);
-  }
+  if (svc === 'buysell')  { showTab('bs-all'); loadVendorListings(); setTimeout(initHaataTab, 100); }
 }
 
 function backHome() { goTab('home'); }
@@ -2762,6 +2844,15 @@ async function saveProfile() {
   currentUser.skill    = document.getElementById('ep-skill')?.value || currentUser.skill;
   currentUser.rate     = document.getElementById('ep-rate-hr')?.value || document.getElementById('ep-rate')?.value || currentUser.rate;
   currentUser.shop     = document.getElementById('ep-shop')?.value || currentUser.shop;
+
+  // Vehicle owner — save vehicle fields
+  if (currentUser.type === 'vehicle') {
+    currentUser.vehicle_type      = document.getElementById('ep-vtype')?.value      || currentUser.vehicle_type;
+    currentUser.vehicle_num       = document.getElementById('ep-vnum')?.value       || currentUser.vehicle_num;
+    currentUser.vehicle_rate      = document.getElementById('ep-vrate')?.value      || currentUser.vehicle_rate;
+    currentUser.vehicle_rate_type = document.getElementById('ep-vrate-type')?.value || currentUser.vehicle_rate_type || 'per_km';
+    currentUser.vehicle_capacity  = document.getElementById('ep-vcapacity')?.value  || currentUser.vehicle_capacity;
+  }
   currentUser.bio      = document.getElementById('ep-bio')?.value || '';
 
   // Availability toggle (workers/vehicles)
@@ -2834,7 +2925,13 @@ async function saveProfile() {
       upi_qr:       currentUser.upi_qr    || null,
       cash_accept:  currentUser.cash_accept || 'both',
       addon_roles:  currentUser.addon_roles || [],
-      avatar_url:   currentUser.avatar_url || null
+      avatar_url:   currentUser.avatar_url || null,
+      // Vehicle owner fields
+      vehicle_type:      currentUser.vehicle_type      || null,
+      vehicle_num:       currentUser.vehicle_num       || null,
+      vehicle_rate:      currentUser.vehicle_rate      || null,
+      vehicle_rate_type: currentUser.vehicle_rate_type || null,
+      vehicle_capacity:  currentUser.vehicle_capacity  || null,
     });
   }
 
@@ -2889,11 +2986,27 @@ function openEditProfile() {
   const availChk = document.getElementById('ep-available');
   if (availRow && (u.type === 'worker' || u.type === 'vehicle')) {
     availRow.style.display = '';
-    const isAvail = u.available !== false; // default true
+    const isAvail = u.available !== false;
     if (availChk) availChk.checked = isAvail;
     updateAvailLabel(isAvail);
   } else if (availRow) {
     availRow.style.display = 'none';
+  }
+
+  // Vehicle owner fields
+  const vExtra = document.getElementById('ep-vehicle-extra');
+  if (vExtra) vExtra.style.display = u.type === 'vehicle' ? '' : 'none';
+  if (u.type === 'vehicle') {
+    const vtype = u.vehicle_type || u.vtype || 'bike';
+    // Normalize to English key
+    const normalizedType = Object.keys(VTYPE_MAP || {}).find(k =>
+      (VTYPE_MAP[k]||[]).some(v => v.toLowerCase() === vtype.toLowerCase())
+    ) || vtype;
+    if (document.getElementById('ep-vtype'))      document.getElementById('ep-vtype').value      = normalizedType;
+    if (document.getElementById('ep-vnum'))       document.getElementById('ep-vnum').value        = u.vehicle_num  || u.vnum  || '';
+    if (document.getElementById('ep-vrate'))      document.getElementById('ep-vrate').value       = u.vehicle_rate || u.vrate || '';
+    if (document.getElementById('ep-vrate-type')) document.getElementById('ep-vrate-type').value  = u.vehicle_rate_type || 'per_km';
+    if (document.getElementById('ep-vcapacity'))  document.getElementById('ep-vcapacity').value   = u.vehicle_capacity || '';
   }
 
   // Render addon roles
@@ -4181,23 +4294,279 @@ function doSearch(val) {
 }
 
 // ============================================================
-// TRANSPORT SYSTEM — Complete Logic
+// TRANSPORT — Complete Ola-style Logic
 // ============================================================
-let selectedTrType  = 'sharing_auto';
+let trSelectedRideType  = 'bike';
+let trSelectedGoodsType = 'tractor';
 let currentRoute    = null;
 let selectedBusSeat = null;
-let trFromStop      = 0;
-let trToStop        = 1;
-let trJourneyDate   = '';
+let trFromStop = 0, trToStop = 1, trJourneyDate = '';
 
-// ── Called when transport section opens
+function vTypeMatches(dbValue, searchType) {
+  if (!dbValue || !searchType) return false;
+  const variants = VTYPE_MAP[searchType] || [searchType];
+  return variants.some(v => dbValue.toLowerCase().includes(v.toLowerCase()) ||
+                             v.toLowerCase().includes(dbValue.toLowerCase()));
+}
+
+
+// ── Tab switcher
+function trTab(el, tabId) {
+  ['tr-ride','tr-bus','tr-delivery','tr-goods','tr-mytickets'].forEach(id => {
+    const t = document.getElementById(id);
+    if (t) t.style.display = 'none';
+  });
+  document.querySelectorAll('#ap-transport .ti').forEach(t => t.classList.remove('on'));
+  const tab = document.getElementById(tabId);
+  if (tab) tab.style.display = '';
+  el.classList.add('on');
+  if (tabId === 'tr-mytickets') loadMyTickets();
+  if (tabId === 'tr-bus') { initBusStops(); }
+}
+
+// ── Init transport page
 function initTransport() {
+  // Show ride tab by default
+  ['tr-delivery','tr-goods','tr-mytickets','tr-bus','tr-seat-view'].forEach(id => {
+    const t = document.getElementById(id);
+    if (t) t.style.display = 'none';
+  });
+  const ride = document.getElementById('tr-ride');
+  if (ride) ride.style.display = '';
+  // Set today's date for bus
   const dateEl = document.getElementById('tr-date');
-  if (dateEl && !dateEl.value) {
-    dateEl.value = new Date().toISOString().split('T')[0];
-    trJourneyDate = dateEl.value;
+  if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().split('T')[0];
+  trJourneyDate = document.getElementById('tr-date')?.value || new Date().toISOString().split('T')[0];
+  initBusStops();
+}
+
+// ── Ride type selector (bike/auto/car etc.)
+function selectRideType(el, type) {
+  trSelectedRideType = type;
+  document.querySelectorAll('.tr-vtype-btn').forEach(b => {
+    b.style.border = '2px solid var(--border)';
+    b.style.background = 'var(--surf2)';
+  });
+  el.style.border = '2px solid var(--saffron)';
+  el.style.background = 'var(--saffron-p)';
+  trLoadDrivers(type);
+}
+
+function selectGoodsType(el, type) {
+  trSelectedGoodsType = type;
+  document.querySelectorAll('#tr-goods .tr-vtype-btn').forEach(b => {
+    b.style.border = '2px solid var(--border)';
+    b.style.background = 'var(--surf2)';
+  });
+  el.style.border = '2px solid var(--saffron)';
+  el.style.background = 'var(--saffron-p)';
+}
+
+// ── Search ride (Ola flow: enter from/to → show all types → pick type → show drivers)
+async function trSearchRide() {
+  const pickup = document.getElementById('tr-pickup')?.value.trim();
+  const drop   = document.getElementById('tr-drop')?.value.trim();
+  if (!pickup || !drop) { showToast('⚠️ Enter pickup and drop location | ଠିକଣା ଦିଅନ୍ତୁ'); return; }
+
+  document.getElementById('tr-type-section').style.display = '';
+  document.getElementById('tr-driver-list').innerHTML =
+    '<div style="text-align:center;padding:14px;color:var(--muted);font-size:.82rem">Select vehicle type above | ଯାନ ପ୍ରକାର ବାଛନ୍ତୁ</div>';
+  // Auto-load with bike
+  trLoadDrivers('bike');
+}
+
+// ── Load drivers for selected vehicle type (Ola-style cards)
+async function trLoadDrivers(vtype) {
+  trSelectedRideType = vtype;
+  const listEl = document.getElementById('tr-driver-list');
+  if (!listEl) return;
+  listEl.innerHTML = '<div style="text-align:center;padding:14px;color:var(--muted);font-size:.82rem">⏳ Finding drivers...</div>';
+
+  let drivers = [];
+  if (isSupabaseReady()) {
+    const { data } = await sb.from('users').select('*')
+      .eq('type','vehicle').eq('status','active').eq('available', true);
+    drivers = (data || []).filter(d => vTypeMatches(d.vehicle_type, vtype));
+    // Filter by same district
+    if (currentUser?.district) {
+      const sameArea = drivers.filter(d => d.district === currentUser.district);
+      if (sameArea.length > 0) drivers = sameArea;
+    }
   }
-  loadAllStops();
+
+  // Demo fallback
+  if (!drivers.length) {
+    drivers = [
+      { id:'D1', name:'Binod Sahoo',   vehicle_type:vtype, vehicle_num:'OD-05-1234', vehicle_rate:'12', vehicle_rate_type:'per_km', rating:'4.8', phone:'9876543210', district: currentUser?.district||'Kendrapara', available:true, jobs:45 },
+      { id:'D2', name:'Ramesh Kumar',  vehicle_type:vtype, vehicle_num:'OD-07-5678', vehicle_rate:'10', vehicle_rate_type:'per_km', rating:'4.6', phone:'9876543211', district: currentUser?.district||'Kendrapara', available:true, jobs:28 },
+      { id:'D3', name:'Sura Nayak',    vehicle_type:vtype, vehicle_num:'OD-09-2345', vehicle_rate:'15', vehicle_rate_type:'per_km', rating:'4.9', phone:'9876543212', district: currentUser?.district||'Kendrapara', available:true, jobs:67 },
+    ];
+  }
+
+  if (!drivers.length) {
+    listEl.innerHTML = `<div style="text-align:center;padding:24px;color:var(--muted);font-size:.82rem">${VTYPE_ICONS[vtype]||'🚗'} No ${vtype} available in your area<br><small>Ask someone to register as vehicle owner</small></div>`;
+    return;
+  }
+
+  const icon = VTYPE_ICONS[vtype] || '🚗';
+  listEl.innerHTML = `<div style="font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:10px">${drivers.length} ${vtype.toUpperCase()} AVAILABLE</div>` +
+    drivers.map(d => {
+      const rate = d.vehicle_rate || '10';
+      const rateType = d.vehicle_rate_type || 'per_km';
+      const rateLabel = rateType === 'per_km' ? `₹${rate}/km` : rateType === 'per_hr' ? `₹${rate}/hr` : rateType === 'per_day' ? `₹${rate}/day` : `₹${rate}`;
+      const initials = (d.name||'?').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+      return `
+      <div style="background:var(--surf2);border-radius:14px;padding:14px;margin-bottom:10px;border:0.5px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+          <!-- Avatar -->
+          <div style="width:52px;height:52px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--saffron-p);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:var(--saffron)">
+            ${d.avatar_url ? `<img src="${d.avatar_url}" style="width:100%;height:100%;object-fit:cover">` : initials}
+          </div>
+          <div style="flex:1">
+            <div style="font-weight:800;font-size:.92rem">${d.name}</div>
+            <div style="font-size:.72rem;color:var(--muted);margin-top:2px">${icon} ${d.vehicle_num||''} • ⭐ ${d.rating||'4.5'} • ${d.jobs||0} trips</div>
+            <div style="font-size:.72rem;color:var(--muted)">📍 ${d.district||''}</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div style="font-weight:800;font-size:1rem;color:var(--saffron)">${rateLabel}</div>
+            <div style="font-size:.68rem;color:var(--green);font-weight:700">🟢 Available</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-p" style="flex:2;padding:9px;margin:0;font-size:.8rem" onclick="bookDriver('${d.id}','${d.name}','${icon}','${rateLabel}','${d.phone||''}','${d.vehicle_num||''}')">📅 Book Now</button>
+          <button class="bc" style="flex:1;padding:9px" onclick="callVendor('${d.phone||''}','${d.name}')">📞 Call</button>
+        </div>
+      </div>`;
+    }).join('');
+}
+
+function bookDriver(id, name, icon, rate, phone, vehicleNum) {
+  openBook(name, icon, `${trSelectedRideType} • ${vehicleNum} • 📞 ${phone}`, rate, '', currentUser?.district||'');
+}
+
+// ── Delivery search
+async function trSearchDelivery() {
+  const from = document.getElementById('td-from')?.value.trim();
+  const to   = document.getElementById('td-to')?.value.trim();
+  if (!from || !to) { showToast('⚠️ Enter pickup and delivery address'); return; }
+  const listEl = document.getElementById('tr-delivery-list');
+  listEl.innerHTML = '<div style="text-align:center;padding:14px;color:var(--muted)">⏳ Finding delivery boys...</div>';
+
+  let drivers = [];
+  if (isSupabaseReady()) {
+    const { data } = await sb.from('users').select('*').eq('type','vehicle').eq('status','active').eq('available',true);
+    drivers = (data||[]).filter(d => vTypeMatches(d.vehicle_type, 'bike'));
+    if (currentUser?.district) drivers = drivers.filter(d => d.district === currentUser.district) || drivers;
+  }
+  if (!drivers.length) {
+    drivers = [
+      { id:'DB1', name:'Kiran Delivery', vehicle_type:'bike', vehicle_num:'OD-05-9876', vehicle_rate:'30', vehicle_rate_type:'fixed', rating:'4.7', phone:'9876540001', district:currentUser?.district||'Kendrapara', jobs:120 },
+    ];
+  }
+  listEl.innerHTML = drivers.map(d => {
+    const initials = (d.name||'?').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    return `
+    <div style="background:var(--surf2);border-radius:14px;padding:14px;margin-bottom:10px;border:0.5px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--green-p);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:var(--green);flex-shrink:0">
+          ${d.avatar_url ? `<img src="${d.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : initials}
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:800;font-size:.9rem">📦 ${d.name}</div>
+          <div style="font-size:.72rem;color:var(--muted)">🏍️ ${d.vehicle_num||''} • ⭐${d.rating||'4.5'} • ${d.jobs||0} deliveries</div>
+        </div>
+        <div style="font-weight:800;color:var(--saffron)">₹${d.vehicle_rate||'30'}</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-p" style="flex:2;padding:9px;margin:0;font-size:.8rem" onclick="bookDelivery('${d.name}','${d.phone||''}')">📦 Send Parcel</button>
+        <button class="bc" style="flex:1;padding:9px" onclick="callVendor('${d.phone||''}','${d.name}')">📞 Call</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function bookDelivery(name, phone) {
+  const item = document.getElementById('td-item')?.value || 'Parcel';
+  const from = document.getElementById('td-from')?.value || '';
+  const to   = document.getElementById('td-to')?.value   || '';
+  openBook(name, '📦', `Delivery: ${item} • From: ${from}`, '₹/delivery', '', currentUser?.district||'');
+}
+
+// ── Goods search
+async function trSearchGoods() {
+  const from  = document.getElementById('tg-from')?.value.trim();
+  const to    = document.getElementById('tg-to')?.value.trim();
+  const goods = document.getElementById('tg-goods')?.value;
+  if (!from || !to) { showToast('⚠️ Enter pickup and drop location'); return; }
+  const listEl = document.getElementById('tr-goods-list');
+  listEl.innerHTML = '<div style="text-align:center;padding:14px;color:var(--muted)">⏳ Finding vehicles...</div>';
+
+  let vehicles = [];
+  if (isSupabaseReady()) {
+    const { data } = await sb.from('users').select('*').eq('type','vehicle').eq('status','active').eq('available',true);
+    vehicles = (data||[]).filter(d => vTypeMatches(d.vehicle_type, trSelectedGoodsType));
+    if (currentUser?.district) {
+      const local = vehicles.filter(d => d.district === currentUser.district);
+      if (local.length) vehicles = local;
+    }
+  }
+  if (!vehicles.length) {
+    const icon = VTYPE_ICONS[trSelectedGoodsType]||'🚛';
+    vehicles = [
+      { id:'G1', name:'Sura Farm Transport', vehicle_type:trSelectedGoodsType, vehicle_num:'OD-09-2233', vehicle_rate:'800', vehicle_rate_type:'per_day', rating:'4.8', phone:'9876543220', district:currentUser?.district||'Kendrapara', jobs:34 },
+    ];
+  }
+  listEl.innerHTML = vehicles.map(d => {
+    const icon = VTYPE_ICONS[d.vehicle_type?.toLowerCase()] || VTYPE_ICONS[trSelectedGoodsType] || '🚛';
+    const rateLabel = d.vehicle_rate_type === 'per_day' ? `₹${d.vehicle_rate}/day` : d.vehicle_rate_type === 'per_km' ? `₹${d.vehicle_rate}/km` : `₹${d.vehicle_rate}`;
+    const initials = (d.name||'?').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    return `
+    <div style="background:var(--surf2);border-radius:14px;padding:14px;margin-bottom:10px;border:0.5px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--saffron-p);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">${icon}</div>
+        <div style="flex:1">
+          <div style="font-weight:800;font-size:.9rem">${d.name}</div>
+          <div style="font-size:.72rem;color:var(--muted)">${icon} ${d.vehicle_num||''} • ⭐${d.rating||'4.5'}</div>
+          <div style="font-size:.72rem;color:var(--muted)">📦 ${goods || 'Goods'} transport</div>
+        </div>
+        <div style="font-weight:800;color:var(--saffron);font-size:.9rem">${rateLabel}</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-p" style="flex:2;padding:9px;margin:0;font-size:.8rem" onclick="bookDriver('${d.id}','${d.name}','${icon}','${rateLabel}','${d.phone||''}','${d.vehicle_num||''}')">📅 Book Vehicle</button>
+        <button class="bc" style="flex:1;padding:9px" onclick="callVendor('${d.phone||''}','${d.name}')">📞 Call</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Bus stops init
+async function initBusStops() {
+  let routes = [];
+  if (isSupabaseReady()) {
+    const { data } = await sb.from('routes').select('stops').eq('status','active');
+    routes = data || [];
+  }
+  const allStops = new Set();
+  routes.forEach(r => parseStops(r.stops).forEach(s => allStops.add(s.name||s)));
+  if (!allStops.size) ['Kendrapara','Salepur','Bhubaneswar','Cuttack','Puri'].forEach(s => allStops.add(s));
+  ['tr-from','tr-to'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = '<option value="">-- Select --</option>' + [...allStops].map(s=>`<option value="${s}">${s}</option>`).join('');
+  });
+  const dateEl = document.getElementById('tr-date');
+  if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().split('T')[0];
+}
+
+async function trSearchBus() {
+  trJourneyDate = document.getElementById('tr-date')?.value || new Date().toISOString().split('T')[0];
+  await loadBusRoutes();
+}
+
+function trBackToRoutes() {
+  document.getElementById('tr-seat-view').style.display = 'none';
+  document.getElementById('tr-bus').style.display = '';
+  document.getElementById('tr-routes-list').style.display = '';
 }
 
 function parseStops(raw) {
@@ -4205,437 +4574,10 @@ function parseStops(raw) {
   try { return JSON.parse(raw); } catch { return []; }
 }
 
-// ── Load all unique stops from active routes for dropdowns
-async function loadAllStops() {
-  let routes = [];
-  if (isSupabaseReady()) {
-    const { data } = await sb.from('routes').select('stops').eq('status','active');
-    routes = data || [];
-  }
-  const allStops = new Set();
-  routes.forEach(r => parseStops(r.stops).forEach(s => allStops.add(s.name || s)));
-  if (allStops.size === 0) {
-    ['Kendrapara','Salepur','Bhubaneswar','Cuttack','Puri','Bhadrak','Balasore','Berhampur'].forEach(s => allStops.add(s));
-  }
-  ['tr-from','tr-to'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.innerHTML = '<option value="">-- Select stop --</option>' +
-      [...allStops].map(s => `<option value="${s}">${s}</option>`).join('');
-    if (id === 'tr-from' && currentUser?.district) {
-      for (const opt of el.options) {
-        if (opt.value.toLowerCase().includes(currentUser.district.toLowerCase())) { opt.selected = true; break; }
-      }
-    }
-  });
-}
+function searchVehicles() { trSearchRide(); }
 
-// ── Search bus routes
-async function loadBusRoutes() {
-  const fromStop = document.getElementById('tr-from')?.value;
-  const toStop   = document.getElementById('tr-to')?.value;
-  const date     = document.getElementById('tr-date')?.value;
-  trJourneyDate  = date;
-  const listEl   = document.getElementById('tr-routes-list');
-  if (!listEl) return;
-  if (!fromStop || !toStop || fromStop === toStop) {
-    listEl.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:.82rem">Please select different from and to stops | ଭିନ୍ନ ସ୍ଥାନ ବାଛନ୍ତୁ</div>'; return;
-  }
-  listEl.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:.82rem">⏳ Searching routes...</div>';
+// ── Called when transport section opens
 
-  let routes = [];
-  if (isSupabaseReady()) {
-    const { data } = await sb.from('routes').select('*').eq('status','active');
-    routes = data || [];
-  }
-  if (!routes.length) {
-    routes = [{ id:'RT-DEMO01', name:'Kendrapara → Bhubaneswar Express', vehicle_type:'bus',
-      stops:[{name:'Kendrapara',time:'06:00'},{name:'Salepur',time:'07:30'},{name:'Bhubaneswar',time:'09:00'}],
-      total_seats:20, fare_per_segment:40, departure_time:'06:00', driver_name:'Dinesh', driver_phone:'9876543210',
-      current_stop_index:0, status:'active' }];
-  }
-
-  const matching = routes.filter(r => {
-    const stops = parseStops(r.stops);
-    const fi = stops.findIndex(s => (s.name||s) === fromStop);
-    const ti = stops.findIndex(s => (s.name||s) === toStop);
-    return fi !== -1 && ti !== -1 && fi < ti;
-  });
-
-  if (!matching.length) {
-    listEl.innerHTML = `<div style="text-align:center;padding:24px;color:var(--muted);font-size:.82rem">No bus found from ${fromStop} to ${toStop}<br><small>Contact admin to add this route</small></div>`;
-    return;
-  }
-
-  listEl.innerHTML = matching.map(r => {
-    const stops = parseStops(r.stops);
-    const fi  = stops.findIndex(s => (s.name||s) === fromStop);
-    const ti  = stops.findIndex(s => (s.name||s) === toStop);
-    const seg = ti - fi;
-    const fare = (r.fare_per_segment || 40) * seg;
-    const curStop = stops[r.current_stop_index || 0];
-    const isLive  = r.current_stop_index > 0;
-    const vIcon   = r.vehicle_type === 'bus' ? '🚌' : '🛺';
-    return `
-    <div style="background:var(--surf2);border-radius:14px;padding:14px;margin-bottom:12px;cursor:pointer" onclick="openSeatMap('${r.id}',${fi},${ti})">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-        <div>
-          <div style="font-weight:800;font-size:.9rem">${vIcon} ${r.name}</div>
-          <div style="font-size:.72rem;color:var(--muted);margin-top:2px">🕐 ${r.departure_time || '06:00'} • ${fromStop} → ${toStop}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-weight:800;color:var(--saffron)">₹${fare}</div>
-          <div style="font-size:.68rem;color:var(--muted)">${seg} stop${seg>1?'s':''}</div>
-        </div>
-      </div>
-      ${isLive ? `<div style="font-size:.72rem;background:var(--green-p);border-radius:8px;padding:5px 10px;color:var(--green);font-weight:700">🟢 LIVE — Now at: ${curStop?.name||curStop}</div>` : ''}
-      <div style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:.72rem;color:var(--muted)">
-        <span>👤 ${r.driver_name || 'Driver'}</span>
-        <span>•</span>
-        <span>💺 ${r.total_seats || 20} seats</span>
-        <span>•</span>
-        <span style="color:var(--green)">Tap to see seats →</span>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ── Open seat map for a route
-async function openSeatMap(routeId, fromIdx, toIdx) {
-  trFromStop = fromIdx;
-  trToStop   = toIdx;
-
-  document.getElementById('tr-routes-list').style.display = 'none';
-  const sv = document.getElementById('tr-seat-view');
-  sv.style.display = '';
-
-  // Load route
-  let route = null;
-  if (isSupabaseReady()) {
-    const { data } = await sb.from('routes').select('*').eq('id', routeId).single();
-    route = data;
-  }
-  if (!route) {
-    route = { id:'RT-DEMO01', name:'Kendrapara → Bhubaneswar Express', vehicle_type:'bus',
-      stops:[{name:'Kendrapara',time:'06:00'},{name:'Salepur',time:'07:30'},{name:'Bhubaneswar',time:'09:00'}],
-      total_seats:20, fare_per_segment:40, current_stop_index:0 };
-  }
-  currentRoute = route;
-
-  const stops = parseStops(route.stops);
-  document.getElementById('sv-route-name').textContent = route.name;
-  document.getElementById('sv-route-info').textContent =
-    `${stops[fromIdx]?.name||fromIdx} → ${stops[toIdx]?.name||toIdx} • ${route.departure_time || '06:00'}`;
-
-  // Build stops strip
-  document.getElementById('sv-stops').innerHTML = stops.map((s, i) => {
-    const isFrom = i === fromIdx, isTo = i === toIdx;
-    const isCur  = i === (route.current_stop_index || 0);
-    const col = isFrom||isTo ? '#FF6B00' : isCur ? '#1B6B3A' : '#888';
-    return `<span style="color:${col};font-weight:${isFrom||isTo?'700':'400'}">${s.name||s}${isCur?' 🟢':''}</span>${i<stops.length-1?' → ':''}`;
-  }).join('');
-
-  // Load existing bookings for this route and date
-  let existingBookings = [];
-  if (isSupabaseReady()) {
-    const { data } = await sb.from('seat_bookings').select('*')
-      .eq('route_id', routeId).eq('journey_date', trJourneyDate).eq('status','confirmed');
-    existingBookings = data || [];
-  }
-
-  // Render seat grid (2+2 layout with aisle)
-  const totalSeats = route.total_seats || 20;
-  const fare = (route.fare_per_segment || 40) * (toIdx - fromIdx);
-  let freeCount = 0;
-  selectedBusSeat = null;
-
-  const seatEl = document.getElementById('sv-seat-grid');
-  let html = '';
-  for (let i = 1; i <= totalSeats; i++) {
-    // Check if seat is available for our segment
-    const conflicts = existingBookings.filter(b =>
-      b.seat_number === i && !(b.to_stop <= fromIdx || b.from_stop >= toIdx)
-    );
-    const partials = existingBookings.filter(b =>
-      b.seat_number === i && (b.to_stop <= fromIdx || b.from_stop >= toIdx) && conflicts.length === 0
-    );
-    const isBooked  = conflicts.length > 0;
-    const isPartial = !isBooked && partials.length > 0;
-    if (!isBooked) freeCount++;
-
-    const bg = isBooked ? '#FCEBEB' : isPartial ? '#FAEEDA' : '#EAF3DE';
-    const bc = isBooked ? '#E24B4A' : isPartial ? '#BA7517' : '#639922';
-    const cursor = isBooked ? 'default' : 'pointer';
-    const onclick = isBooked ? '' : `onclick="selectBusSeat(${i},${fare})"`;
-
-    // Aisle after every 2nd seat
-    if (i % 2 === 1 && i > 1) html += '<div></div>'; // aisle spacer every pair
-    // Actually do 2+aisle+2 layout: cols 1,2,aisle,3,4
-    const col = ((i-1) % 4);
-    if (col === 2) html += '<div style="display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--muted)">│</div>';
-
-    html += `<div id="seat-${i}" style="aspect-ratio:1;border-radius:6px;border:1.5px solid ${bc};background:${bg};display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:500;cursor:${cursor}" ${onclick}>${i}</div>`;
-  }
-  seatEl.innerHTML = html;
-  document.getElementById('sv-avail-count').textContent = `${freeCount} available`;
-  document.getElementById('sv-selected-seat').style.display = 'none';
-  document.getElementById('sv-book-btn').style.display = 'none';
-}
-
-function selectBusSeat(seatNum, fare) {
-  // Deselect previous
-  if (selectedBusSeat) {
-    const prev = document.getElementById('seat-' + selectedBusSeat);
-    if (prev) { prev.style.background = '#EAF3DE'; prev.style.borderColor = '#639922'; }
-  }
-  selectedBusSeat = seatNum;
-  const el = document.getElementById('seat-' + seatNum);
-  if (el) { el.style.background = '#E6F1FB'; el.style.borderColor = '#378ADD'; }
-
-  const stops = parseStops(currentRoute?.stops || []);
-  const fromName = stops[trFromStop]?.name || trFromStop;
-  const toName   = stops[trToStop]?.name   || trToStop;
-
-  document.getElementById('sv-selected-seat').style.display = '';
-  document.getElementById('sv-seat-detail').textContent = `Seat ${seatNum} • ${fromName} → ${toName} • ₹${fare}`;
-  document.getElementById('sv-book-btn').style.display = '';
-  document.getElementById('sv-book-btn').dataset.fare = fare;
-}
-
-async function confirmBusBooking() {
-  if (!currentRoute || !selectedBusSeat) { showToast('⚠️ Select a seat first'); return; }
-  if (!currentUser) { showToast('⚠️ Please login first'); return; }
-
-  const stops = parseStops(currentRoute.stops);
-  const fare  = parseInt(document.getElementById('sv-book-btn').dataset.fare) || 0;
-
-  // T&C check
-  const tncKey = 'pt_transport_tnc_accepted';
-  if (!lsGet(tncKey)) {
-    const accepted = await showTransportTnC('passenger');
-    if (!accepted) return;
-    lsSet(tncKey, true);
-  }
-
-  const booking = {
-    id:              'SB-' + Date.now().toString().slice(-8),
-    route_id:        currentRoute.id,
-    seat_number:     selectedBusSeat,
-    passenger_id:    currentUser.id,
-    passenger_name:  currentUser.name,
-    passenger_phone: currentUser.phone,
-    from_stop:       trFromStop,
-    to_stop:         trToStop,
-    journey_date:    trJourneyDate,
-    fare,
-    status:          'confirmed',
-    booked_at:       new Date().toISOString()
-  };
-
-  if (isSupabaseReady()) {
-    const { error } = await sb.from('seat_bookings').insert([booking]);
-    if (error) { showToast('⚠️ Booking failed. Please try again.'); console.error(error); return; }
-  }
-  let tix = lsGet('pt_seat_bookings') || [];
-  tix.unshift(booking);
-  lsSet('pt_seat_bookings', tix);
-
-  // Notification badge +1
-  const prev = lsGet('pt_unread_notifs') || 0;
-  updateNotifBadge(prev + 1);
-
-  showToast(`✅ Seat ${selectedBusSeat} booked! ${stops[trFromStop]?.name} → ${stops[trToStop]?.name} • ₹${fare}`);
-
-  // Go to My Tickets
-  document.getElementById('tr-seat-view').style.display = 'none';
-  document.getElementById('tr-routes-list').style.display = '';
-  tabSel(document.querySelector('[onclick*="tr-book"]'), 'tr-book');
-  loadMyTickets();
-}
-
-// ── Transport T&C modal
-function showTransportTnC(role) {
-  return new Promise(resolve => {
-    const tnc = role === 'passenger'
-      ? (lsGet('pt_transport_passenger_tnc') ||
-        `Passenger Terms:\n1. Book seat only for confirmed travel\n2. Board on time — 15 min grace period\n3. No overloading or illegal items\n4. Pay fare directly to driver/conductor\n5. Disputes: contact admin\n6. Governed by Motor Vehicles Act 1988 & Consumer Protection Act 2019`)
-      : (lsGet('pt_transport_driver_tnc') ||
-        `Driver/Vehicle Owner Terms:\n1. Valid licence, RC & insurance mandatory (MV Act)\n2. Shared route fares set by admin — cannot overcharge\n3. Private booking rates self-decided but must be agreed upfront\n4. Treat passengers with respect — harassment = account ban\n5. Update route stop when reached\n6. Platform takes 0% commission\n7. Governed by Motor Vehicles Act 1988 & MSME Act 2006`);
-
-    const modal = document.createElement('div');
-    modal.className = 'modal';
-    modal.id = 'modal-transport-tnc';
-    modal.innerHTML = `<div class="msheet" style="max-height:90vh">
-      <div class="mhandle"></div>
-      <div class="mt">📜 Transport Terms | ପରିବହନ ସର୍ତ</div>
-      <div class="msub">As per Indian law — Motor Vehicles Act 1988</div>
-      <div style="overflow-y:auto;max-height:50vh;background:var(--surf2);border-radius:10px;padding:14px;font-size:.78rem;line-height:1.9;white-space:pre-line;margin:14px 0">${tnc}</div>
-      <button class="btn btn-p" onclick="document.getElementById('modal-transport-tnc').classList.remove('on');resolve(true)">✅ I Agree & Continue | ସ୍ୱୀକାର</button>
-      <button class="btn btn-o mt8" onclick="document.getElementById('modal-transport-tnc').classList.remove('on');resolve(false)">Decline</button>
-    </div>`;
-    document.body.appendChild(modal);
-    openModal('modal-transport-tnc');
-  });
-}
-
-// ── Search auto/private vehicles
-async function searchAutoVehicles() {
-  const from = document.getElementById('ta-from')?.value.trim();
-  const to   = document.getElementById('ta-to')?.value.trim();
-  if (!from || !to) { showToast('⚠️ Enter from and to location'); return; }
-  const resEl = document.getElementById('ta-results');
-  resEl.innerHTML = '<div style="text-align:center;padding:14px;color:var(--muted);font-size:.82rem">⏳ Finding vehicles...</div>';
-
-  // For sharing: search routes. For private: search vehicle owners
-  let vehicles = [];
-  if (isSupabaseReady()) {
-    if (selectedTrType === 'sharing_auto' || selectedTrType === 'sharing_car') {
-      const { data } = await sb.from('routes').select('*').eq('vehicle_type', selectedTrType).eq('status','active');
-      vehicles = (data||[]).map(r => ({ ...r, _isRoute: true }));
-    } else {
-      const { data } = await sb.from('users').select('*')
-        .eq('type','vehicle').eq('status','active').eq('available',true)
-        .in('vehicle_type', [selectedTrType, selectedTrType.replace('_','/'), selectedTrType.replace('_',' ')]);
-      vehicles = data || [];
-    }
-  }
-
-  if (!vehicles.length) {
-    // Demo fallback
-    vehicles = [
-      { name: 'Binod Kumar', vehicle_type: selectedTrType, vehicle_rate:'15', vehicle_num:'OD-05-1234', rating:'4.7', phone:'9876543210', district: currentUser?.district || 'Kendrapara', available:true },
-      { name: 'Ramesh Nayak', vehicle_type: selectedTrType, vehicle_rate:'18', vehicle_num:'OD-07-5678', rating:'4.5', phone:'9876543211', district: currentUser?.district || 'Kendrapara', available:true },
-    ];
-  }
-
-  const typeIcons = { sharing_auto:'🛺', sharing_car:'🚗', private_auto:'🛺', erickshaw:'⚡', bike_taxi:'🏍️' };
-  const icon = typeIcons[selectedTrType] || '🚗';
-
-  resEl.innerHTML = vehicles.map(v => `
-    <div style="background:var(--surf2);border-radius:12px;padding:13px;margin-bottom:10px">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <div style="width:40px;height:40px;border-radius:50%;background:var(--saffron-p);display:flex;align-items:center;justify-content:center;font-size:1.3rem">${icon}</div>
-        <div style="flex:1">
-          <div style="font-weight:700;font-size:.88rem">${v.name || v.driver_name}</div>
-          <div style="font-size:.72rem;color:var(--muted)">${v.vehicle_num||v.vehicle_number||''} • ⭐ ${v.rating||'4.5'}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-weight:800;color:var(--saffron)">₹${v.vehicle_rate||v.fare_per_segment||'15'}/km</div>
-          <div style="font-size:.68rem;color:var(--green)">🟢 Available</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="bb" style="flex:1" onclick="bookPrivateVehicle('${v.name||v.driver_name}','${icon}','${v.vehicle_type||selectedTrType}','₹${v.vehicle_rate||'15'}/km','${v.phone||v.driver_phone||''}')">📅 Book</button>
-        <button class="bc" onclick="callVendor('${v.phone||v.driver_phone||''}','${v.name||v.driver_name}')">📞 Call</button>
-      </div>
-    </div>`).join('');
-}
-
-function bookPrivateVehicle(name, icon, vtype, rate, phone) {
-  openBook(name, icon, `${vtype} • Contact: ${phone}`, rate, '', currentUser?.district || '');
-}
-
-// ── Search heavy vehicles
-async function searchHeavyVehicles() {
-  const from   = document.getElementById('th-from')?.value.trim();
-  const to     = document.getElementById('th-to')?.value.trim();
-  const goods  = document.getElementById('th-goods')?.value;
-  const resEl  = document.getElementById('th-results');
-  if (!from || !to) { showToast('⚠️ Enter pickup and drop location'); return; }
-  resEl.innerHTML = '<div style="text-align:center;padding:14px;color:var(--muted)">⏳ Finding vehicles...</div>';
-
-  let vehicles = [];
-  if (isSupabaseReady()) {
-    const { data } = await sb.from('users').select('*')
-      .eq('type','vehicle').eq('status','active').eq('available',true)
-      .in('vehicle_type', ['tractor','mini_truck','truck','boat','Tractor','Truck']);
-    vehicles = data || [];
-  }
-  if (!vehicles.length) {
-    vehicles = [
-      { name:'Sura Tractor Service', vehicle_type:'tractor', vehicle_rate:'800', vehicle_num:'OD-09-2233', rating:'4.8', phone:'9876543220', district:currentUser?.district||'Kendrapara' },
-      { name:'Ram Logistics', vehicle_type:'truck', vehicle_rate:'2500', vehicle_num:'OD-05-7890', rating:'4.6', phone:'9876543221', district:currentUser?.district||'Kendrapara' },
-    ];
-  }
-  const icons = { tractor:'🚜', mini_truck:'🚐', truck:'🚛', boat:'⛵' };
-  resEl.innerHTML = vehicles.map(v => {
-    const ic = icons[v.vehicle_type?.toLowerCase()] || '🚛';
-    return `<div style="background:var(--surf2);border-radius:12px;padding:13px;margin-bottom:10px">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <div style="font-size:1.6rem">${ic}</div>
-        <div style="flex:1">
-          <div style="font-weight:700;font-size:.88rem">${v.name}</div>
-          <div style="font-size:.72rem;color:var(--muted)">${v.vehicle_type} • ${v.vehicle_num||''} • ⭐${v.rating||'4.5'}</div>
-          <div style="font-size:.72rem;color:var(--muted)">📦 ${goods}</div>
-        </div>
-        <div style="font-weight:800;color:var(--saffron)">₹${v.vehicle_rate||'1000'}</div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="bb" style="flex:1" onclick="bookPrivateVehicle('${v.name}','${ic}','${v.vehicle_type}','₹${v.vehicle_rate}','${v.phone||''}')">📅 Book</button>
-        <button class="bc" onclick="callVendor('${v.phone||''}','${v.name}')">📞 Call</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ── My Tickets
-async function loadMyTickets() {
-  const el = document.getElementById('my-tickets-list');
-  if (!el || !currentUser) return;
-  let tickets = [];
-  if (isSupabaseReady()) {
-    const { data } = await sb.from('seat_bookings').select('*, routes(name,stops,departure_time)')
-      .eq('passenger_id', currentUser.id).order('booked_at', { ascending: false });
-    tickets = data || [];
-  } else {
-    tickets = (lsGet('pt_seat_bookings')||[]).filter(t => t.passenger_id === currentUser.id);
-  }
-  if (!tickets.length) {
-    el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted);font-size:.82rem">🎟️ No tickets booked yet</div>';
-    return;
-  }
-  const statusCol = { confirmed:'var(--green)', cancelled:'var(--red)', done:'var(--muted)' };
-  el.innerHTML = tickets.map(t => {
-    const route = t.routes || {};
-    const stops = parseStops(route.stops || '[]');
-    const fromName = stops[t.from_stop]?.name || `Stop ${t.from_stop}`;
-    const toName   = stops[t.to_stop]?.name   || `Stop ${t.to_stop}`;
-    return `<div style="background:var(--surf2);border-radius:12px;padding:13px;margin-bottom:10px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <div>
-          <div style="font-weight:700;font-size:.88rem">${route.name || 'Bus Ticket'}</div>
-          <div style="font-size:.75rem;color:var(--muted)">${fromName} → ${toName}</div>
-          <div style="font-size:.75rem;color:var(--muted)">📅 ${t.journey_date} • 💺 Seat ${t.seat_number} • ₹${t.fare}</div>
-        </div>
-        <span style="font-size:.7rem;font-weight:700;color:${statusCol[t.status]||'var(--muted)'};background:var(--surf2);border:1px solid var(--border);border-radius:20px;padding:2px 10px">${t.status}</span>
-      </div>
-      ${t.status === 'confirmed' ? `<button class="bc" style="margin-top:8px;width:100%;background:#FFE8E8;color:#FF4444;border-color:#FFB3B3" onclick="cancelTicket('${t.id}')">❌ Cancel Ticket</button>` : ''}
-    </div>`;
-  }).join('');
-}
-
-async function cancelTicket(id) {
-  if (!confirm('Cancel this ticket? | ଟିକେଟ ବାତିଲ?')) return;
-  if (isSupabaseReady()) await sbUpdate('seat_bookings', id, { status: 'cancelled' });
-  let tix = lsGet('pt_seat_bookings') || [];
-  const t = tix.find(x => x.id === id);
-  if (t) { t.status = 'cancelled'; lsSet('pt_seat_bookings', tix); }
-  showToast('✅ Ticket cancelled | ଟିକେଟ ବାତିଲ ହୋଇଗଲା');
-  loadMyTickets();
-}
-
-function selectTrType(el, type) {
-  selectedTrType = type;
-  const container = el.parentElement;
-  container.querySelectorAll('.tr-type-card').forEach(c => {
-    c.style.border = '2px solid var(--border)';
-    c.style.background = 'var(--surf2)';
-  });
-  el.style.border = '2px solid var(--saffron)';
-  el.style.background = 'var(--saffron-p)';
-}
-
-function searchVehicles() { searchAutoVehicles(); }
 
 // ============================================================
 // LANG
