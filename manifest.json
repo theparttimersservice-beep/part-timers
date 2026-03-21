@@ -1,7 +1,7 @@
 {
-  "name": "The Part-Timer's | ଦ ପାର୍ଟ-ଟାଇମର୍ସ",
+  "name": "The Part-Timer's | \u0b26 \u0b2a\u0b3e\u0b30\u0b4d\u0b1f-\u0b1f\u0b3e\u0b07\u0b2e\u0b30\u0b4d\u0b38",
   "short_name": "Part-Timer's",
-  "description": "Rural Odisha services — workers, vendors, transport",
+  "description": "Rural Odisha services \u2014 workers, vendors, transport",
   "start_url": "/part-timers/",
   "scope": "/part-timers/",
   "display": "standalone",
@@ -9,31 +9,58 @@
   "background_color": "#FFFFFF",
   "theme_color": "#FF6B00",
   "lang": "or",
-  "categories": ["business", "lifestyle", "utilities"],
+  "categories": [
+    "business",
+    "lifestyle",
+    "utilities"
+  ],
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icons/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ],
   "shortcuts": [
     {
       "name": "Book a Service",
       "short_name": "Book",
       "url": "/part-timers/?tab=farming",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "Buy & Sell",
       "short_name": "Market",
       "url": "/part-timers/?tab=buysell",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "Transport",
       "short_name": "Transport",
       "url": "/part-timers/?tab=transport",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ],
   "prefer_related_applications": false
