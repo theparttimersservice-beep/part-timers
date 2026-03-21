@@ -3456,10 +3456,8 @@ async function setWorkerFree(workerId) {
 }
 
 // Hook into confirmBook — mark assigned worker busy
-const _origConfirmBook = window.confirmBook;
 
 // Hook into markAsReceived / status done — auto free worker
-const _origMarkAsReceived = window.markAsReceived;
 
 // Called after booking status → done
 async function autoFreeWorkerAfterJob(bookingId) {
