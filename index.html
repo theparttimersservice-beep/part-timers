@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- Block Cloudflare email-decode script errors from crashing app -->
+<script>window.addEventListener('error',function(e){if(e.filename&&(e.filename.includes('email-decode')||e.filename.includes('cdn-cgi'))){e.preventDefault();return false;}},true);</script>
 <title>The Part-Timer's | ଦ ପାର୍ଟ-ଟାଇମର୍ସ</title>
 
 <!-- PWA -->
@@ -3201,6 +3203,24 @@ async function saveProfile() {
   updateAvatarDisplay();
   closeEditProfile();
   showToast('✅ Profile saved! | ପ୍ରୋଫାଇଲ ସଂରକ୍ଷିତ');
+
+  // Upload ID proof if new one selected
+  if (currentUser?._idProof && isSupabaseReady()) {
+    try {
+      const path = `id-proofs/${currentUser.id}.jpg`;
+      const resp = await fetch(currentUser._idProof);
+      const blob = await resp.blob();
+      const { error } = await sb.storage.from('avatars').upload(path, blob, { upsert: true });
+      if (!error) {
+        const { data: urlData } = sb.storage.from('avatars').getPublicUrl(path);
+        if (urlData?.publicUrl) {
+          await sbUpdate('users', currentUser.id, { id_proof_url: urlData.publicUrl });
+          currentUser.id_proof_url = urlData.publicUrl;
+        }
+      }
+    } catch(e) { /* storage optional — skip silently */ }
+    delete currentUser._idProof;
+  }
 }
 
 function updateAvatarDisplay() {
@@ -3455,10 +3475,6 @@ async function setWorkerFree(workerId) {
   await sbUpdate('users', workerId, { available: true }).catch(() => {});
 }
 
-// Hook into confirmBook — mark assigned worker busy
-
-// Hook into markAsReceived / status done — auto free worker
-
 // Called after booking status → done
 async function autoFreeWorkerAfterJob(bookingId) {
   if (!isSupabaseReady()) return;
@@ -3649,29 +3665,7 @@ function previewIDProof(input) {
   reader.readAsDataURL(input.files[0]);
 }
 
-// ── Hook ID proof into saveProfile
-const _saveProfileOrig = saveProfile;
-async function saveProfile() {
-  await _saveProfileOrig();
-  // Upload ID proof if new one selected
-  if (currentUser?._idProof && isSupabaseReady()) {
-    try {
-      const ext  = 'jpg';
-      const path = `id-proofs/${currentUser.id}.${ext}`;
-      const resp = await fetch(currentUser._idProof);
-      const blob = await resp.blob();
-      const { error } = await sb.storage.from('avatars').upload(path, blob, { upsert: true });
-      if (!error) {
-        const { data: urlData } = sb.storage.from('avatars').getPublicUrl(path);
-        if (urlData?.publicUrl) {
-          await sbUpdate('users', currentUser.id, { id_proof_url: urlData.publicUrl });
-          currentUser.id_proof_url = urlData.publicUrl;
-        }
-      }
-    } catch(e) { /* storage optional */ }
-    delete currentUser._idProof;
-  }
-}
+// ── ID proof upload handled inside saveProfile directly (see saveProfile function)
 
 // ── Apply all systems on launch
 function applyEnhancementSystems() {
