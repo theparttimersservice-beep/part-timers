@@ -262,7 +262,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
 .eov-body{padding:18px;flex:1}
 
 /* PROFILE */
-.prof-hero{background:linear-gradient(135deg,#FF6B00,#D4A017);padding:28px 18px 48px}
+.prof-hero{background:linear-gradient(135deg,#FF6B00,#D4A017);padding:28px 18px 48px;position:relative;background-size:cover;background-position:center}
 .pav-wrap{display:flex;align-items:center;gap:14px}
 .pav{width:76px;height:76px;border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:2.3rem;box-shadow:0 8px 24px rgba(0,0,0,.2);border:3px solid rgba(255,255,255,.5);overflow:hidden;position:relative}
 .pav img{width:100%;height:100%;object-fit:cover;border-radius:15px}
@@ -1086,7 +1086,10 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
 
 <!-- ===== PROFILE ===== -->
 <div id="ap-profile" class="ca hidden">
-  <div class="prof-hero">
+  <div class="prof-hero" id="prof-hero-bg">
+    <!-- Color/image overlay for transparency control -->
+    <div id="prof-hero-overlay" style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,107,0,0.85),rgba(212,160,23,0.85));pointer-events:none"></div>
+    <div style="position:relative;z-index:1">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
       <button onclick="backHome()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:9px;cursor:pointer">←</button>
       <button onclick="openEditProfile()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;border-radius:20px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">✏️ Edit</button>
@@ -1102,9 +1105,8 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Digital ID Card -->
+    </div>
+  </div><!-- /prof-hero -->
   <div class="did-card">
     <!-- Header: Logo box + App name + Verified -->
     <div class="did-hd" style="padding:10px 14px;display:flex;align-items:center;gap:10px">
@@ -1789,7 +1791,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
       <div style="font-size:.78rem;font-weight:800;margin-bottom:10px">🧑‍💼 Grievance Officer</div>
       <div style="font-size:.78rem;line-height:1.9" id="grievance-officer-info">
         <div>Name: <strong id="gr-name">App Administrator</strong></div>
-        <div>Email: <strong id="gr-email">support@theparttimers.in</strong></div>
+        <div>Email: <strong id="gr-email"><span id="gr-email-display">support [at] theparttimers.in</span></strong></div>
         <div>Phone: <strong id="gr-phone">Contact via app</strong></div>
         <div>Hours: Mon–Sat, 9AM–6PM IST</div>
         <div style="font-size:.7rem;color:var(--muted);margin-top:4px">Response within 48 hours as per IT Rules 2021</div>
@@ -2168,6 +2170,36 @@ function applyPageContent() {
   const logo = design.logo || localStorage.getItem('pt_logo');
   applyLogoEverywhere(logo);
 
+  // ── Apply profile hero background image
+  const profBg = JSON.parse(localStorage.getItem('pt_prof_bg') || '{}');
+  const profHero = document.getElementById('prof-hero-bg');
+  const profOverlay = document.getElementById('prof-hero-overlay');
+  if (profBg.image && profHero) {
+    profHero.style.backgroundImage = `url(${profBg.image})`;
+    profHero.style.backgroundSize  = 'cover';
+    profHero.style.backgroundPosition = 'center';
+  }
+  if (profOverlay && profBg.opacity !== undefined) {
+    const op = profBg.opacity;
+    profOverlay.style.background = `linear-gradient(135deg,rgba(255,107,0,${op}),rgba(212,160,23,${op}))`;
+  }
+
+  // ── Apply Digital ID header background image
+  const didBg = JSON.parse(localStorage.getItem('pt_did_bg') || '{}');
+  if (didBg.image) {
+    document.querySelectorAll('.did-hd').forEach(el => {
+      el.style.backgroundImage  = `url(${didBg.image})`;
+      el.style.backgroundSize   = 'cover';
+      el.style.backgroundPosition = 'center';
+    });
+    // Apply overlay on ID header
+    const op = didBg.opacity !== undefined ? didBg.opacity : 0.6;
+    document.querySelectorAll('.did-hd').forEach(el => {
+      el.style.position = 'relative';
+      // Create/update pseudo overlay via box-shadow trick
+      el.style.boxShadow = `inset 0 0 0 1000px rgba(255,107,0,${op})`;
+    });
+  }
   // ── Apply branding colors
   const branding = JSON.parse(localStorage.getItem('pt_branding') || '{}');
   if (branding.colPrimary)   document.documentElement.style.setProperty('--saffron', branding.colPrimary);
@@ -5575,7 +5607,7 @@ function roundRect(ctx, x, y, w, h, r) {
 // ============================================================
 function openGrievanceEmail() {
   const cfg = lsGet('pt_settings') || {};
-  const email = cfg.supportEmail || 'support@theparttimers.in';
+  const email = cfg.supportEmail || document.getElementById('gr-email')?.textContent || 'support[at]theparttimers.in';
   const subject = encodeURIComponent("Grievance / Complaint — The Part-Timer's App");
   const body = encodeURIComponent('Name: ' + (currentUser?.name||'') + '\nPhone: ' + (currentUser?.phone||'') + '\nIssue: \n\n(Please describe your issue here)');
   window.open('mailto:' + email + '?subject=' + subject + '&body=' + body);
@@ -5627,7 +5659,7 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js')
       .then(() => console.log('✅ SW registered'))
-      .catch(e => console.log('SW registration failed:', e));
+      .catch(e => console.log('SW reg failed:', e));
   });
 }
 </script>
