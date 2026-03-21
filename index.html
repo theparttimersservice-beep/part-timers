@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>The Part-Timer's | ଦ ପାର୍ଟ-ଟାଇମର୍ସ</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FF6B00">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Part-Timer's">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<!-- SEO -->
+<meta name="description" content="Rural Odisha services marketplace — book workers, buy/sell, transport booking">
+<meta name="keywords" content="Odisha, rural services, worker booking, part-timer, kendrapara">
+<meta property="og:title" content="The Part-Timer's | ଦ ପାର୍ଟ-ଟାଇମର୍ସ">
+<meta property="og:description" content="Rural Odisha services marketplace">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tiro+Oriya&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -1145,7 +1161,14 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     <div class="mi" onclick="toggleLang()"><div class="mic">🌐</div><div class="mit"><h4>Language / ଭାଷା</h4><p id="lang-status">Odia (Primary)</p></div><div class="mia">›</div></div>
     <div class="mi" onclick="shareProfile()"><div class="mic">📤</div><div class="mit"><h4>Share Digital ID</h4><p>Share your work profile</p></div><div class="mia">›</div></div>
     <div class="mi" onclick="confirmLogout()" style="border:2px solid #FFE8E8"><div class="mic">🚪</div><div class="mit"><h4 style="color:#FF4444">Logout</h4><p>Sign out of your account</p></div><div class="mia">›</div></div>
-    <div class="mi" onclick="openModal('modal-tnc')"><div class="mic">📋</div><div class="mit"><h4>Terms & Conditions</h4><p>As per Indian law | ଭାରତୀୟ ଆଇନ ଅନୁସାରେ</p></div><div class="mia">›</div></div>
+  </div>
+  <!-- Legal & Support -->
+  <div class="mg">
+    <div class="mg-title">Legal & Support | ଆଇନ ଓ ସହାୟତା</div>
+    <div class="mi" onclick="openModal('modal-tnc')"><div class="mic">📋</div><div class="mit"><h4>Terms & Conditions</h4><p>Platform usage rules | ବ୍ୟବହାର ନିୟମ</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="openModal('modal-privacy')"><div class="mic">🔒</div><div class="mit"><h4>Privacy Policy</h4><p>How we use your data | ଡାଟା ବ୍ୟବହାର</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="openModal('modal-about')"><div class="mic">ℹ️</div><div class="mit"><h4>About App | ଆପ ବିଷୟରେ</h4><p id="about-version-sub">Version 1.0 • The Part-Timer's</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="openModal('modal-grievance')"><div class="mic">📞</div><div class="mit"><h4>Help & Grievance | 민원</h4><p>Contact support | ସହାୟତା</p></div><div class="mia">›</div></div>
   </div>
   <div style="height:16px"></div>
 </div><!-- /profile -->
@@ -1566,6 +1589,92 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     </div>
     <button class="btn btn-p" onclick="uploadPaymentProof()">📤 Send Payment Proof</button>
     <button class="btn btn-o mt8" onclick="closeModal('modal-plan-pay')">Cancel</button>
+  </div>
+</div>
+
+<!-- PRIVACY POLICY MODAL -->
+<div class="modal" id="modal-privacy">
+  <div class="msheet" style="max-height:92vh">
+    <div class="mhandle"></div>
+    <div class="mt">🔒 Privacy Policy</div>
+    <div class="msub">Last updated: March 2026 | IT Act 2000 + DPDP Act 2023</div>
+    <div style="overflow-y:auto;max-height:60vh;font-size:.78rem;line-height:1.9;color:var(--text);margin:14px 0" id="privacy-content">
+      <strong>1. Information We Collect</strong><br>
+      We collect your name, mobile number, village/district, and profile photo when you register. We also collect your location (only when you give permission) to show nearby services.<br><br>
+      <strong>2. How We Use Your Data</strong><br>
+      Your information is used only to connect you with other users on this platform — workers, vendors, and customers in your area. We do not sell your data to any third party.<br><br>
+      <strong>3. Data Storage</strong><br>
+      Your data is stored securely on Supabase (cloud servers). Data is encrypted in transit (HTTPS). We retain your data as long as your account is active.<br><br>
+      <strong>4. Your Rights (DPDP Act 2023)</strong><br>
+      You have the right to: access your data, correct your data, delete your account and data at any time. To delete your account, contact our Grievance Officer.<br><br>
+      <strong>5. Location Data</strong><br>
+      Location is used only when you tap the 📍 button to auto-fill your address. We do not track your location in the background.<br><br>
+      <strong>6. Third Party Services</strong><br>
+      We use Supabase for data storage and GitHub Pages for hosting. Payment happens directly between users — we do not process any payments.<br><br>
+      <strong>7. Children's Privacy</strong><br>
+      This app is not intended for users under 18 years of age.<br><br>
+      <strong>8. Changes to Policy</strong><br>
+      We may update this policy. Continued use of the app means you accept the updated policy.<br><br>
+      <strong>9. Contact</strong><br>
+      For any privacy concerns, contact our Grievance Officer via the Help & Grievance section.
+    </div>
+    <button class="btn btn-g" onclick="closeModal('modal-privacy')">✅ Understood | ବୁଝିଲି</button>
+  </div>
+</div>
+
+<!-- ABOUT APP MODAL -->
+<div class="modal" id="modal-about">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div style="text-align:center;padding:10px 0 16px">
+      <div id="about-logo" style="width:64px;height:64px;border-radius:16px;background:var(--saffron-p);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 10px">🌾</div>
+      <div style="font-weight:800;font-size:1.1rem" id="about-app-name">The Part-Timer's</div>
+      <div style="font-size:.75rem;color:var(--muted)" id="about-tagline">Rural Odisha Services Marketplace</div>
+      <div style="font-size:.7rem;color:var(--muted);margin-top:4px" id="about-version">Version 1.0.0</div>
+    </div>
+    <div style="background:var(--surf2);border-radius:10px;padding:12px 14px;font-size:.78rem;line-height:1.9;margin-bottom:14px">
+      <div class="row" style="margin-bottom:6px"><span style="font-weight:700;width:110px;flex-shrink:0">Platform</span><span id="about-platform">The Part-Timer's</span></div>
+      <div class="row" style="margin-bottom:6px"><span style="font-weight:700;width:110px;flex-shrink:0">Coverage</span><span>Odisha, India</span></div>
+      <div class="row" style="margin-bottom:6px"><span style="font-weight:700;width:110px;flex-shrink:0">Commission</span><span style="color:var(--green);font-weight:700">0% — Direct payments</span></div>
+      <div class="row" style="margin-bottom:6px"><span style="font-weight:700;width:110px;flex-shrink:0">Data stored</span><span>Supabase Cloud (Encrypted)</span></div>
+      <div class="row" style="margin-bottom:0"><span style="font-weight:700;width:110px;flex-shrink:0">Legal</span><span>Indian IT Act 2000, Consumer Protection Act 2019, Motor Vehicles Act 1988</span></div>
+    </div>
+    <div style="font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:14px">
+      Made with ❤️ for rural Odisha<br>
+      <span id="about-copyright">© 2026 The Part-Timer's. All rights reserved.</span>
+    </div>
+    <button class="btn btn-g" onclick="closeModal('modal-about')">Close</button>
+  </div>
+</div>
+
+<!-- GRIEVANCE / HELP MODAL -->
+<div class="modal" id="modal-grievance">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">📞 Help & Grievance | ସହାୟତା</div>
+    <div class="msub">Consumer Protection (E-Commerce) Rules 2020</div>
+    <div style="background:var(--saffron-p);border-radius:12px;padding:14px;margin:14px 0">
+      <div style="font-size:.78rem;font-weight:800;margin-bottom:10px">🧑‍💼 Grievance Officer</div>
+      <div style="font-size:.78rem;line-height:1.9" id="grievance-officer-info">
+        <div>Name: <strong id="gr-name">App Administrator</strong></div>
+        <div>Email: <strong id="gr-email">support@theparttimers.in</strong></div>
+        <div>Phone: <strong id="gr-phone">Contact via app</strong></div>
+        <div>Hours: Mon–Sat, 9AM–6PM IST</div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:4px">Response within 48 hours as per IT Rules 2021</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+      <button class="btn btn-p" onclick="openGrievanceEmail()" style="background:var(--sky)">📧 Send Email Complaint</button>
+      <button class="btn btn-p" onclick="openGrievanceWhatsApp()">💬 WhatsApp Support</button>
+    </div>
+    <div style="background:var(--surf2);border-radius:10px;padding:12px;font-size:.75rem;line-height:1.7;color:var(--muted)">
+      <strong style="color:var(--text)">Common issues:</strong><br>
+      • Account problem → Contact grievance officer<br>
+      • Payment dispute → Resolve directly with worker/vendor<br>
+      • Harassment complaint → Email immediately — strict action taken<br>
+      • Data deletion request → Email with your registered phone number
+    </div>
+    <button class="btn btn-g mt8" onclick="closeModal('modal-grievance')">Close</button>
   </div>
 </div>
 
@@ -4744,7 +4853,10 @@ function showTab(id) {
 // ============================================================
 // MODAL HELPERS
 // ============================================================
-function openModal(id) { document.getElementById(id).classList.add('on'); }
+function openModal(id) {
+  document.getElementById(id)?.classList.add('on');
+  if (id === 'modal-about' || id === 'modal-grievance' || id === 'modal-privacy') loadAboutModal();
+}
 function closeModal(id) { document.getElementById(id).classList.remove('on'); }
 
 // Close modal on overlay click
@@ -4989,6 +5101,47 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
+// ============================================================
+// LEGAL MODALS — Privacy, About, Grievance
+// ============================================================
+function openGrievanceEmail() {
+  const cfg = lsGet('pt_settings') || {};
+  const email = cfg.supportEmail || 'support@theparttimers.in';
+  const subject = encodeURIComponent("Grievance / Complaint — The Part-Timer's App");
+  const body = encodeURIComponent('Name: ' + (currentUser?.name||'') + '\nPhone: ' + (currentUser?.phone||'') + '\nIssue: \n\n(Please describe your issue here)');
+  window.open('mailto:' + email + '?subject=' + subject + '&body=' + body);
+}
+
+function openGrievanceWhatsApp() {
+  const cfg = lsGet('pt_settings') || {};
+  const phone = cfg.supportPhone || cfg.contactPhone || '';
+  if (!phone) { showToast('📞 Contact info not set by admin yet'); return; }
+  const clean = phone.replace(/\D/g, '');
+  const msg = encodeURIComponent("Hi, I need help with The Part-Timer's app.\nName: " + (currentUser?.name||'') + "\nPhone: " + (currentUser?.phone||'') + "\nIssue: ");
+  window.open('https://wa.me/91' + clean + '?text=' + msg);
+}
+
+function loadAboutModal() {
+  const cfg      = lsGet('pt_settings')  || {};
+  const branding = lsGet('pt_branding')  || {};
+  const appName  = branding.appName || cfg.appName || "The Part-Timer's";
+  const tagline  = branding.tagline || cfg.tagline || 'Rural Odisha Services Marketplace';
+  const setTxt   = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setTxt('about-app-name',   appName);
+  setTxt('about-tagline',    tagline);
+  setTxt('about-platform',   appName);
+  setTxt('about-copyright',  '© 2026 ' + appName + '. All rights reserved.');
+  setTxt('about-version-sub','Version 1.0 • ' + appName);
+  const logo = lsGet('pt_logo');
+  const logoEl = document.getElementById('about-logo');
+  if (logo && logoEl) logoEl.innerHTML = '<img src="' + logo + '" style="width:100%;height:100%;object-fit:contain;border-radius:14px">';
+  if (cfg.supportEmail) setTxt('gr-email', cfg.supportEmail);
+  if (cfg.supportPhone) setTxt('gr-phone', cfg.supportPhone);
+  if (cfg.grievanceName) setTxt('gr-name', cfg.grievanceName);
+  const privacy = lsGet('pt_privacy_policy');
+  if (privacy && document.getElementById('privacy-content')) document.getElementById('privacy-content').innerHTML = privacy;
+}
+
 function confirmLogout() {
   if (confirm('Are you sure you want to logout? | ଲଗଆଉଟ କରିବେ?')) {
     if (realtimeSubscription) { sb.removeChannel(realtimeSubscription); realtimeSubscription = null; }
@@ -4998,6 +5151,15 @@ function confirmLogout() {
     document.getElementById('auth-section').classList.remove('hidden');
     showPg('pg-welcome');
   }
+}
+
+// ── PWA Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('✅ SW registered:', reg.scope))
+      .catch(err => console.log('SW registration failed:', err));
+  });
 }
 </script>
 </body>
