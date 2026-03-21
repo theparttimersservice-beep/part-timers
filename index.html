@@ -639,11 +639,48 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     <div class="rc"><div class="rc-row"><div class="rc-img">🔊</div><div class="rc-info"><h4>DJ Sound System</h4><div class="rc-sub">📍 Cuttack • 10,000W setup</div><div class="rc-pr"><span class="rc-price">₹5,000/event</span><span class="rc-unit">• 12 hrs</span></div></div></div><div class="lc-actions" style="margin-top:10px"><button class="bb" onclick="openBook('DJ Sound System','🔊','10000W DJ sound setup','₹5,000/event','⭐ 4.8','Cuttack')">📅 Book</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
   </div>
   <div id="bs-haata" class="hidden">
-    <div class="hbanner" style="margin:14px 15px"><div class="live-dot">🔴 LIVE</div><h3>🎪 ରବିବାର ହଟ</h3><p>Local vendors near you — every Sunday</p></div>
-    <div class="lc"><div class="lc-row"><div class="lc-img">🧹</div><div class="lc-info"><h4>Homemade Phenyl (5L)</h4><div class="lc-sub">📍 Sunita SHG, Nayagarh</div><div class="lc-meta"><span class="lc-price">₹120/5L</span><span class="lc-rt">⭐ 4.6</span><span class="bdg bdg-g">Haata Deal</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Homemade Phenyl','🧹','₹120','5L bottle')">🛒 Buy</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
-    <div class="lc"><div class="lc-row"><div class="lc-img">🧆</div><div class="lc-info"><h4>Handmade Papad (500g)</h4><div class="lc-sub">📍 Bhubaneswar SHG group</div><div class="lc-meta"><span class="lc-price">₹60/500g</span><span class="lc-rt">⭐ 4.8</span><span class="bdg bdg-g">Haata Deal</span></div></div></div><div class="lc-actions"><button class="bb" onclick="openOrder('Handmade Papad','🧆','₹60','500g pack')">🛒 Buy</button><button class="bc" onclick="showToast('📞 Connecting...')">📞</button></div></div>
+    <!-- Sunday Haata — auto open/close based on day -->
+    <div id="haata-closed-msg" style="display:none;padding:30px 20px;text-align:center">
+      <div style="font-size:3rem;margin-bottom:12px">🎪</div>
+      <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:8px">Sunday Haata is Closed</h3>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:16px">Haata sirf Sunday 6AM–10PM khulta hai<br>ହଟ ରବିବାର ସକାଳ ୬ ରୁ ରାତ ୧୦ ଟା ଯାଏ ଖୋଲା ଥାଏ</p>
+      <div id="haata-next-time" style="background:var(--saffron-p);border-radius:10px;padding:12px;font-size:.82rem;font-weight:700;color:var(--saffron)"></div>
+    </div>
+    <div id="haata-open-section">
+      <div class="hbanner" style="margin:14px 15px">
+        <div class="live-dot">🔴 LIVE</div>
+        <h3>🎪 ରବିବାର ହଟ | Sunday Haata</h3>
+        <p>Local vendors near you — closes at 10 PM tonight</p>
+      </div>
+      <!-- Post to haata button — only on Sundays -->
+      <div id="haata-post-btn" style="padding:0 15px 10px;display:none">
+        <button class="btn btn-p" onclick="openHaataModal()" style="background:linear-gradient(135deg,var(--saffron),var(--gold))">🎪 Post to Sunday Haata</button>
+      </div>
+      <!-- Live haata listings -->
+      <div id="haata-listings-live" style="padding:0 15px">
+        <div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem">Loading haata listings...</div>
+      </div>
+    </div>
   </div>
 </div><!-- /buysell -->
+
+<!-- ===== MY LISTINGS (VENDOR) ===== -->
+<div id="ap-mylistings" class="ca hidden">
+  <div class="tbar">
+    <button class="bk" onclick="goTab('profile')">←</button>
+    <h3>📦 My Listings | ମୋ ଲିଷ୍ଟିଂ</h3>
+    <button onclick="openVendorModal()" style="background:var(--saffron);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">➕ Add</button>
+  </div>
+  <div style="padding:12px 15px">
+    <!-- Plan info bar -->
+    <div id="my-listings-plan-bar" style="background:var(--saffron-p);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.78rem;display:flex;justify-content:space-between;align-items:center">
+      <span id="my-listings-plan-info">Plan: Local Mini • 0/5 items used</span>
+      <button onclick="openPlanModal()" style="background:var(--saffron);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.72rem;cursor:pointer">⬆️ Upgrade</button>
+    </div>
+    <!-- Listings container -->
+    <div id="my-listings-container"></div>
+  </div>
+</div>
 
 <!-- ===== SERVICE: TRANSPORT (OLA LOGIC) ===== -->
 <div id="ap-transport" class="ca hidden">
@@ -837,22 +874,55 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
 
   <!-- Digital ID Card -->
   <div class="did-card">
-    <div class="did-hd"><span>THE PART-TIMER'S • DIGITAL ID</span><span id="did-status">✅ VERIFIED</span></div>
-    <div class="did-body">
-      <div class="did-row">
-        <div class="did-info">
-          <div class="did-id" id="did-id">PT-000000</div>
-          <h3 id="did-name">User Name</h3>
-          <div class="did-role" id="did-role">Customer</div>
-          <div class="did-loc" id="did-loc">📍 Village, District, Odisha</div>
-        </div>
-        <div id="qrcode"></div>
-      </div>
-      <div class="did-skills" id="did-skills"></div>
+    <!-- Header: Logo box + App name + Verified -->
+    <div class="did-hd" style="padding:10px 14px;display:flex;align-items:center;gap:10px">
+      <!-- Logo box — separate from text -->
+      <div id="did-logo-box" style="width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;overflow:hidden;border:1.5px solid rgba(255,255,255,.4)">🌾</div>
+      <!-- App name -->
+      <span id="did-hd-title" style="flex:1;color:#fff;font-size:.72rem;font-weight:800;letter-spacing:.8px">THE PART-TIMER'S • DIGITAL ID</span>
+      <!-- Verified badge -->
+      <span id="did-status" style="color:#fff;font-size:.65rem;font-weight:700;background:rgba(255,255,255,.2);padding:3px 8px;border-radius:20px;white-space:nowrap">✅ VERIFIED</span>
     </div>
-    <div class="did-ft">
-      <span class="ver">✅ Verified Member</span>
-      <span class="rt" id="did-rating">⭐ 4.8 Rating</span>
+    <!-- Body -->
+    <div class="did-body" style="padding:14px">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <!-- Left: Profile photo + user info -->
+        <div style="flex:1">
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+            <!-- Profile photo circle -->
+            <div id="did-avatar" style="width:52px;height:52px;border-radius:50%;background:var(--saffron-p);border:2.5px solid var(--saffron);display:flex;align-items:center;justify-content:center;font-size:1.6rem;overflow:hidden;flex-shrink:0">👤</div>
+            <div>
+              <div class="did-id" id="did-id">PT-000000</div>
+              <h3 id="did-name" style="font-size:1.1rem;font-weight:800;margin:2px 0">User Name</h3>
+            </div>
+          </div>
+          <div class="did-role" id="did-role" style="margin-bottom:4px">Customer</div>
+          <div class="did-loc" id="did-loc">📍 Village, District, Odisha</div>
+          <div class="did-skills" id="did-skills" style="margin-top:8px"></div>
+        </div>
+        <!-- Right: QR code -->
+        <div style="flex-shrink:0;text-align:center">
+          <div id="qrcode" style="width:80px;height:80px"></div>
+          <div style="font-size:.55rem;color:var(--muted);margin-top:3px">Scan to verify</div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <div class="did-ft" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <span class="ver" style="display:block">✅ Verified Member</span>
+        <span style="font-size:.62rem;color:var(--muted)" id="did-member-since">The Part-Timer's</span>
+      </div>
+      <div style="display:flex;gap:14px;text-align:center">
+        <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:5px 10px">
+          <div style="font-size:.9rem;font-weight:800" id="did-jobs">0</div>
+          <div style="font-size:.58rem;opacity:.8">Jobs</div>
+        </div>
+        <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:5px 10px">
+          <div style="font-size:.9rem;font-weight:800">⭐ <span id="did-rating-ft">4.8</span></div>
+          <div style="font-size:.58rem;opacity:.8">Rating</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -882,7 +952,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     <div class="mi" onclick="goTab('orders')"><div class="mic">📋</div><div class="mit"><h4>My Bookings & Orders</h4><p>View all your activity</p></div><div class="mia">›</div></div>
     <div class="mi" onclick="openPlanModal()"><div class="mic">💎</div><div class="mit"><h4>Upgrade Plan</h4><p>Get more visibility & features</p></div><div class="mia">›</div></div>
     <div class="mi" id="mi-post-listing" style="display:none" onclick="openVendorModal()"><div class="mic">➕</div><div class="mit"><h4>Post a Listing | ଲିଷ୍ଟିଂ ଯୋଡ଼ନ୍ତୁ</h4><p id="mi-listing-sub">Post items to sell or rent</p></div><div class="mia">›</div></div>
-    <div class="mi" id="mi-my-listings" style="display:none" onclick="goSvc('buysell')"><div class="mic">📦</div><div class="mit"><h4>My Listings | ମୋ ଲିଷ୍ଟିଂ</h4><p id="mi-mylist-sub">View & manage your listings</p></div><div class="mia">›</div></div>
+    <div class="mi" id="mi-my-listings" style="display:none" onclick="openMyListings()"><div class="mic">📦</div><div class="mit"><h4>My Listings | ମୋ ଲିଷ୍ଟିଂ</h4><p id="mi-mylist-sub">View & manage your listings</p></div><div class="mia">›</div></div>
   </div>
   <div class="mg">
     <div class="mg-title">Settings</div>
@@ -980,6 +1050,22 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
       </div>
       <div id="or-addr-status" style="font-size:.68rem;color:var(--muted);margin-top:3px;display:none"></div>
     </div>
+    <!-- Delivery method -->
+    <div class="fg">
+      <label>🚚 Delivery Method | ଡେଲିଭରି ପ୍ରକାର</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px" id="delivery-method-grid">
+        <div class="delivery-opt on" onclick="selectDelivery(this,'pickup')" style="background:var(--green-p);border:2px solid var(--green);border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;font-size:.72rem;font-weight:700;color:var(--green)">
+          🚶 Self Pickup<div style="font-weight:400;margin-top:2px;color:var(--muted)">I'll collect</div>
+        </div>
+        <div class="delivery-opt" onclick="selectDelivery(this,'vendor')" style="background:var(--surf2);border:2px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;font-size:.72rem;font-weight:700">
+          🛵 Vendor Delivers<div style="font-weight:400;margin-top:2px;color:var(--muted)">They'll bring</div>
+        </div>
+        <div class="delivery-opt" onclick="selectDelivery(this,'contact')" style="background:var(--surf2);border:2px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;font-size:.72rem;font-weight:700">
+          📞 Contact First<div style="font-weight:400;margin-top:2px;color:var(--muted)">Arrange direct</div>
+        </div>
+      </div>
+      <input type="hidden" id="or-delivery-method" value="pickup">
+    </div>
     <div class="total-row"><span>Total Amount:</span><strong id="or-total">₹00</strong></div>
     <button class="btn btn-p" onclick="confirmOrder()">🛒 Place Order</button>
     <button class="btn btn-o mt8" onclick="closeModal('modal-order')">Cancel</button>
@@ -1058,19 +1144,17 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
       <div style="font-size:.88rem;font-weight:800;margin-bottom:10px" id="pay-worker-name">Worker Name</div>
       <!-- UPI Section -->
       <div id="pay-upi-section">
-        <div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">📲 UPI se pay karo:</div>
+        <div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">📲 Pay via UPI | UPI ଦ୍ୱାରା ଦେୟ:</div>
         <div style="display:flex;align-items:center;gap:10px;background:#fff;border-radius:10px;padding:11px 13px;margin-bottom:10px">
           <span style="font-size:1.4rem">📱</span>
           <div>
             <div style="font-size:.72rem;color:var(--muted)">UPI ID</div>
             <div style="font-weight:800;font-size:.9rem" id="pay-upi-id">—</div>
           </div>
-          <button onclick="copyUPI()" style="margin-left:auto;background:var(--sky);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.72rem;cursor:pointer">Copy</button>
+          <button onclick="navigator.clipboard?.writeText(document.getElementById('pay-upi-id').textContent).then(()=>showToast('📋 UPI copied!'))" style="margin-left:auto;background:var(--sky);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.72rem;cursor:pointer">Copy</button>
         </div>
-        <!-- QR Code -->
         <div id="pay-qr-section" style="text-align:center;margin-bottom:10px">
-          <img id="pay-qr-img" style="width:120px;height:120px;border-radius:10px;border:2px solid var(--border);display:none">
-          <div id="pay-no-qr" style="font-size:.72rem;color:var(--muted)">QR code available nahi hai</div>
+          <img id="pay-upi-qr" style="width:120px;height:120px;border-radius:10px;border:2px solid var(--border);display:none">
         </div>
       </div>
       <!-- Cash Section -->
@@ -1078,16 +1162,16 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
         <div style="display:flex;align-items:center;gap:8px">
           <span style="font-size:1.3rem">💵</span>
           <div>
-            <div style="font-weight:700;font-size:.82rem">Cash Payment</div>
-            <div style="font-size:.72rem;color:var(--muted)" id="pay-cash-status">Service ke baad cash dena</div>
+            <div style="font-weight:700;font-size:.82rem">Cash Payment | ନଗଦ ଦେୟ</div>
+            <div style="font-size:.72rem;color:var(--muted)">Pay cash after service | ସେବା ପରେ ନଗଦ ଦିଅନ୍ତୁ</div>
           </div>
         </div>
       </div>
     </div>
     <div style="background:var(--green-p);border-radius:10px;padding:11px;font-size:.75rem;color:var(--green);font-weight:600;margin-bottom:14px">
       ✅ No commission charged by app | ଆପ୍ ଦ୍ୱାରା କୌଣସି କମିଶନ ନାହିଁ<br>
-      ✅ Direct payment between you and the worker<br>
-      ✅ For any dispute, contact admin
+      ✅ Direct payment between you and the worker | ସିଧା ଦେୟ<br>
+      ✅ For any dispute, contact admin | ବିବାଦ ପାଇଁ admin ଙ୍କୁ ଯୋଗାଯୋଗ
     </div>
     <button class="btn btn-g" onclick="closeModal('modal-payment')">✅ Got it | ବୁଝିଲି</button>
   </div>
@@ -1097,7 +1181,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
 <div class="modal" id="modal-rating">
   <div class="msheet">
     <div class="mhandle"></div>
-    <div class="mt">⭐ Service Rate Karo</div>
+    <div class="mt">⭐ Rate this Service | ରେଟ କରନ୍ତୁ</div>
     <div class="msub" id="rating-sub">Service kaisi rahi?</div>
     <div id="rating-target-info" style="background:var(--saffron-p);border-radius:10px;padding:12px;margin-bottom:14px;font-size:.85rem;font-weight:700"></div>
     <!-- Star Rating -->
@@ -1110,7 +1194,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
         <span onclick="setRating(4)" style="font-size:2.2rem;cursor:pointer;opacity:.4;transition:all .15s;color:var(--gold)">★</span>
         <span onclick="setRating(5)" style="font-size:2.2rem;cursor:pointer;opacity:.4;transition:all .15s;color:var(--gold)">★</span>
       </div>
-      <div id="rating-label" style="font-size:.78rem;color:var(--muted);margin-top:6px">Star tap karo</div>
+      <div id="rating-label" style="font-size:.78rem;color:var(--muted);margin-top:6px">Tap a star to rate | ତାରା ଟ୍ୟାପ କରନ୍ତୁ</div>
     </div>
     <!-- Tags for quick feedback -->
     <div style="margin-bottom:12px">
@@ -1118,7 +1202,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
       <div id="rating-tags" style="display:flex;flex-wrap:wrap;gap:6px"></div>
     </div>
     <div class="fg"><label>Comment (optional)</label><textarea id="rating-comment" placeholder="Apna experience likho..." style="min-height:60px"></textarea></div>
-    <button class="btn btn-p" onclick="submitRating()">✅ Rating Submit Karo</button>
+    <button class="btn btn-p" onclick="submitRating()">✅ Submit Rating | ରେଟିଂ ଦିଅନ୍ତୁ</button>
     <button class="btn btn-o mt8" onclick="closeModal('modal-rating')">Skip</button>
   </div>
 </div>
@@ -1291,11 +1375,37 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
     <div style="font-size:.73rem;color:var(--muted);margin-bottom:14px;line-height:1.9">
       1. UPI se payment karo | ୟୁପିଆଇ ଦ୍ୱାରା ଦେୟ କରନ୍ତୁ<br>
       2. Screenshot attach karo<br>
-      3. "Send Proof" dabao — Admin verify karega<br>
+      3. Tap "Send Proof" — Admin will verify | ଆଡମିନ ଯାଞ୍ଚ କରିବେ<br>
       4. Plan 24 hours mein activate ho jayega | ୨୪ ଘଣ୍ଟା ମଧ୍ୟରେ ଆକ୍ଟିଭ ହେବ
     </div>
     <button class="btn btn-p" onclick="uploadPaymentProof()">📤 Send Payment Proof</button>
     <button class="btn btn-o mt8" onclick="closeModal('modal-plan-pay')">Cancel</button>
+  </div>
+</div>
+
+<!-- SUNDAY HAATA POST MODAL -->
+<div class="modal" id="modal-haata">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">🎪 Post to Sunday Haata</div>
+    <div class="msub">Listing only for today Sunday — auto-removed at 10 PM | ରାତ ୧୦ ଟାରେ ସ୍ୱୟଂ ବନ୍ଦ</div>
+    <div style="background:var(--saffron-p);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.75rem;color:var(--saffron);font-weight:700">
+      ⏰ Auto-closes at 10 PM today | ଆଜି ରାତ ୧୦ ଟାରେ ସ୍ୱୟଂ ବନ୍ଦ ହେବ
+    </div>
+    <div class="fg"><label>Item Name | ଜିନିଷ ନାମ</label><input type="text" id="hi-name" placeholder="e.g. Fresh Tomatoes, Homemade Pickle"></div>
+    <div class="fg"><label>Price | ମୂଲ୍ୟ</label><input type="text" id="hi-price" placeholder="e.g. ₹20/kg or ₹50 per bundle"></div>
+    <div class="fg"><label>Quantity Available | ପରିମାଣ</label><input type="text" id="hi-qty" placeholder="e.g. 5kg, 10 packets, limited stock"></div>
+    <div class="fg"><label>Description (optional)</label><textarea id="hi-desc" placeholder="Fresh from my garden, organic..." style="height:60px"></textarea></div>
+    <div class="fg">
+      <label>📷 Photo (recommended)</label>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;background:var(--surf2);border:1px solid var(--border);border-radius:9px;padding:10px">
+        <span style="font-size:1.2rem">📷</span>
+        <span style="font-size:.8rem;color:var(--muted)" id="hi-photo-label">Add photo of your item</span>
+        <input type="file" id="hi-photo" accept="image/*" style="display:none" onchange="document.getElementById('hi-photo-label').textContent=this.files[0]?.name||'Photo selected'">
+      </label>
+    </div>
+    <button class="btn btn-p" style="background:linear-gradient(135deg,var(--saffron),var(--gold))" onclick="postHaataItem()">🎪 Post to Haata</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-haata')">Cancel</button>
   </div>
 </div>
 
@@ -1391,7 +1501,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
           <div id="ep-upi-qr-preview" style="display:none;margin-top:8px"><img id="ep-upi-qr-img" style="width:100px;height:100px;object-fit:contain;border-radius:8px;border:2px solid var(--border)"></div>
         </div>
         <div class="fg"><label>Cash Accept karte ho? <span>/ Cash OK?</span></label>
-          <select id="ep-cash"><option value="yes">✅ Haan, Cash Accept karta/karti hoon</option><option value="no">❌ Nahi, Sirf UPI</option><option value="both">✅ Dono — Cash + UPI</option></select>
+          <select id="ep-cash"><option value="yes">✅ Yes, I accept Cash | ହଁ, ନଗଦ ଗ୍ରହଣ କରୁଛି</option><option value="no">❌ UPI Only | ଯୁପିଆଇ ମାତ୍ର</option><option value="both">✅ Cash + UPI Both | ଦୁଇଟି</option></select>
         </div>
       </div>
     </div>
@@ -1415,6 +1525,21 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
       <div style="font-size:.82rem;font-weight:800;color:var(--sky);margin-bottom:8px">➕ Add-on Roles <span style="font-weight:400;font-size:.72rem;color:var(--muted)">/ ଅତିରିକ୍ତ ଭୂମିକା</span></div>
       <div style="font-size:.75rem;color:var(--muted);margin-bottom:10px">What else do you do? | ଆପଣ ଆଉ କ'ଣ କରନ୍ତି?</div>
       <div id="addon-roles-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:7px"></div>
+    </div>
+    <!-- Availability Toggle (workers only) -->
+    <div id="ep-availability-row" style="display:none;background:var(--surf2);border-radius:12px;padding:14px;margin-bottom:12px">
+      <div style="font-size:.82rem;font-weight:800;margin-bottom:10px">🟢 Availability | ଉପଲ୍ଲବ୍ଧତା</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:.82rem;font-weight:700" id="ep-avail-label">Available for work</div>
+          <div style="font-size:.72rem;color:var(--muted)">Customers can see & book you | ଗ୍ରାହକ ବୁକ କରିପାରିବେ</div>
+        </div>
+        <label style="position:relative;display:inline-block;width:52px;height:28px;cursor:pointer">
+          <input type="checkbox" id="ep-available" style="opacity:0;width:0;height:0" onchange="updateAvailLabel(this.checked)">
+          <span style="position:absolute;inset:0;background:var(--border);border-radius:28px;transition:.3s" id="ep-avail-track"></span>
+          <span style="position:absolute;left:3px;top:3px;width:22px;height:22px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.2)" id="ep-avail-knob"></span>
+        </label>
+      </div>
     </div>
     <div class="fg"><label>ବ୍ୟକ୍ତିଗତ ବିବରଣ <span>/ Bio (optional)</span></label><textarea id="ep-bio" placeholder="Tell something about yourself..."></textarea></div>
     <button class="btn btn-p" onclick="saveProfile()">✅ Save Changes</button>
@@ -1528,10 +1653,12 @@ function applyPageContent() {
     document.querySelectorAll('.did-ft').forEach(el => el.style.background = design.footerColor);
   }
   if (design.hdTitle) {
-    document.querySelectorAll('.did-hd span:first-child').forEach(el => el.textContent = design.hdTitle);
+    const hdTitle = document.getElementById('did-hd-title');
+    if (hdTitle) hdTitle.textContent = design.hdTitle;
   }
   if (design.verified) {
-    document.getElementById('did-status') && (document.getElementById('did-status').textContent = design.verified);
+    const didStatus = document.getElementById('did-status');
+    if (didStatus) didStatus.textContent = design.verified;
   }
   if (design.ftLeft) {
     document.querySelector('.did-ft .ver') && (document.querySelector('.did-ft .ver').textContent = design.ftLeft);
@@ -1751,6 +1878,13 @@ async function doRegister() {
       type: selectedUserType, pass,
       plan: 'Local Mini', rating: 4.8, jobs: 0, bio: '',
       status: 'active', available: true, featured: false,
+      // Vendor gets 3 months FREE trial automatically
+      plan_status: selectedUserType === 'vendor' ? 'active' : 'free',
+      plan_start:  selectedUserType === 'vendor' ? new Date().toISOString().split('T')[0] : null,
+      plan_expiry: selectedUserType === 'vendor' ? (() => {
+        const d = new Date(); d.setDate(d.getDate() + 90);
+        return d.toISOString().split('T')[0];
+      })() : null,
       // Type-specific fields only
       skill:        selectedUserType === 'worker'  ? user.skill : null,
       rate:         selectedUserType === 'worker'  ? user.rate  : null,
@@ -1847,6 +1981,7 @@ async function launchApp() {
   goTab('home');
   checkTnC();
   checkPendingSafetyAlerts();
+  checkPlanExpiry(); // Check if vendor plan is expiring/expired
   // Restore unread notification badge
   const unread = lsGet('pt_unread_notifs') || 0;
   if (unread > 0) updateNotifBadge(unread);
@@ -1941,7 +2076,7 @@ function lsSet(key, val) { try { localStorage.setItem(key, JSON.stringify(val));
 // ============================================================
 // NAVIGATION
 // ============================================================
-const ALL_SECTIONS = ['home','orders','notif','profile','farming','fish','poultry','buysell','transport','food','homeservice','photo','tent','pandit','doctor','tuition'];
+const ALL_SECTIONS = ['home','orders','notif','profile','mylistings','farming','fish','poultry','buysell','transport','food','homeservice','photo','tent','pandit','doctor','tuition'];
 
 function hideAll() {
   ALL_SECTIONS.forEach(t => document.getElementById('ap-' + t)?.classList.add('hidden'));
@@ -1962,7 +2097,12 @@ function goSvc(svc) {
   document.getElementById('ap-' + svc)?.classList.remove('hidden');
   // Initialize tabs on first open
   if (svc === 'fish') showTab('fish-workers');
-  if (svc === 'buysell') { showTab('bs-all'); loadVendorListings(); }
+  if (svc === 'buysell') {
+    showTab('bs-all');
+    loadVendorListings();
+    // Init haata tab state immediately (will show closed/open based on day)
+    setTimeout(initHaataTab, 100);
+  }
 }
 
 function backHome() { goTab('home'); }
@@ -1986,19 +2126,9 @@ function applyLogoEverywhere(logoSrc) {
   const welcomeLogo = document.getElementById('welcome-logo');
   if (welcomeLogo) welcomeLogo.innerHTML = imgTag;
 
-  // 3. Profile Digital ID card — top icon (above QR)
-  const qrArea = document.getElementById('qrcode');
-  const didLogo = document.getElementById('did-logo-img');
-  if (!didLogo && qrArea) {
-    // Insert logo above QR in Digital ID
-    const logoEl = document.createElement('img');
-    logoEl.id = 'did-logo-img';
-    logoEl.src = logoSrc;
-    logoEl.style.cssText = 'width:36px;height:36px;object-fit:contain;border-radius:8px;margin-bottom:4px;display:block';
-    qrArea.parentNode.insertBefore(logoEl, qrArea);
-  } else if (didLogo) {
-    didLogo.src = logoSrc;
-  }
+  // 3. Profile Digital ID card header logo box
+  const didLogoBox = document.getElementById('did-logo-box');
+  if (didLogoBox) didLogoBox.innerHTML = imgTag;
 
   // 4. Booking modal icon — replace default 🌾 if no service icon
   const bkIcon = document.getElementById('bk-icon');
@@ -2015,6 +2145,201 @@ function applyLogoEverywhere(logoSrc) {
   }
 }
 
+
+// ============================================================
+// CALL VENDOR — direct phone/whatsapp
+// ============================================================
+function callVendor(phone, name) {
+  if (!phone) { showToast('📞 Contact info not available'); return; }
+  const clean = phone.replace(/\D/g, '');
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.id = 'modal-call-tmp';
+  modal.innerHTML = `<div class="msheet" style="padding:20px">
+    <div class="mhandle"></div>
+    <div class="mt" style="margin-bottom:4px">Contact ${name}</div>
+    <div class="msub" style="margin-bottom:16px">📞 ${phone}</div>
+    <a href="tel:${clean}" class="btn btn-p" style="display:block;text-align:center;text-decoration:none;margin-bottom:10px">📞 Call Now</a>
+    <a href="https://wa.me/91${clean}" target="_blank" class="btn btn-p" style="display:block;text-align:center;text-decoration:none;background:#25D366;margin-bottom:10px">💬 WhatsApp</a>
+    <button class="btn btn-o" onclick="document.getElementById('modal-call-tmp').classList.remove('on');setTimeout(()=>document.getElementById('modal-call-tmp')?.remove(),300)">Cancel</button>
+  </div>`;
+  document.body.appendChild(modal);
+  openModal('modal-call-tmp');
+}
+
+// ============================================================
+// PLAN EXPIRY CHECK
+// ============================================================
+function checkPlanExpiry() {
+  if (!currentUser || currentUser.type !== 'vendor') return;
+  const expiry = currentUser.plan_expiry;
+  if (!expiry) return;
+  const daysLeft = Math.ceil((new Date(expiry) - Date.now()) / 86400000);
+  if (daysLeft <= 0) {
+    currentUser.plan_status = 'expired';
+    lsSet('pt_user', currentUser);
+    if (isSupabaseReady()) sbUpdate('users', currentUser.id, { plan_status: 'expired' });
+    showToast('⚠️ Your plan has expired. Renew to keep listings active.');
+  } else if (daysLeft <= 7) {
+    showToast(`⚠️ Plan expires in ${daysLeft} days! Renew soon.`);
+  }
+}
+
+// ============================================================
+// SUNDAY HAATA — tab logic (open only Sunday 6AM–10PM)
+// ============================================================
+function isSundayHaataOpen() {
+  const now = new Date();
+  return now.getDay() === 0 && now.getHours() >= 6 && now.getHours() < 22;
+}
+
+function initHaataTab() {
+  const closed  = document.getElementById('haata-closed-msg');
+  const open    = document.getElementById('haata-open-section');
+  const postBtn = document.getElementById('haata-post-btn');
+  if (!closed || !open) return;
+
+  if (isSundayHaataOpen()) {
+    closed.style.display = 'none';
+    open.style.display   = '';
+    const isVendor = currentUser?.type === 'vendor' || (currentUser?.addon_roles||[]).includes('vendor');
+    if (postBtn) postBtn.style.display = isVendor ? '' : 'none';
+    loadHaataListings();
+  } else {
+    closed.style.display = '';
+    open.style.display   = 'none';
+    const now = new Date();
+    const daysUntil = now.getDay() === 0 ? 7 : (7 - now.getDay());
+    const next = new Date(now); next.setDate(now.getDate() + daysUntil); next.setHours(6,0,0,0);
+    const hrs  = Math.floor((next - now) / 3600000);
+    const el   = document.getElementById('haata-next-time');
+    if (el) el.textContent = `⏳ Next Haata: ${Math.floor(hrs/24)} days ${hrs%24} hours to go — Every Sunday 6AM–10PM`;
+  }
+}
+
+async function loadHaataListings() {
+  const container = document.getElementById('haata-listings-live');
+  if (!container || !currentUser) return;
+  const today = new Date().toISOString().split('T')[0];
+  let listings = [];
+  if (isSupabaseReady()) {
+    const { data } = await sb.from('listings').select('*')
+      .eq('listing_type','haata').eq('status','approved')
+      .gte('created_at', today + 'T00:00:00')
+      .order('created_at', { ascending: false });
+    listings = data || [];
+  } else {
+    listings = (lsGet('pt_listings')||[]).filter(l =>
+      l.listing_type === 'haata' && l.status === 'approved' && l.created_at?.startsWith(today));
+  }
+  const cfg = getPlansConfig();
+  function inRadius(l) {
+    const km = (cfg[l.vendor_plan||'Local Mini']||cfg['Local Mini']).km||5;
+    return km >= 999 || !l.vendor_district || l.vendor_district === currentUser.district;
+  }
+  const filtered = listings.filter(inRadius);
+  if (filtered.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:30px;color:var(--muted)"><div style="font-size:2rem;margin-bottom:8px">🎪</div><div style="font-size:.82rem">No haata listings yet today.<br>Be the first to post!</div></div>`;
+    return;
+  }
+  container.innerHTML = filtered.map(l => `
+    <div class="lc">
+      <div class="lc-row">
+        <div class="lc-img">${l.image_url?`<img src="${l.image_url}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`:'🎪'}</div>
+        <div class="lc-info">
+          <h4>${l.name}</h4>
+          <div class="lc-sub">📍 ${l.vendor_district||'Local'} • ${l.vendor_name||'Vendor'}</div>
+          <div class="lc-meta"><span class="lc-price">${l.price}</span>${l.qty?`<span style="font-size:.7rem;color:var(--muted)"> • ${l.qty}</span>`:''}<span class="bdg bdg-g">Haata Deal</span></div>
+        </div>
+      </div>
+      <div class="lc-actions">
+        <button class="bb" onclick="openOrder('${l.name}','🎪','${l.price}','unit')">🛒 Buy</button>
+        <button class="bc" onclick="callVendor('${l.vendor_phone||''}','${l.vendor_name||'Vendor'}')">📞 Call</button>
+      </div>
+    </div>`).join('');
+}
+
+function openHaataModal() {
+  if (!isSundayHaataOpen()) { showToast('⚠️ Sunday Haata sirf Sunday 6AM–10PM open hota hai'); return; }
+  ['hi-name','hi-price','hi-qty','hi-desc'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  openModal('modal-haata');
+}
+
+async function postHaataItem() {
+  const name  = document.getElementById('hi-name')?.value.trim();
+  const price = document.getElementById('hi-price')?.value.trim();
+  const qty   = document.getElementById('hi-qty')?.value.trim();
+  if (!name || !price) { showToast('⚠️ Name and price required'); return; }
+  if (!isSundayHaataOpen()) { showToast('⚠️ Haata is now closed!'); return; }
+
+  const cfg = getPlansConfig();
+  const planCfg = cfg[currentUser?.plan||'Local Mini']||cfg['Local Mini'];
+  if (isSupabaseReady()) {
+    const today = new Date().toISOString().split('T')[0];
+    const { count } = await sb.from('listings').select('id',{count:'exact',head:true})
+      .eq('vendor_id',currentUser.id).eq('listing_type','haata').gte('created_at',today+'T00:00:00');
+    if ((count||0) >= (planCfg.items||5)) {
+      showToast(`⚠️ Plan limit: max ${planCfg.items} haata items today`); return;
+    }
+  }
+  const item = {
+    id:'HT-'+Date.now().toString().slice(-6),
+    vendor_id:currentUser.id, vendor_name:currentUser.name,
+    vendor_phone:currentUser.phone, vendor_district:currentUser.district,
+    vendor_plan:currentUser.plan||'Local Mini',
+    name, price, qty,
+    description:document.getElementById('hi-desc')?.value||'',
+    listing_type:'haata', status:'approved',
+    haata_date:new Date().toISOString().split('T')[0],
+    created_at:new Date().toISOString()
+  };
+  if (isSupabaseReady()) await sb.from('listings').insert([item]).catch(()=>{});
+  let ls = lsGet('pt_listings')||[]; ls.unshift(item); lsSet('pt_listings',ls);
+  closeModal('modal-haata');
+  showToast('✅ Posted to Sunday Haata! | ହଟରେ ପୋଷ୍ଟ ହୋଇଗଲା');
+  loadHaataListings();
+}
+
+// ── My Listings dashboard for vendor
+async function loadMyListings() {
+  const container = document.getElementById('my-listings-container');
+  if (!container || !currentUser) return;
+  container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Loading...</div>';
+  let listings = [];
+  if (isSupabaseReady()) {
+    const { data } = await sb.from('listings').select('*').eq('vendor_id',currentUser.id)
+      .neq('listing_type','haata').order('created_at',{ascending:false});
+    listings = data||[];
+  } else {
+    listings = (lsGet('pt_listings')||[]).filter(l=>l.vendor_id===currentUser.id&&l.listing_type!=='haata');
+  }
+  if (listings.length===0) {
+    container.innerHTML=`<div style="text-align:center;padding:30px"><div style="font-size:2rem;margin-bottom:10px">📦</div><div style="font-size:.82rem;color:var(--muted)">No listings yet.</div></div>`; return;
+  }
+  const sc={approved:'var(--green)',pending:'var(--gold)',rejected:'var(--red)'};
+  container.innerHTML=listings.map(l=>`
+    <div class="lc" style="margin-bottom:10px">
+      <div class="lc-row">
+        <div class="lc-img">${l.image_url?`<img src="${l.image_url}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`:'📦'}</div>
+        <div class="lc-info">
+          <h4>${l.name}</h4>
+          <div class="lc-sub">${l.price}</div>
+          <div class="lc-meta"><span style="font-size:.7rem;font-weight:700;color:${sc[l.status]||'var(--muted)'}">● ${(l.status||'pending').toUpperCase()}</span></div>
+        </div>
+      </div>
+      <div class="lc-actions">
+        <button class="bc" style="flex:1;background:#FFE8E8;color:#FF4444;border-color:#FFB3B3" onclick="deleteMyListing('${l.id}')">🗑️ Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+async function deleteMyListing(id) {
+  if (!confirm('Delete this listing?')) return;
+  if (isSupabaseReady()) await sb.from('listings').delete().eq('id',id).eq('vendor_id',currentUser.id);
+  lsSet('pt_listings',(lsGet('pt_listings')||[]).filter(l=>l.id!==id));
+  showToast('🗑️ Listing deleted');
+  loadMyListings();
+}
 
 function initHaataBanner() {
   const banner = document.getElementById('haata-banner');
@@ -2104,28 +2429,34 @@ async function loadHomeData() {
   if (workers.length > 0) {
     const hs = document.getElementById('workers-hs');
     if (hs.dataset.loaded) return;
-    // Clear demo hardcoded workers if real data found
-    hs.innerHTML = '';
+    hs.innerHTML = ''; // clear demo cards
+    // Hide demo Buy/Sell items too when real listings exist
+    if (workers.length > 0) {
+      const demoItems = document.getElementById('bs-demo-items');
+      if (demoItems) demoItems.style.display = 'none';
+    }
     workers.forEach(w => {
-      const rate = w.rate || '0';
-      const rateNum = parseInt(rate) || 0;
-      const rateDisplay = rateNum > 0 ? `₹${rateNum}/hr` : 'Rate on request';
+      const rate = parseInt(w.rate) || 0;
+      const rateDisplay = rate > 0 ? `₹${rate}/hr` : 'Rate on request';
+      const isAvail = w.available !== false;
       const div = document.createElement('div');
       div.className = 'wc';
       div.onclick = () => openBook(
         w.name, '👷',
-        (w.skill || 'Worker') + (w.exp ? ' • ' + w.exp + ' yrs exp' : ''),
-        `₹${rateNum}/hr`,
-        '⭐ ' + (w.rating || '4.5'),
-        w.district,
-        rateNum  // pass hourly rate for price calculation
+        (w.skill || 'Worker') + (w.exp ? ' • ' + w.exp + ' yrs' : ''),
+        `₹${rate}/hr`, '⭐ ' + (w.rating || '4.5'),
+        w.district, rate
       );
       div.innerHTML = `
-        <div class="wav">👷</div>
+        <div class="wav" style="position:relative">
+          ${w.avatar_url ? `<img src="${w.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : '👷'}
+          <div style="position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:${isAvail ? '#22c55e' : '#9ca3af'};border:2px solid #fff"></div>
+        </div>
         <h4>${w.name}</h4>
         <div class="wsk">${w.skill || 'Worker'}</div>
         <div class="wrt">⭐ ${w.rating || '4.5'} ${w.featured ? '🌟' : ''}</div>
-        <div class="wpr">${rateDisplay}</div>`;
+        <div class="wpr">${rateDisplay}</div>
+        <div style="font-size:.62rem;color:var(--muted)">📍 ${w.district || ''}</div>`;
       hs.appendChild(div);
     });
     hs.dataset.loaded = '1';
@@ -2175,7 +2506,7 @@ function loadProfileData() {
   document.getElementById('did-id').textContent = u.id;
   document.getElementById('did-name').textContent = u.name;
 
-  // Role line — show type-appropriate detail only
+  // Role line
   const roleDetail = u.type === 'worker'  ? (u.skill || 'Worker') :
                      u.type === 'vendor'  ? (u.biz_type || u.biz || u.shop || 'Vendor') :
                      u.type === 'vehicle' ? (u.vehicle_type || u.vtype || 'Vehicle Owner') :
@@ -2183,11 +2514,31 @@ function loadProfileData() {
   document.getElementById('did-role').textContent = u.type.charAt(0).toUpperCase() + u.type.slice(1) + (roleDetail ? ' • ' + roleDetail : '');
   document.getElementById('did-loc').textContent = '📍 ' + u.village + ', ' + u.district + ', Odisha';
 
+  // Footer stats on ID card
+  const didJobs = document.getElementById('did-jobs');
+  const didRatingFt = document.getElementById('did-rating-ft');
+  const didMemberSince = document.getElementById('did-member-since');
+  const year = (u.created_at || u.createdAt) ? new Date(u.created_at || u.createdAt).getFullYear() : new Date().getFullYear();
+  if (didJobs) didJobs.textContent = u.jobs || '0';
+  if (didRatingFt) didRatingFt.textContent = u.rating || '4.8';
+  if (didMemberSince) didMemberSince.textContent = `The Part-Timer's • Member since ${year}`;
+
+  // Legacy stat elements (still used by other parts)
   document.getElementById('stat-jobs').textContent = u.jobs || '0';
   document.getElementById('stat-rating').textContent = u.rating || '4.8';
-  document.getElementById('stat-member').textContent = (u.created_at||u.createdAt) ? new Date(u.created_at||u.createdAt).getFullYear() : new Date().getFullYear();
+  document.getElementById('stat-member').textContent = year;
 
-  // Skills tags — only relevant to user type
+  // Profile photo on ID card
+  const didAvatar = document.getElementById('did-avatar');
+  if (didAvatar) {
+    if (u.avatar_url) {
+      didAvatar.innerHTML = `<img src="${u.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    } else {
+      didAvatar.innerHTML = '👤';
+    }
+  }
+
+  // Skills tags
   const sk = document.getElementById('did-skills');
   sk.innerHTML = '';
   let tags = [];
@@ -2256,17 +2607,21 @@ async function saveProfile() {
   currentUser.phone    = document.getElementById('ep-phone').value.trim() || currentUser.phone;
   currentUser.village  = document.getElementById('ep-village').value.trim() || currentUser.village;
   currentUser.district = document.getElementById('ep-dist').value || currentUser.district;
-  currentUser.skill    = document.getElementById('ep-skill').value;
+  currentUser.skill    = document.getElementById('ep-skill')?.value || currentUser.skill;
   currentUser.rate     = document.getElementById('ep-rate-hr')?.value || document.getElementById('ep-rate')?.value || currentUser.rate;
-  currentUser.shop     = document.getElementById('ep-shop').value;
-  currentUser.bio      = document.getElementById('ep-bio').value;
+  currentUser.shop     = document.getElementById('ep-shop')?.value || currentUser.shop;
+  currentUser.bio      = document.getElementById('ep-bio')?.value || '';
+
+  // Availability toggle (workers/vehicles)
+  const availChk = document.getElementById('ep-available');
+  if (availChk) currentUser.available = availChk.checked;
 
   // UPI & payment
   const upiEl = document.getElementById('ep-upi') || document.getElementById('ep-vendor-upi');
   if (upiEl) currentUser.upi_id = upiEl.value.trim();
   const cashEl = document.getElementById('ep-cash');
   if (cashEl) currentUser.cash_accept = cashEl.value;
-  if (currentUser._upiQR) currentUser.upi_qr = currentUser._upiQR;
+  if (currentUser._upiQR)    currentUser.upi_qr = currentUser._upiQR;
   if (currentUser._vendorQR) currentUser.upi_qr = currentUser._vendorQR;
 
   // Addon roles from toggles
@@ -2276,8 +2631,8 @@ async function saveProfile() {
   const photoInput = document.getElementById('ep-photo');
   if (photoInput?.files?.[0]) {
     const file = photoInput.files[0];
-    if (file.size > 8 * 1024 * 1024) {
-      showToast('⚠️ Photo 8MB se bada hai');
+    if (file.size > 10 * 1024 * 1024) {
+      showToast('⚠️ Photo must be under 10MB');
     } else {
       // Always save base64 locally first (reliable)
       await new Promise(resolve => {
@@ -2314,11 +2669,20 @@ async function saveProfile() {
 
   if (isSupabaseReady()) {
     await sbUpdate('users', currentUser.id, {
-      name: currentUser.name, phone: currentUser.phone,
-      village: currentUser.village, district: currentUser.district,
-      skill: currentUser.skill, rate: currentUser.rate,
-      shop: currentUser.shop, bio: currentUser.bio,
-      avatar_url: currentUser.avatar_url || null
+      name:         currentUser.name,
+      phone:        currentUser.phone,
+      village:      currentUser.village,
+      district:     currentUser.district,
+      skill:        currentUser.skill || null,
+      rate:         currentUser.rate  || null,
+      shop:         currentUser.shop  || null,
+      bio:          currentUser.bio   || null,
+      available:    currentUser.available !== false,
+      upi_id:       currentUser.upi_id    || null,
+      upi_qr:       currentUser.upi_qr    || null,
+      cash_accept:  currentUser.cash_accept || 'both',
+      addon_roles:  currentUser.addon_roles || [],
+      avatar_url:   currentUser.avatar_url || null
     });
   }
 
@@ -2327,7 +2691,7 @@ async function saveProfile() {
   loadProfileData();
   updateAvatarDisplay();
   closeEditProfile();
-  showToast('✅ Profile updated!');
+  showToast('✅ Profile saved! | ପ୍ରୋଫାଇଲ ସଂରକ୍ଷିତ');
 }
 
 function updateAvatarDisplay() {
@@ -2345,24 +2709,41 @@ function openEditProfile() {
   document.getElementById('eov-profile').classList.add('on');
   const u = currentUser;
   if (!u) return;
+
   // Load avatar
   const preview = document.getElementById('ep-avatar-preview');
   if (u.avatar_url) preview.innerHTML = `<img src="${u.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:13px">`;
   else preview.innerHTML = '👤';
+
   // Load UPI
-  if (document.getElementById('ep-upi')) document.getElementById('ep-upi').value = u.upi_id || '';
-  if (document.getElementById('ep-cash')) document.getElementById('ep-cash').value = u.cash_accept || 'both';
+  if (document.getElementById('ep-upi'))        document.getElementById('ep-upi').value = u.upi_id || '';
+  if (document.getElementById('ep-cash'))       document.getElementById('ep-cash').value = u.cash_accept || 'both';
   if (document.getElementById('ep-vendor-upi')) document.getElementById('ep-vendor-upi').value = u.upi_id || '';
+
   // Load hourly rate
   if (document.getElementById('ep-rate-hr')) {
     document.getElementById('ep-rate-hr').value = u.rate || '';
     updateEpSlots();
   }
+
   // Load UPI QR preview
   if (u.upi_qr && document.getElementById('ep-upi-qr-img')) {
     document.getElementById('ep-upi-qr-img').src = u.upi_qr;
     document.getElementById('ep-upi-qr-preview').style.display = '';
   }
+
+  // Availability toggle — show only for workers & vehicles
+  const availRow = document.getElementById('ep-availability-row');
+  const availChk = document.getElementById('ep-available');
+  if (availRow && (u.type === 'worker' || u.type === 'vehicle')) {
+    availRow.style.display = '';
+    const isAvail = u.available !== false; // default true
+    if (availChk) availChk.checked = isAvail;
+    updateAvailLabel(isAvail);
+  } else if (availRow) {
+    availRow.style.display = 'none';
+  }
+
   // Render addon roles
   renderAddonRoles();
 }
@@ -2370,7 +2751,7 @@ function closeEditProfile() { document.getElementById('eov-profile').classList.r
 
 function previewProfilePhoto(input) {
   if (!input.files || !input.files[0]) return;
-  if (input.files[0].size > 8 * 1024 * 1024) { showToast('⚠️ Photo 8MB se bada hai — compress karke try karo'); input.value = ''; return; }
+  if (input.files[0].size > 10 * 1024 * 1024) { showToast('⚠️ Photo must be under 10MB | ଫଟୋ 10MB ରୁ କମ ହେବ'); input.value = ''; return; }
   const reader = new FileReader();
   reader.onload = e => {
     const preview = document.getElementById('ep-avatar-preview');
@@ -2409,51 +2790,173 @@ let orderPrice = 0;
 let orderQty = 1;
 let orderUnit = '';
 
-function openOrder(name, icon, price, unit) {
-  const p = parseInt(price.replace('₹','')) || 0;
-  orderPrice = p; orderQty = 1; orderUnit = unit;
-  document.getElementById('or-title').textContent = 'Order: ' + name;
-  document.getElementById('or-icon').textContent = icon;
-  document.getElementById('or-name').textContent = name;
-  document.getElementById('or-unit-label').textContent = 'per ' + unit;
-  document.getElementById('or-price-label').textContent = price + ' / ' + unit;
-  document.getElementById('qty-unit').textContent = unit;
-  document.getElementById('qty-disp').textContent = '1';
-  document.getElementById('or-total').textContent = price;
-  currentOrderItem = { name, icon, price: p, unit };
-  openModal('modal-order');
-}
-
 function changeQty(d) {
   orderQty = Math.max(1, orderQty + d);
   document.getElementById('qty-disp').textContent = orderQty;
   document.getElementById('or-total').textContent = '₹' + (orderPrice * orderQty);
 }
 
+function selectDelivery(el, method) {
+  document.querySelectorAll('.delivery-opt').forEach(d => {
+    d.style.background = 'var(--surf2)';
+    d.style.borderColor = 'var(--border)';
+    d.style.color = '';
+  });
+  el.style.background = 'var(--green-p)';
+  el.style.borderColor = 'var(--green)';
+  el.style.color = 'var(--green)';
+  document.getElementById('or-delivery-method').value = method;
+}
+
 async function confirmOrder() {
-  const addr = document.getElementById('or-addr').value.trim();
-  if (!addr) { showToast('⚠️ Enter delivery address'); return; }
+  const addr           = document.getElementById('or-addr').value.trim();
+  const deliveryMethod = document.getElementById('or-delivery-method')?.value || 'pickup';
+  if (!addr) { showToast('⚠️ Enter delivery address | ଠିକଣା ଦିଅନ୍ତୁ'); return; }
+
+  const deliveryLabels = { pickup:'Self Pickup', vendor:'Vendor Delivery', contact:'Direct Contact' };
   const order = {
     id: 'ORD-' + Date.now().toString().slice(-6),
-    user_id: currentUser?.id, user_name: currentUser?.name,
-    item: currentOrderItem?.name, icon: currentOrderItem?.icon,
-    qty: orderQty + ' ' + orderUnit,
-    total: '₹' + (orderPrice * orderQty),
-    address: addr, status: 'pending'
+    user_id:   currentUser?.id,
+    user_name: currentUser?.name,
+    user_phone: currentUser?.phone,
+    item:    currentOrderItem?.name,
+    icon:    currentOrderItem?.icon,
+    vendor_id:    currentOrderItem?.vendorId || '',
+    vendor_name:  currentOrderItem?.vendorName || '',
+    vendor_phone: currentOrderItem?.vendorPhone || '',
+    qty:     orderQty + ' ' + orderUnit,
+    total:   '₹' + (orderPrice * orderQty),
+    address: addr,
+    delivery_method: deliveryMethod,
+    status:  'pending',
+    created_at: new Date().toISOString()
   };
-  if (isSupabaseReady()) { await sbInsert('orders', order); }
-  // Local fallback
+
+  if (isSupabaseReady()) {
+    await sbInsert('orders', order);
+    // Notify vendor that someone ordered their product
+    if (order.vendor_name) {
+      await sb.from('notifications').insert([{
+        message: `New order from ${currentUser.name}: ${order.item} × ${order.qty} — ${deliveryLabels[deliveryMethod]}. Contact: ${currentUser.phone}`,
+        target: 'Vendors Only',
+        title: '🛒 New Order Received!',
+        type: 'order_received'
+      }]).catch(() => {});
+    }
+  }
   let orders = lsGet('pt_orders') || [];
-  orders.unshift({ ...order, type:'order', createdAt: new Date().toISOString() });
+  orders.unshift({ ...order, type:'order' });
   lsSet('pt_orders', orders);
+
+  // Update notification badge
+  const prev = lsGet('pt_unread_notifs') || 0;
+  updateNotifBadge(prev + 1);
+
   closeModal('modal-order');
-  showToast('✅ Order placed! ' + order.total);
+  showToast(`✅ Order placed! ${order.total} • ${deliveryLabels[deliveryMethod]} | ଅର୍ଡ଼ର ହୋଇଗଲା`);
+
   if (currentUser) {
     currentUser.jobs = (parseInt(currentUser.jobs)||0)+1;
     lsSet('pt_user', currentUser);
     if (isSupabaseReady()) await sbUpdate('users', currentUser.id, { jobs: currentUser.jobs });
   }
   loadOrders();
+}
+
+// ── Availability toggle label update
+function updateAvailLabel(checked) {
+  const label = document.getElementById('ep-avail-label');
+  const track = document.getElementById('ep-avail-track');
+  const knob  = document.getElementById('ep-avail-knob');
+  if (label) label.textContent = checked ? 'Available for work | ଉପଲ୍ଲବ୍ଧ' : 'Not available today | ଅନୁପଲ୍ଲବ୍ଧ';
+  if (track) track.style.background = checked ? 'var(--green)' : 'var(--border)';
+  if (knob)  knob.style.left = checked ? '27px' : '3px';
+}
+
+
+function openMyListings() {
+  hideAll();
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
+  document.getElementById('ap-mylistings')?.classList.remove('hidden');
+  // Update plan info bar
+  const cfg = getPlansConfig();
+  const plan = cfg[currentUser?.plan || 'Local Mini'] || cfg['Local Mini'];
+  const infoEl = document.getElementById('my-listings-plan-info');
+  if (infoEl) infoEl.textContent = `Plan: ${currentUser?.plan || 'Local Mini'} • Max ${plan.items} items • ${plan.km >= 999 ? 'Full Odisha' : plan.km + 'km'} reach`;
+  loadMyListings();
+}
+
+// ── Open order modal with vendor info stored for notification
+function openOrder(name, icon, price, unit, vendorId, vendorName, vendorPhone) {
+  const p = parseInt((price||'0').replace('₹','').replace(/[^0-9]/g,'')) || 0;
+  orderPrice = p; orderQty = 1; orderUnit = unit || 'unit';
+  currentOrderItem = { name, icon, vendorId: vendorId||'', vendorName: vendorName||'', vendorPhone: vendorPhone||'' };
+  document.getElementById('or-title').textContent = 'Order: ' + name;
+  document.getElementById('or-icon').textContent = icon;
+  document.getElementById('or-name').textContent = name;
+  document.getElementById('or-unit-label').textContent = 'per ' + unit;
+  document.getElementById('or-price-label').textContent = price + ' / ' + unit;
+  document.getElementById('or-total').textContent = price;
+  document.getElementById('qty-disp').textContent = '1';
+  document.getElementById('qty-unit').textContent = unit;
+  document.getElementById('or-addr').value = currentUser ? (currentUser.village + ', ' + currentUser.district) : '';
+  // Reset delivery method to pickup
+  document.querySelectorAll('.delivery-opt').forEach((d,i) => {
+    d.style.background = i===0?'var(--green-p)':'var(--surf2)';
+    d.style.borderColor = i===0?'var(--green)':'var(--border)';
+    d.style.color = i===0?'var(--green)':'';
+  });
+  document.getElementById('or-delivery-method').value = 'pickup';
+  openModal('modal-order');
+}
+
+// ── Mark order as received by customer
+async function markAsReceived(orderId) {
+  if (!confirm('Mark this order as received? | ଅର୍ଡ଼ର ପ୍ରାପ୍ତ ହୋଇଛି?')) return;
+  if (isSupabaseReady()) {
+    await sbUpdate('orders', orderId, { status: 'done' });
+    // Notify vendor
+    await sb.from('notifications').insert([{
+      message: `Customer confirmed receipt of order. Payment complete.`,
+      target: 'Vendors Only',
+      title: '✅ Order Delivered!',
+      type: 'order_delivered'
+    }]).catch(() => {});
+  }
+  let orders = lsGet('pt_orders') || [];
+  const o = orders.find(x => x.id === orderId);
+  if (o) { o.status = 'done'; lsSet('pt_orders', orders); }
+  showToast('✅ Order marked as received! | ଅର୍ଡ଼ର ପ୍ରାପ୍ତ ଚିହ୍ନିତ');
+  loadOrders();
+}
+
+// ── Open payment modal with REAL worker UPI fetched from Supabase
+async function openPaymentModal(worker) {
+  let realWorker = worker;
+  if (worker && !worker.upi_id && worker.name && isSupabaseReady()) {
+    try {
+      const { data } = await sb.from('users').select('name,phone,upi_id,upi_qr,cash_accept')
+        .ilike('name', worker.name).limit(1);
+      if (data?.[0]) realWorker = { ...worker, ...data[0] };
+    } catch(e) {}
+  }
+  const el = document.getElementById('modal-payment');
+  if (!el) return;
+  document.getElementById('pay-worker-name').textContent = realWorker.name || 'Service Provider';
+  const upiSec  = document.getElementById('pay-upi-section');
+  const cashSec = document.getElementById('pay-cash-section');
+  const upiIdEl = document.getElementById('pay-upi-id');
+  const upiQrEl = document.getElementById('pay-upi-qr');
+  if (realWorker.upi_id) {
+    if (upiSec)  upiSec.style.display = '';
+    if (upiIdEl) upiIdEl.textContent = realWorker.upi_id;
+    if (upiQrEl && realWorker.upi_qr) { upiQrEl.src = realWorker.upi_qr; upiQrEl.style.display = ''; }
+    else if (upiQrEl) upiQrEl.style.display = 'none';
+  } else {
+    if (upiSec) upiSec.style.display = 'none';
+  }
+  if (cashSec) cashSec.style.display = (realWorker.cash_accept || 'both') !== 'upi_only' ? '' : 'none';
+  openModal('modal-payment');
 }
 
 // FOOD CART
@@ -2654,7 +3157,7 @@ async function loadOrders() {
       </div>` : '';
     const resubmitBtn = isNeedsResubmit ? `
       <div style="background:#FFF4EC;border:1px solid var(--saffron);border-radius:10px;padding:10px;margin-top:8px">
-        <div style="font-size:.78rem;color:var(--saffron);font-weight:700;margin-bottom:6px">⚠️ 3 workers ne reject kiya — Dobara try karo</div>
+        <div style="font-size:.78rem;color:var(--saffron);font-weight:700;margin-bottom:6px">⚠️ 3 workers rejected. Please re-submit | ୩ ଜଣ ପ୍ରତ୍ୟାଖ୍ୟାନ — ପୁନଃ ଚେଷ୍ଟା</div>
         <button onclick="resubmitBooking('${o.id}')" style="background:var(--saffron);color:#fff;border:none;padding:7px 16px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">🔄 Re-submit Booking</button>
       </div>` : '';
     const rateBtn = o.status === 'done' ? `
@@ -2666,6 +3169,10 @@ async function loadOrders() {
     const safetyBtn = (o.status === 'confirmed' || o.status === 'in progress') && o.type === 'booking' && currentUser?.type === 'worker' ? `
       <button onclick="openSafetyModal('${o.id}','${o.item}','${o.date}','${o.time_slot||''}')"
         style="margin-top:8px;margin-left:6px;background:#FF6B00;color:#fff;border:none;padding:6px 14px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">🛡️ Safety Check-in</button>` : '';
+    const markReceivedBtn = (o.status === 'confirmed' || o.status === 'in progress') && o.type === 'order' ? `
+      <button onclick="markAsReceived('${o.id}')"
+        style="margin-top:8px;margin-left:6px;background:var(--green);color:#fff;border:none;padding:6px 14px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">✅ Mark as Received | ମିଳିଗଲା</button>` : '';
+    const deliveryInfo = o.delivery_method ? `<div style="font-size:.72rem;color:var(--muted);margin-top:3px">🚚 ${({'pickup':'Self Pickup','vendor':'Vendor Delivery','contact':'Direct Contact'})[o.delivery_method]||''}</div>` : '';
     return `<div class="order-item">
       <div class="order-hd">
         <h4>${o.icon} ${o.item}</h4>
@@ -2674,7 +3181,8 @@ async function loadOrders() {
       ${pipeline}
       ${resubmitBtn}
       <div class="order-det" style="margin-top:6px">📅 ${o.date} • 💰 ${o.total}${o.qty?' • Qty: '+o.qty:''}${o.loc?' • 📍 '+o.loc:''}</div>
-      <div>${rateBtn}${payBtn}${safetyBtn}</div>
+      ${deliveryInfo}
+      <div>${rateBtn}${payBtn}${safetyBtn}${markReceivedBtn}</div>
     </div>`;
   }).join('');
 }
@@ -2965,27 +3473,7 @@ function previewVendorQR(input) {
   reader.readAsDataURL(input.files[0]);
 }
 
-function openPaymentModal(worker) {
-  // worker = { name, upi_id, upi_qr, cash_accept }
-  document.getElementById('pay-worker-name').textContent = worker.name || 'Service Provider';
-  const upiId = worker.upi_id || worker.upiId || '';
-  const upiQR = worker.upi_qr || worker.upiQR || worker._upiQR || '';
-  const cashOk = worker.cash_accept || worker.cashAccept || 'both';
-
-  document.getElementById('pay-upi-id').textContent = upiId || 'UPI nahi diya';
-  const qrImg = document.getElementById('pay-qr-img');
-  const noQr  = document.getElementById('pay-no-qr');
-  if (upiQR) { qrImg.src = upiQR; qrImg.style.display = ''; noQr.style.display = 'none'; }
-  else { qrImg.style.display = 'none'; noQr.style.display = ''; }
-
-  const cashSec = document.getElementById('pay-cash-section');
-  cashSec.style.display = (cashOk === 'no') ? 'none' : '';
-  if (cashOk === 'yes') document.getElementById('pay-cash-status').textContent = 'Cash accepted hai';
-  else if (cashOk === 'both') document.getElementById('pay-cash-status').textContent = 'Cash + UPI dono accepted';
-
-  document.getElementById('pay-upi-section').style.display = upiId ? '' : 'none';
-  openModal('modal-payment');
-}
+// openPaymentModal — see async version above
 
 function copyUPI() {
   const upi = document.getElementById('pay-upi-id').textContent;
@@ -2997,7 +3485,7 @@ function copyUPI() {
 // ============================================================
 const ALL_ROLES = [
   { id:'worker',   label:'👷 Worker/Helper',    desc:'I provide labour services' },
-  { id:'vendor',   label:'🏪 Vendor/Seller',    desc:'Saman bechta/bechti hoon' },
+  { id:'vendor',   label:'🏪 Vendor/Seller',    desc:'I sell products or run a shop' },
   { id:'vehicle',  label:'🚜 Vehicle Owner',    desc:'I own a vehicle/tractor' },
   { id:'customer', label:'👤 Customer',         desc:'I book services' },
 ];
@@ -3047,17 +3535,17 @@ let currentRatingVal = 0;
 
 const RATING_LABELS = ['', 'Bahut bura', 'Theek nahi tha', 'Theek tha', 'Achha tha', 'Bahut achha!'];
 const RATING_TAGS = {
-  worker:   ['Samay pe aaya', 'Achha kaam', 'Polite tha', 'Late aaya', 'Kaam theek nahi tha', 'Saman khud laya'],
-  vendor:   ['Fresh product', 'Sahi price', 'Jaldi delivery', 'Quality kharab', 'Late delivery', 'Sahi weight'],
-  customer: ['Sahi payment kiya', 'Cooperative tha', 'Clear requirement', 'Late payment', 'Rude behaviour', 'Achha customer']
+  worker:   ['On time | ସময়ରେ', 'Good work | ଭଲ', 'Polite | ଭଦ୍ର', 'Skilled | ଦକ୍ଷ', 'Late | ଦେରୀ', 'Poor work | ଖରାପ'],
+  vendor:   ['Fresh product | ତଜା', 'Fair price | ସଠିକ ମୂଲ୍ୟ', 'Fast delivery | ଶୀଘ୍ର', 'Good quality | ଗୁଣ', 'Late | ଦେରୀ', 'Wrong item | ଭୁଲ'],
+  customer: ['Paid on time | ସମୟ', 'Cooperative | ସହଯୋଗ', 'Clear need | ସ୍ପଷ୍ଟ', 'Late payment | ଦେରୀ', 'Rude | ଅଭଦ୍ର', 'Good customer | ଭଲ']
 };
 
 function openRatingModal(bookingId, targetId, targetName, targetType, raterType) {
   currentRatingCtx = { bookingId, targetId, targetName, targetType, raterType };
   currentRatingVal = 0;
-  document.getElementById('rating-sub').textContent = `${targetName} ko rate karo`;
+  document.getElementById('rating-sub').textContent = `Rate ${targetName} | ରେଟ କରନ୍ତୁ`;
   document.getElementById('rating-target-info').textContent = `${targetType === 'worker' ? '👷' : targetType === 'vendor' ? '🏪' : '👤'} ${targetName}`;
-  document.getElementById('rating-label').textContent = 'Star tap karo';
+  document.getElementById('rating-label').textContent = 'Tap a star to rate | ତାରା ଟ୍ୟାପ';
   document.getElementById('rating-comment').value = '';
   // Reset stars
   document.querySelectorAll('#rating-stars span').forEach(s => { s.style.opacity = '.4'; s.style.transform = ''; });
@@ -3196,9 +3684,10 @@ async function confirmBook() {
   const prev = lsGet('pt_unread_notifs') || 0;
   updateNotifBadge(prev + 1);
 
-  // Show payment info
+  // Show payment info with real worker data
   const workerName = document.getElementById('bk-name').textContent;
   setTimeout(() => {
+    // Try to get worker from current page context
     openPaymentModal({ name: workerName, upi_id: '', upi_qr: '', cash_accept: 'both' });
   }, 800);
   loadOrders();
@@ -3471,19 +3960,21 @@ async function loadVendorListings() {
 
   // ── Filter by plan radius (district-based)
   const cfg = getPlansConfig();
-  const ODISHA_DISTRICTS = ['Khurda','Cuttack','Puri','Ganjam','Balasore','Mayurbhanj','Kendrapara','Jajpur','Bhadrak','Nayagarh','Bargarh','Koraput','Sundargarh','Sambalpur','Rayagada','Malkangiri','Kandhamal','Angul','Dhenkanal','Bolangir','Kalahandi','Jharsuguda','Keonjhar','Jagatsinghpur','Baudh','Sonepur','Deogarh','Nabarangpur','Gajapati','Nuapada'];
 
   function isInRadius(listing) {
     const planName = listing.vendor_plan || 'Local Mini';
     const km = (cfg[planName] || cfg['Local Mini']).km || 5;
     if (km >= 999) return true; // Full Odisha
-    if (km >= 15)  return true; // Block reach — show all (district-level approx)
-    if (km >= 10)  return listing.vendor_district === currentUser.district;
-    // 5km — same district only
-    return listing.vendor_district === currentUser.district;
+    if (km >= 15)  return true; // Block reach
+    // 5km or 10km — same district
+    return listing.vendor_district === currentUser.district ||
+           !listing.vendor_district; // if district not set, show anyway
   }
 
-  const filtered = listings.filter(isInRadius);
+  // Show listings from: active plans, free trial, AND no plan set (legacy data)
+  const filtered = listings.filter(l =>
+    isInRadius(l) && l.listing_type !== 'haata' // exclude haata listings
+  );
 
   if (filtered.length === 0) {
     container.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted)">📦 No listings near you yet.<br><small>Be the first vendor in your area!</small></div>';
@@ -3506,7 +3997,7 @@ async function loadVendorListings() {
       </div>
       <div class="lc-actions">
         <button class="bb" onclick="openOrder('${l.name}','🛒','${l.price}','unit')">🛒 ${l.listing_type==='For Rent'?'Rent':'Buy/Order'}</button>
-        <button class="bc" onclick="showToast('📞 Connecting to ${l.vendor_name||'vendor'}...')">📞 Call</button>
+        <button class="bc" onclick="callVendor('${l.vendor_phone||''}','${l.vendor_name||'Vendor'}')">📞 Call</button>
       </div>
     </div>`).join('');
 }
@@ -3688,6 +4179,8 @@ function tabSel(el, target) {
   const parent = el.closest('.ca') || el.closest('#ap-fish') || document.getElementById('ap-fish') || document.getElementById('ap-buysell');
   el.parentElement.querySelectorAll('.ti').forEach(t=>t.classList.remove('on'));
   el.classList.add('on');
+  // Haata tab — check open/closed state on click
+  if (target === 'bs-haata') setTimeout(initHaataTab, 50);
   showTab(target);
 }
 
@@ -3757,66 +4250,91 @@ async function shareProfile() {
   grad.addColorStop(0, c1);
   grad.addColorStop(1, c2);
   ctx.fillStyle = grad;
-  roundRect(ctx, 0, 0, 900, 90, [24, 24, 0, 0]);
+  roundRect(ctx, 0, 0, 900, 88, [24, 24, 0, 0]);
   ctx.fill();
 
-  // ── Header text
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 22px Arial';
-  ctx.fillText(hdTitle, logo ? 110 : 30, 52);
-  ctx.font = 'bold 18px Arial';
-  ctx.textAlign = 'right';
-  ctx.fillText(verified, 870, 52);
-  ctx.textAlign = 'left';
-
-  // ── Logo on header
+  // ── Logo box in header (separate, not overlapping text)
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  roundRect(ctx, 20, 18, 52, 52, 10);
+  ctx.fill();
   if (logo) {
     await new Promise(resolve => {
       const img = new Image();
-      img.onload = () => { ctx.drawImage(img, 24, 18, 60, 60); resolve(); };
+      img.onload = () => { ctx.drawImage(img, 22, 20, 48, 48); resolve(); };
       img.onerror = resolve;
       img.src = logo;
     });
   } else {
-    ctx.fillStyle = 'rgba(255,255,255,0.25)';
-    roundRect(ctx, 24, 18, 60, 60, 10);
-    ctx.fill();
-    ctx.fillStyle = '#fff';
-    ctx.font = '32px Arial';
-    ctx.fillText('🌾', 32, 62);
+    ctx.font = '28px Arial'; ctx.fillStyle = '#fff';
+    ctx.fillText('🌾', 28, 54);
   }
 
-  // ── User info section
-  ctx.fillStyle = '#888888';
-  ctx.font = '18px monospace';
-  ctx.fillText(u.id || 'PT-000000', 30, 130);
+  // ── Header title (starts AFTER logo box)
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = 'bold 20px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(hdTitle, 84, 48);
 
-  ctx.fillStyle = '#1A1A1A';
-  ctx.font = 'bold 42px Arial';
-  ctx.fillText(u.name || 'User Name', 30, 185);
+  // ── Verified badge (right)
+  ctx.font = 'bold 16px Arial';
+  ctx.textAlign = 'right';
+  ctx.fillText(verified, 878, 58);
+  ctx.textAlign = 'left';
 
-  ctx.fillStyle = accent;
-  ctx.font = 'bold 24px Arial';
-  ctx.fillText(roleText, 30, 220);
+  // ── Profile photo (circle, left side)
+  const photoX = 40, photoY = 108, photoR = 55;
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(photoX + photoR, photoY + photoR, photoR, 0, Math.PI * 2);
+  ctx.clip();
+  let photoLoaded = false;
+  if (u.avatar_url) {
+    await new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => { ctx.drawImage(img, photoX, photoY, photoR*2, photoR*2); photoLoaded = true; resolve(); };
+      img.onerror = resolve;
+      img.src = u.avatar_url;
+    });
+  }
+  if (!photoLoaded) {
+    ctx.fillStyle = accent + '22'; ctx.fillRect(photoX, photoY, photoR*2, photoR*2);
+    ctx.font = '50px Arial'; ctx.textAlign = 'center';
+    ctx.fillText('👤', photoX + photoR, photoY + photoR + 16);
+    ctx.textAlign = 'left';
+  }
+  ctx.restore();
+  // Circle border
+  ctx.strokeStyle = accent; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(photoX + photoR, photoY + photoR, photoR, 0, Math.PI * 2); ctx.stroke();
 
-  ctx.fillStyle = '#888888';
-  ctx.font = '20px Arial';
-  ctx.fillText('📍 ' + (u.village || '') + ', ' + (u.district || '') + ', Odisha', 30, 255);
+  // ── User info (right of photo)
+  const infoX = photoX + photoR * 2 + 20;
+  ctx.fillStyle = '#888888'; ctx.font = '16px monospace';
+  ctx.fillText(u.id || 'PT-000000', infoX, 130);
+
+  ctx.fillStyle = '#1A1A1A'; ctx.font = 'bold 40px Arial';
+  ctx.fillText(u.name || 'User Name', infoX, 178);
+
+  ctx.fillStyle = accent; ctx.font = 'bold 22px Arial';
+  ctx.fillText(roleText, infoX, 210);
+
+  ctx.fillStyle = '#666666'; ctx.font = '18px Arial';
+  ctx.fillText('📍 ' + (u.village || '') + ', ' + (u.district || '') + ', Odisha', infoX, 240);
 
   // ── Skill tags
   const tags = u.type === 'worker' ? [u.skill, u.exp ? u.exp + ' yrs exp' : ''].filter(Boolean) :
                u.type === 'vendor' ? [u.biz_type || u.shop].filter(Boolean) :
                u.type === 'vehicle' ? [u.vehicle_type, u.vehicle_num].filter(Boolean) : ['Customer'];
-  let tagX = 30;
-  ctx.font = 'bold 16px Arial';
+  let tagX = infoX;
+  ctx.font = 'bold 15px Arial';
   tags.forEach(tag => {
     if (!tag) return;
-    const tw = ctx.measureText(tag).width + 24;
+    const tw = ctx.measureText(tag).width + 22;
     ctx.fillStyle = accent + '22';
-    roundRect(ctx, tagX, 272, tw, 32, 16);
+    roundRect(ctx, tagX, 258, tw, 28, 14);
     ctx.fill();
     ctx.fillStyle = accent;
-    ctx.fillText(tag, tagX + 12, 293);
+    ctx.fillText(tag, tagX + 11, 277);
     tagX += tw + 8;
   });
 
@@ -3922,7 +4440,7 @@ function roundRect(ctx, x, y, w, h, r) {
 }
 
 function confirmLogout() {
-  if (confirm('Logout karna chahte hain? / Logout?')) {
+  if (confirm('Are you sure you want to logout? | ଲଗଆଉଟ କରିବେ?')) {
     if (realtimeSubscription) { sb.removeChannel(realtimeSubscription); realtimeSubscription = null; }
     localStorage.removeItem('pt_user');
     currentUser = null; cart = []; qrGenerated = false;
