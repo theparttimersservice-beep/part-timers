@@ -37,7 +37,7 @@
 body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
 /* LOADER */
-#loader{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#FF6B00,#D4A017,#1B6B3A);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s}
+#loader{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#FF6B00,#D4A017,#1B6B3A);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease}
 #loader h1{font-family:'Tiro Oriya',serif;font-size:2.6rem;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.3);animation:pulse 1.5s infinite}
 #loader p{color:rgba(255,255,255,.8);margin-top:8px;font-size:.95rem}
 .lbar{width:200px;height:4px;background:rgba(255,255,255,.3);border-radius:2px;margin-top:24px;overflow:hidden}
@@ -2100,26 +2100,26 @@ const TRANSLATIONS = {
 window.addEventListener('load', () => {
   applyPageContent();
 
+  const hideLo = () => {
+    const lo = document.getElementById('loader');
+    if (lo) { lo.style.opacity = '0'; lo.style.pointerEvents = 'none'; setTimeout(() => lo.style.display = 'none', 600); }
+  };
+
   setTimeout(() => {
-    document.getElementById('loader').style.opacity = '0';
-    setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+    hideLo();
     const saved = localStorage.getItem('pt_user');
     if (saved) {
       try {
         currentUser = JSON.parse(saved);
         launchApp();
       } catch(e) {
-        // Corrupted data — clear and show login
         localStorage.removeItem('pt_user');
-        document.getElementById('auth-section')?.classList.remove('hidden');
         showPg('pg-welcome');
       }
     } else {
-      // No user — show login/register screen
-      document.getElementById('auth-section')?.classList.remove('hidden');
       showPg('pg-welcome');
     }
-  }, 2400);
+  }, 1800);
 
   const today = new Date().toISOString().split('T')[0];
   const bkDate = document.getElementById('bk-date');
