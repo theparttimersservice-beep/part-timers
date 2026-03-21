@@ -244,6 +244,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="sn-label">Control</div>
       <div class="sn-item" data-pan="pagecontent" onclick="goPan('pagecontent')"><div class="ic">✏️</div><span>Page Content</span></div>
       <div class="sn-item" data-pan="iddesigner" onclick="goPan('iddesigner')"><div class="ic">🪪</div><span>ID Card Design</span></div>
+      <div class="sn-item" data-pan="routes" onclick="goPan('routes')"><div class="ic">🚌</div><span>Transport Routes</span></div>
       <div class="sn-item" data-pan="banners" onclick="goPan('banners')"><div class="ic">📢</div><span>Banners</span></div>
       <div class="sn-item" data-pan="settings" onclick="goPan('settings')"><div class="ic">⚙️</div><span>Settings</span></div>
     </div>
@@ -1016,6 +1017,93 @@ Disputes: Odisha Courts | ବିବାଦ: ଓଡ଼ିଶା ନ୍ୟାୟା
         </div>
       </div>
 
+      <!-- ══ TRANSPORT ROUTES ══ -->
+      <div id="panel-routes" class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div>
+            <div style="font-size:.82rem;font-weight:700">Manage bus, auto and sharing vehicle routes</div>
+            <div style="font-size:.72rem;color:var(--muted)">Only admin can add/edit/delete routes and stopages</div>
+          </div>
+          <button onclick="openAddRoute()" style="background:var(--saffron);border:none;color:#fff;padding:8px 16px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">+ Add Route</button>
+        </div>
+
+        <!-- Route list -->
+        <div id="routes-list">
+          <div style="text-align:center;padding:20px;color:var(--muted);font-size:.78rem">Loading routes...</div>
+        </div>
+
+        <!-- Add/Edit Route Form -->
+        <div id="route-form" style="display:none;background:var(--surf2);border-radius:14px;padding:16px;margin-top:16px;border:1px solid var(--border)">
+          <div style="font-weight:700;font-size:.9rem;margin-bottom:14px" id="rf-title">Add New Route</div>
+          <div class="mf"><label>Route Name</label><input type="text" id="rf-name" placeholder="e.g. Kendrapara → Bhubaneswar Express"></div>
+          <div class="dvr" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="mf"><label>Vehicle Type</label>
+              <select id="rf-vtype">
+                <option value="bus">🚌 Bus</option>
+                <option value="sharing_auto">🛺 Sharing Auto</option>
+                <option value="sharing_car">🚗 Sharing Car</option>
+              </select>
+            </div>
+            <div class="mf"><label>Total Seats</label><input type="number" id="rf-seats" value="20" min="1" max="60"></div>
+          </div>
+          <div class="dvr" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="mf"><label>Departure Time</label><input type="time" id="rf-time" value="06:00"></div>
+            <div class="mf"><label>Fare per segment (₹)</label><input type="number" id="rf-fare" value="40" min="1"></div>
+          </div>
+          <div class="mf"><label>Running Days</label>
+            <select id="rf-days">
+              <option value="daily">Daily</option>
+              <option value="mon-sat">Monday–Saturday</option>
+              <option value="weekdays">Weekdays only</option>
+              <option value="sun">Sundays only</option>
+            </select>
+          </div>
+          <div class="dvr" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="mf"><label>Driver Name</label><input type="text" id="rf-driver-name" placeholder="Driver's name"></div>
+            <div class="mf"><label>Driver Phone</label><input type="tel" id="rf-driver-phone" placeholder="Driver phone number"></div>
+          </div>
+
+          <!-- Stopages section -->
+          <div style="font-weight:700;font-size:.8rem;margin:14px 0 8px">🛑 Stopages (in order)</div>
+          <div id="rf-stops-list" style="margin-bottom:8px"></div>
+          <div style="display:flex;gap:8px;margin-bottom:14px">
+            <input type="text" id="rf-stop-name" placeholder="Stop name" style="flex:1">
+            <input type="time" id="rf-stop-time" value="06:00" style="width:110px">
+            <button onclick="addStopToForm()" style="background:var(--green);border:none;color:#fff;padding:8px 14px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">+ Add</button>
+          </div>
+
+          <div style="display:flex;gap:10px">
+            <button onclick="saveRoute()" style="flex:1;background:var(--saffron);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:800;cursor:pointer">💾 Save Route</button>
+            <button onclick="document.getElementById('route-form').style.display='none'" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px 16px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;cursor:pointer">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Transport T&C Editor -->
+        <div style="margin-top:20px">
+          <div style="font-weight:700;font-size:.85rem;margin-bottom:10px">📜 Transport Terms & Conditions</div>
+          <div class="set-card" style="margin-bottom:10px">
+            <h3>For Passengers</h3>
+            <textarea id="tr-passenger-tnc" style="width:100%;min-height:150px;padding:10px;border:1px solid var(--border);border-radius:8px;font-family:'Baloo 2',sans-serif;font-size:.78rem;background:var(--bg);color:var(--text);resize:vertical">Passenger Terms:
+1. Book seat only for confirmed travel
+2. Board on time — 15 min grace period
+3. No overloading or illegal items
+4. Pay fare directly to driver
+5. Governed by Motor Vehicles Act 1988</textarea>
+          </div>
+          <div class="set-card" style="margin-bottom:10px">
+            <h3>For Drivers / Vehicle Owners</h3>
+            <textarea id="tr-driver-tnc" style="width:100%;min-height:150px;padding:10px;border:1px solid var(--border);border-radius:8px;font-family:'Baloo 2',sans-serif;font-size:.78rem;background:var(--bg);color:var(--text);resize:vertical">Driver Terms:
+1. Valid licence, RC & insurance mandatory (MV Act)
+2. Shared route fares set by admin only
+3. Private booking rates self-decided but agreed upfront
+4. Treat passengers with respect
+5. Platform takes 0% commission
+6. Governed by Motor Vehicles Act 1988 & MSME Act 2006</textarea>
+          </div>
+          <button onclick="saveTransportTnC()" style="background:var(--saffron);border:none;color:#fff;padding:10px 20px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;cursor:pointer">💾 Save T&C</button>
+        </div>
+      </div>
+
       <!-- ══ BANNERS ══ -->
       <div id="panel-banners" class="panel">
         <div class="set-grid">
@@ -1391,6 +1479,7 @@ const panTitles = {
   revenue:'Revenue & Plans',analytics:'Analytics',
   planmgmt:'Plan Management',
   iddesigner:'Digital ID Card Designer',
+  routes:'Transport Routes Management',
   pagecontent:'Page Content Editor',
   banners:'Banners & Settings',settings:'Settings'
 };
@@ -1401,6 +1490,7 @@ const panSubs = {
   revenue:'Revenue from vendor plans',analytics:'Platform growth analytics',
   planmgmt:'Manage plan prices, area limits and listing counts',
   iddesigner:'Design the Digital ID card for all users',
+  routes:'Add, edit, delete bus and auto routes with stopages',
   pagecontent:'Edit every Odia/English text shown in the user app',
   banners:'Control app content',settings:'Admin configuration'
 };
@@ -1418,6 +1508,7 @@ function goPan(id) {
     listings: loadListingsTable, revenue: loadRevenue, analytics: loadAnalytics,
     planmgmt: loadPlansConfig,
     iddesigner: loadIDDesigner,
+    routes: loadRoutesPanel,
     pagecontent: () => { loadPageContent(); loadTnCContent(); }, settings: () => { loadSheetStatus(); loadSettings(); loadAppPaymentSettings(); }
   };
   loaders[id]?.();
@@ -2314,8 +2405,206 @@ function loadIDDesigner() {
   updateIDPreview();
 }
 
+// ════════════════════════════════════════════
+// TRANSPORT ROUTES MANAGEMENT
+// ════════════════════════════════════════════
+let editingRouteId = null;
+let rfStops = [];
+
+async function loadRoutesPanel() {
+  const el = document.getElementById('routes-list');
+  if (!el) return;
+  let routes = [];
+  if (isSbReady()) {
+    const { data } = await sb.from('routes').select('*').order('created_at', { ascending: false });
+    routes = data || [];
+  }
+  if (!routes.length) {
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:.78rem">No routes yet. Click "+ Add Route" to create one.</div>';
+    return;
+  }
+  const vIcons = { bus:'🚌', sharing_auto:'🛺', sharing_car:'🚗' };
+  el.innerHTML = routes.map(r => {
+    const stops = parseAdminStops(r.stops);
+    const stopNames = stops.map(s => s.name || s).join(' → ');
+    const statusCol = r.status === 'active' ? 'var(--green)' : 'var(--red)';
+    return `
+    <div style="background:var(--surf2);border-radius:10px;padding:13px;margin-bottom:10px;border:0.5px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div>
+          <div style="font-weight:700;font-size:.88rem">${vIcons[r.vehicle_type]||'🚌'} ${r.name}</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-top:2px">${stopNames}</div>
+          <div style="font-size:.72rem;color:var(--muted)">🕐 ${r.departure_time} • 💺 ${r.total_seats} seats • ₹${r.fare_per_segment}/seg</div>
+        </div>
+        <span style="font-size:.68rem;font-weight:700;color:${statusCol}">● ${r.status}</span>
+      </div>
+      <!-- Live stop update -->
+      <div style="background:var(--bg);border-radius:8px;padding:8px;margin-bottom:8px;font-size:.75rem">
+        <div style="font-weight:700;margin-bottom:5px">🔄 Update current stop:</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${stops.map((s,i) => `<button onclick="updateBusStop('${r.id}',${i},'${s.name||s}')" style="background:${i===(r.current_stop_index||0)?'var(--saffron)':'var(--surf2)'};color:${i===(r.current_stop_index||0)?'#fff':'var(--text)'};border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-family:'Baloo 2',sans-serif;font-weight:600;font-size:.7rem;cursor:pointer">${s.name||s}</button>`).join('')}
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="editRoute('${r.id}')" class="ab ab-view">✏️ Edit</button>
+        <button onclick="toggleRouteStatus('${r.id}','${r.status}')" class="ab ${r.status==='active'?'ab-block':'ab-approve'}">${r.status==='active'?'⏸ Suspend':'▶ Activate'}</button>
+        <button onclick="deleteRoute('${r.id}')" class="ab" style="background:rgba(255,68,68,.1);color:var(--red);border-color:rgba(255,68,68,.3)">🗑️ Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Load T&C
+  const ptc = localStorage.getItem('pt_transport_passenger_tnc');
+  const dtc = localStorage.getItem('pt_transport_driver_tnc');
+  if (ptc && document.getElementById('tr-passenger-tnc')) document.getElementById('tr-passenger-tnc').value = ptc;
+  if (dtc && document.getElementById('tr-driver-tnc')) document.getElementById('tr-driver-tnc').value = dtc;
+}
+
+function parseAdminStops(raw) {
+  if (Array.isArray(raw)) return raw;
+  try { return JSON.parse(raw); } catch { return []; }
+}
+
+function openAddRoute() {
+  editingRouteId = null; rfStops = [];
+  document.getElementById('rf-title').textContent = 'Add New Route';
+  ['rf-name','rf-driver-name','rf-driver-phone'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('rf-seats').value = '20';
+  document.getElementById('rf-fare').value  = '40';
+  document.getElementById('rf-time').value  = '06:00';
+  renderRfStops();
+  document.getElementById('route-form').style.display = '';
+  document.getElementById('route-form').scrollIntoView({ behavior:'smooth' });
+}
+
+function addStopToForm() {
+  const name = document.getElementById('rf-stop-name')?.value.trim();
+  const time = document.getElementById('rf-stop-time')?.value || '06:00';
+  if (!name) { toast('⚠️ Enter stop name'); return; }
+  rfStops.push({ name, time });
+  document.getElementById('rf-stop-name').value = '';
+  renderRfStops();
+}
+
+function renderRfStops() {
+  const el = document.getElementById('rf-stops-list');
+  if (!el) return;
+  if (!rfStops.length) { el.innerHTML = '<div style="font-size:.75rem;color:var(--muted);padding:6px 0">No stops added yet</div>'; return; }
+  el.innerHTML = rfStops.map((s,i) => `
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--border)">
+      <span style="font-size:.75rem;font-weight:700;color:var(--muted);width:20px">${i+1}</span>
+      <span style="flex:1;font-size:.8rem">${s.name}</span>
+      <span style="font-size:.75rem;color:var(--muted)">${s.time}</span>
+      <button onclick="rfStops.splice(${i},1);renderRfStops()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:.85rem">✕</button>
+    </div>`).join('');
+}
+
+async function saveRoute() {
+  const name  = document.getElementById('rf-name')?.value.trim();
+  const vtype = document.getElementById('rf-vtype')?.value;
+  const seats = parseInt(document.getElementById('rf-seats')?.value) || 20;
+  const fare  = parseFloat(document.getElementById('rf-fare')?.value) || 40;
+  const time  = document.getElementById('rf-time')?.value;
+  const days  = document.getElementById('rf-days')?.value;
+  const dname = document.getElementById('rf-driver-name')?.value.trim();
+  const dphone= document.getElementById('rf-driver-phone')?.value.trim();
+
+  if (!name || rfStops.length < 2) { toast('⚠️ Name and at least 2 stops required'); return; }
+
+  const payload = {
+    name, vehicle_type: vtype, stops: JSON.stringify(rfStops),
+    total_seats: seats, fare_per_segment: fare,
+    departure_time: time, running_days: days,
+    driver_name: dname, driver_phone: dphone,
+    current_stop_index: 0, status: 'active'
+  };
+
+  if (isSbReady()) {
+    if (editingRouteId) {
+      await sb.from('routes').update(payload).eq('id', editingRouteId);
+      toast('✅ Route updated!');
+    } else {
+      const { error } = await sb.from('routes').insert([payload]);
+      if (error) { toast('⚠️ Could not save: ' + error.message); return; }
+      toast('✅ Route added!');
+    }
+  }
+  document.getElementById('route-form').style.display = 'none';
+  loadRoutesPanel();
+}
+
+async function editRoute(id) {
+  let route = null;
+  if (isSbReady()) {
+    const { data } = await sb.from('routes').select('*').eq('id',id).single();
+    route = data;
+  }
+  if (!route) return;
+  editingRouteId = id;
+  rfStops = parseAdminStops(route.stops);
+  document.getElementById('rf-title').textContent = 'Edit Route';
+  document.getElementById('rf-name').value         = route.name;
+  document.getElementById('rf-vtype').value        = route.vehicle_type;
+  document.getElementById('rf-seats').value        = route.total_seats;
+  document.getElementById('rf-fare').value         = route.fare_per_segment;
+  document.getElementById('rf-time').value         = route.departure_time;
+  document.getElementById('rf-days').value         = route.running_days || 'daily';
+  document.getElementById('rf-driver-name').value  = route.driver_name || '';
+  document.getElementById('rf-driver-phone').value = route.driver_phone || '';
+  renderRfStops();
+  document.getElementById('route-form').style.display = '';
+  document.getElementById('route-form').scrollIntoView({ behavior:'smooth' });
+}
+
+async function toggleRouteStatus(id, current) {
+  const newStatus = current === 'active' ? 'inactive' : 'active';
+  if (isSbReady()) await sb.from('routes').update({ status: newStatus }).eq('id', id);
+  toast(`Route ${newStatus === 'active' ? 'activated' : 'suspended'}`);
+  loadRoutesPanel();
+}
+
+async function deleteRoute(id) {
+  if (!confirm('Delete this route? All future bookings will be affected.')) return;
+  if (isSbReady()) {
+    await sb.from('seat_bookings').delete().eq('route_id', id);
+    await sb.from('routes').delete().eq('id', id);
+  }
+  toast('🗑️ Route deleted');
+  loadRoutesPanel();
+}
+
+async function updateBusStop(routeId, stopIdx, stopName) {
+  if (isSbReady()) {
+    await sb.from('routes').update({ current_stop_index: stopIdx }).eq('id', routeId);
+    // Notify all passengers with bookings on this route today
+    const today = new Date().toISOString().split('T')[0];
+    const { data: bookings } = await sb.from('seat_bookings').select('passenger_name').eq('route_id', routeId).eq('journey_date', today).eq('status','confirmed');
+    if (bookings?.length) {
+      await sb.from('notifications').insert([{
+        message: `Bus has reached ${stopName} | ବସ ${stopName}ରେ ପହଞ୍ଚିଲା`,
+        target: 'All Users', title: `🚌 Bus Update`, type: 'bus_update'
+      }]).catch(() => {});
+    }
+  }
+  toast(`✅ Bus position updated: ${stopName}`);
+  loadRoutesPanel();
+}
+
+function saveTransportTnC() {
+  const ptc = document.getElementById('tr-passenger-tnc')?.value || '';
+  const dtc = document.getElementById('tr-driver-tnc')?.value || '';
+  localStorage.setItem('pt_transport_passenger_tnc', ptc);
+  localStorage.setItem('pt_transport_driver_tnc', dtc);
+  if (isSbReady()) {
+    sb.from('app_config').upsert({ key:'transport_passenger_tnc', value: ptc }).catch(()=>{});
+    sb.from('app_config').upsert({ key:'transport_driver_tnc', value: dtc }).catch(()=>{});
+  }
+  toast('✅ Transport T&C saved! Passengers and drivers will see these terms.');
+}
+
 function previewIDLogo(input) {
   if (!input.files?.[0]) return;
+  if (input.files[0].size > 2 * 1024 * 1024) { toast('⚠️ Logo must be under 2MB'); input.value = ''; return; }
   const reader = new FileReader();
   reader.onload = e => {
     document.getElementById('id-logo-preview').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:contain;border-radius:11px">`;
