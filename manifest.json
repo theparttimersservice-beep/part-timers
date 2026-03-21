@@ -1,0 +1,40 @@
+{
+  "name": "The Part-Timer's | ଦ ପାର୍ଟ-ଟାଇମର୍ସ",
+  "short_name": "Part-Timer's",
+  "description": "Rural Odisha services — workers, vendors, transport",
+  "start_url": "/part-timers/",
+  "scope": "/part-timers/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FF6B00",
+  "lang": "or",
+  "categories": ["business", "lifestyle", "utilities"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Book a Service",
+      "short_name": "Book",
+      "url": "/part-timers/?tab=farming",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Buy & Sell",
+      "short_name": "Market",
+      "url": "/part-timers/?tab=buysell",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Transport",
+      "short_name": "Transport",
+      "url": "/part-timers/?tab=transport",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ],
+  "prefer_related_applications": false
+}
