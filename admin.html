@@ -980,6 +980,29 @@ Disputes: Odisha Courts | ବିବାଦ: ଓଡ଼ିଶା ନ୍ୟାୟା
               </div>
             </div>
 
+            <!-- Profile Hero Background -->
+            <div class="set-card" style="margin-bottom:14px">
+              <h3>🌅 Profile Page Background</h3>
+              <p style="font-size:.72rem;color:var(--muted);margin-bottom:12px">Background image for profile hero section. Overlay transparency controls how much color shows over image.</p>
+              <div id="prof-hero-img-preview" style="display:none;margin-bottom:10px;border-radius:8px;overflow:hidden;height:80px;background-size:cover;background-position:center"></div>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;background:var(--surf2);border:1px dashed var(--border);border-radius:9px;padding:10px;margin-bottom:10px">
+                <span style="font-size:1.2rem">🖼️</span>
+                <span style="font-size:.78rem;color:var(--muted)" id="prof-bg-label">Upload background image (JPG/PNG)</span>
+                <input type="file" id="prof-hero-upload" accept="image/*" style="display:none" onchange="previewProfHeroBg(this)">
+              </label>
+              <div class="mf"><label>Overlay Color 1 (left)</label>
+                <input type="color" id="prof-overlay-c1" value="#FF6B00" oninput="updateProfHeroPreview()" style="width:48%;height:32px;border-radius:6px;border:1px solid var(--border);cursor:pointer">
+                <input type="color" id="prof-overlay-c2" value="#D4A017" oninput="updateProfHeroPreview()" style="width:48%;height:32px;border-radius:6px;border:1px solid var(--border);cursor:pointer;margin-left:2%">
+              </div>
+              <div class="mf"><label>Overlay Transparency (0 = full color, 100 = full image)</label>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <input type="range" id="prof-overlay-opacity" min="0" max="100" value="85" oninput="document.getElementById('prof-opacity-val').textContent=this.value+'%';updateProfHeroPreview()" style="flex:1">
+                  <span id="prof-opacity-val" style="font-size:.78rem;font-weight:700;min-width:36px">85%</span>
+                </div>
+              </div>
+              <button onclick="saveProfHeroBg()" style="background:var(--saffron);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;width:100%">💾 Save Profile Background</button>
+            </div>
+
             <div style="display:flex;gap:10px">
               <button onclick="saveIDDesign()" style="flex:1;background:var(--saffron);border:none;color:#fff;padding:11px;border-radius:9px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.85rem;cursor:pointer">💾 Save Design</button>
               <button onclick="resetIDDesign()" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:11px 16px;border-radius:9px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">↺ Reset</button>
@@ -1288,6 +1311,44 @@ Disputes: Odisha Courts | ବିବାଦ: ଓଡ଼ିଶା ନ୍ୟାୟା
             <div style="margin-top:14px;display:flex;gap:10px">
               <button onclick="saveBranding()" style="background:var(--saffron);border:none;color:#fff;padding:9px 20px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">💾 Save Branding</button>
               <button onclick="resetBranding()" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 20px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">↺ Reset to Default</button>
+            </div>
+          </div>
+
+          <!-- PROFILE BACKGROUND & ID CARD HEADER IMAGE -->
+          <div class="set-card" style="grid-column:1/-1">
+            <h3>🖼️ Profile & ID Card Background Images</h3>
+            <p style="font-size:.74rem;color:var(--muted);margin-bottom:14px">Set background image for profile hero banner and Digital ID card header. Overlay transparency is adjustable.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <!-- Profile Hero BG -->
+              <div>
+                <div style="font-size:.78rem;font-weight:700;margin-bottom:8px">👤 Profile Hero Background</div>
+                <div id="prof-bg-preview" style="height:80px;border-radius:10px;background:linear-gradient(135deg,#FF6B00,#D4A017);margin-bottom:8px;background-size:cover;background-position:center;border:1px solid var(--border)"></div>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;background:var(--surf2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-bottom:8px">
+                  <span>🖼️</span><span style="font-size:.75rem" id="prof-bg-label">Upload background image</span>
+                  <input type="file" id="prof-bg-img" accept="image/*" style="display:none" onchange="previewProfileBg(this)">
+                </label>
+                <div class="mf" style="margin-bottom:6px">
+                  <label style="font-size:.72rem">Overlay opacity (0=transparent, 1=solid color)</label>
+                  <input type="range" id="prof-overlay-opacity" min="0" max="1" step="0.05" value="0.75" oninput="updateProfileBgPreview()" style="width:100%">
+                  <span id="prof-opacity-val" style="font-size:.72rem;color:var(--muted)">0.75</span>
+                </div>
+                <button onclick="saveProfileBg()" style="background:var(--saffron);border:none;color:#fff;padding:8px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer;width:100%">💾 Save Profile BG</button>
+              </div>
+              <!-- Digital ID Header BG -->
+              <div>
+                <div style="font-size:.78rem;font-weight:700;margin-bottom:8px">🪪 Digital ID Header Background</div>
+                <div id="did-bg-preview" style="height:80px;border-radius:10px;background:linear-gradient(90deg,#FF6B00,#D4A017);margin-bottom:8px;background-size:cover;background-position:center;border:1px solid var(--border)"></div>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;background:var(--surf2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-bottom:8px">
+                  <span>🖼️</span><span style="font-size:.75rem" id="did-bg-label">Upload ID header image</span>
+                  <input type="file" id="did-bg-img" accept="image/*" style="display:none" onchange="previewDIDBg(this)">
+                </label>
+                <div class="mf" style="margin-bottom:6px">
+                  <label style="font-size:.72rem">Overlay opacity</label>
+                  <input type="range" id="did-overlay-opacity" min="0" max="1" step="0.05" value="0.6" oninput="updateDIDBgPreview()" style="width:100%">
+                  <span id="did-opacity-val" style="font-size:.72rem;color:var(--muted)">0.60</span>
+                </div>
+                <button onclick="saveDIDBg()" style="background:var(--sky);border:none;color:#fff;padding:8px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer;width:100%">💾 Save ID Header BG</button>
+              </div>
             </div>
           </div>
 
@@ -2497,6 +2558,7 @@ function loadIDDesigner() {
     document.getElementById('id-logo-preview').innerHTML = `<img src="${d.logo}" style="width:100%;height:100%;object-fit:contain;border-radius:11px">`;
     document.getElementById('prev-logo').innerHTML = `<img src="${d.logo}" style="width:100%;height:100%;object-fit:contain;border-radius:5px">`;
   }
+  loadProfHeroBgSettings();
   updateIDPreview();
 }
 
@@ -2912,6 +2974,86 @@ function toggleVerifyModal() {
   if (selectedUID) toggleVerify(selectedUID, false);
 }
 
+// ════════════════════════════════════════════
+// PROFILE BG & DIGITAL ID HEADER BG
+// ════════════════════════════════════════════
+function previewProfileBg(input) {
+  if (!input.files?.[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('prof-bg-label').textContent = '✅ ' + input.files[0].name;
+    document.getElementById('prof-bg-preview').style.backgroundImage = `url(${e.target.result})`;
+    window._profBgData = e.target.result;
+    updateProfileBgPreview();
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function updateProfileBgPreview() {
+  const op = parseFloat(document.getElementById('prof-overlay-opacity')?.value || 0.75);
+  document.getElementById('prof-opacity-val').textContent = op.toFixed(2);
+  const prev = document.getElementById('prof-bg-preview');
+  if (window._profBgData) prev.style.backgroundImage = `url(${window._profBgData})`;
+}
+
+function saveProfileBg() {
+  const op = parseFloat(document.getElementById('prof-overlay-opacity')?.value || 0.75);
+  const cfg = { opacity: op, image: window._profBgData || null };
+  localStorage.setItem('pt_prof_bg', JSON.stringify(cfg));
+  if (isSbReady()) sb.from('app_config').upsert({ key:'prof_bg', value: JSON.stringify(cfg) }).catch(() => {});
+  toast('✅ Profile background saved! Users will see it on their profile.');
+}
+
+function previewDIDBg(input) {
+  if (!input.files?.[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('did-bg-label').textContent = '✅ ' + input.files[0].name;
+    document.getElementById('did-bg-preview').style.backgroundImage = `url(${e.target.result})`;
+    window._didBgData = e.target.result;
+    updateDIDBgPreview();
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function updateDIDBgPreview() {
+  const op = parseFloat(document.getElementById('did-overlay-opacity')?.value || 0.6);
+  document.getElementById('did-opacity-val').textContent = op.toFixed(2);
+  const prev = document.getElementById('did-bg-preview');
+  if (window._didBgData) prev.style.backgroundImage = `url(${window._didBgData})`;
+}
+
+function saveDIDBg() {
+  const op = parseFloat(document.getElementById('did-overlay-opacity')?.value || 0.6);
+  const cfg = { opacity: op, image: window._didBgData || null };
+  localStorage.setItem('pt_did_bg', JSON.stringify(cfg));
+  if (isSbReady()) sb.from('app_config').upsert({ key:'did_bg', value: JSON.stringify(cfg) }).catch(() => {});
+  toast('✅ Digital ID header background saved!');
+}
+
+function loadBgSettings() {
+  const profCfg = JSON.parse(localStorage.getItem('pt_prof_bg') || '{}');
+  const didCfg  = JSON.parse(localStorage.getItem('pt_did_bg') || '{}');
+  if (profCfg.image) {
+    window._profBgData = profCfg.image;
+    document.getElementById('prof-bg-preview').style.backgroundImage = `url(${profCfg.image})`;
+    document.getElementById('prof-bg-label').textContent = '✅ Background set';
+  }
+  if (profCfg.opacity !== undefined) {
+    document.getElementById('prof-overlay-opacity').value = profCfg.opacity;
+    document.getElementById('prof-opacity-val').textContent = parseFloat(profCfg.opacity).toFixed(2);
+  }
+  if (didCfg.image) {
+    window._didBgData = didCfg.image;
+    document.getElementById('did-bg-preview').style.backgroundImage = `url(${didCfg.image})`;
+    document.getElementById('did-bg-label').textContent = '✅ Background set';
+  }
+  if (didCfg.opacity !== undefined) {
+    document.getElementById('did-overlay-opacity').value = didCfg.opacity;
+    document.getElementById('did-opacity-val').textContent = parseFloat(didCfg.opacity).toFixed(2);
+  }
+}
+
 function previewIDLogo(input) {
   if (!input.files?.[0]) return;
   if (input.files[0].size > 2 * 1024 * 1024) { toast('⚠️ Logo must be under 2MB'); input.value = ''; return; }
@@ -2957,6 +3099,62 @@ function updateIDPreview() {
 document.addEventListener('input', e => {
   if (e.target?.id?.startsWith('id-')) updateIDPreview();
 });
+
+// ════════════════════════════════════════════
+// PROFILE HERO BACKGROUND
+// ════════════════════════════════════════════
+function previewProfHeroBg(input) {
+  if (!input.files?.[0]) return;
+  if (input.files[0].size > 3 * 1024 * 1024) { toast('⚠️ Image must be under 3MB'); input.value=''; return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const src = e.target.result;
+    const prev = document.getElementById('prof-hero-img-preview');
+    if (prev) { prev.style.backgroundImage = `url(${src})`; prev.style.display=''; }
+    document.getElementById('prof-bg-label').textContent = '✅ ' + input.files[0].name;
+    localStorage.setItem('pt_prof_hero_img', src);
+    updateProfHeroPreview();
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function updateProfHeroPreview() {
+  const c1  = document.getElementById('prof-overlay-c1')?.value || '#FF6B00';
+  const c2  = document.getElementById('prof-overlay-c2')?.value || '#D4A017';
+  const op  = (document.getElementById('prof-overlay-opacity')?.value || 85) / 100;
+  const prev = document.getElementById('prof-hero-img-preview');
+  if (prev && prev.style.backgroundImage) {
+    prev.style.background = `linear-gradient(135deg,${c1}${Math.round(op*255).toString(16).padStart(2,'0')},${c2}${Math.round(op*255).toString(16).padStart(2,'0')}), ${prev.style.backgroundImage.replace('none','')}`
+  }
+}
+
+function saveProfHeroBg() {
+  const c1  = document.getElementById('prof-overlay-c1')?.value || '#FF6B00';
+  const c2  = document.getElementById('prof-overlay-c2')?.value || '#D4A017';
+  const op  = (document.getElementById('prof-overlay-opacity')?.value || 85) / 100;
+  const img = localStorage.getItem('pt_prof_hero_img') || '';
+  const cfg = { c1, c2, opacity: op, img };
+  localStorage.setItem('pt_prof_hero_cfg', JSON.stringify(cfg));
+  if (isSbReady()) sb.from('app_config').upsert({ key:'prof_hero_cfg', value: JSON.stringify({ c1, c2, opacity: op }) }).catch(() => {});
+  toast('✅ Profile background saved! Users will see it on their profile.');
+}
+
+function loadProfHeroBgSettings() {
+  const cfg = JSON.parse(localStorage.getItem('pt_prof_hero_cfg') || '{}');
+  if (cfg.c1) document.getElementById('prof-overlay-c1').value = cfg.c1;
+  if (cfg.c2) document.getElementById('prof-overlay-c2').value = cfg.c2;
+  if (cfg.opacity !== undefined) {
+    const pct = Math.round(cfg.opacity * 100);
+    document.getElementById('prof-overlay-opacity').value = pct;
+    document.getElementById('prof-opacity-val').textContent = pct + '%';
+  }
+  const img = localStorage.getItem('pt_prof_hero_img');
+  if (img) {
+    const prev = document.getElementById('prof-hero-img-preview');
+    if (prev) { prev.style.backgroundImage = `url(${img})`; prev.style.display=''; }
+    document.getElementById('prof-bg-label').textContent = '✅ Background image loaded';
+  }
+}
 
 function saveIDDesign() {
   const design = {
@@ -3431,6 +3629,7 @@ function loadSettings() {
   if (contact.address)  document.getElementById('set-address').value = contact.address;
   if (contact.grievanceName  && document.getElementById('set-grievance-name'))  document.getElementById('set-grievance-name').value  = contact.grievanceName;
   if (contact.grievanceEmail && document.getElementById('set-grievance-email')) document.getElementById('set-grievance-email').value = contact.grievanceEmail;
+  loadBgSettings();
 }
 
 function loadSheetStatus() {
