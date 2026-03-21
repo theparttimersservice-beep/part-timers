@@ -2053,12 +2053,21 @@ async function toggleBlock(id) {
   const newStatus = u.status==='blocked' ? 'active' : 'blocked';
   if (isSbReady()) {
     await sbUpdate('users', id, { status: newStatus });
+    // Send notification to user
+    const msg = newStatus === 'blocked'
+      ? 'Your account has been suspended. Contact admin for details.'
+      : 'Your account has been reactivated. Welcome back!';
+    await sb.from('notifications').insert([{
+      message: msg, target: 'All Users',
+      title: newStatus === 'blocked' ? '🚫 Account Suspended' : '✅ Account Reactivated',
+      type: 'account_status'
+    }]).catch(() => {});
   } else {
     u.status = newStatus;
     await saveUsers(users);
   }
   loadUsersTable(); loadWorkersTable(); loadVendorsTable(); loadVehiclesTable(); loadDashboard();
-  toast((newStatus==='blocked'?'🚫 User blocked: ':'✅ User unblocked: ') + u.name);
+  toast((newStatus==='blocked' ? '🚫 User blocked: ' : '✅ User unblocked: ') + u.name);
 }
 
 async function deleteUser(id) {
@@ -2671,7 +2680,7 @@ function loadAppPaymentSettings() {
 
 function previewLogo(input) {
   if (!input.files?.[0]) return;
-  if (input.files[0].size > 2 * 1024 * 1024) { toast('⚠️ Logo must be under 2MB'); input.value = ''; return; }
+  if (input.files[0].size > 5 * 1024 * 1024) { toast('⚠️ Logo must be under 5MB'); input.value = ''; return; }
   const reader = new FileReader();
   reader.onload = e => {
     const logoSrc = e.target.result;
