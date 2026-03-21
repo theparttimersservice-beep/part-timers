@@ -2098,7 +2098,6 @@ const TRANSLATIONS = {
 // INIT
 // ============================================================
 window.addEventListener('load', () => {
-  // Apply any page content edits saved by admin
   applyPageContent();
 
   setTimeout(() => {
@@ -2106,12 +2105,22 @@ window.addEventListener('load', () => {
     setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
     const saved = localStorage.getItem('pt_user');
     if (saved) {
-      currentUser = JSON.parse(saved);
-      launchApp();
+      try {
+        currentUser = JSON.parse(saved);
+        launchApp();
+      } catch(e) {
+        // Corrupted data — clear and show login
+        localStorage.removeItem('pt_user');
+        document.getElementById('auth-section')?.classList.remove('hidden');
+        showPg('pg-welcome');
+      }
+    } else {
+      // No user — show login/register screen
+      document.getElementById('auth-section')?.classList.remove('hidden');
+      showPg('pg-welcome');
     }
   }, 2400);
 
-  // Set today as default booking date
   const today = new Date().toISOString().split('T')[0];
   const bkDate = document.getElementById('bk-date');
   if (bkDate) bkDate.value = today;
