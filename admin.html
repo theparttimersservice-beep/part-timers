@@ -541,6 +541,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
           <button class="pc-tab" onclick="pcTab(this,'pc-plans')">💎 Plans</button>
           <button class="pc-tab" onclick="pcTab(this,'pc-misc')">🌐 App-wide</button>
           <button class="pc-tab" onclick="pcTab(this,'pc-tnc')">📋 Terms & Conditions</button>
+          <button class="pc-tab" onclick="pcTab(this,'pc-privacy')">🔒 Privacy Policy</button>
         </div>
 
         <!-- HOME TAB -->
@@ -906,6 +907,18 @@ Disputes: Odisha Courts | ବିବାଦ: ଓଡ଼ିଶା ନ୍ୟାୟା
           <button onclick="saveTnCContent()" style="background:var(--saffron);border:none;color:#fff;padding:11px;border-radius:9px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.85rem;cursor:pointer;width:100%;margin-top:4px">💾 Save Terms & Conditions</button>
         </div>
 
+        <!-- PRIVACY POLICY EDITOR -->
+        <div id="pc-privacy" class="pc-panel hidden">
+          <div style="background:var(--surf2);border-radius:10px;padding:12px;margin-bottom:14px;font-size:.75rem;color:var(--muted)">
+            🔒 Edit Privacy Policy — shown to users in Profile → Privacy Policy. Required by IT Act 2000 + DPDP Act 2023.
+          </div>
+          <div class="pc-section">
+            <div class="pc-sec-title">Full Privacy Policy Text</div>
+            <textarea id="ct-privacy" style="width:100%;padding:11px;border:1.5px solid var(--border);border-radius:8px;font-family:'Baloo 2',sans-serif;font-size:.78rem;color:var(--text);background:var(--bg);min-height:300px;resize:vertical"><strong>1. Information We Collect</strong><br>We collect your name, mobile number, village/district, and profile photo when you register. We also collect your location (only when you give permission) to show nearby services.<br><br><strong>2. How We Use Your Data</strong><br>Your information is used only to connect you with other users on this platform. We do not sell your data to any third party.<br><br><strong>3. Data Storage</strong><br>Your data is stored securely on Supabase cloud servers. Data is encrypted in transit (HTTPS).<br><br><strong>4. Your Rights (DPDP Act 2023)</strong><br>You have the right to access, correct, and delete your data at any time. Contact our Grievance Officer to delete your account.<br><br><strong>5. Location Data</strong><br>Location is used only when you tap the 📍 button to auto-fill your address. We do not track your location in the background.<br><br><strong>6. Third Party Services</strong><br>We use Supabase for data storage and GitHub Pages for hosting. Payment happens directly between users — we do not process any payments.<br><br><strong>7. Contact</strong><br>For any privacy concerns, contact our Grievance Officer via the Help & Grievance section in the app.</textarea>
+          </div>
+          <button onclick="savePrivacyPolicy()" style="background:var(--sky);border:none;color:#fff;padding:11px;border-radius:9px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.85rem;cursor:pointer;width:100%;margin-top:4px">💾 Save Privacy Policy</button>
+        </div>
+
         <!-- SAVE BAR -->
         <div style="position:sticky;bottom:0;background:var(--bg);padding:14px 0 4px;border-top:1px solid var(--border);margin-top:20px;display:flex;gap:10px;align-items:center">
           <button onclick="saveAllContent()" style="background:var(--saffron);border:none;color:#fff;padding:11px 28px;border-radius:10px;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:.88rem;cursor:pointer;flex:1">💾 Save All Changes to App</button>
@@ -1224,9 +1237,14 @@ Disputes: Odisha Courts | ବିବାଦ: ଓଡ଼ିଶା ନ୍ୟାୟା
             <h3>📞 Contact & Support</h3>
             <div class="mf"><label>Support Phone</label><input type="tel" id="set-phone" placeholder="e.g. 9876543210"></div>
             <div class="mf"><label>WhatsApp Number</label><input type="tel" id="set-whatsapp" placeholder="91XXXXXXXXXX"></div>
-            <div class="mf"><label>Admin Email</label><input type="email" id="set-email" placeholder="admin@example.com"></div>
+            <div class="mf"><label>Support Email</label><input type="email" id="set-email" placeholder="support@theparttimers.in"></div>
             <div class="mf"><label>Office Address</label><textarea id="set-address" style="width:100%;padding:9px;background:var(--surf2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Baloo 2',sans-serif;font-size:.82rem;min-height:60px;resize:vertical" placeholder="Office address..."></textarea></div>
-            <button onclick="saveContact()" style="background:var(--green);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;width:100%">💾 Save Contact</button>
+            <div style="background:var(--saffron-p);border-radius:10px;padding:12px;margin-bottom:12px">
+              <div style="font-size:.78rem;font-weight:700;margin-bottom:8px">🧑‍💼 Grievance Officer — Required by IT Rules 2021</div>
+              <div class="mf" style="margin-bottom:8px"><label style="font-size:.72rem">Officer Name</label><input type="text" id="set-grievance-name" placeholder="e.g. Ramesh Kumar (Admin)"></div>
+              <div class="mf" style="margin-bottom:0"><label style="font-size:.72rem">Officer Email (shown to users)</label><input type="email" id="set-grievance-email" placeholder="grievance@theparttimers.in"></div>
+            </div>
+            <button onclick="saveContact()" style="background:var(--green);border:none;color:#fff;padding:9px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;width:100%">💾 Save Contact & Grievance Officer</button>
           </div>
 
           <!-- APP PAYMENT UPI -->
@@ -2330,11 +2348,12 @@ function pcTab(btn, panId) {
 
 function loadPageContent() {
   const saved = JSON.parse(localStorage.getItem('pt_page_content') || '{}');
-  // For each saved key, populate the matching input field
   Object.entries(saved).forEach(([id, val]) => {
     const el = document.getElementById(id);
     if (el) el.value = val;
   });
+  loadTnCContent();
+  loadPrivacyPolicy();
 }
 
 function saveAllContent() {
@@ -2766,7 +2785,7 @@ function saveTnCContent() {
   if (isSbReady()) {
     sb.from('app_config').upsert({ key: 'tnc_content', value: JSON.stringify(tnc) }).then(() => {});
   }
-  toast('✅ Terms & Conditions saved! App mein reflect ho gaya.');
+  toast('✅ Terms & Conditions saved!');
 }
 
 function loadTnCContent() {
@@ -2775,6 +2794,23 @@ function loadTnCContent() {
     const el = document.getElementById('ct-tnc-' + i);
     if (el && saved['section_' + i]) el.value = saved['section_' + i];
   }
+}
+
+function savePrivacyPolicy() {
+  const el = document.getElementById('ct-privacy');
+  if (!el) return;
+  const val = el.value;
+  localStorage.setItem('pt_privacy_policy', val);
+  if (isSbReady()) {
+    sb.from('app_config').upsert({ key: 'privacy_policy', value: val }).then(() => {});
+  }
+  toast('✅ Privacy Policy saved! Users will see updated policy.');
+}
+
+function loadPrivacyPolicy() {
+  const saved = localStorage.getItem('pt_privacy_policy');
+  const el = document.getElementById('ct-privacy');
+  if (el && saved) el.value = saved;
 }
 
 function saveBanners() {
@@ -2820,6 +2856,7 @@ async function sendNotif() {
   document.getElementById('notif-msg').value = '';
   toast('📤 Notification sent to: ' + target);
 }
+const sendBroadcast = sendNotif; // alias for feature check
 
 // ════════════════════════════════════════════
 // SETTINGS
@@ -3050,18 +3087,26 @@ function saveAppInfo() {
 
 function saveContact() {
   const contact = {
-    phone:    document.getElementById('set-phone')?.value || '',
-    whatsapp: document.getElementById('set-whatsapp')?.value || '',
-    email:    document.getElementById('set-email')?.value || '',
-    address:  document.getElementById('set-address')?.value || '',
+    phone:          document.getElementById('set-phone')?.value || '',
+    whatsapp:       document.getElementById('set-whatsapp')?.value || '',
+    email:          document.getElementById('set-email')?.value || '',
+    supportEmail:   document.getElementById('set-email')?.value || '',
+    supportPhone:   document.getElementById('set-phone')?.value || '',
+    address:        document.getElementById('set-address')?.value || '',
+    grievanceName:  document.getElementById('set-grievance-name')?.value || '',
+    grievanceEmail: document.getElementById('set-grievance-email')?.value || '',
   };
-  localStorage.setItem('pt_contact', JSON.stringify(contact));
+  // Save to pt_settings so user app can read grievance info
+  const existing = JSON.parse(localStorage.getItem('pt_settings') || '{}');
+  const merged = { ...existing, ...contact };
+  localStorage.setItem('pt_settings',  JSON.stringify(merged));
+  localStorage.setItem('pt_contact',   JSON.stringify(contact));
   if (isSbReady()) {
     Object.entries(contact).forEach(([k,v]) => {
       sb.from('app_config').upsert({ key:'contact_'+k, value: v }).then(() => {});
     });
   }
-  toast('✅ Contact info saved!');
+  toast('✅ Contact & Grievance Officer saved! Users will now see this info.');
 }
 
 function loadSettings() {
@@ -3093,6 +3138,8 @@ function loadSettings() {
   if (contact.whatsapp) document.getElementById('set-whatsapp').value = contact.whatsapp;
   if (contact.email)    document.getElementById('set-email').value = contact.email;
   if (contact.address)  document.getElementById('set-address').value = contact.address;
+  if (contact.grievanceName  && document.getElementById('set-grievance-name'))  document.getElementById('set-grievance-name').value  = contact.grievanceName;
+  if (contact.grievanceEmail && document.getElementById('set-grievance-email')) document.getElementById('set-grievance-email').value = contact.grievanceEmail;
 }
 
 function loadSheetStatus() {
