@@ -262,7 +262,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
 .eov-body{padding:18px;flex:1}
 
 /* PROFILE */
-.prof-hero{background:linear-gradient(135deg,#FF6B00,#D4A017);padding:28px 18px 48px;position:relative;background-size:cover;background-position:center}
+.prof-hero{background:linear-gradient(135deg,#FF6B00,#D4A017);padding:28px 18px 32px;position:relative;background-size:cover;background-position:center}
 .pav-wrap{display:flex;align-items:center;gap:14px}
 .pav{width:76px;height:76px;border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:2.3rem;box-shadow:0 8px 24px rgba(0,0,0,.2);border:3px solid rgba(255,255,255,.5);overflow:hidden;position:relative}
 .pav img{width:100%;height:100%;object-fit:cover;border-radius:15px}
@@ -272,7 +272,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
 .pb{background:rgba(255,255,255,.2);color:#fff;padding:3px 10px;border-radius:20px;font-size:.67rem;font-weight:600;border:1px solid rgba(255,255,255,.3)}
 
 /* DIGITAL ID */
-.did-card{margin:-22px 15px 0;background:#fff;border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.15);overflow:hidden}
+.did-card{margin:12px 15px 0;background:#fff;border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.15);overflow:hidden}
 .did-hd{background:linear-gradient(90deg,#FF6B00,#D4A017);padding:9px 15px;display:flex;align-items:center;justify-content:space-between}
 .did-hd span{color:#fff;font-size:.7rem;font-weight:700;letter-spacing:1px}
 .did-body{padding:18px}
@@ -415,7 +415,8 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
       </div>
       <button class="btn btn-p" onclick="doLogin()" style="margin-bottom:10px">🔑 ଲଗ ଇନ୍ | Login</button>
       <button class="btn" onclick="demoLogin()" style="background:var(--green-p);color:var(--green)">🎯 Demo Login</button>
-      <p style="text-align:center;margin-top:12px;font-size:.8rem;color:var(--muted)">ନୂତନ ଉପଯୋଗକର୍ତ୍ତା? <span onclick="switchAuthTab('register')" style="color:var(--saffron);font-weight:700;cursor:pointer">ଯୋଗ ଦିଅନ୍ତୁ →</span></p>
+      <p style="text-align:center;margin-top:10px;font-size:.8rem;color:var(--muted)">ନୂତନ ଉପଯୋଗକର୍ତ୍ତା? <span onclick="switchAuthTab('register')" style="color:var(--saffron);font-weight:700;cursor:pointer">ଯୋଗ ଦିଅନ୍ତୁ →</span></p>
+      <p style="text-align:center;margin-top:8px"><span onclick="openForgotPassword()" style="color:var(--muted);font-size:.78rem;cursor:pointer;text-decoration:underline">🔑 Forgot Password? | ପାସୱାର୍ଡ ଭୁଲିଗଲେ?</span></p>
     </div>
     <!-- REGISTER PANEL -->
     <div id="auth-reg-panel" style="display:none;background:#fff;border-radius:20px;padding:20px;box-shadow:0 16px 48px rgba(0,0,0,.2);max-height:68vh;overflow-y:auto">
@@ -512,7 +513,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
         <div class="hero-gr" id="h-gr">ନମସ୍କାର 🙏</div>
         <div class="hero-nm" id="h-nm">Loading...</div>
       </div>
-      <div onclick="goTab('profile')" style="width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.25rem">👤</div>
+      <div onclick="goTab('profile')" id="h-avatar" style="width:40px;height:40px;background:rgba(255,255,255,.2);border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.25rem;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,.3)">👤</div>
     </div>
     <div class="hero-row2">
       <div class="loc-chip">📍 <span id="h-loc">Odisha</span></div>
@@ -1723,6 +1724,34 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
       </div>
     </div>
     <button class="btn btn-g" onclick="closeModal('modal-notif-prefs')">✅ Saved | ସଂରକ୍ଷିତ</button>
+  </div>
+</div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal" id="modal-forgot">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">🔑 Forgot Password | ପାସୱାର୍ଡ ଭୁଲିଗଲେ</div>
+    <div class="msub">Enter your mobile number — admin will reset your password</div>
+    <div id="forgot-step1">
+      <div class="fg">
+        <label>📱 Mobile Number | ମୋବାଇଲ ନମ୍ବର</label>
+        <input type="tel" id="fp-phone" placeholder="10-digit mobile number" maxlength="10">
+      </div>
+      <button class="btn btn-p" onclick="submitForgotPassword()">📤 Send Reset Request</button>
+      <button class="btn btn-o mt8" onclick="closeModal('modal-forgot')">Cancel</button>
+    </div>
+    <div id="forgot-step2" style="display:none;text-align:center;padding:10px 0">
+      <div style="font-size:2.5rem;margin-bottom:12px">✅</div>
+      <div style="font-weight:800;font-size:.95rem;margin-bottom:8px">Request Sent! | ଅନୁରୋଧ ପଠାଗଲା</div>
+      <div style="font-size:.8rem;color:var(--muted);line-height:1.7;margin-bottom:16px">
+        Admin has been notified.<br>
+        Your new password will be set within 24 hours.<br>
+        <span style="color:var(--saffron);font-weight:700">Please contact admin directly if urgent.</span>
+      </div>
+      <div id="fp-admin-contact" style="background:var(--saffron-p);border-radius:10px;padding:12px;font-size:.8rem;margin-bottom:14px"></div>
+      <button class="btn btn-g" onclick="closeModal('modal-forgot')">OK | ଠିକ ଅଛି</button>
+    </div>
   </div>
 </div>
 
@@ -2939,6 +2968,11 @@ function initHaataBanner() {
 async function loadHomeData() {
   if (!currentUser) return;
   document.getElementById('h-nm').textContent = currentUser.name || 'User';
+  // Load user avatar on home screen
+  const hAvatar = document.getElementById('h-avatar');
+  if (hAvatar && currentUser.avatar_url) {
+    hAvatar.innerHTML = `<img src="${currentUser.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:9px">`;
+  }
   document.getElementById('h-loc').textContent = currentUser.district + ', Odisha';
   document.getElementById('h-gr').textContent = currentLang === 'or' ? 'ନମସ୍କାର 🙏' : 'Welcome 🙏';
   initHaataBanner(); // Show/hide Sunday Haata based on day
@@ -5603,8 +5637,63 @@ function roundRect(ctx, x, y, w, h, r) {
 }
 
 // ============================================================
-// LEGAL MODALS — Privacy, About, Grievance
+// FORGOT PASSWORD
 // ============================================================
+function openForgotPassword() {
+  document.getElementById('forgot-step1').style.display = '';
+  document.getElementById('forgot-step2').style.display = 'none';
+  const el = document.getElementById('fp-phone');
+  if (el) el.value = '';
+  openModal('modal-forgot');
+}
+
+async function submitForgotPassword() {
+  const phone = document.getElementById('fp-phone')?.value.trim();
+  if (!phone || phone.length < 10) { showToast('⚠️ Enter valid 10-digit mobile number'); return; }
+
+  // Check if user exists
+  let userExists = false;
+  let userName   = '';
+  if (isSupabaseReady()) {
+    const { data } = await sb.from('users').select('id,name,phone').eq('phone', phone).limit(1);
+    if (data?.length) { userExists = true; userName = data[0].name; }
+  } else {
+    const users = lsGet('pt_all_users') || [];
+    const u = users.find(x => x.phone === phone);
+    if (u) { userExists = true; userName = u.name; }
+  }
+
+  if (!userExists) { showToast('⚠️ No account found with this mobile number'); return; }
+
+  // Send reset request to admin via notification
+  if (isSupabaseReady()) {
+    await sb.from('notifications').insert([{
+      message:  `Password reset request from ${userName} (📱 ${phone}). Please set a new password for this user.`,
+      target:   'All Users',
+      title:    '🔑 Password Reset Request',
+      type:     'password_reset'
+    }]).catch(() => {});
+  }
+
+  // Store reset request in localStorage for admin panel
+  const requests = lsGet('pt_reset_requests') || [];
+  requests.unshift({ phone, name: userName, time: new Date().toISOString(), status: 'pending' });
+  lsSet('pt_reset_requests', requests);
+
+  // Show success + admin contact
+  const cfg = lsGet('pt_settings') || {};
+  const contactEl = document.getElementById('fp-admin-contact');
+  if (contactEl) {
+    const phone_  = cfg.supportPhone || cfg.callFallbackPhone || '';
+    const email_  = cfg.supportEmail || '';
+    contactEl.innerHTML = `<strong>Contact Admin directly:</strong><br>${phone_ ? '📞 ' + phone_ + '<br>' : ''}${email_ ? '📧 ' + email_ + '<br>' : ''}⏰ Response within 24 hours`;
+  }
+
+  document.getElementById('forgot-step1').style.display = 'none';
+  document.getElementById('forgot-step2').style.display = '';
+}
+
+
 function openGrievanceEmail() {
   const cfg = lsGet('pt_settings') || {};
   const email = cfg.supportEmail || document.getElementById('gr-email')?.textContent || 'support[at]theparttimers.in';
