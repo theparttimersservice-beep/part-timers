@@ -5624,8 +5624,7 @@ function confirmLogout() {
 
 // ── PWA Service Worker Registration
 if ('serviceWorker' in navigator) {
-  window.addEventL
-istener('load', () => {
+  window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js')
       .then(() => console.log('✅ SW registered'))
       .catch(e => console.log('SW registration failed:', e));
