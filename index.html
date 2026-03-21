@@ -1789,7 +1789,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
       <div style="font-size:.78rem;font-weight:800;margin-bottom:10px">🧑‍💼 Grievance Officer</div>
       <div style="font-size:.78rem;line-height:1.9" id="grievance-officer-info">
         <div>Name: <strong id="gr-name">App Administrator</strong></div>
-        <div>Email: <strong id="gr-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dfacaaafafb0adab9fabb7baafbeadababb6b2baadacf1b6b1">[email&#160;protected]</a></strong></div>
+        <div>Email: <strong id="gr-email">support@theparttimers.in</strong></div>
         <div>Phone: <strong id="gr-phone">Contact via app</strong></div>
         <div>Hours: Mon–Sat, 9AM–6PM IST</div>
         <div style="font-size:.7rem;color:var(--muted);margin-top:4px">Response within 48 hours as per IT Rules 2021</div>
@@ -2022,7 +2022,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false">
 // ============================================================
 // SUPABASE CONFIG — Replace these two values after setup
 // ============================================================
@@ -2099,12 +2099,13 @@ const TRANSLATIONS = {
 // ============================================================
 // INIT
 // ============================================================
-window.addEventListener('load', () => {
+// App init — use DOMContentLoaded so Cloudflare scripts cannot block
+document.addEventListener('DOMContentLoaded', () => {
   applyPageContent();
 
   const hideLo = () => {
     const lo = document.getElementById('loader');
-    if (lo) { lo.style.opacity = '0'; lo.style.pointerEvents = 'none'; setTimeout(() => lo.style.display = 'none', 600); }
+    if (lo) { lo.style.opacity = '0'; lo.style.pointerEvents = 'none'; setTimeout(() => { if(lo) lo.style.display = 'none'; }, 600); }
   };
 
   setTimeout(() => {
@@ -2121,7 +2122,7 @@ window.addEventListener('load', () => {
     } else {
       showPg('pg-welcome');
     }
-  }, 1800);
+  }, 1500);
 
   const today = new Date().toISOString().split('T')[0];
   const bkDate = document.getElementById('bk-date');
@@ -5624,3 +5625,12 @@ function confirmLogout() {
 // ── PWA Service Worker Registration
 if ('serviceWorker' in navigator) {
   window.addEventL
+istener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('✅ SW registered'))
+      .catch(e => console.log('SW registration failed:', e));
+  });
+}
+</script>
+</body>
+</html>
