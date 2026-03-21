@@ -92,6 +92,22 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
 .tbar .extra{font-size:.8rem;color:var(--muted)}
 
 /* BOTTOM NAV */
+/* Notification toggle */
+.notif-toggle-wrap{position:relative;display:inline-block;width:48px;height:26px;cursor:pointer}
+.notif-toggle-wrap input{opacity:0;width:0;height:0;position:absolute}
+.ntog-track{position:absolute;inset:0;background:var(--border);border-radius:26px;transition:.3s}
+.notif-toggle-wrap input:checked + .ntog-track{background:var(--green)}
+.ntog-track::after{content:'';position:absolute;left:3px;top:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.notif-toggle-wrap input:checked + .ntog-track::after{left:25px}
+/* Verified badge */
+.v-badge{display:inline-block;background:#E6F1FB;color:#185FA5;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:4px;vertical-align:middle}
+/* Call fallback bar */
+.call-fallback-bar{background:var(--saffron-p);border:1px solid var(--saffron);border-radius:10px;padding:10px 14px;margin:10px 15px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+/* Offer banner */
+.offer-banner{border-radius:10px;padding:10px 14px;margin:8px 15px;font-size:.8rem;font-weight:700;text-align:center;display:none}
+/* Earnings */
+.earn-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--border);font-size:.78rem}
+.earn-row:last-child{border-bottom:none}
 .bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;z-index:100;background:#fff;border-top:1px solid var(--border);display:flex;padding:6px 0 10px;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:5px 3px;transition:all .2s}
 .ni .ic{font-size:1.35rem;line-height:1}
@@ -501,6 +517,18 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
       <button class="lang-btn" onclick="toggleLang()" id="alb">EN</button>
     </div>
     <div class="hsearch"><span>🔍</span><input type="text" placeholder="ସେବା ଖୋଜନ୍ତୁ | Search services..." oninput="doSearch(this.value)" id="srch"></div>
+  </div>
+
+  <!-- Offer Banner (admin controlled) -->
+  <div class="offer-banner" id="offer-banner"></div>
+
+  <!-- Call Fallback Bar (shown when no workers found or no internet) -->
+  <div class="call-fallback-bar" id="call-fallback-bar" style="display:none">
+    <div>
+      <div style="font-size:.82rem;font-weight:700" id="call-fallback-text">Call us for quick service | ତ୍ୱରିତ ସେବା ପାଇଁ ଫୋନ</div>
+      <div style="font-size:.7rem;color:var(--muted)">No worker available nearby | ନଜିକରେ କର୍ମୀ ଉପଲ୍ଲବ୍ଧ ନାହିଁ</div>
+    </div>
+    <button id="call-fallback-btn" onclick="callFallback()" style="background:var(--saffron);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer;white-space:nowrap">📞 Call Now</button>
   </div>
 
   <!-- Categories -->
@@ -1159,6 +1187,8 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   <div class="mg">
     <div class="mg-title">Settings</div>
     <div class="mi" onclick="toggleLang()"><div class="mic">🌐</div><div class="mit"><h4>Language / ଭାଷା</h4><p id="lang-status">Odia (Primary)</p></div><div class="mia">›</div></div>
+    <div class="mi" id="mi-earnings" style="display:none" onclick="openEarnings()"><div class="mic">💰</div><div class="mit"><h4>My Earnings | ମୋ ଆୟ</h4><p id="earn-quick">Today: ₹0</p></div><div class="mia">›</div></div>
+    <div class="mi" onclick="openModal('modal-notif-prefs')"><div class="mic">🔔</div><div class="mit"><h4>Notification Settings | ସୂଚନା</h4><p>Manage alerts | ସୂଚନା ପ୍ରବନ୍ଧ</p></div><div class="mia">›</div></div>
     <div class="mi" onclick="shareProfile()"><div class="mic">📤</div><div class="mit"><h4>Share Digital ID</h4><p>Share your work profile</p></div><div class="mia">›</div></div>
     <div class="mi" onclick="confirmLogout()" style="border:2px solid #FFE8E8"><div class="mic">🚪</div><div class="mit"><h4 style="color:#FF4444">Logout</h4><p>Sign out of your account</p></div><div class="mia">›</div></div>
   </div>
@@ -1592,6 +1622,106 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
+<!-- ══ REPORT ISSUE / DISPUTE MODAL ══ -->
+<div class="modal" id="modal-dispute">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">⚠️ Report Issue | ସମସ୍ୟା ଜଣାନ୍ତୁ</div>
+    <div class="msub">We will review and respond within 48 hrs | ୪୮ ଘଣ୍ଟା ମଧ୍ୟରେ ଉତ୍ତର</div>
+    <input type="hidden" id="dis-ref-type" value="">
+    <input type="hidden" id="dis-ref-id"   value="">
+    <div class="fg">
+      <label>Issue type | ସମସ୍ୟା ପ୍ରକାର</label>
+      <select id="dis-reason" style="background:var(--surf2)">
+        <option value="worker_not_arrived">Worker did not arrive | କର୍ମୀ ଆସିଲା ନାହିଁ</option>
+        <option value="payment_issue">Payment problem | ଦେୟ ସମସ୍ୟା</option>
+        <option value="wrong_item">Wrong item received | ଭୁଲ ସାମଗ୍ରୀ</option>
+        <option value="late_delivery">Late / delayed | ବିଳମ୍ବ</option>
+        <option value="quality_issue">Quality problem | ଗୁଣ ସମସ୍ୟା</option>
+        <option value="rude_behaviour">Rude behaviour | ଅଭଦ୍ର ଆଚରଣ</option>
+        <option value="overcharge">Overcharged | ଅଧିକ ଅର୍ଥ ନିଆଗଲା</option>
+        <option value="other">Other | ଅନ୍ୟ</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Description | ବିବରଣ (optional)</label>
+      <textarea id="dis-desc" placeholder="Tell us what happened... | କ'ଣ ହୋଇଥିଲା ଲେଖନ୍ତୁ" style="height:80px"></textarea>
+    </div>
+    <button class="btn btn-p" style="background:#FF6B00" onclick="submitDispute()">📤 Submit Report | ଜମା ଦିଅନ୍ତୁ</button>
+    <button class="btn btn-o mt8" onclick="closeModal('modal-dispute')">Cancel</button>
+  </div>
+</div>
+
+<!-- ══ MY EARNINGS MODAL ══ -->
+<div class="modal" id="modal-earnings">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">💰 My Earnings | ମୋ ଆୟ</div>
+    <div class="msub" id="earn-sub">Your income from completed work</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:14px 0" id="earn-cards">
+      <div style="background:var(--green-p);border-radius:12px;padding:12px;text-align:center">
+        <div style="font-size:.65rem;color:var(--muted);margin-bottom:4px">TODAY</div>
+        <div style="font-size:1.3rem;font-weight:800;color:var(--green)" id="earn-today">₹0</div>
+      </div>
+      <div style="background:var(--saffron-p);border-radius:12px;padding:12px;text-align:center">
+        <div style="font-size:.65rem;color:var(--muted);margin-bottom:4px">THIS WEEK</div>
+        <div style="font-size:1.3rem;font-weight:800;color:var(--saffron)" id="earn-week">₹0</div>
+      </div>
+      <div style="background:var(--surf2);border-radius:12px;padding:12px;text-align:center">
+        <div style="font-size:.65rem;color:var(--muted);margin-bottom:4px">TOTAL</div>
+        <div style="font-size:1.3rem;font-weight:800" id="earn-total">₹0</div>
+      </div>
+    </div>
+    <div style="font-size:.78rem;font-weight:700;margin-bottom:8px">Recent completed jobs</div>
+    <div id="earn-list" style="max-height:220px;overflow-y:auto">
+      <div style="text-align:center;padding:20px;color:var(--muted);font-size:.78rem">Loading...</div>
+    </div>
+    <button class="btn btn-g mt8" onclick="closeModal('modal-earnings')">Close</button>
+  </div>
+</div>
+
+<!-- ══ NOTIFICATION PREFERENCES MODAL ══ -->
+<div class="modal" id="modal-notif-prefs">
+  <div class="msheet">
+    <div class="mhandle"></div>
+    <div class="mt">🔔 Notification Settings | ସୂଚନା ସେଟ</div>
+    <div class="msub">Choose what alerts you want | କେଉଁ ସୂଚନା ଚାହୁଁଛନ୍ତି</div>
+    <div style="margin:14px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:0.5px solid var(--border)">
+        <div>
+          <div style="font-size:.85rem;font-weight:700">📅 Booking Alerts</div>
+          <div style="font-size:.72rem;color:var(--muted)">New booking, status changes | ବୁକିଂ ସୂଚନା</div>
+        </div>
+        <label class="notif-toggle-wrap">
+          <input type="checkbox" id="np-booking" checked onchange="saveNotifPrefs()">
+          <span class="ntog-track" id="np-booking-track"></span>
+        </label>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:0.5px solid var(--border)">
+        <div>
+          <div style="font-size:.85rem;font-weight:700">🚌 Transport Alerts</div>
+          <div style="font-size:.72rem;color:var(--muted)">Bus position, ticket updates | ବସ ସୂଚନା</div>
+        </div>
+        <label class="notif-toggle-wrap">
+          <input type="checkbox" id="np-transport" checked onchange="saveNotifPrefs()">
+          <span class="ntog-track" id="np-transport-track"></span>
+        </label>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0">
+        <div>
+          <div style="font-size:.85rem;font-weight:700">🎉 Promotions & Offers</div>
+          <div style="font-size:.72rem;color:var(--muted)">Offers, announcements | ଅଫର ସୂଚନା</div>
+        </div>
+        <label class="notif-toggle-wrap">
+          <input type="checkbox" id="np-promo" checked onchange="saveNotifPrefs()">
+          <span class="ntog-track" id="np-promo-track"></span>
+        </label>
+      </div>
+    </div>
+    <button class="btn btn-g" onclick="closeModal('modal-notif-prefs')">✅ Saved | ସଂରକ୍ଷିତ</button>
+  </div>
+</div>
+
 <!-- PRIVACY POLICY MODAL -->
 <div class="modal" id="modal-privacy">
   <div class="msheet" style="max-height:92vh">
@@ -1657,7 +1787,7 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
       <div style="font-size:.78rem;font-weight:800;margin-bottom:10px">🧑‍💼 Grievance Officer</div>
       <div style="font-size:.78rem;line-height:1.9" id="grievance-officer-info">
         <div>Name: <strong id="gr-name">App Administrator</strong></div>
-        <div>Email: <strong id="gr-email">support@theparttimers.in</strong></div>
+        <div>Email: <strong id="gr-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dfacaaafafb0adab9fabb7baafbeadababb6b2baadacf1b6b1">[email&#160;protected]</a></strong></div>
         <div>Phone: <strong id="gr-phone">Contact via app</strong></div>
         <div>Hours: Mon–Sat, 9AM–6PM IST</div>
         <div style="font-size:.7rem;color:var(--muted);margin-top:4px">Response within 48 hours as per IT Rules 2021</div>
@@ -1875,11 +2005,22 @@ body{font-family:'Baloo 2',sans-serif;background:var(--bg);color:var(--text);min
       </div>
     </div>
     <div class="fg"><label>ବ୍ୟକ୍ତିଗତ ବିବରଣ <span>/ Bio (optional)</span></label><textarea id="ep-bio" placeholder="Tell something about yourself..."></textarea></div>
+    <!-- ID Proof Upload -->
+    <div style="background:var(--surf2);border-radius:12px;padding:14px;margin-bottom:12px">
+      <div style="font-size:.82rem;font-weight:800;margin-bottom:4px">🪪 ID Proof | ପରିଚୟ ପ୍ରମାଣ <span style="font-size:.7rem;font-weight:400;color:var(--muted)">(Optional — helps get verified)</span></div>
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:10px">Aadhaar, Voter ID, Driving Licence photo | ଆଧାର, ଭୋଟ ID, ଲାଇସେନ୍ସ</div>
+      <div id="ep-id-proof-preview" style="display:none;margin-bottom:8px"><img id="ep-id-proof-img" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;border:1px solid var(--border)"></div>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;background:var(--bg);border:1px dashed var(--border);border-radius:9px;padding:10px">
+        <span style="font-size:1.2rem">📄</span>
+        <span style="font-size:.78rem;color:var(--muted)" id="ep-id-proof-label">Upload ID photo (max 2MB)</span>
+        <input type="file" id="ep-id-proof" accept="image/*" style="display:none" onchange="previewIDProof(this)">
+      </label>
+    </div>
     <button class="btn btn-p" onclick="saveProfile()">✅ Save Changes</button>
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ============================================================
 // SUPABASE CONFIG — Replace these two values after setup
 // ============================================================
@@ -2329,7 +2470,8 @@ async function launchApp() {
   goTab('home');
   checkTnC();
   checkPendingSafetyAlerts();
-  checkPlanExpiry(); // Check if vendor plan is expiring/expired
+  checkPlanExpiry();
+  applyEnhancementSystems();
   // Restore unread notification badge
   const unread = lsGet('pt_unread_notifs') || 0;
   if (unread > 0) updateNotifBadge(unread);
@@ -2795,7 +2937,7 @@ async function loadHomeData() {
           ${w.avatar_url ? `<img src="${w.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : '👷'}
           <div style="position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:${isAvail ? '#22c55e' : '#9ca3af'};border:2px solid #fff"></div>
         </div>
-        <h4>${w.name}</h4>
+        <h4>${w.name}${w.is_verified ? ' <span class="v-badge">✔</span>' : ''}</h4>
         <div class="wsk">${w.skill || 'Worker'}</div>
         <div class="wrt">⭐ ${w.rating || '4.5'} ${w.featured ? '🌟' : ''}</div>
         <div class="wpr">${rateDisplay}</div>
@@ -3237,7 +3379,320 @@ async function confirmOrder() {
   loadOrders();
 }
 
-// ── Availability toggle label update
+// ============================================================
+// SYSTEM 1 — USER VERIFICATION BADGE
+// ============================================================
+function getVerifiedBadge(user) {
+  if (!user) return '';
+  return user.is_verified ? '<span class="v-badge">✔ Verified</span>' : '';
+}
+
+// Inject verified badge into worker cards
+function injectVerifiedBadges() {
+  document.querySelectorAll('.wc h4').forEach(el => {
+    if (!el.querySelector('.v-badge') && el.closest('.wc')?._verified) {
+      el.insertAdjacentHTML('beforeend', '<span class="v-badge">✔ Verified</span>');
+    }
+  });
+}
+
+// ============================================================
+// SYSTEM 2 — DISPUTE / REPORT ISSUE
+// ============================================================
+function openDispute(refType, refId) {
+  document.getElementById('dis-ref-type').value = refType;
+  document.getElementById('dis-ref-id').value   = refId;
+  document.getElementById('dis-desc').value     = '';
+  openModal('modal-dispute');
+}
+
+async function submitDispute() {
+  const refType = document.getElementById('dis-ref-type').value;
+  const refId   = document.getElementById('dis-ref-id').value;
+  const reason  = document.getElementById('dis-reason').value;
+  const desc    = document.getElementById('dis-desc').value.trim();
+  if (!currentUser) { showToast('⚠️ Please login first'); return; }
+
+  const dispute = {
+    id:            'DIS-' + Date.now().toString().slice(-8),
+    reporter_id:   currentUser.id,
+    reporter_name: currentUser.name,
+    ref_type:      refType,
+    ref_id:        refId,
+    reason, description: desc,
+    status:        'pending',
+    created_at:    new Date().toISOString()
+  };
+
+  if (isSupabaseReady()) {
+    await sb.from('disputes').insert([dispute]).catch(e => console.error(e));
+  }
+  let d = lsGet('pt_disputes') || []; d.unshift(dispute); lsSet('pt_disputes', d);
+
+  closeModal('modal-dispute');
+  showToast('✅ Issue reported! Admin will respond in 48 hrs | ୪୮ ଘଣ୍ଟାରେ ଉତ୍ତର ମିଳିବ');
+}
+
+// ============================================================
+// SYSTEM 3 — SMART AUTO AVAILABILITY
+// ============================================================
+async function setWorkerBusy(workerId) {
+  if (!workerId || !isSupabaseReady()) return;
+  await sbUpdate('users', workerId, { available: false }).catch(() => {});
+}
+
+async function setWorkerFree(workerId) {
+  if (!workerId || !isSupabaseReady()) return;
+  await sbUpdate('users', workerId, { available: true }).catch(() => {});
+}
+
+// Hook into confirmBook — mark assigned worker busy
+const _origConfirmBook = window.confirmBook;
+
+// Hook into markAsReceived / status done — auto free worker
+const _origMarkAsReceived = window.markAsReceived;
+
+// Called after booking status → done
+async function autoFreeWorkerAfterJob(bookingId) {
+  if (!isSupabaseReady()) return;
+  const { data } = await sb.from('bookings').select('assigned_worker_id').eq('id', bookingId).single().catch(() => ({ data: null }));
+  if (data?.assigned_worker_id) await setWorkerFree(data.assigned_worker_id);
+}
+
+// ============================================================
+// SYSTEM 4 — EARNINGS TRACKER
+// ============================================================
+async function openEarnings() {
+  openModal('modal-earnings');
+  await loadEarnings();
+}
+
+async function loadEarnings() {
+  if (!currentUser) return;
+  const todayStr = new Date().toISOString().split('T')[0];
+  const weekAgo  = new Date(Date.now() - 7*86400000).toISOString().split('T')[0];
+
+  let bookings = [], orders = [];
+  if (isSupabaseReady()) {
+    // For workers: their assigned bookings done
+    if (currentUser.type === 'worker' || currentUser.type === 'vehicle') {
+      const { data } = await sb.from('bookings').select('*').eq('assigned_worker_id', currentUser.id).eq('status','done');
+      bookings = data || [];
+    }
+    // For vendors: completed orders
+    if (currentUser.type === 'vendor') {
+      const { data } = await sb.from('orders').select('*').eq('vendor_id', currentUser.id).eq('status','done');
+      orders = data || [];
+    }
+    // Customers see what they paid
+    if (currentUser.type === 'customer') {
+      const { data: bd } = await sb.from('bookings').select('*').eq('user_id', currentUser.id).eq('status','done');
+      const { data: od } = await sb.from('orders').select('*').eq('user_id', currentUser.id).eq('status','done');
+      bookings = bd || []; orders = od || [];
+    }
+  } else {
+    bookings = (lsGet('pt_bookings')||[]).filter(b => b.status === 'done');
+    orders   = (lsGet('pt_orders')||[]).filter(o => o.status === 'done');
+  }
+
+  const all = [
+    ...bookings.map(b => ({ ...b, _src:'booking', _amt: parseFloat(b.amount_paid||b.total?.replace('₹','')||0) })),
+    ...orders.map(o  => ({ ...o,  _src:'order',   _amt: parseFloat(o.amount_paid||o.total?.replace('₹','')||0) }))
+  ].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+
+  const today = all.filter(x => (x.created_at||'').startsWith(todayStr));
+  const week  = all.filter(x => (x.created_at||'') >= weekAgo);
+  const sum   = arr => arr.reduce((s,x) => s + (x._amt||0), 0);
+
+  document.getElementById('earn-today').textContent = '₹' + sum(today).toFixed(0);
+  document.getElementById('earn-week').textContent  = '₹' + sum(week).toFixed(0);
+  document.getElementById('earn-total').textContent = '₹' + sum(all).toFixed(0);
+
+  // Update quick preview in profile
+  const qk = document.getElementById('earn-quick');
+  if (qk) qk.textContent = `Today: ₹${sum(today).toFixed(0)}`;
+
+  // List
+  const listEl = document.getElementById('earn-list');
+  if (!all.length) { listEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:.78rem">No completed jobs yet | ଏପର୍ୟ୍ୟନ୍ত କୋଣସି ସମ୍ପୂର୍ଣ ଚାକିରି ନାହିଁ</div>'; return; }
+  listEl.innerHTML = all.slice(0,20).map(x => `
+    <div class="earn-row">
+      <div><div style="font-weight:600;font-size:.82rem">${x._src==='booking'?'📅':'🛒'} ${x.item||x.service||'Job'}</div>
+      <div style="font-size:.7rem;color:var(--muted)">${(x.created_at||'').slice(0,10)}</div></div>
+      <div style="font-weight:700;color:var(--green)">₹${x._amt||0}</div>
+    </div>`).join('');
+}
+
+// ============================================================
+// SYSTEM 5 — NOTIFICATION PREFERENCES
+// ============================================================
+function loadNotifPrefs() {
+  const prefs = lsGet('pt_notif_prefs') || { booking:true, transport:true, promo:true };
+  ['booking','transport','promo'].forEach(k => {
+    const el = document.getElementById('np-' + k);
+    if (el) el.checked = prefs[k] !== false;
+  });
+}
+
+function saveNotifPrefs() {
+  const prefs = {
+    booking:   document.getElementById('np-booking')?.checked !== false,
+    transport: document.getElementById('np-transport')?.checked !== false,
+    promo:     document.getElementById('np-promo')?.checked !== false,
+  };
+  lsSet('pt_notif_prefs', prefs);
+  if (isSupabaseReady() && currentUser) {
+    sbUpdate('users', currentUser.id, { notif_prefs: prefs }).catch(() => {});
+  }
+}
+
+function shouldNotify(type) {
+  const prefs = lsGet('pt_notif_prefs') || {};
+  return prefs[type] !== false; // default true
+}
+
+// ============================================================
+// SYSTEM 6 — LOCATION IMPROVEMENT (village + landmark)
+// ============================================================
+// Already has GPS — add manual edit helper
+function setManualLocation(inputId, village, landmark) {
+  const el = document.getElementById(inputId);
+  if (!el) return;
+  const parts = [village, landmark].filter(Boolean);
+  if (parts.length) el.value = parts.join(', ');
+}
+
+// ============================================================
+// SYSTEM 7 — RETENTION: Book Again
+// ============================================================
+function bookAgain(itemName, icon, type) {
+  if (type === 'booking') {
+    // Find service section and open booking
+    showToast('🔄 Opening booking for ' + itemName);
+    // Navigate to relevant service
+    goTab('orders');
+    openBook(itemName, icon || '🔄', 'Quick rebook', '', '', currentUser?.district || '');
+  } else {
+    showToast('🔄 Opening order for ' + itemName);
+    openOrder(itemName, icon || '🛒', '', 'unit');
+  }
+}
+
+// ============================================================
+// SYSTEM 8 — OFFER BANNER (admin controlled)
+// ============================================================
+function loadOfferBanner() {
+  const cfg = lsGet('pt_offer_banner') || {};
+  const banner = document.getElementById('offer-banner');
+  if (!banner) return;
+  if (cfg.active === true || cfg.active === 'true') {
+    banner.style.display = '';
+    banner.style.background = cfg.color || 'var(--saffron-p)';
+    banner.style.color = cfg.textColor || 'var(--saffron)';
+    banner.textContent = cfg.text || '';
+    banner.style.border = '1px solid ' + (cfg.color || 'var(--saffron)');
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
+// ============================================================
+// SYSTEM 9 — CALL FALLBACK
+// ============================================================
+function callFallback() {
+  const cfg = lsGet('pt_settings') || {};
+  const phone = cfg.callFallbackPhone || cfg.supportPhone || '';
+  if (!phone) { showToast('📞 Contact number not set. Ask admin.'); return; }
+  window.open('tel:' + phone.replace(/\D/g,''));
+}
+
+function showCallFallback(reason) {
+  const bar = document.getElementById('call-fallback-bar');
+  if (!bar) return;
+  const cfg = lsGet('pt_settings') || {};
+  if (!cfg.callFallbackPhone && !cfg.supportPhone) return; // no number set
+  const txt = document.getElementById('call-fallback-text');
+  if (txt) txt.textContent = reason || (cfg.callFallbackText || 'Call us for quick service | ତ୍ୱରିତ ସେବା ପାଇଁ ଫୋନ');
+  bar.style.display = 'flex';
+}
+
+function hideCallFallback() {
+  const bar = document.getElementById('call-fallback-bar');
+  if (bar) bar.style.display = 'none';
+}
+
+// ============================================================
+// SYSTEM 10 — ID PROOF UPLOAD
+// ============================================================
+function previewIDProof(input) {
+  if (!input.files?.[0]) return;
+  if (input.files[0].size > 2 * 1024 * 1024) {
+    showToast('⚠️ ID photo must be under 2MB'); input.value = ''; return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('ep-id-proof-preview');
+    const img  = document.getElementById('ep-id-proof-img');
+    const lbl  = document.getElementById('ep-id-proof-label');
+    if (img)  img.src = e.target.result;
+    if (prev) prev.style.display = '';
+    if (lbl)  lbl.textContent = '✅ ' + input.files[0].name;
+    currentUser._idProof = e.target.result;
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+// ── Hook ID proof into saveProfile
+const _saveProfileOrig = saveProfile;
+async function saveProfile() {
+  await _saveProfileOrig();
+  // Upload ID proof if new one selected
+  if (currentUser?._idProof && isSupabaseReady()) {
+    try {
+      const ext  = 'jpg';
+      const path = `id-proofs/${currentUser.id}.${ext}`;
+      const resp = await fetch(currentUser._idProof);
+      const blob = await resp.blob();
+      const { error } = await sb.storage.from('avatars').upload(path, blob, { upsert: true });
+      if (!error) {
+        const { data: urlData } = sb.storage.from('avatars').getPublicUrl(path);
+        if (urlData?.publicUrl) {
+          await sbUpdate('users', currentUser.id, { id_proof_url: urlData.publicUrl });
+          currentUser.id_proof_url = urlData.publicUrl;
+        }
+      }
+    } catch(e) { /* storage optional */ }
+    delete currentUser._idProof;
+  }
+}
+
+// ── Apply all systems on launch
+function applyEnhancementSystems() {
+  loadOfferBanner();
+  loadNotifPrefs();
+  // Show earnings menu item for non-customers
+  const earningsMenu = document.getElementById('mi-earnings');
+  if (earningsMenu && currentUser && currentUser.type !== 'customer') {
+    earningsMenu.style.display = '';
+    loadEarnings().catch(() => {});
+  }
+  // Load ID proof preview if exists
+  if (currentUser?.id_proof_url) {
+    const img  = document.getElementById('ep-id-proof-img');
+    const prev = document.getElementById('ep-id-proof-preview');
+    if (img)  { img.src = currentUser.id_proof_url; }
+    if (prev) prev.style.display = '';
+  }
+  // Show call fallback if no workers in area after timeout
+  setTimeout(() => {
+    const workers = document.getElementById('workers-hs');
+    if (workers && workers.children.length <= 3) { // only demo workers
+      showCallFallback();
+    }
+  }, 5000);
+}
+
+
 function updateAvailLabel(checked) {
   const label = document.getElementById('ep-avail-label');
   const track = document.getElementById('ep-avail-track');
@@ -3289,12 +3744,11 @@ async function markAsReceived(orderId) {
   if (!confirm('Mark this order as received? | ଅର୍ଡ଼ର ପ୍ରାପ୍ତ ହୋଇଛି?')) return;
   if (isSupabaseReady()) {
     await sbUpdate('orders', orderId, { status: 'done' });
-    // Notify vendor
+    // Auto-free worker if this was a booking
+    await autoFreeWorkerAfterJob(orderId);
     await sb.from('notifications').insert([{
-      message: `Customer confirmed receipt of order. Payment complete.`,
-      target: 'Vendors Only',
-      title: '✅ Order Delivered!',
-      type: 'order_delivered'
+      message: 'Customer confirmed receipt of order. Payment complete.',
+      target: 'Vendors Only', title: '✅ Order Delivered!', type: 'order_delivered'
     }]).catch(() => {});
   }
   let orders = lsGet('pt_orders') || [];
@@ -3547,6 +4001,12 @@ async function loadOrders() {
       <button onclick="markAsReceived('${o.id}')"
         style="margin-top:8px;margin-left:6px;background:var(--green);color:#fff;border:none;padding:6px 14px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">✅ Mark as Received | ମିଳିଗଲା</button>` : '';
     const deliveryInfo = o.delivery_method ? `<div style="font-size:.72rem;color:var(--muted);margin-top:3px">🚚 ${({'pickup':'Self Pickup','vendor':'Vendor Delivery','contact':'Direct Contact'})[o.delivery_method]||''}</div>` : '';
+    const bookAgainBtn = o.status === 'done' ? `
+      <button onclick="bookAgain('${o.item}','${o.icon}','${o.type}')"
+        style="margin-top:8px;background:var(--saffron-p);color:var(--saffron);border:1px solid var(--saffron);padding:6px 14px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">🔄 Book Again | ପୁନଃ ବୁକ</button>` : '';
+    const reportBtn = (o.status !== 'done' && o.status !== 'cancelled') ? `
+      <button onclick="openDispute('${o.type}','${o.id}')"
+        style="margin-top:8px;margin-left:6px;background:#FFF4EC;color:#FF6B00;border:1px solid #FFD4B0;padding:6px 14px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">⚠️ Report Issue</button>` : '';
     return `<div class="order-item">
       <div class="order-hd">
         <h4>${o.icon} ${o.item}</h4>
@@ -3556,7 +4016,7 @@ async function loadOrders() {
       ${resubmitBtn}
       <div class="order-det" style="margin-top:6px">📅 ${o.date} • 💰 ${o.total}${o.qty?' • Qty: '+o.qty:''}${o.loc?' • 📍 '+o.loc:''}</div>
       ${deliveryInfo}
-      <div>${rateBtn}${payBtn}${safetyBtn}${markReceivedBtn}</div>
+      <div>${rateBtn}${payBtn}${safetyBtn}${markReceivedBtn}${bookAgainBtn}${reportBtn}</div>
     </div>`;
   }).join('');
 }
@@ -4030,6 +4490,13 @@ async function confirmBook() {
       note: booking.note, status: 'pending'
     }]);
     if (error) { showToast('⚠️ Cloud save failed — saved locally'); console.error(error); }
+  }
+
+  // Auto-mark current user unavailable while booking is active (workers)
+  if (currentUser?.type === 'worker' || currentUser?.type === 'vehicle') {
+    currentUser.available = false;
+    lsSet('pt_user', currentUser);
+    if (isSupabaseReady()) await sbUpdate('users', currentUser.id, { available: false });
   }
 
   let bookings = lsGet('pt_bookings') || [];
@@ -5155,12 +5622,4 @@ function confirmLogout() {
 
 // ── PWA Service Worker Registration
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('✅ SW registered:', reg.scope))
-      .catch(err => console.log('SW registration failed:', err));
-  });
-}
-</script>
-</body>
-</html>
+  window.addEventL
