@@ -245,6 +245,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="sn-item" data-pan="pagecontent" onclick="goPan('pagecontent')"><div class="ic">✏️</div><span>Page Content</span></div>
       <div class="sn-item" data-pan="iddesigner" onclick="goPan('iddesigner')"><div class="ic">🪪</div><span>ID Card Design</span></div>
       <div class="sn-item" data-pan="routes" onclick="goPan('routes')"><div class="ic">🚌</div><span>Transport Routes</span></div>
+      <div class="sn-item" data-pan="disputes" onclick="goPan('disputes')"><div class="ic">⚠️</div><span>Disputes</span></div>
+      <div class="sn-item" data-pan="offerbanner" onclick="goPan('offerbanner')"><div class="ic">🎉</div><span>Offer Banner</span></div>
       <div class="sn-item" data-pan="banners" onclick="goPan('banners')"><div class="ic">📢</div><span>Banners</span></div>
       <div class="sn-item" data-pan="settings" onclick="goPan('settings')"><div class="ic">⚙️</div><span>Settings</span></div>
     </div>
@@ -1117,6 +1119,74 @@ Disputes: Odisha Courts | ବିବାଦ: ଓଡ଼ିଶା ନ୍ୟାୟା
         </div>
       </div>
 
+      <!-- ══ DISPUTES ══ -->
+      <div id="panel-disputes" class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div>
+            <div style="font-size:.82rem;font-weight:700">User reported issues — respond within 48 hours</div>
+            <div style="font-size:.72rem;color:var(--muted)">Consumer Protection (E-Commerce) Rules 2020</div>
+          </div>
+          <button onclick="loadDisputesPanel()" style="background:var(--surf2);border:1px solid var(--border);color:var(--text);padding:7px 14px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">🔄 Refresh</button>
+        </div>
+        <!-- Filter tabs -->
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+          <button class="dis-filter-btn on" onclick="filterDisputes(this,'all')" style="background:var(--saffron);color:#fff;border:none;border-radius:7px;padding:5px 14px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">All</button>
+          <button class="dis-filter-btn" onclick="filterDisputes(this,'pending')" style="background:var(--surf2);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:5px 14px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">⏳ Pending</button>
+          <button class="dis-filter-btn" onclick="filterDisputes(this,'resolved')" style="background:var(--surf2);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:5px 14px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.75rem;cursor:pointer">✅ Resolved</button>
+        </div>
+        <div id="disputes-list">
+          <div style="text-align:center;padding:20px;color:var(--muted);font-size:.78rem">Loading disputes...</div>
+        </div>
+      </div>
+
+      <!-- ══ OFFER BANNER & CALL FALLBACK ══ -->
+      <div id="panel-offerbanner" class="panel">
+        <!-- Offer Banner -->
+        <div class="set-card" style="margin-bottom:16px">
+          <h3>🎉 Offer Banner</h3>
+          <p style="font-size:.74rem;color:var(--muted);margin-bottom:14px">Shown on home screen to all users. Use for promotions, announcements.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <label style="font-size:.82rem;font-weight:700">Show banner</label>
+            <label style="position:relative;display:inline-block;width:48px;height:26px;cursor:pointer">
+              <input type="checkbox" id="ob-active" style="opacity:0;width:0;height:0;position:absolute">
+              <span style="position:absolute;inset:0;background:var(--border);border-radius:26px;transition:.3s" id="ob-track"></span>
+              <span style="position:absolute;left:3px;top:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,.2)" id="ob-knob"></span>
+            </label>
+          </div>
+          <div class="mf"><label>Banner text</label><input type="text" id="ob-text" placeholder="e.g. 🎉 First booking FREE this week!"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+            <div class="mf" style="margin:0"><label style="font-size:.72rem">Background color</label>
+              <div style="display:flex;align-items:center;gap:8px"><input type="color" id="ob-color" value="#FFF4EC" style="width:36px;height:28px;border-radius:6px;border:1px solid var(--border);cursor:pointer"><span style="font-size:.75rem;color:var(--muted)" id="ob-color-hex">#FFF4EC</span></div>
+            </div>
+            <div class="mf" style="margin:0"><label style="font-size:.72rem">Text color</label>
+              <div style="display:flex;align-items:center;gap:8px"><input type="color" id="ob-textcolor" value="#FF6B00" style="width:36px;height:28px;border-radius:6px;border:1px solid var(--border);cursor:pointer"><span style="font-size:.75rem;color:var(--muted)">Text</span></div>
+            </div>
+          </div>
+          <div style="border-radius:8px;padding:10px 14px;text-align:center;font-size:.82rem;font-weight:700;margin-bottom:12px" id="ob-preview">Preview will show here</div>
+          <button onclick="saveOfferBanner()" style="background:var(--saffron);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;width:100%">💾 Save Banner</button>
+        </div>
+
+        <!-- Call Fallback -->
+        <div class="set-card">
+          <h3>📞 Call Fallback Settings</h3>
+          <p style="font-size:.74rem;color:var(--muted);margin-bottom:14px">Shown when no workers found nearby or user has no internet. Phone button appears on home screen.</p>
+          <div class="mf"><label>Fallback Phone Number</label><input type="tel" id="cf-phone" placeholder="9876543210"></div>
+          <div class="mf"><label>Fallback Message (shown to user)</label><input type="text" id="cf-text" placeholder="Call us for quick service | ତ୍ୱରିତ ସେବା ପାଇଁ ଫୋନ"></div>
+          <button onclick="saveCallFallback()" style="background:var(--green);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;width:100%">💾 Save Call Fallback</button>
+        </div>
+
+        <!-- Export Data (CSV) -->
+        <div class="set-card">
+          <h3>📥 Export Data (CSV)</h3>
+          <p style="font-size:.74rem;color:var(--muted);margin-bottom:14px">Download all data as CSV for backup or analysis.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button onclick="exportCSV('users')"    style="flex:1;background:var(--sky);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">👥 Export Users</button>
+            <button onclick="exportCSV('bookings')" style="flex:1;background:var(--saffron);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">📅 Export Bookings</button>
+            <button onclick="exportCSV('orders')"   style="flex:1;background:var(--green);border:none;color:#fff;padding:10px;border-radius:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">🛒 Export Orders</button>
+          </div>
+        </div>
+      </div>
+
       <!-- ══ BANNERS ══ -->
       <div id="panel-banners" class="panel">
         <div class="set-grid">
@@ -1337,7 +1407,7 @@ Disputes: Odisha Courts | ବିବାଦ: ଓଡ଼ିଶା ନ୍ୟାୟା
     <div class="mh"><h3>👤 User Details</h3><button class="mcl" onclick="closeM('modal-user')">✕</button></div>
     <div class="dv" id="user-dv"></div>
     <div style="display:flex;gap:9px;margin-top:14px">
-      <button id="m-block-btn" class="ab ab-block" style="flex:1;padding:10px;font-size:.8rem" onclick="toggleBlockModal()">🚫 Block User</button>
+      <button id="m-block-btn" class="ab ab-block" style="flex:1;padding:10px;font-size:.8rem" onclick="toggleBlockModal()">🚫 Block User</button><button id="m-verify-btn" class="ab ab-approve" style="flex:1;padding:10px;font-size:.8rem" onclick="toggleVerifyModal()">✔ Verify</button>
       <button class="ab ab-del" style="flex:1;padding:10px;font-size:.8rem" onclick="deleteUserModal()">🗑️ Delete</button>
     <button class="ab ab-edit" style="flex:1;padding:10px;font-size:.8rem" onclick="closeM('modal-user');openEditUser(selectedUID)">✏️ Edit</button>
     </div>
@@ -1498,6 +1568,8 @@ const panTitles = {
   planmgmt:'Plan Management',
   iddesigner:'Digital ID Card Designer',
   routes:'Transport Routes Management',
+  disputes:'Disputes & Issue Reports',
+  offerbanner:'Offer Banner & Call Fallback',
   pagecontent:'Page Content Editor',
   banners:'Banners & Settings',settings:'Settings'
 };
@@ -1509,6 +1581,8 @@ const panSubs = {
   planmgmt:'Manage plan prices, area limits and listing counts',
   iddesigner:'Design the Digital ID card for all users',
   routes:'Add, edit, delete bus and auto routes with stopages',
+  disputes:'View and resolve user reported issues',
+  offerbanner:'Control offer banner and call fallback settings',
   pagecontent:'Edit every Odia/English text shown in the user app',
   banners:'Control app content',settings:'Admin configuration'
 };
@@ -1526,7 +1600,9 @@ function goPan(id) {
     listings: loadListingsTable, revenue: loadRevenue, analytics: loadAnalytics,
     planmgmt: loadPlansConfig,
     iddesigner: loadIDDesigner,
-    routes: loadRoutesPanel,
+    routes:      loadRoutesPanel,
+    disputes:    loadDisputesPanel,
+    offerbanner: loadOfferBannerPanel,
     pagecontent: () => { loadPageContent(); loadTnCContent(); }, settings: () => { loadSheetStatus(); loadSettings(); loadAppPaymentSettings(); }
   };
   loaders[id]?.();
@@ -1766,7 +1842,7 @@ async function loadWorkersTable() {
       <td style="white-space:nowrap">
         <button class="ab ab-view" onclick="viewUser('${u.id}')">👁</button>
         <button class="ab ab-feature" onclick="featureUser('${u.id}')">⭐</button>
-        <button class="ab ${u.status==='blocked'?'ab-approve':'ab-block'}" onclick="toggleBlock('${u.id}')">${u.status==='blocked'?'✅ Unblock':'🚫 Block'}</button>
+        <button class="ab ${u.status==='blocked'?'ab-approve':'ab-block'}" onclick="toggleBlock('${u.id}')">${u.status==='blocked'?'✅ Unblock':'🚫 Block'}</button><button class="ab ${u.is_verified?'ab-approve':'ab-view'}" onclick="toggleVerify('${u.id}',${!!u.is_verified})" title="${u.is_verified?'Remove verification':'Verify user'}">${u.is_verified?'✔ Verified':'☐ Verify'}</button>
       </td>
     </tr>`).join('') : '<tr><td colspan="10" class="empty"><div class="ei">👷</div><p>No workers registered yet</p></td></tr>';
 }
@@ -2619,6 +2695,221 @@ function saveTransportTnC() {
     sb.from('app_config').upsert({ key:'transport_driver_tnc', value: dtc }).catch(()=>{});
   }
   toast('✅ Transport T&C saved! Passengers and drivers will see these terms.');
+}
+
+// ════════════════════════════════════════════
+// DISPUTES MANAGEMENT
+// ════════════════════════════════════════════
+let allDisputes = [];
+let disputeFilter = 'all';
+
+async function loadDisputesPanel() {
+  const el = document.getElementById('disputes-list');
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:.78rem">Loading...</div>';
+  if (isSbReady()) {
+    const { data } = await sb.from('disputes').select('*').order('created_at', { ascending: false });
+    allDisputes = data || [];
+  } else {
+    allDisputes = [];
+  }
+  renderDisputes();
+}
+
+function filterDisputes(btn, filter) {
+  disputeFilter = filter;
+  document.querySelectorAll('.dis-filter-btn').forEach(b => {
+    b.style.background = 'var(--surf2)'; b.style.color = 'var(--text)'; b.style.border = '1px solid var(--border)';
+  });
+  btn.style.background = 'var(--saffron)'; btn.style.color = '#fff'; btn.style.border = 'none';
+  renderDisputes();
+}
+
+function renderDisputes() {
+  const el = document.getElementById('disputes-list');
+  if (!el) return;
+  const filtered = disputeFilter === 'all' ? allDisputes : allDisputes.filter(d => d.status === disputeFilter);
+  if (!filtered.length) {
+    el.innerHTML = `<div style="text-align:center;padding:30px;color:var(--muted);font-size:.78rem">${disputeFilter === 'pending' ? '✅ No pending disputes!' : 'No disputes found'}</div>`;
+    return;
+  }
+  const reasonLabels = {
+    worker_not_arrived:'Worker did not arrive', payment_issue:'Payment problem',
+    wrong_item:'Wrong item', late_delivery:'Late delivery', quality_issue:'Quality problem',
+    rude_behaviour:'Rude behaviour', overcharge:'Overcharged', other:'Other'
+  };
+  const statusColor = { pending:'#FF6B00', resolved:'var(--green)', closed:'var(--muted)' };
+  el.innerHTML = filtered.map(d => `
+    <div style="background:var(--surf2);border-radius:12px;padding:14px;margin-bottom:10px;border:0.5px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div>
+          <div style="font-weight:700;font-size:.88rem">⚠️ ${reasonLabels[d.reason]||d.reason}</div>
+          <div style="font-size:.72rem;color:var(--muted)">${d.reporter_name} • ${d.ref_type} #${d.ref_id?.slice(-6)} • ${(d.created_at||'').slice(0,10)}</div>
+        </div>
+        <span style="font-size:.7rem;font-weight:700;color:${statusColor[d.status]||'var(--muted)'};background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:2px 10px">${d.status}</span>
+      </div>
+      ${d.description ? `<div style="font-size:.78rem;background:var(--bg);border-radius:8px;padding:8px 10px;margin-bottom:8px">"${d.description}"</div>` : ''}
+      ${d.admin_response ? `<div style="font-size:.75rem;color:var(--green);margin-bottom:6px">✅ Admin: ${d.admin_response}</div>` : ''}
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="text" placeholder="Type response..." id="dis-resp-${d.id}" style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:7px;font-family:'Baloo 2',sans-serif;font-size:.75rem;background:var(--bg);color:var(--text);min-width:120px">
+        <button onclick="resolveDispute('${d.id}')" class="ab ab-approve" style="padding:7px 12px;font-size:.75rem">✅ Resolve</button>
+        <button onclick="closeDispute('${d.id}')" class="ab" style="padding:7px 12px;font-size:.75rem;background:var(--surf2);border-color:var(--border)">✕ Close</button>
+      </div>
+    </div>`).join('');
+}
+
+async function resolveDispute(id) {
+  const resp = document.getElementById('dis-resp-' + id)?.value.trim();
+  const update = { status:'resolved', admin_response: resp || 'Issue resolved by admin.', resolved_at: new Date().toISOString() };
+  if (isSbReady()) await sb.from('disputes').update(update).eq('id', id);
+  // Notify user
+  const d = allDisputes.find(x => x.id === id);
+  if (d && isSbReady()) {
+    await sb.from('notifications').insert([{
+      message: `Your issue report has been resolved. ${resp ? 'Admin says: ' + resp : ''}`,
+      target:'All Users', title:'✅ Issue Resolved', type:'dispute_resolved'
+    }]).catch(() => {});
+  }
+  toast('✅ Dispute resolved and user notified!');
+  loadDisputesPanel();
+}
+
+async function closeDispute(id) {
+  if (isSbReady()) await sb.from('disputes').update({ status:'closed' }).eq('id', id);
+  toast('Dispute closed');
+  loadDisputesPanel();
+}
+
+// ════════════════════════════════════════════
+// OFFER BANNER & CALL FALLBACK
+// ════════════════════════════════════════════
+function loadOfferBannerPanel() {
+  const cfg = JSON.parse(localStorage.getItem('pt_offer_banner') || '{}');
+  const cfgS = JSON.parse(localStorage.getItem('pt_settings') || '{}');
+  if (cfg.text) document.getElementById('ob-text').value = cfg.text;
+  if (cfg.color) document.getElementById('ob-color').value = cfg.color;
+  if (cfg.textColor) document.getElementById('ob-textcolor').value = cfg.textColor;
+  const trackEl = document.getElementById('ob-track');
+  const knobEl  = document.getElementById('ob-knob');
+  const checkbox = document.getElementById('ob-active');
+  if (checkbox) {
+    checkbox.checked = cfg.active === true || cfg.active === 'true';
+    if (checkbox.checked && trackEl) { trackEl.style.background = 'var(--green)'; knobEl.style.left = '25px'; }
+  }
+  if (cfgS.callFallbackPhone) document.getElementById('cf-phone').value = cfgS.callFallbackPhone;
+  if (cfgS.callFallbackText)  document.getElementById('cf-text').value  = cfgS.callFallbackText;
+  updateOfferPreview();
+  // Wire toggle
+  const chk = document.getElementById('ob-active');
+  if (chk) chk.onchange = function() {
+    const t = document.getElementById('ob-track'); const k = document.getElementById('ob-knob');
+    if (t) t.style.background = this.checked ? 'var(--green)' : 'var(--border)';
+    if (k) k.style.left = this.checked ? '25px' : '3px';
+    updateOfferPreview();
+  };
+  ['ob-text','ob-color','ob-textcolor'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.oninput = updateOfferPreview;
+  });
+}
+
+function updateOfferPreview() {
+  const prev = document.getElementById('ob-preview');
+  if (!prev) return;
+  const txt = document.getElementById('ob-text')?.value || 'Your offer text here';
+  const bg  = document.getElementById('ob-color')?.value || '#FFF4EC';
+  const col = document.getElementById('ob-textcolor')?.value || '#FF6B00';
+  const hex = document.getElementById('ob-color-hex');
+  if (hex) hex.textContent = bg;
+  prev.style.background = bg; prev.style.color = col;
+  prev.style.border = '1px solid ' + col;
+  prev.textContent = txt;
+}
+
+function saveOfferBanner() {
+  const cfg = {
+    active:    document.getElementById('ob-active')?.checked || false,
+    text:      document.getElementById('ob-text')?.value || '',
+    color:     document.getElementById('ob-color')?.value || '#FFF4EC',
+    textColor: document.getElementById('ob-textcolor')?.value || '#FF6B00',
+  };
+  localStorage.setItem('pt_offer_banner', JSON.stringify(cfg));
+  if (isSbReady()) sb.from('app_config').upsert({ key:'offer_banner', value: JSON.stringify(cfg) }).catch(() => {});
+  toast('✅ Offer banner saved! Users will see it on home screen.');
+}
+
+function saveCallFallback() {
+  const phone = document.getElementById('cf-phone')?.value.trim() || '';
+  const text  = document.getElementById('cf-text')?.value.trim()  || 'Call us for quick service';
+  const existing = JSON.parse(localStorage.getItem('pt_settings') || '{}');
+  const updated  = { ...existing, callFallbackPhone: phone, callFallbackText: text, supportPhone: phone };
+  localStorage.setItem('pt_settings', JSON.stringify(updated));
+  if (isSbReady()) {
+    sb.from('app_config').upsert({ key:'call_fallback_phone', value: phone }).catch(() => {});
+    sb.from('app_config').upsert({ key:'call_fallback_text',  value: text  }).catch(() => {});
+  }
+  toast('✅ Call fallback saved! Users can call this number when no worker found.');
+}
+
+// ════════════════════════════════════════════
+// CSV EXPORT
+// ════════════════════════════════════════════
+async function exportCSV(table) {
+  toast('⏳ Preparing ' + table + ' export...');
+  let rows = [];
+  if (isSbReady()) {
+    const { data } = await sb.from(table).select('*').order('created_at', { ascending: false });
+    rows = data || [];
+  }
+  if (!rows.length) { toast('No data to export'); return; }
+
+  // Build CSV
+  const headers = Object.keys(rows[0]);
+  const csv = [
+    headers.join(','),
+    ...rows.map(r => headers.map(h => {
+      const val = r[h] === null || r[h] === undefined ? '' : String(r[h]);
+      return '"' + val.replace(/"/g, '""') + '"';
+    }).join(','))
+  ].join('\n');
+
+  // Download
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `parttimers_${table}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast(`✅ ${rows.length} ${table} exported!`);
+}
+
+// ════════════════════════════════════════════
+// USER VERIFICATION
+// ════════════════════════════════════════════
+async function toggleVerify(id, currentlyVerified) {
+  const newVal = !currentlyVerified;
+  if (isSbReady()) {
+    await sbUpdate('users', id, {
+      is_verified: newVal,
+      verified_at: newVal ? new Date().toISOString() : null,
+    });
+    // Notify user
+    await sb.from('notifications').insert([{
+      message: newVal
+        ? 'Your account has been verified! ✔ Verified badge now shows on your profile.'
+        : 'Your verification status has been removed. Contact admin for details.',
+      target:'All Users',
+      title: newVal ? '✔ Account Verified!' : '⚠️ Verification Removed',
+      type: 'verification'
+    }]).catch(() => {});
+  }
+  toast(newVal ? '✔ User verified and notified!' : '⚠️ Verification removed');
+  loadUsersTable(); loadWorkersTable(); loadVendorsTable();
+}
+
+function toggleVerifyModal() {
+  if (selectedUID) toggleVerify(selectedUID, false);
 }
 
 function previewIDLogo(input) {
